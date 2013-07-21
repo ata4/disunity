@@ -83,8 +83,13 @@ public class DisUnityCli {
         optClassFilter.setArgs(1);
         optClassFilter.setArgName("classes");
         opts.addOption(optClassFilter);
-        
+
         try {
+            if (args.length == 0) {
+                printUsage();
+                return false;
+            }
+            
             CommandLineParser parser = new PosixParser();
             CommandLine cl = parser.parse(opts, args);
             
