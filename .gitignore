@@ -1,0 +1,10 @@
+# netbeans
+/nbproject/configs/
+/nbproject/private/
+
+# builds
+/build/
+/dist/
+
+# other
+/private/
