@@ -36,7 +36,7 @@ public class DisUnityCli {
     private static final Logger L = Logger.getLogger(DisUnityCli.class.getName());
     
     private final DisUnity disunity;
-    private Options opts = new Options();
+    private Options opts;
     
     /**
      * @param args the command line arguments
@@ -62,6 +62,8 @@ public class DisUnityCli {
     }
 
     public boolean configure(String[] args) {
+        opts = new Options();
+        
         Option optHelp = new Option("h", "help", false, "Print this help.");
         opts.addOption(optHelp);
         
