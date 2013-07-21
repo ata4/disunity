@@ -14,15 +14,12 @@ import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class SubstanceArchiveHandler extends ExtractHandler {
-    
-    private static final Logger L = Logger.getLogger(RawHandler.class.getName());
     
     @Override
     public String getClassName() {
