@@ -1,2 +1,2 @@
 @echo off
-java -jar disunity.jar %*
+java -jar %~dp0\disunity.jar %*
