@@ -85,6 +85,9 @@ public class DisUnityCli {
         optClassFilter.setArgs(1);
         optClassFilter.setArgName("classes");
         opts.addOption(optClassFilter);
+        
+        Option optVerbose = new Option("v", "verbose", false, "Show more verbose log output.");
+        opts.addOption(optVerbose);
 
         try {
             if (args.length == 0) {
@@ -133,6 +136,10 @@ public class DisUnityCli {
                 }
                 
                 disunity.setClassFilter(classFilter);
+            }
+            
+            if (cl.hasOption(optVerbose.getOpt())) {
+                LogUtils.configure(Level.ALL);
             }
             
             // add remaining arguments as files
