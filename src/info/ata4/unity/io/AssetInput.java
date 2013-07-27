@@ -27,6 +27,16 @@ public class AssetInput {
     public AssetInput(DataInputReader in) {
         this.in = in;
     }
+    
+    public byte readByte() throws IOException {
+        bytes++;
+        return in.readByte();
+    }
+    
+    public int readUnsignedByte() throws IOException {
+        bytes++;
+        return in.readUnsignedByte();
+    }
 
     public boolean readBoolean() throws IOException {
         bytes++;
@@ -36,6 +46,11 @@ public class AssetInput {
     public int readInt() throws IOException {
         align();
         return in.readInt();
+    }
+    
+    public long readUnsignedInt() throws IOException {
+        align();
+        return in.readUnsignedInt();
     }
     
     public float readFloat() throws IOException {
@@ -48,14 +63,29 @@ public class AssetInput {
         return in.readDouble();
     }
     
-    public byte[] readByteArray() throws IOException {
+    public short readShort() throws IOException {
         align();
-        int len = in.readInt();
+        return in.readShort();
+    }
+
+    public int readUnsignedShort() throws IOException {
+        align();
+        return in.readUnsignedShort();
+    }
+    
+    public byte[] readByteArray(int len) throws IOException {
+        align();
         byte[] data = new byte[len];
         in.readFully(data);
         bytes = len;
         align();
         return data;
+    }
+    
+    public byte[] readByteArray() throws IOException {
+        align();
+        int len = in.readInt();
+        return readByteArray(len);
     }
     
     public String readString() throws IOException {

@@ -10,6 +10,10 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.asset.Asset;
+import info.ata4.unity.serialization.AssetDeserializer;
+import info.ata4.unity.serialization.AssetObject;
+import info.ata4.unity.struct.AssetHeader;
+import info.ata4.unity.struct.AssetRef;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.FieldTree;
 import info.ata4.unity.struct.ObjectPath;
@@ -20,11 +24,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to output information about an asset file.
@@ -118,11 +124,61 @@ public class AssetStructure {
         indent.delete(indent.length() - 3, indent.length());
     }
     
-    public void printStats(PrintStream ps) {
-        ps.println("Objects: " + asset.getObjectTable().getPaths().size());
-        ps.println("Size: " + humanReadableByteCount(asset.getHeader().fileSize, true));
-        ps.println("Format: " + asset.getHeader().format);
+    public void printInfo(PrintStream ps) {
+        ObjectTable objTable = asset.getObjectTable();
+        AssetHeader header = asset.getHeader();
+        FieldTree fieldTree = asset.getFieldTree();
         
+        ps.println("Engine: " + fieldTree.revision);
+        ps.println("Objects: " + objTable.getPaths().size());
+        ps.println("Size: " + humanReadableByteCount(header.fileSize, true));
+        ps.println("Format: " + header.format);
+        
+        if (!fieldTree.isEmpty()) {
+            printPlayerSettings(ps);
+        }
+        
+        if (!objTable.getRefs().isEmpty()) {
+            ps.println("External references:");
+            for (AssetRef ref : objTable.getRefs()) {
+                ps.println("  Path: " + ref.path);
+                ps.println("  GUID: " + DatatypeConverter.printHexBinary(ref.guid));
+                ps.println("  Type: " + ref.type);
+                ps.println();
+            }
+        }
+    }
+    
+    private void printPlayerSettings(PrintStream ps) {
+        try {
+            List<ObjectPath> paths = asset.getPathsByID(ClassID.getIDForName("PlayerSettings"));
+            
+            // only the mainData contains a PlayerSettings object
+            if (paths.isEmpty()) {
+                return;
+            }
+            
+            AssetDeserializer deser = new AssetDeserializer(asset);
+            AssetObject playerSettings = deser.deserializeObject(paths.get(0));
+
+            // only print the most interesting fields
+            printField(ps, playerSettings, "productName");
+            printField(ps, playerSettings, "companyName");
+            printField(ps, playerSettings, "targetPlatform");
+            printField(ps, playerSettings, "targetDevice");
+            printField(ps, playerSettings, "targetResolution");
+        } catch (Exception ex) {
+            L.log(Level.WARNING, "Can't read PlayerSettings", ex);
+        }
+    }
+    
+    private void printField(PrintStream ps, AssetObject obj, String fieldName) {
+        if (obj.containsKey(fieldName)) {
+            ps.println(fieldName + ": " + obj.get(fieldName));
+        }
+    }
+    
+    public void printStats(PrintStream ps) {
         ObjectTable objTable = asset.getObjectTable();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();

@@ -34,12 +34,12 @@ import org.apache.commons.io.FilenameUtils;
 public class DisUnity implements Runnable {
 
     public enum Command {
-        STRUCT, EXTRACT, RAW, INFO, UNBUNDLE, FIXREFS, SPLIT
+        STRUCT, EXTRACT, RAW, INFO, STATS, UNBUNDLE, FIXREFS, SPLIT
     }
     
     private static final Logger L = Logger.getLogger(DisUnity.class.getName());
     
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.0.2";
     
     private final AssetFileFilter assetFilter = new AssetFileFilter();
 
@@ -130,7 +130,12 @@ public class DisUnity implements Runnable {
                     break;
                     
                 case INFO:
-                    L.log(Level.INFO, "Printing information about {0}", name);
+                    System.out.println("Printing information for " + name);
+                    new AssetStructure(asset).printInfo(System.out);
+                    break;
+                    
+                case STATS:
+                    System.out.println("Printing class stats for " + name);
                     new AssetStructure(asset).printStats(System.out);
                     break;
                     

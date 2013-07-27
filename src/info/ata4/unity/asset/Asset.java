@@ -11,6 +11,7 @@ package info.ata4.unity.asset;
 
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.FieldTree;
+import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectTable;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferOutput;
@@ -23,6 +24,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -152,5 +155,17 @@ public class Asset extends MappedFileHandler {
 
     public ObjectTable getObjectTable() {
         return pathTable;
+    }
+    
+    public List<ObjectPath> getPathsByID(int cid) {
+        List<ObjectPath> paths = new ArrayList<>();
+        
+        for (ObjectPath path : pathTable.getPaths()) {
+            if (path.classID1 == cid) {
+                paths.add(path);
+            }
+        }
+        
+        return paths;
     }
 }

@@ -44,7 +44,7 @@ public class DisUnityCli {
     public static void main(String[] args) {
         LogUtils.configure();
         
-        System.out.println("DisUnity " + DisUnity.VERSION);
+        System.out.println("DisUnity v" + DisUnity.VERSION);
         
         try {
             DisUnity disunity = new DisUnity();
@@ -74,14 +74,15 @@ public class DisUnityCli {
                 + Command.UNBUNDLE + " - Extracts an Unity asset bundle.\n"
                 + Command.STRUCT + "   - Outputs the data structure of asset files into text files.\n"
                 + Command.FIXREFS + "  - Fixes asset references of unpacked .unity scene files so they can be loaded with the Unity editor.\n"
-                + Command.INFO + "     - Outputs some information about the asset files.");
+                + Command.INFO + "     - Outputs some information for asset files.\n"
+                + Command.STATS + "    - Outputs class usage stats for asset files.\n"
+                + Command.SPLIT + "    - Attempts to split asset files into multiple smaller asset files.");
         optCmd.setArgs(1);
         optCmd.setArgName("cmd");
         opts.addOption(optCmd);
         
         Option optClassFilter = new Option("f", null);
         optClassFilter.setDescription("Only process objects that use these classes. Expects a string with class names, separated by commas.");
-        optClassFilter.setLongOpt("filter-class");
         optClassFilter.setArgs(1);
         optClassFilter.setArgName("classes");
         opts.addOption(optClassFilter);
