@@ -29,11 +29,11 @@ public class AssetHeader implements Struct {
     // size of the whole asset file
     public int fileSize;
     
-    // 5 = 2.0.x
-    // 6 = 2.6.x
+    // 5 = 2.0
+    // 6 = 2.6
     // 7 = ???
-    // 8 = 3.3.x
-    // 9 = 3.5.x+
+    // 8 = 3.3 - 3.4
+    // 9 = 3.5 - 4.1
     public int format;
     
     // apparently the offset to the serialized data

@@ -10,8 +10,6 @@
 package info.ata4.unity.serialization;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.serialization.AssetField;
-import info.ata4.unity.serialization.AssetObject;
 import info.ata4.unity.io.AssetInput;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.ObjectPath;
