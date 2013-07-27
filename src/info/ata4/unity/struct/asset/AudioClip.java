@@ -70,28 +70,28 @@ public class AudioClip extends UnityObject {
     public void readData() throws IOException {
         super.readData();
         
-        format = readInt();
+        format = in.readInt();
         L.log(Level.FINEST, "format = {0}", format);
         
-        type = readInt();
+        type = in.readInt();
         L.log(Level.FINEST, "type = {0}", type);
         
-        use3D = readBoolean();
+        use3D = in.readBoolean();
         L.log(Level.FINEST, "use3D = {0}", use3D);
         
         if (formatInfo.getFormat() >= 7) {
-            useHardware = readBoolean();
+            useHardware = in.readBoolean();
             L.log(Level.FINEST, "useHardware = {0}", useHardware);
 
-            stream = readInt();
+            stream = in.readInt();
             L.log(Level.FINEST, "stream = {0}", stream);
         }
         
-        audioData = readByteArray();
+        audioData = in.readByteArray();
         L.log(Level.FINEST, "audioData = {0}", audioData);
         
         if (formatInfo.getFormat() < 7) {
-            decompressOnLoad = readBoolean();
+            decompressOnLoad = in.readBoolean();
             L.log(Level.FINEST, "decompressOnLoad = {0}", stream);
         }
     }

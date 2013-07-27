@@ -119,49 +119,49 @@ public class Texture2D extends UnityObject {
     public void readData() throws IOException {
         super.readData();
         
-        width = readInt();
+        width = in.readInt();
         L.log(Level.FINEST, "width = {0}", width);
         
-        height = readInt();
+        height = in.readInt();
         L.log(Level.FINEST, "height = {0}", height);
         
-        completeImageSize = readInt();
+        completeImageSize = in.readInt();
         L.log(Level.FINEST, "completeImageSize = {0}", completeImageSize);
         
-        textureFormat = readInt();
+        textureFormat = in.readInt();
         L.log(Level.FINEST, "textureFormat = {0}", textureFormat);
         
-        mipMap = readBoolean();
+        mipMap = in.readBoolean();
         L.log(Level.FINEST, "mipMap = {0}", mipMap);
         
-        isReadable = readBoolean();
+        isReadable = in.readBoolean();
         L.log(Level.FINEST, "isReadable = {0}", isReadable);
         
         // TODO: validate
         if (formatInfo.getFormat() >= 7) {
-            readAllowed = readBoolean();
+            readAllowed = in.readBoolean();
             L.log(Level.FINEST, "readAllowed = {0}", readAllowed);
         }
         
-        imageCount = readInt();
+        imageCount = in.readInt();
         L.log(Level.FINEST, "imageCount = {0}", imageCount);
-        textureDimension = readInt();
+        textureDimension = in.readInt();
         L.log(Level.FINEST, "textureDimension = {0}", textureDimension);
 
-        readObject(textureSettings);
+        in.readStruct(textureSettings);
         
         // TODO: validate
         if (formatInfo.getFormat() >= 7) {
-            lightmapFormat = readInt();
+            lightmapFormat = in.readInt();
             L.log(Level.FINEST, "lightmapFormat = {0}", lightmapFormat);
         }
         
         if (formatInfo.getFormat() >= 9) {
-            colorSpace = readInt();
+            colorSpace = in.readInt();
             L.log(Level.FINEST, "colorSpace = {0}", colorSpace);
         }
         
-        imageData = readByteArray();
+        imageData = in.readByteArray();
         L.log(Level.FINEST, "imageData = {0} bytes", imageData.length);
     }
 }

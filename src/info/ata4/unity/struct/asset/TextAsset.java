@@ -47,10 +47,10 @@ public class TextAsset extends UnityObject {
     public void readData() throws IOException {
         super.readData();
         
-        script = readByteArray();
+        script = in.readByteArray();
         L.log(Level.FINEST, "script = {0} bytes", script.length);
         
-        pathName = readString();
+        pathName = in.readString();
         L.log(Level.FINEST, "pathName = {0}", pathName);
     }
 

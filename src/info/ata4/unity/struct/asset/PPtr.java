@@ -31,10 +31,10 @@ public class PPtr extends AssetStruct {
 
     @Override
     public void readData() throws IOException {
-        fileID = readInt();
+        fileID = in.readInt();
         L.log(Level.FINEST, "fileID = {0} ", fileID);
         
-        pathID = readInt();
+        pathID = in.readInt();
         L.log(Level.FINEST, "pathID = {0} ", pathID);
     }
 }

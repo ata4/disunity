@@ -49,12 +49,12 @@ public class MovieTexture extends UnityObject {
     public void readData() throws IOException {
         super.readData();
         
-        loop = readBoolean();
+        loop = in.readBoolean();
         L.log(Level.FINEST, "loop = {0} ", loop);
         
-        readObject(audioClip);
+        in.readStruct(audioClip);
         
-        moveData = readByteArray();
+        moveData = in.readByteArray();
         L.log(Level.FINEST, "moveData = {0} bytes", moveData.length);
     }
 }

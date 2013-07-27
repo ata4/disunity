@@ -10,6 +10,7 @@
 package info.ata4.unity.struct.asset;
 
 import info.ata4.unity.asset.AssetFormat;
+import info.ata4.unity.io.AssetInput;
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
@@ -21,11 +22,7 @@ import java.io.IOException;
  */
 public abstract class AssetStruct implements Struct {
     
-    private static final int ALIGN = 4;
-    
-    private DataInputReader in;
-    private int booleans;
-    
+    protected AssetInput in;
     protected final AssetFormat formatInfo;
     
     public AssetStruct(AssetFormat formatInfo) {
@@ -34,7 +31,7 @@ public abstract class AssetStruct implements Struct {
     
     @Override
     public final void read(DataInputReader in) throws IOException {
-        this.in = in;
+        this.in = new AssetInput(in);
         readData();
     }
 
@@ -45,49 +42,4 @@ public abstract class AssetStruct implements Struct {
     }
     
     public abstract void readData() throws IOException;
-    
-    protected boolean readBoolean() throws IOException {
-        booleans++;
-        return in.readBoolean();
-    }
-    
-    private void doPadding() throws IOException {
-        if (booleans > 0) {
-            in.align(booleans, ALIGN);
-            booleans = 0;
-        }
-    }
-    
-    protected int readInt() throws IOException {
-        doPadding();
-        return in.readInt();
-    }
-    
-    protected float readFloat() throws IOException {
-        doPadding();
-        return in.readFloat();
-    }
-    
-    protected double readDouble() throws IOException {
-        doPadding();
-        return in.readDouble();
-    }
-    
-    protected byte[] readByteArray() throws IOException {
-        doPadding();
-        int len = in.readInt();
-        byte[] data = new byte[len];
-        in.readFully(data);
-        in.align(len, ALIGN);
-        return data;
-    }
-    
-    protected String readString() throws IOException {
-        return new String(readByteArray(), "UTF8");
-    }
-    
-    protected void readObject(AssetStruct obj) throws IOException {
-        doPadding();
-        obj.read(in);
-    }
 }

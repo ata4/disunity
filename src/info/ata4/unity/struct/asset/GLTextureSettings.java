@@ -39,16 +39,16 @@ public class GLTextureSettings extends AssetStruct {
 
     @Override
     public void readData() throws IOException {
-        filterMode = readInt();
+        filterMode = in.readInt();
         L.log(Level.FINEST, "filterMode = {0}", filterMode);
         
-        aniso = readInt();
+        aniso = in.readInt();
         L.log(Level.FINEST, "aniso = {0}", aniso);
         
-        mipBias = readFloat();
+        mipBias = in.readFloat();
         L.log(Level.FINEST, "mipBias = {0}", mipBias);
         
-        wrapMode = readInt();
+        wrapMode = in.readInt();
         L.log(Level.FINEST, "wrapMode = {0}", wrapMode);
     }
 }

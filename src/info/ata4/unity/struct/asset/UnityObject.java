@@ -30,7 +30,7 @@ public class UnityObject extends AssetStruct {
 
     @Override
     public void readData() throws IOException {
-        name = readString();
+        name = in.readString();
         L.log(Level.FINEST, "name = {0}", name);
     }
 }

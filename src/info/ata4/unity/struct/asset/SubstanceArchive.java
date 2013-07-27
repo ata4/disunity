@@ -42,7 +42,7 @@ public class SubstanceArchive extends UnityObject {
     public void readData() throws IOException {
         super.readData();
         
-        packageData = readByteArray();
+        packageData = in.readByteArray();
         L.log(Level.FINEST, "packageData = {0} bytes", packageData.length);
     }
 }
