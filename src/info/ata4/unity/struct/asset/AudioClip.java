@@ -79,7 +79,7 @@ public class AudioClip extends UnityObject {
         use3D = in.readBoolean();
         L.log(Level.FINEST, "use3D = {0}", use3D);
         
-        if (formatInfo.getFormat() >= 7) {
+        if (formatInfo.getFormat() == 7) {
             useHardware = in.readBoolean();
             L.log(Level.FINEST, "useHardware = {0}", useHardware);
 

@@ -32,7 +32,7 @@ public class AssetHeader implements Struct {
     // 5 = 2.0
     // 6 = 2.6
     // 7 = ???
-    // 8 = 3.3 - 3.4
+    // 8 = 3.1 - 3.4
     // 9 = 3.5 - 4.1
     public int format;
     
