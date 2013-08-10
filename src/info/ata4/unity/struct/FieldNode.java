@@ -13,6 +13,7 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,5 +96,56 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         for (FieldNode subField : this) {
             subField.write(out);
         }
+    }
+
+    @Override
+    public String toString() {
+        return type + ":" + name;
+    }
+    
+   @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FieldNode other = (FieldNode) obj;
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.size != other.size) {
+            return false;
+        }
+        if (this.index != other.index) {
+            return false;
+        }
+        if (this.isArray != other.isArray) {
+            return false;
+        }
+        if (this.unknown1 != other.unknown1) {
+            return false;
+        }
+        if (this.flags != other.flags) {
+            return false;
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 47 * hash + Objects.hashCode(this.type);
+        hash = 47 * hash + Objects.hashCode(this.name);
+        hash = 47 * hash + this.size;
+        hash = 47 * hash + this.index;
+        hash = 47 * hash + this.isArray;
+        hash = 47 * hash + this.unknown1;
+        hash = 47 * hash + this.flags;
+        return hash;
     }
 }

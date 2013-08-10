@@ -14,6 +14,7 @@ import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,4 +98,36 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
             out.writeInt(0); // padding
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FieldTree other = (FieldTree) obj;
+        if (!Objects.equals(this.revision, other.revision)) {
+            return false;
+        }
+        if (this.version != other.version) {
+            return false;
+        }
+        if (this.format != other.format) {
+            return false;
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 29 * hash + Objects.hashCode(this.revision);
+        hash = 29 * hash + this.version;
+        hash = 29 * hash + this.format;
+        return hash;
+    }
+    
+    
 }
