@@ -25,6 +25,11 @@ public class AssetFileFilter implements FilenameFilter {
 
     @Override
     public boolean accept(File dir, String name) {
+        // scene files in asset bundles have no extension
+        if (dir == null && !name.contains(".")) {
+            return true;
+        }
+        
         return ASSET_PATTERN.matcher(name).find();
     }
 
