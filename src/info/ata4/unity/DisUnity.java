@@ -40,8 +40,7 @@ public class DisUnity implements Runnable {
     public static final String VERSION = "0.0.3";
     
     private final AssetFileFilter assetFilter = new AssetFileFilter();
-    
-    private DisUnitySettings settings = new DisUnitySettings();
+    private final DisUnitySettings settings = new DisUnitySettings();
     
     public DisUnitySettings getSettings() {
         return settings;
