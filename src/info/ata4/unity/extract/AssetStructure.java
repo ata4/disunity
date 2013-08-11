@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
@@ -69,13 +68,7 @@ public class AssetStructure {
             return;
         }
         
-        ObjectTable objTable = asset.getObjectTable();
-        
-        Set<Integer> classIDs = new TreeSet<>();
-        
-        for (ObjectPath path : objTable.getPaths()) {
-            classIDs.add(path.classID2);
-        }
+        Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
             FieldNode classField = fieldTree.get(classID);
