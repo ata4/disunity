@@ -14,6 +14,7 @@ import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.extract.AssetExtractor;
 import info.ata4.unity.extract.AssetStructure;
+import info.ata4.unity.extract.StructDatabase;
 import info.ata4.unity.struct.AssetRef;
 import java.io.File;
 import java.io.IOException;
@@ -218,6 +219,12 @@ public class DisUnity implements Runnable {
                 for (AssetBundle.Entry entry : ab.getEntries()) {
                     // skip non-asset entries
                     if (!isAsset(entry.getName())) {
+                        continue;
+                    }
+                    
+                    // skip dummy asset from Unity3D Obfuscator
+                    // TODO: random number?
+                    if (entry.getName().equals("33Obf")) {
                         continue;
                     }
 
