@@ -72,7 +72,7 @@ public class AssetDeserializer {
         ac.setType(field.type);
 
         for (FieldNode fieldNode : field) {
-            ac.put(field.name, deserializeField(fieldNode));
+            ac.put(fieldNode.name, deserializeField(fieldNode));
         }
         
         return ac;
