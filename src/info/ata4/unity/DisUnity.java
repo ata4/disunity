@@ -35,12 +35,12 @@ import org.apache.commons.io.FilenameUtils;
 public class DisUnity implements Runnable {
 
     public enum Command {
-        STRUCT, EXTRACT, RAW, INFO, STATS, UNBUNDLE, FIXREFS, SPLIT
+        STRUCT, LEARN, EXTRACT, RAW, INFO, STATS, UNBUNDLE, FIXREFS, SPLIT
     }
     
     private static final Logger L = Logger.getLogger(DisUnity.class.getName());
     
-    public static final String VERSION = "0.0.2";
+    public static final String VERSION = "0.0.3";
     
     private final AssetFileFilter assetFilter = new AssetFileFilter();
 
@@ -186,6 +186,11 @@ public class DisUnity implements Runnable {
                     asset.save(sourceFile);
                     
                     break;
+                    
+                case LEARN:
+                    L.log(Level.INFO, "Learning structs from {0}", name);
+                    new AssetStructure(asset).learnStruct();
+                    break;
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't read " + name, ex);
@@ -272,6 +277,10 @@ public class DisUnity implements Runnable {
             } catch (Exception ex) {
                 L.log(Level.SEVERE, "Can't process " + file, ex);
             }
+        }
+        
+        if (command == Command.LEARN) {
+            StructDatabase.getInstance().update();
         }
     }
 }

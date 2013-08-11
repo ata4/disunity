@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.asset;
 
+import info.ata4.unity.extract.StructDatabase;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.FieldTree;
 import info.ata4.unity.struct.ObjectPath;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -40,7 +43,7 @@ public class Asset extends MappedFileHandler {
     private ByteBuffer bbData;
     private AssetHeader header = new AssetHeader();
     private FieldTree fieldTree = new FieldTree();
-    private ObjectTable pathTable = new ObjectTable();
+    private ObjectTable objTable = new ObjectTable();
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
@@ -53,8 +56,8 @@ public class Asset extends MappedFileHandler {
         fieldTree.clear();
         fieldTree.setFormat(header.format);
         
-        pathTable.getPaths().clear();
-        pathTable.getRefs().clear();
+        objTable.getPaths().clear();
+        objTable.getRefs().clear();
 
         switch (header.format) {
             case 6:
@@ -70,13 +73,13 @@ public class Asset extends MappedFileHandler {
                 bb.position(treeOffset);
 
                 fieldTree.read(in);
-                pathTable.read(in);
+                objTable.read(in);
                 break;
                 
             case 9:
                 // first struct, then data
                 fieldTree.read(in);
-                pathTable.read(in);
+                objTable.read(in);
                 
                 bb.position(header.dataOffset);
                 bbData = bb.slice();
@@ -84,6 +87,11 @@ public class Asset extends MappedFileHandler {
                 
             default:
                 throw new AssetException("Unknown asset format " + header.format);
+        }
+        
+        // try to get struct from database if the embedded one is empty
+        if (fieldTree.isEmpty()) {
+            StructDatabase.getInstance().fill(this);
         }
     }
     
@@ -101,7 +109,7 @@ public class Asset extends MappedFileHandler {
         
         fieldTree.setFormat(header.format);
         fieldTree.write(outStruct);
-        pathTable.write(outStruct);
+        objTable.write(outStruct);
         
         // align block to 16 bytes
         int structSize = bosStruct.size();
@@ -154,18 +162,26 @@ public class Asset extends MappedFileHandler {
     }
 
     public ObjectTable getObjectTable() {
-        return pathTable;
+        return objTable;
     }
     
     public List<ObjectPath> getPathsByID(int cid) {
         List<ObjectPath> paths = new ArrayList<>();
         
-        for (ObjectPath path : pathTable.getPaths()) {
+        for (ObjectPath path : objTable.getPaths()) {
             if (path.classID1 == cid) {
                 paths.add(path);
             }
         }
         
         return paths;
+    }
+    
+    public Set<Integer> getClassIDs() {
+        Set<Integer> classIDs = new TreeSet<>();
+        for (ObjectPath path : objTable.getPaths()) {
+            classIDs.add(path.classID2);
+        }
+        return classIDs;
     }
 }

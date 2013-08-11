@@ -30,6 +30,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
     public int version;
     
     private int format;
+    private boolean includeFieldNodes = true;
     
     public int getFormat() {
         return format;
@@ -37,6 +38,14 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
 
     public void setFormat(int format) {
         this.format = format;
+    }
+    
+    public boolean isIncludeFieldNodes() {
+        return includeFieldNodes;
+    }
+
+    public void setIncludeFieldNodes(boolean includeFieldNodes) {
+        this.includeFieldNodes = includeFieldNodes;
     }
 
     @Override
@@ -80,17 +89,21 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
             L.log(Level.FINEST, "version = {0}", version);
         }
         
-        int fields = size();
-        out.writeInt(fields);
-        L.log(Level.FINEST, "fields = {0}", fields);
-        
-        for (Map.Entry<Integer, FieldNode> entry : entrySet()) {
-            int classID = entry.getKey();
-            out.writeInt(classID);
-            L.log(Level.FINEST, "classID = {0}", classID);
-            
-            FieldNode fn = entry.getValue();
-            fn.write(out);
+        if (includeFieldNodes) {
+            int fields = size();
+            out.writeInt(fields);
+            L.log(Level.FINEST, "fields = {0}", fields);
+
+            for (Map.Entry<Integer, FieldNode> entry : entrySet()) {
+                int classID = entry.getKey();
+                out.writeInt(classID);
+                L.log(Level.FINEST, "classID = {0}", classID);
+
+                FieldNode fn = entry.getValue();
+                fn.write(out);
+            }
+        } else {
+            out.writeInt(0);
         }
         
         // TODO: validate
@@ -128,6 +141,4 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
         hash = 29 * hash + this.format;
         return hash;
     }
-    
-    
 }

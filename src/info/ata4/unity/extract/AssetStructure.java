@@ -19,7 +19,7 @@ import info.ata4.unity.struct.FieldTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectTable;
 import info.ata4.unity.util.ClassID;
-import info.ata4.util.io.collection.MapUtils;
+import info.ata4.util.collection.MapUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -45,6 +45,13 @@ public class AssetStructure {
 
     public AssetStructure(Asset asset) {
         this.asset = asset;
+    }
+    
+    public void learnStruct() {                
+        int learned = StructDatabase.getInstance().learn(asset);
+        if (learned > 0) {
+            L.log(Level.INFO, "New structs: {0}", learned);
+        }
     }
     
     public void dumpStruct(File dir) throws FileNotFoundException {

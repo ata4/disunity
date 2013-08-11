@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.util.io.collection;
+package info.ata4.util.collection;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Based on http://stackoverflow.com/questions/109383/how-to-sort-a-mapkey-value-on-the-values-in-java/2581754#2581754
+ * Based on http://stackoverflow.com/a/2581754
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
