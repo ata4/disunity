@@ -111,14 +111,14 @@ public class StructDatabase {
         }
         
         // don't include the struct when saving
-        fieldTree.setIncludeFieldNodes(false);
+        fieldTree.setStandalone(false);
     }
     
     public int learn(Asset asset) {
         FieldTree fieldTree = asset.getFieldTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (fieldTree.isEmpty()) {
+        if (fieldTree.isStandalone()) {
             L.info("No structure data available");
             return 0;
         }

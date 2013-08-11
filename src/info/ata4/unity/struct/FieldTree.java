@@ -30,7 +30,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
     public int version;
     
     private int format;
-    private boolean includeFieldNodes = true;
+    private boolean standalone = true;
     
     public int getFormat() {
         return format;
@@ -40,12 +40,12 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
         this.format = format;
     }
     
-    public boolean isIncludeFieldNodes() {
-        return includeFieldNodes;
+    public boolean isStandalone() {
+        return standalone;
     }
 
-    public void setIncludeFieldNodes(boolean includeFieldNodes) {
-        this.includeFieldNodes = includeFieldNodes;
+    public void setStandalone(boolean standalone) {
+        this.standalone = standalone;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
             L.log(Level.FINEST, "version = {0}", version);
         }
         
-        if (includeFieldNodes) {
+        if (standalone) {
             int fields = size();
             out.writeInt(fields);
             L.log(Level.FINEST, "fields = {0}", fields);

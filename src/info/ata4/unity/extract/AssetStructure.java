@@ -64,7 +64,7 @@ public class AssetStructure {
     
     private void printStruct(PrintStream ps, File dir) throws FileNotFoundException {
         FieldTree fieldTree = asset.getFieldTree();
-        if (fieldTree.isEmpty()) {
+        if (!fieldTree.isStandalone()) {
             L.info("No structure data available");
             return;
         }
