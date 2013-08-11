@@ -26,19 +26,19 @@ import java.util.logging.Logger;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetDeserializer {
+public class UnityDeserializer {
     
-    private static final Logger L = Logger.getLogger(AssetDeserializer.class.getName());
+    private static final Logger L = Logger.getLogger(UnityDeserializer.class.getName());
     
     private final Asset asset;
     private AssetInput in;
     private ByteBuffer bb;
     
-    public AssetDeserializer(Asset asset) {
+    public UnityDeserializer(Asset asset) {
         this.asset = asset;
     }
     
-    public AssetObject deserializeObject(ObjectPath path) {
+    public UnityObject deserializeObject(ObjectPath path) {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
@@ -53,7 +53,7 @@ public class AssetDeserializer {
         
         L.log(Level.FINEST, "class {0} {1}", new Object[]{classNode.name, classNode.type});
 
-        AssetObject ac = new AssetObject();
+        UnityObject ac = new UnityObject();
         ac.setName(classNode.name);
         ac.setType(classNode.type);
 
@@ -68,10 +68,10 @@ public class AssetDeserializer {
         return ac;
     }
     
-    private AssetObject deserializeObject(FieldNode field) {
+    private UnityObject deserializeObject(FieldNode field) {
         L.log(Level.FINEST, "class {0} {1}", new Object[]{field.name, field.type});
         
-        AssetObject ac = new AssetObject();
+        UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);
 
@@ -82,8 +82,8 @@ public class AssetDeserializer {
         return ac;
     }
     
-    private AssetField deserializeField(FieldNode field) {
-        AssetField af = new AssetField();
+    private UnityField deserializeField(FieldNode field) {
+        UnityField af = new UnityField();
         
         Object value = null;
         

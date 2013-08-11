@@ -9,42 +9,30 @@
  */
 package info.ata4.unity.serialization;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetField<T> {
+public class UnityObject extends HashMap<String, UnityField> {
     
-    private String type;
     private String name;
-    private T value;
-    
-    public String getType() {
-        return type;
-    }
+    private String type;
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getType() {
+        return type;
     }
 
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+    public void setType(String type) {
+        this.type = type;
     }
 }

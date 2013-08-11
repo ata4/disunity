@@ -10,8 +10,8 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.serialization.AssetDeserializer;
-import info.ata4.unity.serialization.AssetObject;
+import info.ata4.unity.serialization.UnityDeserializer;
+import info.ata4.unity.serialization.UnityObject;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.AssetRef;
 import info.ata4.unity.struct.FieldNode;
@@ -158,8 +158,8 @@ public class AssetStructure {
                 return;
             }
             
-            AssetDeserializer deser = new AssetDeserializer(asset);
-            AssetObject playerSettings = deser.deserializeObject(paths.get(0));
+            UnityDeserializer deser = new UnityDeserializer(asset);
+            UnityObject playerSettings = deser.deserializeObject(paths.get(0));
 
             // only print the most interesting fields
             printField(ps, playerSettings, "productName");
@@ -172,7 +172,7 @@ public class AssetStructure {
         }
     }
     
-    private void printField(PrintStream ps, AssetObject obj, String fieldName) {
+    private void printField(PrintStream ps, UnityObject obj, String fieldName) {
         if (obj.containsKey(fieldName)) {
             ps.println(fieldName + ": " + obj.get(fieldName));
         }
