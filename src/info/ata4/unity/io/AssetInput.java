@@ -53,6 +53,11 @@ public class AssetInput {
         return in.readUnsignedInt();
     }
     
+    public long readLong() throws IOException {
+        align();
+        return in.readLong();
+    }
+    
     public float readFloat() throws IOException {
         align();
         return in.readFloat();

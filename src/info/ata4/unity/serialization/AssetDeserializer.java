@@ -33,7 +33,7 @@ public class AssetDeserializer {
     private final Asset asset;
     private AssetInput in;
     private ByteBuffer bb;
-
+    
     public AssetDeserializer(Asset asset) {
         this.asset = asset;
     }
@@ -59,6 +59,10 @@ public class AssetDeserializer {
 
         for (FieldNode fieldNode : classNode) {
             ac.put(fieldNode.name, deserializeField(fieldNode));
+        }
+        
+        if (bb.hasRemaining()) {
+            L.log(Level.WARNING, "Remaining bytes: {0}", bb.remaining());
         }
         
         return ac;
@@ -104,6 +108,9 @@ public class AssetDeserializer {
     
     private Object deserializePrimitive(FieldNode field) throws IOException {
         switch (field.type) {
+            case "UInt64":
+                return in.readLong();
+            
             case "SInt32":
             case "int":
                 return in.readInt();
