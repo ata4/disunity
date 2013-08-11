@@ -30,7 +30,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
     public int version;
     
     private int format;
-    private boolean standalone = true;
+    private boolean standalone = false;
     
     public int getFormat() {
         return format;
@@ -89,7 +89,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
             L.log(Level.FINEST, "version = {0}", version);
         }
         
-        if (standalone) {
+        if (!standalone) {
             int fields = size();
             out.writeInt(fields);
             L.log(Level.FINEST, "fields = {0}", fields);

@@ -111,7 +111,7 @@ public class StructDatabase {
         }
         
         // don't include the struct when saving
-        fieldTree.setStandalone(false);
+        fieldTree.setStandalone(true);
     }
     
     public int learn(Asset asset) {
