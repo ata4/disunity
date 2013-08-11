@@ -45,7 +45,7 @@ public class DisUnityCli {
     public static void main(String[] args) {
         LogUtils.configure();
         
-        System.out.println("DisUnity v" + DisUnity.VERSION);
+        L.info("DisUnity v" + DisUnity.VERSION);
         
         try {
             DisUnity disunity = new DisUnity();
