@@ -52,7 +52,7 @@ public class AssetBundle extends MappedFileHandler {
             DataInputReader in = new DataInputReader(new DataInputStream(fis));
             String signature = in.readStringNull(8);
             return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
     }
