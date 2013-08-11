@@ -11,6 +11,7 @@ package info.ata4.unity.cli;
 
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.DisUnity.Command;
+import info.ata4.unity.DisUnitySettings;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
@@ -99,6 +100,7 @@ public class DisUnityCli {
             
             CommandLineParser parser = new PosixParser();
             CommandLine cl = parser.parse(opts, args);
+            DisUnitySettings settings = disunity.getSettings();
             
             if (cl.hasOption(optHelp.getOpt())) {
                 printUsage();
@@ -109,7 +111,7 @@ public class DisUnityCli {
                 String value = cl.getOptionValue(optCmd.getOpt()).toUpperCase();
                 try {
                     Command cmd = Command.valueOf(value);
-                    disunity.setCommand(cmd);
+                    settings.setCommand(cmd);
                 } catch (IllegalArgumentException ex) {
                     L.log(Level.SEVERE, "Invalid command: {0}", value);
                     printUsage();
@@ -137,7 +139,7 @@ public class DisUnityCli {
                     classFilter.add(classID);
                 }
                 
-                disunity.setClassFilter(classFilter);
+                settings.setClassFilter(classFilter);
             }
             
             if (cl.hasOption(optVerbose.getOpt())) {
@@ -146,7 +148,7 @@ public class DisUnityCli {
             
             // add remaining arguments as files
             for (String leftArg : cl.getArgs()) {
-                disunity.getFiles().add(new File(leftArg));
+                settings.getFiles().add(new File(leftArg));
             }
         } catch (ParseException ex) {
             L.severe(ex.getMessage());

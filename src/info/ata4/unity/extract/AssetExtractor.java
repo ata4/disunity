@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.extract;
 
+import info.ata4.unity.DisUnitySettings;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.asset.AssetFormat;
 import info.ata4.unity.extract.handler.AudioClipHandler;
@@ -48,14 +49,16 @@ public class AssetExtractor {
     private static final Logger L = Logger.getLogger(AssetExtractor.class.getName());
     
     private final Asset asset;
+    private final DisUnitySettings settings;
     
     private Map<String, ExtractHandler> extractHandlerMap = new HashMap<>();
     private Set<ExtractHandler> extractHandlerSet = new HashSet<>();
     private RawHandler rawExtractHandler = new RawHandler();
-    private Set<Integer> classFilter;
     
-    public AssetExtractor(Asset asset) {
+    public AssetExtractor(Asset asset, DisUnitySettings settings) {
         this.asset = asset;
+        this.settings = settings;
+        
         addExtractHandler(new AudioClipHandler());
         addExtractHandler(new ShaderHandler());
         addExtractHandler(new SubstanceArchiveHandler());
@@ -81,14 +84,6 @@ public class AssetExtractor {
         extractHandlerSet.clear();
         extractHandlerSet.add(rawExtractHandler);
     }
-    
-    public void setClassFilter(Set<Integer> classFilter) {
-        this.classFilter = classFilter;
-    }
-    
-    public Set<Integer> getClassFilter() {
-        return classFilter;
-    }
 
     public void extract(File dir, boolean raw) throws IOException {
         AssetHeader header = asset.getHeader();
@@ -105,7 +100,7 @@ public class AssetExtractor {
         
         for (ObjectPath path : objTable.getPaths()) {
             // skip filtered classes
-            if (classFilter != null && !classFilter.contains(path.classID2)) {
+            if (settings.isClassFiltered(path.classID2)) {
                 continue;
             }
             
@@ -149,7 +144,7 @@ public class AssetExtractor {
         
         for (ObjectPath path : objTable.getPaths()) {
             // skip filtered classes
-            if (classFilter != null && !classFilter.contains(path.classID2)) {
+            if (settings.isClassFiltered(path.classID2)) {
                 continue;
             }
 

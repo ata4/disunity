@@ -19,9 +19,6 @@ import info.ata4.unity.struct.AssetRef;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -43,10 +40,12 @@ public class DisUnity implements Runnable {
     public static final String VERSION = "0.0.3";
     
     private final AssetFileFilter assetFilter = new AssetFileFilter();
-
-    private List<File> files = new ArrayList<>();
-    private Command command = Command.EXTRACT;
-    private Set<Integer> classFilter;
+    
+    private DisUnitySettings settings = new DisUnitySettings();
+    
+    public DisUnitySettings getSettings() {
+        return settings;
+    }
 
     public boolean isAssetBundle(File file) {
         return AssetBundle.isAssetBundle(file);
@@ -60,33 +59,9 @@ public class DisUnity implements Runnable {
         return assetFilter.accept(file.getParentFile(), file.getName());
     }
     
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
-
-    public Command getCommand() {
-        return command;
-    }
-
-    public void setCommand(Command cmd) {
-        this.command = cmd;
-    }
-    
-    public Set<Integer> getClassFilter() {
-        return classFilter;
-    }
-    
-    public void setClassFilter(Set<Integer> classFilter) {
-        this.classFilter = classFilter;
-    }
-    
     private void processAsset(File file, File dir) {
         try {
-            boolean map = command != Command.FIXREFS;
+            boolean map = settings.getCommand() != Command.FIXREFS;
             
             Asset asset = new Asset();
             asset.load(file, map);
@@ -119,6 +94,7 @@ public class DisUnity implements Runnable {
     
     private void processAsset(Asset asset, String name, File sourceFile, File dir) {        
         try {
+            Command command = settings.getCommand();
             switch (command) {
                 case UNBUNDLE:
                     L.log(Level.WARNING, "Asset files can''t be unbundled, skipping {0}", name);
@@ -153,8 +129,7 @@ public class DisUnity implements Runnable {
                     }
 
                     FileUtils.forceMkdir(dir);
-                    AssetExtractor ae = new AssetExtractor(asset);
-                    ae.setClassFilter(classFilter);
+                    AssetExtractor ae = new AssetExtractor(asset, settings);
 
                     if (split) {
                         ae.split(dir);
@@ -199,6 +174,8 @@ public class DisUnity implements Runnable {
 
     private void processAssetBundle(File file, File dir) {
         try {
+            Command command = settings.getCommand();
+            
             AssetBundle ab = new AssetBundle();
             ab.load(file);
             
@@ -252,7 +229,7 @@ public class DisUnity implements Runnable {
     
     @Override
     public void run() {
-        for (File file : files) {
+        for (File file : settings.getFiles()) {
             if (!file.exists()) {
                 L.log(Level.WARNING, "File {0} doesn''t exist", file);
                 continue;
@@ -279,7 +256,7 @@ public class DisUnity implements Runnable {
             }
         }
         
-        if (command == Command.LEARN) {
+        if (settings.getCommand() == Command.LEARN) {
             StructDatabase.getInstance().update();
         }
     }
