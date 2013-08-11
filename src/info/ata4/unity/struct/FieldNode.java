@@ -32,7 +32,7 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
     public int isArray;
     public int unknown1;
     public int flags;
-
+    
     @Override
     public void read(DataInputReader in) throws IOException {
         type = in.readStringNull(256);
@@ -118,21 +118,21 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (this.size != other.size) {
-            return false;
-        }
-        if (this.index != other.index) {
-            return false;
-        }
-        if (this.isArray != other.isArray) {
-            return false;
-        }
-        if (this.unknown1 != other.unknown1) {
-            return false;
-        }
-        if (this.flags != other.flags) {
-            return false;
-        }
+//        if (this.size != other.size) {
+//            return false;
+//        }
+//        if (this.index != other.index) {
+//            return false;
+//        }
+//        if (this.isArray != other.isArray) {
+//            return false;
+//        }
+//        if (this.unknown1 != other.unknown1) {
+//            return false;
+//        }
+//        if (this.flags != other.flags) {
+//            return false;
+//        }
         return super.equals(obj);
     }
 
@@ -141,11 +141,11 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         int hash = super.hashCode();
         hash = 47 * hash + Objects.hashCode(this.type);
         hash = 47 * hash + Objects.hashCode(this.name);
-        hash = 47 * hash + this.size;
-        hash = 47 * hash + this.index;
-        hash = 47 * hash + this.isArray;
-        hash = 47 * hash + this.unknown1;
-        hash = 47 * hash + this.flags;
+//        hash = 47 * hash + this.size;
+//        hash = 47 * hash + this.index;
+//        hash = 47 * hash + this.isArray;
+//        hash = 47 * hash + this.unknown1;
+//        hash = 47 * hash + this.flags;
         return hash;
     }
 }
