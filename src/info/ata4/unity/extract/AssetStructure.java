@@ -159,7 +159,7 @@ public class AssetStructure {
             }
             
             UnityDeserializer deser = new UnityDeserializer(asset);
-            UnityObject playerSettings = deser.deserializeObject(paths.get(0));
+            UnityObject playerSettings = deser.deserializeObjectPath(paths.get(0));
 
             // only print the most interesting fields
             printField(ps, playerSettings, "productName");

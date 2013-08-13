@@ -18,6 +18,9 @@ import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +41,7 @@ public class UnityDeserializer {
         this.asset = asset;
     }
     
-    public UnityObject deserializeObject(ObjectPath path) {
+    public UnityObject deserializeObjectPath(ObjectPath path) {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
@@ -61,24 +64,18 @@ public class UnityDeserializer {
             ac.put(fieldNode.name, deserializeField(fieldNode));
         }
         
+        // read remaining bytes
+        try {
+            in.align();
+        } catch (IOException ex) {
+            L.log(Level.WARNING, "Alignment failed", ex);
+        }
+        
+        // check if all bytes have been read
         if (bb.hasRemaining()) {
             L.log(Level.WARNING, "Remaining bytes: {0}", bb.remaining());
         }
-        
-        return ac;
-    }
-    
-    private UnityObject deserializeObject(FieldNode field) {
-        L.log(Level.FINEST, "class {0} {1}", new Object[]{field.name, field.type});
-        
-        UnityObject ac = new UnityObject();
-        ac.setName(field.name);
-        ac.setType(field.type);
-
-        for (FieldNode fieldNode : field) {
-            ac.put(fieldNode.name, deserializeField(fieldNode));
-        }
-        
+         
         return ac;
     }
     
@@ -89,6 +86,10 @@ public class UnityDeserializer {
         
         try {
             value = deserializePrimitive(field);
+            
+            if (value == null) {
+                value = deserializeCollection(field);
+            }
 
             if (value == null) {
                 value = deserializeObject(field);
@@ -149,5 +150,42 @@ public class UnityDeserializer {
             default:
                 return null;
         }
+    }
+    
+    private Collection<Object> deserializeCollection(FieldNode field) throws IOException {
+        switch (field.type) {
+            // just a wrapper for an Array field?
+            case "vector":
+                return deserializeCollection(field.get(0));
+            
+            case "Array":
+                int size = in.readInt();
+                FieldNode fieldData = field.get(1);
+                List<Object> objList = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    objList.add(deserializeObject(fieldData));
+                }
+                return objList;
+                
+            case "Map":
+                throw new UnsupportedOperationException();
+
+            default:
+                return null;
+        }
+    }
+    
+    private UnityObject deserializeObject(FieldNode field) {
+        L.log(Level.FINEST, "class {0} {1}", new Object[]{field.name, field.type});
+        
+        UnityObject ac = new UnityObject();
+        ac.setName(field.name);
+        ac.setType(field.type);
+
+        for (FieldNode fieldNode : field) {
+            ac.put(fieldNode.name, deserializeField(fieldNode));
+        }
+        
+        return ac;
     }
 }
