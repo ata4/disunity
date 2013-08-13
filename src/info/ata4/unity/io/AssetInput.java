@@ -79,7 +79,7 @@ public class AssetInput {
     }
     
     public byte[] readByteArray() throws IOException {
-        int len = in.readInt();
+        int len = readInt();
         byte[] data = new byte[len];
         in.readFully(data);
         bytes = len;
