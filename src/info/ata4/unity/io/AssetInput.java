@@ -78,19 +78,13 @@ public class AssetInput {
         return in.readUnsignedShort();
     }
     
-    public byte[] readByteArray(int len) throws IOException {
-        align();
+    public byte[] readByteArray() throws IOException {
+        int len = in.readInt();
         byte[] data = new byte[len];
         in.readFully(data);
         bytes = len;
         align();
         return data;
-    }
-    
-    public byte[] readByteArray() throws IOException {
-        align();
-        int len = in.readInt();
-        return readByteArray(len);
     }
     
     public String readString() throws IOException {
