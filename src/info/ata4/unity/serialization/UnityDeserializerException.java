@@ -1,5 +1,5 @@
 /*
- ** 2013 July 24
+ ** 2013 August 14
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,30 +9,24 @@
  */
 package info.ata4.unity.serialization;
 
-import java.util.LinkedHashMap;
-
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityObject extends LinkedHashMap<String, UnityField> {
-    
-    private String name;
-    private String type;
+public class UnityDeserializerException extends Exception {
 
-    public void setName(String name) {
-        this.name = name;
+    public UnityDeserializerException() {
     }
 
-    public String getName() {
-        return name;
+    public UnityDeserializerException(String msg) {
+        super(msg);
     }
 
-    public String getType() {
-        return type;
+    public UnityDeserializerException(Throwable cause) {
+        super(cause);
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public UnityDeserializerException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

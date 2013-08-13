@@ -10,7 +10,7 @@
 package info.ata4.unity.struct.asset;
 
 import info.ata4.unity.asset.AssetFormat;
-import info.ata4.unity.io.AssetInput;
+import info.ata4.unity.serialization.AssetInput;
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;

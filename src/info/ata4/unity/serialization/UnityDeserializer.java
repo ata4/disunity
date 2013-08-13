@@ -10,7 +10,6 @@
 package info.ata4.unity.serialization;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.io.AssetInput;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.util.io.ByteBufferInput;
@@ -19,10 +18,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Deserializer for asset objects.
@@ -30,8 +26,6 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityDeserializer {
-    
-    private static final Logger L = Logger.getLogger(UnityDeserializer.class.getName());
     
     private final Asset asset;
     private AssetInput in;
@@ -41,73 +35,61 @@ public class UnityDeserializer {
         this.asset = asset;
     }
     
-    public UnityObject deserializeObjectPath(ObjectPath path) {
+    public UnityObject deserialize(ObjectPath path) throws UnityDeserializerException {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
         bb = bbData.slice();
         bb.limit(path.length);
         bb.order(ByteOrder.LITTLE_ENDIAN);
-        
+
         // create asset input
         in = new AssetInput(new DataInputReader(new ByteBufferInput(bb)));
 
-        FieldNode classNode = asset.getFieldTree().get(path.classID1);
+        FieldNode classNode = asset.getFieldTree().get(path.classID2);
         
-        L.log(Level.FINEST, "class {0} {1}", new Object[]{classNode.name, classNode.type});
-
+        if (classNode == null) {
+            throw new UnityDeserializerException("ClassID not found in field tree");
+        }
+        
         UnityObject ac = new UnityObject();
         ac.setName(classNode.name);
         ac.setType(classNode.type);
 
         for (FieldNode fieldNode : classNode) {
-            ac.put(fieldNode.name, deserializeField(fieldNode));
+            ac.put(fieldNode.name, readField(fieldNode));
         }
         
         // read remaining bytes
         try {
             in.align();
         } catch (IOException ex) {
-            L.log(Level.WARNING, "Alignment failed", ex);
+            throw new UnityDeserializerException("Alignment failed");
         }
         
         // check if all bytes have been read
         if (bb.hasRemaining()) {
-            L.log(Level.WARNING, "Remaining bytes: {0}", bb.remaining());
+            throw new UnityDeserializerException("Remaining bytes: " + bb.remaining());
         }
          
         return ac;
     }
     
-    private UnityField deserializeField(FieldNode field) {
+    private UnityField readField(FieldNode field) throws UnityDeserializerException {
         UnityField af = new UnityField();
-        
-        Object value = null;
-        
-        try {
-            value = deserializePrimitive(field);
-            
-            if (value == null) {
-                value = deserializeCollection(field);
-            }
-
-            if (value == null) {
-                value = deserializeObject(field);
-            }
-        } catch (Exception ex) {
-            L.log(Level.WARNING, "Can't read value of field " + field.name, ex);
-        }
-        
-        L.log(Level.FINEST, "field {0} ({1}) = {2}", new Object[]{field.name, field.type, value});
-        
         af.setName(field.name);
         af.setType(field.type);
-        af.setValue(value);
+        
+        try {
+            af.setValue(readFieldValue(field));
+        } catch (IOException ex) {
+            throw new UnityDeserializerException("Can't read value of field " + field.name, ex);
+        }
 
         return af;
     }
-    
-    private Object deserializePrimitive(FieldNode field) throws IOException {
+
+    private Object readFieldValue(FieldNode field) throws IOException, UnityDeserializerException {
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -146,44 +128,39 @@ public class UnityDeserializer {
                 
             case "string":
                 return in.readString();
-
-            default:
-                return null;
-        }
-    }
-    
-    private Collection<Object> deserializeCollection(FieldNode field) throws IOException {
-        switch (field.type) {
-            // just a wrapper for an Array field?
+                
             case "vector":
-                return deserializeCollection(field.get(0));
+            case "staticvector":
+                return readArray(field.get(0));
+                
+            case "TypelessData":
+                return in.readByteArray();
             
             case "Array":
-                int size = in.readInt();
-                FieldNode fieldData = field.get(1);
-                List<Object> objList = new ArrayList<>(size);
-                for (int i = 0; i < size; i++) {
-                    objList.add(deserializeObject(fieldData));
-                }
-                return objList;
-                
-            case "Map":
-                throw new UnsupportedOperationException();
+                return readArray(field);
 
             default:
-                return null;
+                return readObject(field);
         }
     }
     
-    private UnityObject deserializeObject(FieldNode field) {
-        L.log(Level.FINEST, "class {0} {1}", new Object[]{field.name, field.type});
-        
+    private List<Object> readArray(FieldNode field) throws IOException, UnityDeserializerException {
+        int size = in.readInt();
+        FieldNode fieldData = field.get(1);
+        List<Object> objList = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            objList.add(readFieldValue(fieldData));
+        }
+        return objList;
+    }
+    
+    private UnityObject readObject(FieldNode field) throws UnityDeserializerException {
         UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);
 
         for (FieldNode fieldNode : field) {
-            ac.put(fieldNode.name, deserializeField(fieldNode));
+            ac.put(fieldNode.name, readField(fieldNode));
         }
         
         return ac;

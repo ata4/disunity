@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.io;
+package info.ata4.unity.serialization;
 
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
