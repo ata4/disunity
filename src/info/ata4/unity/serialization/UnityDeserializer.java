@@ -19,8 +19,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Deserializer for asset objects.
@@ -44,14 +46,6 @@ public class UnityDeserializer {
         bb = bbData.slice();
         bb.limit(path.length);
         bb.order(ByteOrder.LITTLE_ENDIAN);
-        
-//        try {
-//            InputStream is = new ByteBufferInputStream(bb);
-//            FileUtils.copyInputStreamToFile(is, new File("test.bin"));
-//            bb.rewind();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
 
         // create asset input
         in = new AssetInput(new DataInputReader(new ByteBufferInput(bb)));
@@ -92,7 +86,9 @@ public class UnityDeserializer {
         
         try {
             af.setValue(readFieldValue(field));
-//            System.out.println(af.getValue());
+            if (field.isForceAlign()) {
+                in.align();
+            }
         } catch (IOException ex) {
             throw new UnityDeserializerException("Can't read value of field " + field.name, ex);
         }
@@ -101,7 +97,6 @@ public class UnityDeserializer {
     }
 
     private Object readFieldValue(FieldNode field) throws IOException, UnityDeserializerException {
-//        System.out.print(field.name + " " + bb.position() + " ");
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -145,6 +140,9 @@ public class UnityDeserializer {
             case "staticvector":
                 return readArray(field.get(0));
                 
+            case "set":
+                return readSet(field);
+                
             case "map":
                 return readMap(field);
             
@@ -181,6 +179,12 @@ public class UnityDeserializer {
         }
         
         return map;
+    }
+    
+    private Set<Object> readSet(FieldNode field) throws IOException, UnityDeserializerException {
+        Set<Object> set = new HashSet<>();
+        set.addAll(readArray(field.get(0)));
+        return set;
     }
     
     private UnityObject readObject(FieldNode field) throws UnityDeserializerException {
