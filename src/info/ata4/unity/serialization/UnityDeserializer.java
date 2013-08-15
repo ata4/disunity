@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Deserializer for asset objects.
@@ -42,6 +44,14 @@ public class UnityDeserializer {
         bb = bbData.slice();
         bb.limit(path.length);
         bb.order(ByteOrder.LITTLE_ENDIAN);
+        
+//        try {
+//            InputStream is = new ByteBufferInputStream(bb);
+//            FileUtils.copyInputStreamToFile(is, new File("test.bin"));
+//            bb.rewind();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
 
         // create asset input
         in = new AssetInput(new DataInputReader(new ByteBufferInput(bb)));
@@ -82,6 +92,7 @@ public class UnityDeserializer {
         
         try {
             af.setValue(readFieldValue(field));
+//            System.out.println(af.getValue());
         } catch (IOException ex) {
             throw new UnityDeserializerException("Can't read value of field " + field.name, ex);
         }
@@ -90,6 +101,7 @@ public class UnityDeserializer {
     }
 
     private Object readFieldValue(FieldNode field) throws IOException, UnityDeserializerException {
+//        System.out.print(field.name + " " + bb.position() + " ");
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -133,11 +145,14 @@ public class UnityDeserializer {
             case "staticvector":
                 return readArray(field.get(0));
                 
-            case "TypelessData":
-                return in.readByteArray();
+            case "map":
+                return readMap(field);
             
             case "Array":
                 return readArray(field);
+                
+            case "TypelessData":
+                return in.readByteArray();
 
             default:
                 return readObject(field);
@@ -152,6 +167,20 @@ public class UnityDeserializer {
             objList.add(readFieldValue(fieldData));
         }
         return objList;
+    }
+    
+    private Map<Object, Object> readMap(FieldNode field) throws IOException, UnityDeserializerException {
+        List<Object> pairList = readArray(field.get(0));
+        Map<Object, Object> map = new HashMap<>();
+        
+        for (Object pair : pairList) {
+            UnityObject pairUnity = (UnityObject) pair;
+            Object first = pairUnity.get("first").getValue();
+            Object second = pairUnity.get("second").getValue();
+            map.put(first, second);
+        }
+        
+        return map;
     }
     
     private UnityObject readObject(FieldNode field) throws UnityDeserializerException {
