@@ -13,7 +13,7 @@ Support
 
 ### Engine versions
 
-* 2.6
+* 2.6 (buggy)
 * 3.4
 * 3.5
 * 4.1
