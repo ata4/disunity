@@ -35,4 +35,22 @@ public class UnityObject extends LinkedHashMap<String, UnityField> {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public <T> T getValue(String name) {
+        UnityField f = get(name);
+
+        if (f == null) {
+            return null;
+        } else {
+            return (T) f.getValue();
+        }
+    }
+    
+    public <T> void setValue(String name, T value) {
+        UnityField f = get(name);
+        
+        if (f != null) {
+            f.setValue(value);
+        }
+    }
 }
