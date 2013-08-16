@@ -194,19 +194,28 @@ public class StructDatabase {
             // try a similar revision and ignore the patch number
             String revision2 = revision.substring(0, 3);
             String revision3 = revision.substring(0, 1);
+            FieldNode fieldNodeC = null;
             for (Map.Entry<Pair<Integer, String>, FieldNode> entry : entrySet()) {
                 Pair<Integer, String> fieldNodeKey = entry.getKey();
                 if (fieldNodeKey.getLeft() == classID) {
+                    FieldNode fieldNodeEntry = entry.getValue();
+                    fieldNodeC = fieldNodeEntry;
+                    
                     // if major and minor version matches, it will probably work
                     if (fieldNodeKey.getRight().startsWith(revision2)) {
-                        return entry.getValue();
+                        return fieldNodeEntry;
                     }
                     
                     // suboptimal choice, use only as last resort
                     if (fieldNodeKey.getRight().startsWith(revision3)) {
-                        fieldNode = entry.getValue();
+                        fieldNode = fieldNodeEntry;
                     }
                 }
+            }
+            
+            // try a field node from any revision as the very last resort
+            if (fieldNode == null) {
+                fieldNode = fieldNodeC;
             }
             
             return fieldNode;
