@@ -24,14 +24,49 @@ import java.util.logging.Logger;
 public class FieldNode extends ArrayList<FieldNode> implements Struct {
     
     private static final Logger L = Logger.getLogger(FieldNode.class.getName());
+    
+    public static final int FLAG_FORCE_ALIGN = 0x4000;
 
+    // field type string
     public String type;
+    
+    // field name string
     public String name;
+    
+    // size of the field value in bytes or -1 if the field contains sub-fields only
     public int size;
+    
+    // field index for the associated parent field
     public int index;
-    public int isArray;
+    
+    // set to 1 if "type" is "Array" or "TypelessData"
+    public int rawArray;
+    
+    // observed values: 1-5, 8
     public int unknown1;
+    
+    // field flags
+    // observed values:
+    // 0x1
+    // 0x10
+    // 0x800
+    // 0x4000
+    // 0x8000
+    // 0x200000
+    // 0x400000
     public int flags;
+    
+    public boolean isForceAlign() {
+        return (flags & FLAG_FORCE_ALIGN) != 0;
+    }
+    
+    public void setForceAlign(boolean forceAlign) {
+        if (forceAlign) {
+            flags |= FLAG_FORCE_ALIGN;
+        } else {
+            flags &= ~FLAG_FORCE_ALIGN;
+        }
+    }
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -47,8 +82,8 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         index = in.readInt();
         L.log(Level.FINEST, "index = {0}", index);
         
-        isArray = in.readInt();
-        L.log(Level.FINEST, "isArray = {0}", isArray);
+        rawArray = in.readInt();
+        L.log(Level.FINEST, "rawArray = {0}", rawArray);
         
         unknown1 = in.readInt();
         L.log(Level.FINEST, "unknown1 = {0}", unknown1);
@@ -80,8 +115,8 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         out.writeInt(index);
         L.log(Level.FINEST, "index = {0}", index);
         
-        out.writeInt(isArray);
-        L.log(Level.FINEST, "isArray = {0}", isArray);
+        out.writeInt(rawArray);
+        L.log(Level.FINEST, "rawArray = {0}", rawArray);
         
         out.writeInt(unknown1);
         L.log(Level.FINEST, "unknown1 = {0}", unknown1);
