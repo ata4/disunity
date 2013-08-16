@@ -153,15 +153,15 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-//        if (this.size != other.size) {
-//            return false;
-//        }
-//        if (this.index != other.index) {
-//            return false;
-//        }
-//        if (this.isArray != other.isArray) {
-//            return false;
-//        }
+        if (this.size != other.size) {
+            return false;
+        }
+        if (this.index != other.index) {
+            return false;
+        }
+        if (this.rawArray != other.rawArray) {
+            return false;
+        }
 //        if (this.unknown1 != other.unknown1) {
 //            return false;
 //        }
@@ -176,9 +176,9 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         int hash = super.hashCode();
         hash = 47 * hash + Objects.hashCode(this.type);
         hash = 47 * hash + Objects.hashCode(this.name);
-//        hash = 47 * hash + this.size;
-//        hash = 47 * hash + this.index;
-//        hash = 47 * hash + this.isArray;
+        hash = 47 * hash + this.size;
+        hash = 47 * hash + this.index;
+        hash = 47 * hash + this.rawArray;
 //        hash = 47 * hash + this.unknown1;
 //        hash = 47 * hash + this.flags;
         return hash;
