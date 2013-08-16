@@ -52,7 +52,7 @@ public class TypeTree extends LinkedHashMap<Integer, FieldNode> implements Struc
     public void read(DataInputReader in) throws IOException {
         // TODO: validate
         if (format >= 7) {
-            revision = in.readStringNull(8);
+            revision = in.readStringNull(10);
             L.log(Level.FINEST, "revision = {0}", revision);
 
             version = in.readInt();
