@@ -78,13 +78,17 @@ public class SerializedInput {
         return in.readUnsignedShort();
     }
     
-    public byte[] readByteArray() throws IOException {
-        int len = readInt();
-        byte[] data = new byte[len];
+    public byte[] readByteArray(int size) throws IOException {
+        byte[] data = new byte[size];
         in.readFully(data);
-        bytes = len;
+        bytes = size;
         align();
         return data;
+    }
+    
+    public byte[] readByteArray() throws IOException {
+        int len = readInt();
+        return readByteArray(len);
     }
     
     public String readString() throws IOException {
