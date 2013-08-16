@@ -118,10 +118,10 @@ public class Deserializer {
                 return in.readUnsignedShort();
 
             case "SInt8":
-            case "char":
                 return in.readByte();
 
             case "UInt8":
+            case "char":
                 return in.readUnsignedByte();
 
             case "float":
@@ -138,7 +138,7 @@ public class Deserializer {
                 
             case "vector":
             case "staticvector":
-                return readArray(field.get(0));
+                return readVector(field);
                 
             case "set":
                 return readSet(field);
@@ -157,12 +157,29 @@ public class Deserializer {
         }
     }
     
+    private Object readVector(FieldNode field) throws IOException, DeserializationException {
+        int size = in.readInt();
+        FieldNode arrayField = field.get(0).get(1);
+        
+        // use wrapped ByteBuffers for raw byte arrays, which is much faster and
+        // more efficient than a list of Integer objects
+        if (arrayField.type.equals("UInt8") || arrayField.type.equals("char")) {
+            return ByteBuffer.wrap(in.readByteArray(size));
+        } else {
+            return doReadArray(arrayField, size);
+        }
+    }
+    
     private List<Object> readArray(FieldNode field) throws IOException, DeserializationException {
         int size = in.readInt();
-        FieldNode fieldData = field.get(1);
+        FieldNode arrayField = field.get(1);
+        return doReadArray(arrayField, size);
+    }
+    
+    private List<Object> doReadArray(FieldNode field, int size) throws IOException, DeserializationException {
         List<Object> objList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            objList.add(readFieldValue(fieldData));
+            objList.add(readFieldValue(field));
         }
         return objList;
     }
