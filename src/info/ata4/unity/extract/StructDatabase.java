@@ -11,7 +11,7 @@ package info.ata4.unity.extract;
 
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldNode;
-import info.ata4.unity.struct.FieldTree;
+import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.Struct;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
@@ -95,27 +95,27 @@ public class StructDatabase {
     }
     
     public void fill(Asset asset) {
-        FieldTree fieldTree = asset.getFieldTree();
+        TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (fieldTree.revision == null) {
-            L.warning("fieldTree.revision = null");
+        if (typeTree.revision == null) {
+            L.warning("typeTree.revision = null");
             return;
         }
         
         for (Integer classID : classIDs) {
-            FieldNode fieldNode = fndb.get(classID, fieldTree.revision, false);
+            FieldNode fieldNode = fndb.get(classID, typeTree.revision, false);
             if (fieldNode != null) {
-                fieldTree.put(classID, fieldNode);
+                typeTree.put(classID, fieldNode);
             }
         }
         
         // don't include the struct when saving
-        fieldTree.setStandalone(true);
+        typeTree.setStandalone(true);
     }
     
     public int learn(Asset asset) {
-        FieldTree fieldTree = asset.getFieldTree();
+        TypeTree fieldTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (fieldTree.isStandalone()) {

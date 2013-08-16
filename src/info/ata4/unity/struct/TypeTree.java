@@ -22,9 +22,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Struct {
+public class TypeTree extends LinkedHashMap<Integer, FieldNode> implements Struct {
 
-    private static final Logger L = Logger.getLogger(FieldTree.class.getName());
+    private static final Logger L = Logger.getLogger(TypeTree.class.getName());
     
     public String revision;
     public int version;
@@ -120,7 +120,7 @@ public class FieldTree extends LinkedHashMap<Integer, FieldNode> implements Stru
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FieldTree other = (FieldTree) obj;
+        final TypeTree other = (TypeTree) obj;
         if (!Objects.equals(this.revision, other.revision)) {
             return false;
         }

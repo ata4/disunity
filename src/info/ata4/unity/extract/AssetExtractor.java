@@ -23,7 +23,7 @@ import info.ata4.unity.extract.handler.SubstanceArchiveHandler;
 import info.ata4.unity.extract.handler.TextAssetHandler;
 import info.ata4.unity.extract.handler.Texture2DHandler;
 import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.FieldTree;
+import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectTable;
 import info.ata4.unity.util.ClassID;
@@ -87,11 +87,11 @@ public class AssetExtractor {
 
     public void extract(File dir, boolean raw) throws IOException {
         AssetHeader header = asset.getHeader();
-        FieldTree fieldTree = asset.getFieldTree();
+        TypeTree typeTree = asset.getTypeTree();
         ObjectTable objTable = asset.getObjectTable();
         ByteBuffer bb = asset.getDataBuffer();
         
-        AssetFormat format = new AssetFormat(fieldTree.version, fieldTree.revision, header.format);
+        AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
         
         for (ExtractHandler extractHandler : extractHandlerSet) {
             extractHandler.setExtractDir(dir);
@@ -133,7 +133,7 @@ public class AssetExtractor {
 
     public void split(File dir) throws IOException {
         ObjectTable objTable = asset.getObjectTable();
-        FieldTree fieldTree = asset.getFieldTree();
+        TypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -161,11 +161,11 @@ public class AssetExtractor {
             subFieldPath.pathID = 1;
             subAsset.getObjectTable().getPaths().add(subFieldPath);
             
-            FieldTree subFieldTree = subAsset.getFieldTree();
-            subFieldTree.revision = fieldTree.revision;
-            subFieldTree.version = -2;
-            subFieldTree.setFormat(fieldTree.getFormat());
-            subFieldTree.put(path.classID2, fieldTree.get(path.classID2));
+            TypeTree subTypeTree = subAsset.getTypeTree();
+            subTypeTree.revision = typeTree.revision;
+            subTypeTree.version = -2;
+            subTypeTree.setFormat(typeTree.getFormat());
+            subTypeTree.put(path.classID2, typeTree.get(path.classID2));
             
             // create a byte buffer for the data area
             bb.position(path.offset);

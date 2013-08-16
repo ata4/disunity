@@ -15,7 +15,7 @@ import info.ata4.unity.serialization.UnityObject;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.AssetRef;
 import info.ata4.unity.struct.FieldNode;
-import info.ata4.unity.struct.FieldTree;
+import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectTable;
 import info.ata4.unity.util.ClassID;
@@ -62,16 +62,16 @@ public class AssetStructure {
     }
     
     private void printStruct(PrintStream ps, File dir) throws FileNotFoundException {
-        FieldTree fieldTree = asset.getFieldTree();
-        if (fieldTree.isStandalone()) {
-            L.info("No structure data available");
+        TypeTree typeTree = asset.getTypeTree();
+        if (typeTree.isStandalone()) {
+            L.info("No type tree available");
             return;
         }
         
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            FieldNode classField = fieldTree.get(classID);
+            FieldNode classField = typeTree.get(classID);
             
             if (classField == null) {
                 continue;
@@ -127,14 +127,14 @@ public class AssetStructure {
     public void printInfo(PrintStream ps) {
         ObjectTable objTable = asset.getObjectTable();
         AssetHeader header = asset.getHeader();
-        FieldTree fieldTree = asset.getFieldTree();
+        TypeTree typeTree = asset.getTypeTree();
         
-        ps.println("Engine: " + fieldTree.revision);
+        ps.println("Engine: " + typeTree.revision);
         ps.println("Objects: " + objTable.getPaths().size());
         ps.println("Size: " + humanReadableByteCount(header.fileSize, true));
         ps.println("Format: " + header.format);
         
-        if (!fieldTree.isEmpty()) {
+        if (!typeTree.isEmpty()) {
             printPlayerSettings(ps);
         }
         

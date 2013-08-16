@@ -50,7 +50,7 @@ public class UnityDeserializer {
         // create asset input
         in = new AssetInput(new DataInputReader(new ByteBufferInput(bb)));
 
-        FieldNode classNode = asset.getFieldTree().get(path.classID2);
+        FieldNode classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
             throw new UnityDeserializerException("ClassID not found in field tree");

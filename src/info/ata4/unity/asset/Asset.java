@@ -11,7 +11,7 @@ package info.ata4.unity.asset;
 
 import info.ata4.unity.extract.StructDatabase;
 import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.FieldTree;
+import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectTable;
 import info.ata4.util.io.ByteBufferInput;
@@ -42,7 +42,7 @@ public class Asset extends MappedFileHandler {
 
     private ByteBuffer bbData;
     private AssetHeader header = new AssetHeader();
-    private FieldTree fieldTree = new FieldTree();
+    private TypeTree typeTree = new TypeTree();
     private ObjectTable objTable = new ObjectTable();
     
     @Override
@@ -53,8 +53,8 @@ public class Asset extends MappedFileHandler {
 
         in.setSwap(true);
         
-        fieldTree.clear();
-        fieldTree.setFormat(header.format);
+        typeTree.clear();
+        typeTree.setFormat(header.format);
         
         objTable.getPaths().clear();
         objTable.getRefs().clear();
@@ -72,13 +72,13 @@ public class Asset extends MappedFileHandler {
                 
                 bb.position(treeOffset);
 
-                fieldTree.read(in);
+                typeTree.read(in);
                 objTable.read(in);
                 break;
                 
             case 9:
                 // first struct, then data
-                fieldTree.read(in);
+                typeTree.read(in);
                 objTable.read(in);
                 
                 bb.position(header.dataOffset);
@@ -90,7 +90,7 @@ public class Asset extends MappedFileHandler {
         }
         
         // try to get struct from database if the embedded one is empty
-        if (fieldTree.isEmpty()) {
+        if (typeTree.isEmpty()) {
             StructDatabase.getInstance().fill(this);
         }
     }
@@ -107,8 +107,8 @@ public class Asset extends MappedFileHandler {
         DataOutputWriter outStruct = new DataOutputWriter(new DataOutputStream(bosStruct));
         outStruct.setSwap(true);
         
-        fieldTree.setFormat(header.format);
-        fieldTree.write(outStruct);
+        typeTree.setFormat(header.format);
+        typeTree.write(outStruct);
         objTable.write(outStruct);
         
         // align block to 16 bytes
@@ -157,8 +157,8 @@ public class Asset extends MappedFileHandler {
         return header;
     }
 
-    public FieldTree getFieldTree() {
-        return fieldTree;
+    public TypeTree getTypeTree() {
+        return typeTree;
     }
 
     public ObjectTable getObjectTable() {
