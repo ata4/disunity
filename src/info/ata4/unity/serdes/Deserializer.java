@@ -53,7 +53,7 @@ public class Deserializer {
         FieldNode classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
-            throw new DeserializationException("ClassID not found in field tree");
+            throw new DeserializationException("Class not found in type tree");
         }
         
         UnityObject ac = new UnityObject();
