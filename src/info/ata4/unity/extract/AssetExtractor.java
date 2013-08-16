@@ -25,7 +25,7 @@ import info.ata4.unity.extract.handler.Texture2DHandler;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectTable;
+import info.ata4.unity.struct.ObjectPathTable;
 import info.ata4.unity.util.ClassID;
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class AssetExtractor {
     public void extract(File dir, boolean raw) throws IOException {
         AssetHeader header = asset.getHeader();
         TypeTree typeTree = asset.getTypeTree();
-        ObjectTable objTable = asset.getObjectTable();
+        ObjectPathTable pathTable = asset.getObjectPaths();
         ByteBuffer bb = asset.getDataBuffer();
         
         AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
@@ -98,7 +98,7 @@ public class AssetExtractor {
             extractHandler.setAssetFormat(format);
         }
         
-        for (ObjectPath path : objTable.getPaths()) {
+        for (ObjectPath path : pathTable) {
             // skip filtered classes
             if (settings.isClassFiltered(path.classID2)) {
                 continue;
@@ -132,17 +132,17 @@ public class AssetExtractor {
     }
 
     public void split(File dir) throws IOException {
-        ObjectTable objTable = asset.getObjectTable();
+        ObjectPathTable pathTable = asset.getObjectPaths();
         TypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
-        if (objTable.getPaths().size() == 1) {
+        if (pathTable.size() == 1) {
             L.warning("Asset doesn't contain sub-assets!");
             return;
         }
         
-        for (ObjectPath path : objTable.getPaths()) {
+        for (ObjectPath path : pathTable) {
             // skip filtered classes
             if (settings.isClassFiltered(path.classID2)) {
                 continue;
@@ -159,7 +159,7 @@ public class AssetExtractor {
             subFieldPath.length = path.length;
             subFieldPath.offset = 0;
             subFieldPath.pathID = 1;
-            subAsset.getObjectTable().getPaths().add(subFieldPath);
+            subAsset.getObjectPaths().add(subFieldPath);
             
             TypeTree subTypeTree = subAsset.getTypeTree();
             subTypeTree.revision = typeTree.revision;

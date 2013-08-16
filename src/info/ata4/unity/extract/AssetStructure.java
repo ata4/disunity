@@ -10,14 +10,15 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.serialization.UnityDeserializer;
-import info.ata4.unity.serialization.UnityObject;
+import info.ata4.unity.serdes.Deserializer;
+import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.AssetRef;
+import info.ata4.unity.struct.ExternalReference;
+import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectTable;
+import info.ata4.unity.struct.ObjectPathTable;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
 import java.io.File;
@@ -125,12 +126,13 @@ public class AssetStructure {
     }
     
     public void printInfo(PrintStream ps) {
-        ObjectTable objTable = asset.getObjectTable();
+        ObjectPathTable pathTable = asset.getObjectPaths();
+        ExternalReferenceTable refTable = asset.getExternalRefs();
         AssetHeader header = asset.getHeader();
         TypeTree typeTree = asset.getTypeTree();
         
         ps.println("Engine: " + typeTree.revision);
-        ps.println("Objects: " + objTable.getPaths().size());
+        ps.println("Objects: " + pathTable.size());
         ps.println("Size: " + humanReadableByteCount(header.fileSize, true));
         ps.println("Format: " + header.format);
         
@@ -138,9 +140,9 @@ public class AssetStructure {
             printPlayerSettings(ps);
         }
         
-        if (!objTable.getRefs().isEmpty()) {
+        if (!refTable.isEmpty()) {
             ps.println("External references:");
-            for (AssetRef ref : objTable.getRefs()) {
+            for (ExternalReference ref : refTable) {
                 ps.println("  Path: " + ref.path);
                 ps.println("  GUID: " + DatatypeConverter.printHexBinary(ref.guid));
                 ps.println("  Type: " + ref.type);
@@ -158,7 +160,7 @@ public class AssetStructure {
                 return;
             }
             
-            UnityDeserializer deser = new UnityDeserializer(asset);
+            Deserializer deser = new Deserializer(asset);
             UnityObject playerSettings = deser.deserialize(paths.get(0));
 
             // only print the most interesting fields
@@ -179,11 +181,11 @@ public class AssetStructure {
     }
     
     public void printStats(PrintStream ps) {
-        ObjectTable objTable = asset.getObjectTable();
+        ObjectPathTable pathTable = asset.getObjectPaths();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();
         
-        for (ObjectPath path : objTable.getPaths()) {
+        for (ObjectPath path : pathTable) {
             String className = ClassID.getSafeNameForID(path.classID2);
             
             if (!classCounts.containsKey(className)) {

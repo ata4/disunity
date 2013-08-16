@@ -15,7 +15,7 @@ import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.extract.AssetExtractor;
 import info.ata4.unity.extract.AssetStructure;
 import info.ata4.unity.extract.StructDatabase;
-import info.ata4.unity.struct.AssetRef;
+import info.ata4.unity.struct.ExternalReference;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -149,7 +149,7 @@ public class DisUnity implements Runnable {
                     
                     String fixedPath = sourceFile.getParent().replace("\\", "/").toLowerCase();
                     
-                    for (AssetRef ref : asset.getObjectTable().getRefs()) {
+                    for (ExternalReference ref : asset.getExternalRefs()) {
                         if (isAsset(ref.path)) {
                             String pathOld = ref.path;
                             ref.path = fixedPath + "/" + FilenameUtils.getName(ref.path);

@@ -11,9 +11,10 @@ package info.ata4.unity.asset;
 
 import info.ata4.unity.extract.StructDatabase;
 import info.ata4.unity.struct.AssetHeader;
+import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectTable;
+import info.ata4.unity.struct.ObjectPathTable;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataInputReader;
@@ -43,7 +44,8 @@ public class Asset extends MappedFileHandler {
     private ByteBuffer bbData;
     private AssetHeader header = new AssetHeader();
     private TypeTree typeTree = new TypeTree();
-    private ObjectTable objTable = new ObjectTable();
+    private ObjectPathTable objTable = new ObjectPathTable();
+    private ExternalReferenceTable refTable = new ExternalReferenceTable();
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
@@ -56,8 +58,8 @@ public class Asset extends MappedFileHandler {
         typeTree.clear();
         typeTree.setFormat(header.format);
         
-        objTable.getPaths().clear();
-        objTable.getRefs().clear();
+        objTable.clear();
+        refTable.clear();
 
         switch (header.format) {
             case 6:
@@ -74,12 +76,14 @@ public class Asset extends MappedFileHandler {
 
                 typeTree.read(in);
                 objTable.read(in);
+                refTable.read(in);
                 break;
                 
             case 9:
                 // first struct, then data
                 typeTree.read(in);
                 objTable.read(in);
+                refTable.read(in);
                 
                 bb.position(header.dataOffset);
                 bbData = bb.slice();
@@ -110,6 +114,7 @@ public class Asset extends MappedFileHandler {
         typeTree.setFormat(header.format);
         typeTree.write(outStruct);
         objTable.write(outStruct);
+        refTable.write(outStruct);
         
         // align block to 16 bytes
         int structSize = bosStruct.size();
@@ -161,14 +166,18 @@ public class Asset extends MappedFileHandler {
         return typeTree;
     }
 
-    public ObjectTable getObjectTable() {
+    public ObjectPathTable getObjectPaths() {
         return objTable;
+    }
+    
+    public ExternalReferenceTable getExternalRefs() {
+        return refTable;
     }
     
     public List<ObjectPath> getPathsByID(int cid) {
         List<ObjectPath> paths = new ArrayList<>();
         
-        for (ObjectPath path : objTable.getPaths()) {
+        for (ObjectPath path : objTable) {
             if (path.classID1 == cid) {
                 paths.add(path);
             }
@@ -179,7 +188,7 @@ public class Asset extends MappedFileHandler {
     
     public Set<Integer> getClassIDs() {
         Set<Integer> classIDs = new TreeSet<>();
-        for (ObjectPath path : objTable.getPaths()) {
+        for (ObjectPath path : objTable) {
             classIDs.add(path.classID2);
         }
         return classIDs;

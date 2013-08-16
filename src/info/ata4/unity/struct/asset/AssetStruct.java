@@ -10,7 +10,7 @@
 package info.ata4.unity.struct.asset;
 
 import info.ata4.unity.asset.AssetFormat;
-import info.ata4.unity.serialization.AssetInput;
+import info.ata4.unity.serdes.SerializedInput;
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public abstract class AssetStruct implements Struct {
     
-    protected AssetInput in;
+    protected SerializedInput in;
     protected final AssetFormat formatInfo;
     
     public AssetStruct(AssetFormat formatInfo) {
@@ -31,7 +31,7 @@ public abstract class AssetStruct implements Struct {
     
     @Override
     public final void read(DataInputReader in) throws IOException {
-        this.in = new AssetInput(in);
+        this.in = new SerializedInput(in);
         readData();
     }
 

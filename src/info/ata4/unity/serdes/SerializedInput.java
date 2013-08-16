@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.serialization;
+package info.ata4.unity.serdes;
 
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
@@ -17,14 +17,14 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetInput {
+public class SerializedInput {
     
     private static final int ALIGNMENT = 4;
     
     private final DataInputReader in;
     private int bytes;
 
-    public AssetInput(DataInputReader in) {
+    public SerializedInput(DataInputReader in) {
         this.in = in;
     }
     

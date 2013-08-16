@@ -7,26 +7,26 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.serialization;
+package info.ata4.unity.serdes;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityDeserializerException extends Exception {
+public class DeserializationException extends Exception {
 
-    public UnityDeserializerException() {
+    public DeserializationException() {
     }
 
-    public UnityDeserializerException(String msg) {
+    public DeserializationException(String msg) {
         super(msg);
     }
 
-    public UnityDeserializerException(Throwable cause) {
+    public DeserializationException(Throwable cause) {
         super(cause);
     }
 
-    public UnityDeserializerException(String message, Throwable cause) {
+    public DeserializationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

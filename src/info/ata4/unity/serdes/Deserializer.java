@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.serialization;
+package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldNode;
@@ -29,17 +29,17 @@ import java.util.Set;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityDeserializer {
+public class Deserializer {
     
     private final Asset asset;
-    private AssetInput in;
+    private SerializedInput in;
     private ByteBuffer bb;
     
-    public UnityDeserializer(Asset asset) {
+    public Deserializer(Asset asset) {
         this.asset = asset;
     }
     
-    public UnityObject deserialize(ObjectPath path) throws UnityDeserializerException {
+    public UnityObject deserialize(ObjectPath path) throws DeserializationException {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
@@ -48,12 +48,12 @@ public class UnityDeserializer {
         bb.order(ByteOrder.LITTLE_ENDIAN);
 
         // create asset input
-        in = new AssetInput(new DataInputReader(new ByteBufferInput(bb)));
+        in = new SerializedInput(new DataInputReader(new ByteBufferInput(bb)));
 
         FieldNode classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
-            throw new UnityDeserializerException("ClassID not found in field tree");
+            throw new DeserializationException("ClassID not found in field tree");
         }
         
         UnityObject ac = new UnityObject();
@@ -68,18 +68,18 @@ public class UnityDeserializer {
         try {
             in.align();
         } catch (IOException ex) {
-            throw new UnityDeserializerException("Alignment failed");
+            throw new DeserializationException("Alignment failed");
         }
         
         // check if all bytes have been read
         if (bb.hasRemaining()) {
-            throw new UnityDeserializerException("Remaining bytes: " + bb.remaining());
+            throw new DeserializationException("Remaining bytes: " + bb.remaining());
         }
          
         return ac;
     }
     
-    private UnityField readField(FieldNode field) throws UnityDeserializerException {
+    private UnityField readField(FieldNode field) throws DeserializationException {
         UnityField af = new UnityField();
         af.setName(field.name);
         af.setType(field.type);
@@ -90,13 +90,13 @@ public class UnityDeserializer {
                 in.align();
             }
         } catch (IOException ex) {
-            throw new UnityDeserializerException("Can't read value of field " + field.name, ex);
+            throw new DeserializationException("Can't read value of field " + field.name, ex);
         }
 
         return af;
     }
 
-    private Object readFieldValue(FieldNode field) throws IOException, UnityDeserializerException {
+    private Object readFieldValue(FieldNode field) throws IOException, DeserializationException {
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -157,7 +157,7 @@ public class UnityDeserializer {
         }
     }
     
-    private List<Object> readArray(FieldNode field) throws IOException, UnityDeserializerException {
+    private List<Object> readArray(FieldNode field) throws IOException, DeserializationException {
         int size = in.readInt();
         FieldNode fieldData = field.get(1);
         List<Object> objList = new ArrayList<>(size);
@@ -167,7 +167,7 @@ public class UnityDeserializer {
         return objList;
     }
     
-    private Map<Object, Object> readMap(FieldNode field) throws IOException, UnityDeserializerException {
+    private Map<Object, Object> readMap(FieldNode field) throws IOException, DeserializationException {
         List<Object> pairList = readArray(field.get(0));
         Map<Object, Object> map = new HashMap<>();
         
@@ -181,13 +181,13 @@ public class UnityDeserializer {
         return map;
     }
     
-    private Set<Object> readSet(FieldNode field) throws IOException, UnityDeserializerException {
+    private Set<Object> readSet(FieldNode field) throws IOException, DeserializationException {
         Set<Object> set = new HashSet<>();
         set.addAll(readArray(field.get(0)));
         return set;
     }
     
-    private UnityObject readObject(FieldNode field) throws UnityDeserializerException {
+    private UnityObject readObject(FieldNode field) throws DeserializationException {
         UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);

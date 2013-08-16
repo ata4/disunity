@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.serialization;
+package info.ata4.unity.serdes;
 
 import java.util.LinkedHashMap;
 

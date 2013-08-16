@@ -20,9 +20,9 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetRef implements Struct {
+public class ExternalReference implements Struct {
     
-    private static final Logger L = Logger.getLogger(AssetRef.class.getName());
+    private static final Logger L = Logger.getLogger(ExternalReference.class.getName());
     
     public byte unknown;
     public byte[] guid = new byte[16];
