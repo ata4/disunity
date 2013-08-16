@@ -31,7 +31,7 @@ public class ClassID {
 
     static {
         try (
-            InputStream is = ClassID.class.getResource("classid.txt").openStream();
+            InputStream is = ClassID.class.getResource("ClassID.txt").openStream();
         ) {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
