@@ -115,34 +115,34 @@ public class StructDatabase {
     }
     
     public int learn(Asset asset) {
-        TypeTree fieldTree = asset.getTypeTree();
+        TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (fieldTree.isStandalone()) {
+        if (typeTree.isStandalone()) {
             L.info("No structure data available");
             return 0;
         }
         
-        if (fieldTree.revision == null) {
-            L.warning("fieldTree.revision = null");
+        if (typeTree.revision == null) {
+            L.warning("typeTree.revision = null");
             return 0;
         }
         
         int learnedNew = 0;
         
-        // merge the FieldTree map with the database field map
+        // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            FieldNode fieldNode = fieldTree.get(classID);
+            FieldNode fieldNode = typeTree.get(classID);
 
             if (fieldNode == null) {
                 continue;
             }
             
-            FieldNode fieldNodeDB = fndb.get(classID, fieldTree.revision);
+            FieldNode fieldNodeDB = fndb.get(classID, typeTree.revision);
 
             if (fieldNodeDB == null) {
                 fieldNodeDB = fieldNode;
-                fndb.add(classID, fieldTree.revision, fieldNodeDB);
+                fndb.add(classID, typeTree.revision, fieldNodeDB);
                 learnedNew++;
             }
 
