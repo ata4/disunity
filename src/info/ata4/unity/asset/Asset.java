@@ -55,12 +55,12 @@ public class Asset extends MappedFileHandler {
 
         in.setSwap(true);
         
-        typeTree.clear();
-        typeTree.setFormat(header.format);
-        
+        typeTree.clear();        
         objTable.clear();
         refTable.clear();
-
+        
+        typeTree.setFormat(header.format);
+        
         switch (header.format) {
             case 6:
             case 7:

@@ -150,10 +150,10 @@ public class DisUnity implements Runnable {
                     String fixedPath = sourceFile.getParent().replace("\\", "/").toLowerCase();
                     
                     for (ExternalReference ref : asset.getExternalRefs()) {
-                        if (isAsset(ref.path)) {
-                            String pathOld = ref.path;
-                            ref.path = fixedPath + "/" + FilenameUtils.getName(ref.path);
-                            L.log(Level.FINE, "Fixing ref: {0} -> {1}", new Object[]{pathOld, ref.path});
+                        if (isAsset(ref.filePath)) {
+                            String pathOld = ref.filePath;
+                            ref.filePath = fixedPath + "/" + FilenameUtils.getName(ref.filePath);
+                            L.log(Level.FINE, "Fixing ref: {0} -> {1}", new Object[]{pathOld, ref.filePath});
                         }
                     }
 

@@ -143,7 +143,11 @@ public class AssetStructure {
         if (!refTable.isEmpty()) {
             ps.println("External references:");
             for (ExternalReference ref : refTable) {
-                ps.println("  Path: " + ref.path);
+                if (ref.assetPath != null && !ref.assetPath.isEmpty()) {
+                    ps.println("  Path: " + ref.filePath + "/" + ref.assetPath);
+                } else {
+                    ps.println("  Path: " + ref.filePath);
+                }
                 ps.println("  GUID: " + DatatypeConverter.printHexBinary(ref.guid));
                 ps.println("  Type: " + ref.type);
                 ps.println();

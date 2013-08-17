@@ -25,19 +25,19 @@ public class ExternalReferenceTable extends ArrayList<ExternalReference> impleme
     private static final Logger L = Logger.getLogger(ExternalReferenceTable.class.getName());
     
     public byte unknown;
-
+    
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
         L.log(Level.FINEST, "entries = {0}", entries);
-
+        
+        unknown = in.readByte();
+        
         for (int i = 0; i < entries; i++) {
             ExternalReference ref = new ExternalReference();
             ref.read(in);
             add(ref);
         }
-
-        unknown = in.readByte();
     }
 
     @Override

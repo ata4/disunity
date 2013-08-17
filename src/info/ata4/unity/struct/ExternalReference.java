@@ -24,31 +24,31 @@ public class ExternalReference implements Struct {
     
     private static final Logger L = Logger.getLogger(ExternalReference.class.getName());
     
-    public byte unknown;
     public byte[] guid = new byte[16];
-    public String path;
+    public String filePath;
+    public String assetPath;
     public int type;
 
     @Override
     public void read(DataInputReader in) throws IOException {
-        unknown = in.readByte();
-        L.log(Level.FINEST, "unknown = {0}", unknown);
-        
         in.readFully(guid);
         L.log(Level.FINEST, "guid = {0}", DatatypeConverter.printHexBinary(guid));
-        
+
         type = in.readInt();
         L.log(Level.FINEST, "type = {0}", type);
-        
-        path = in.readStringNull();
-        L.log(Level.FINEST, "path = {0}", path);
+
+        filePath = in.readStringNull();
+        L.log(Level.FINEST, "filePath = {0}", filePath);
+
+        assetPath = in.readStringNull();
+        L.log(Level.FINEST, "assetPath = {0}", assetPath);
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        out.writeByte(unknown);
         out.write(guid);
         out.writeInt(type);
-        out.writeStringNull(path);
+        out.writeStringNull(filePath);
+        out.writeStringNull(assetPath);
     }
 }
