@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.serdes.StructDatabase;
+import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.TypeTree;
