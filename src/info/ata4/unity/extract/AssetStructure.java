@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.extract;
 
+import info.ata4.unity.serdes.StructDatabase;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;

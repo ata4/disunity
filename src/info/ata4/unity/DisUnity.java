@@ -14,7 +14,7 @@ import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.extract.AssetExtractor;
 import info.ata4.unity.extract.AssetStructure;
-import info.ata4.unity.extract.StructDatabase;
+import info.ata4.unity.serdes.StructDatabase;
 import info.ata4.unity.struct.ExternalReference;
 import java.io.File;
 import java.io.IOException;
