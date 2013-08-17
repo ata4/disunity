@@ -9,9 +9,8 @@
  */
 package info.ata4.unity.extract.handler;
 
-import info.ata4.unity.struct.asset.MovieTexture;
-import info.ata4.util.io.ByteBufferInput;
-import info.ata4.util.io.DataInputReader;
+import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
@@ -31,14 +30,12 @@ public class MovieTextureHandler extends ExtractHandler {
     }
 
     @Override
-    public void extract(ByteBuffer bb, int id) throws IOException {
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
-        
-        MovieTexture mt = new MovieTexture(getAssetFormat());
-        mt.read(in);
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+        String name = obj.getValue("m_Name");
+        ByteBuffer movieData = obj.getValue("m_MovieData");
         
         String ext;
-        String fourCC = new String(mt.moveData, 0, 4);
+        String fourCC = new String(movieData.array(), 0, 4);
         
         switch (fourCC) {
             case "OggS":
@@ -50,7 +47,6 @@ public class MovieTextureHandler extends ExtractHandler {
                 L.log(Level.WARNING, "Unrecognized movie fourCC \"{0}\"", fourCC);
         }
         
-        extractToFile(mt.moveData, id, mt.name, ext);
+        writeFile(movieData, path.pathID, name, ext);
     }
-    
 }

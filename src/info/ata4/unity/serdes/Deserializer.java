@@ -150,7 +150,7 @@ public class Deserializer {
                 return readArray(field);
                 
             case "TypelessData":
-                return in.readByteArray();
+                return readTypelessData(field);
 
             default:
                 return readObject(field);
@@ -202,6 +202,10 @@ public class Deserializer {
         Set<Object> set = new HashSet<>();
         set.addAll(readArray(field.get(0)));
         return set;
+    }
+    
+    private ByteBuffer readTypelessData(FieldNode field) throws IOException {
+        return ByteBuffer.wrap(in.readByteArray());
     }
     
     private UnityObject readObject(FieldNode field) throws DeserializationException {

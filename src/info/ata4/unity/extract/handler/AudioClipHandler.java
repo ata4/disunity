@@ -10,13 +10,13 @@
 package info.ata4.unity.extract.handler;
 
 import info.ata4.unity.enums.AudioType;
-import info.ata4.unity.struct.asset.AudioClip;
-import info.ata4.util.io.ByteBufferInput;
-import info.ata4.util.io.DataInputReader;
+import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class AudioClipHandler extends ExtractHandler {
     
-    private static final Logger L = Logger.getLogger(RawHandler.class.getName());
+    private static final Logger L = Logger.getLogger(AudioClipHandler.class.getName());
     
     private static final Map<AudioType, String> AUDIO_EXT;
     
@@ -52,22 +52,20 @@ public class AudioClipHandler extends ExtractHandler {
     }
     
     @Override
-    public void extract(ByteBuffer bb, int id) throws IOException {
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
-        
-        AudioClip audio = new AudioClip(getAssetFormat());
-        audio.read(in);
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+        String name = obj.getValue("m_Name");
+        ByteBuffer audioData = obj.getValue("m_AudioData");
 
-        if (audio.audioData.length == 0) {
-            L.log(Level.WARNING, "Audio clip {0} empty", audio.name);
+        if (audioData.capacity() == 0) {
+            L.log(Level.WARNING, "Audio clip {0} empty", name);
             return;
         }
         
-        AudioType type = AudioType.fromOrdinal(audio.type);
+        AudioType type = AudioType.fromOrdinal((int) obj.getValue("m_Type"));
         
         if (type == null) {
             L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",
-                    new Object[]{audio.name, audio.type});
+                    new Object[]{name, type});
             return;
         }
         
@@ -75,10 +73,10 @@ public class AudioClipHandler extends ExtractHandler {
         
         if (ext == null) {
             L.log(Level.WARNING, "Audio clip {0} uses unsupported audio type {1}",
-                    new Object[]{audio.name, type});
+                    new Object[]{name, type});
             return;
         }
         
-        extractToFile(audio.audioData, id, audio.name, ext);
+        writeFile(audioData, path.pathID, name, ext);
     }
 }

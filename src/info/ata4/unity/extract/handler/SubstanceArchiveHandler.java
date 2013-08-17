@@ -9,9 +9,8 @@
  */
 package info.ata4.unity.extract.handler;
 
-import info.ata4.unity.struct.asset.SubstanceArchive;
-import info.ata4.util.io.ByteBufferInput;
-import info.ata4.util.io.DataInputReader;
+import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -31,12 +30,10 @@ public class SubstanceArchiveHandler extends ExtractHandler {
     }
 
     @Override
-    public void extract(ByteBuffer bb, int id) throws IOException {
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+        String name = obj.getValue("m_Name");
+        ByteBuffer packageData = obj.getValue("m_PackageData");
         
-        SubstanceArchive sb = new SubstanceArchive(getAssetFormat());
-        sb.read(in);
-        
-        extractToFile(sb.packageData, id, sb.name, getExtension());
+        writeFile(packageData, path.pathID, name);
     }
 }

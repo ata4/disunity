@@ -9,11 +9,9 @@
  */
 package info.ata4.unity.extract.handler;
 
-import info.ata4.unity.struct.asset.TextAsset;
-import info.ata4.util.io.ByteBufferInput;
-import info.ata4.util.io.DataInputReader;
+import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  *
@@ -26,18 +24,15 @@ public class TextAssetHandler extends ExtractHandler {
         return "TextAsset";
     }
     
-    public String getExtension() {
+    @Override
+    public String getFileExtension() {
         return "txt";
     }
 
     @Override
-    public void extract(ByteBuffer bb, int id) throws IOException {
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
-        
-        TextAsset ta = new TextAsset(getAssetFormat());
-        ta.read(in);
-        
-        extractToFile(ta.script, id, ta.name, getExtension());
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+        String name = obj.getValue("m_Name");
+        String script = obj.getValue("m_Script");
+        writeFile(script.getBytes(), path.pathID, name);
     }
-    
 }

@@ -21,7 +21,7 @@ public class ShaderHandler extends TextAssetHandler {
     }
 
     @Override
-    public String getExtension() {
+    public String getFileExtension() {
         return "shader";
     }
 }
