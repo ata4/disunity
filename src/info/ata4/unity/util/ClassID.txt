@@ -132,6 +132,7 @@
 198	ParticleSystem
 199	ParticleSystemRenderer
 205	LODGroup
+208	NavMeshObstacle
 220	LightProbeGroup
 1001	Prefab
 1002	EditorExtensionImpl
