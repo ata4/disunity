@@ -123,7 +123,10 @@ public class StructDatabase {
             return 0;
         }
         
+        // older file formats don't contain the revision in the header, override
+        // it manually here
         if (typeTree.revision == null) {
+            //typeTree.revision = "2.6.0f7";
             L.warning("typeTree.revision = null");
             return 0;
         }
@@ -146,6 +149,7 @@ public class StructDatabase {
                 learnedNew++;
             }
 
+            // check the hashes, they must be identical at this point
             int hash1 = fieldNode.hashCode();
             int hash2 = fieldNodeDB.hashCode();
 
@@ -194,31 +198,51 @@ public class StructDatabase {
             // try a similar revision and ignore the patch number
             String revision2 = revision.substring(0, 3);
             String revision3 = revision.substring(0, 1);
+            
+            FieldNode fieldNodeB = null;
+            String revisionB = null;
+            
             FieldNode fieldNodeC = null;
+            String revisionC = null;
+            
+            
             for (Map.Entry<Pair<Integer, String>, FieldNode> entry : entrySet()) {
                 Pair<Integer, String> fieldNodeKey = entry.getKey();
                 if (fieldNodeKey.getLeft() == classID) {
                     FieldNode fieldNodeEntry = entry.getValue();
-                    fieldNodeC = fieldNodeEntry;
+                    String revisionEntry = fieldNodeKey.getRight();
                     
                     // if major and minor version matches, it will probably work
                     if (fieldNodeKey.getRight().startsWith(revision2)) {
                         return fieldNodeEntry;
                     }
                     
-                    // suboptimal choice, use only as last resort
+                    // suboptimal choice
                     if (fieldNodeKey.getRight().startsWith(revision3)) {
-                        fieldNode = fieldNodeEntry;
+                        fieldNodeB = fieldNodeEntry;
+                        revisionB = revisionEntry;
                     }
+                    
+                    // worst choice
+                    fieldNodeC = fieldNodeEntry;
+                    revisionC = revisionEntry;
                 }
             }
             
-            // try a field node from any revision as the very last resort
-            if (fieldNode == null) {
-                fieldNode = fieldNodeC;
+            // return less perfect match
+            if (fieldNodeB != null) {
+                L.log(Level.WARNING, "Unprecise match for ClassID {0} (expected: {1}, available: {2})", new Object[] {classID, revision, revisionB});
+                return fieldNodeB;
             }
             
-            return fieldNode;
+            // return field node from any revision as the very last resort
+            if (fieldNodeC != null) {
+                L.log(Level.WARNING, "Bad match for ClassID {0} (expected: {1}, available: {2})", new Object[] {classID, revision, revisionC});
+                return fieldNodeC;
+            }
+           
+            // no matches at all
+            return null;
         }
         
         public void add(int classID, String revision, FieldNode fieldNode) {

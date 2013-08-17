@@ -26,10 +26,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 
 /**
@@ -39,6 +41,7 @@ import java.util.TreeSet;
  */
 public class Asset extends MappedFileHandler {
     
+    private static final Logger L = Logger.getLogger(Asset.class.getName());
     private static final int HEADER_SIZE = 20;
 
     private ByteBuffer bbData;
@@ -95,6 +98,7 @@ public class Asset extends MappedFileHandler {
         
         // try to get struct from database if the embedded one is empty
         if (typeTree.isEmpty()) {
+            L.info("Standalone asset file detected, using structure from database");
             StructDatabase.getInstance().fill(this);
         }
     }
