@@ -91,10 +91,10 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         flags = in.readInt();
         L.log(Level.FINEST, "flags = {0}", flags);
         
-        int subFields = in.readInt();
-        L.log(Level.FINEST, "subFields = {0}", subFields);
+        int children = in.readInt();
+        L.log(Level.FINEST, "children = {0}", children);
         
-        for (int i = 0; i < subFields; i++) {
+        for (int i = 0; i < children; i++) {
             FieldNode fn = new FieldNode();
             fn.read(in);
             add(fn);
@@ -124,9 +124,9 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         out.writeInt(flags);
         L.log(Level.FINEST, "flags = {0}", flags);
         
-        int subFields = size();
-        out.writeInt(subFields);
-        L.log(Level.FINEST, "subFields = {0}", subFields);
+        int children = size();
+        out.writeInt(children);
+        L.log(Level.FINEST, "children = {0}", children);
         
         for (FieldNode subField : this) {
             subField.write(out);
