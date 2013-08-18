@@ -10,11 +10,12 @@
 package info.ata4.unity.cli;
 
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.DisUnity.Command;
+import info.ata4.unity.DisUnityCommand;
 import info.ata4.unity.DisUnitySettings;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -69,16 +70,7 @@ public class DisUnityCli {
         opts.addOption(optHelp);
         
         Option optCmd = new Option("c", null, true, null);
-        optCmd.setDescription("Processing command:\n"
-                + Command.EXTRACT + "  - Extracts the converted data from asset files or asset bundles.\n"
-                + Command.RAW + "      - Extracts the raw object data from asset files or asset bundles.\n"
-                + Command.UNBUNDLE + " - Extracts an Unity asset bundle.\n"
-                + Command.STRUCT + "   - Outputs the structs of Unity Web assets into text files.\n"
-                + Command.LEARN + "    - Collects new structs from Unity Web assets into a database.\n"
-                + Command.FIXREFS + "  - Fixes asset references of unpacked .unity scene files so they can be loaded with the Unity editor.\n"
-                + Command.INFO + "     - Outputs some information for asset files.\n"
-                + Command.STATS + "    - Outputs class usage stats for asset files.\n"
-                + Command.SPLIT + "    - Attempts to split asset files into multiple smaller asset files.");
+        optCmd.setDescription("Processing command. Available commands:\n" + Arrays.asList(DisUnityCommand.values()));
         optCmd.setArgs(1);
         optCmd.setArgName("cmd");
         opts.addOption(optCmd);
@@ -108,9 +100,9 @@ public class DisUnityCli {
             }
             
             if (cl.hasOption(optCmd.getOpt())) {
-                String value = cl.getOptionValue(optCmd.getOpt()).toUpperCase();
+                String value = cl.getOptionValue(optCmd.getOpt());
                 try {
-                    Command cmd = Command.valueOf(value);
+                    DisUnityCommand cmd = DisUnityCommand.fromString(value);
                     settings.setCommand(cmd);
                 } catch (IllegalArgumentException ex) {
                     L.log(Level.SEVERE, "Invalid command: {0}", value);

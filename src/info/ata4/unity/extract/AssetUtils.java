@@ -11,11 +11,6 @@ package info.ata4.unity.extract;
 
 import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.ExternalReference;
-import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
@@ -26,26 +21,28 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to output information about an asset file.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetStructure {
+public class AssetUtils {
     
-    private static final Logger L = Logger.getLogger(AssetStructure.class.getName());
+    private static final Logger L = Logger.getLogger(AssetUtils.class.getName());
     
     private final Asset asset;
 
-    public AssetStructure(Asset asset) {
+    public AssetUtils(Asset asset) {
         this.asset = asset;
+    }
+    
+    public void dump(PrintStream ps) {
+        
     }
     
     public void learnStruct() {                
@@ -65,6 +62,7 @@ public class AssetStructure {
     
     private void printStruct(PrintStream ps, File dir) throws FileNotFoundException {
         TypeTree typeTree = asset.getTypeTree();
+        
         if (typeTree.isStandalone()) {
             L.info("No type tree available");
             return;
@@ -127,62 +125,6 @@ public class AssetStructure {
     }
     
     public void printInfo(PrintStream ps) {
-        ObjectPathTable pathTable = asset.getObjectPaths();
-        ExternalReferenceTable refTable = asset.getExternalRefs();
-        AssetHeader header = asset.getHeader();
-        TypeTree typeTree = asset.getTypeTree();
-        
-        ps.println("Engine: " + typeTree.revision);
-        ps.println("Objects: " + pathTable.size());
-        ps.println("Size: " + humanReadableByteCount(header.fileSize, true));
-        ps.println("Format: " + header.format);
-        
-        if (!typeTree.isEmpty()) {
-            printPlayerSettings(ps);
-        }
-        
-        if (!refTable.isEmpty()) {
-            ps.println("External references:");
-            for (ExternalReference ref : refTable) {
-                if (ref.assetPath != null && !ref.assetPath.isEmpty()) {
-                    ps.println("  Path: " + ref.filePath + "/" + ref.assetPath);
-                } else {
-                    ps.println("  Path: " + ref.filePath);
-                }
-                ps.println("  GUID: " + DatatypeConverter.printHexBinary(ref.guid));
-                ps.println("  Type: " + ref.type);
-                ps.println();
-            }
-        }
-    }
-    
-    private void printPlayerSettings(PrintStream ps) {
-        try {
-            List<ObjectPath> paths = asset.getPathsByID(ClassID.getIDForName("PlayerSettings"));
-            
-            // only the mainData contains a PlayerSettings object
-            if (paths.isEmpty()) {
-                return;
-            }
-            
-            Deserializer deser = new Deserializer(asset);
-            UnityObject playerSettings = deser.deserialize(paths.get(0));
-
-            // only print the most interesting fields
-            printField(ps, playerSettings, "productName");
-            printField(ps, playerSettings, "companyName");
-            printField(ps, playerSettings, "targetPlatform");
-            printField(ps, playerSettings, "targetDevice");
-            printField(ps, playerSettings, "targetResolution");
-        } catch (Exception ex) {
-            L.log(Level.WARNING, "Can't read PlayerSettings", ex);
-        }
-    }
-    
-    private void printField(PrintStream ps, UnityObject obj, String fieldName) {
-        if (obj.containsKey(fieldName)) {
-            ps.println(fieldName + ": " + obj.get(fieldName));
-        }
     }
     
     public void printStats(PrintStream ps) {

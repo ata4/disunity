@@ -51,6 +51,37 @@ public class AssetExtractor {
     
     private static final Logger L = Logger.getLogger(AssetExtractor.class.getName());
     
+    public static String getAssetName(ByteBuffer bb) {
+        try {
+            // make sure we have enough bytes to read a string at all
+            if (bb.capacity() < 5) {
+                L.log(Level.FINEST, "Not enough data for an asset name");
+                return null;
+            }
+            
+            int len = bb.getInt();
+            if (len > 1024) {
+                L.log(Level.FINEST, "Asset name too long: {0}", len);
+                return null;
+            }
+            
+            byte[] raw = new byte[len];
+            bb.get(raw);
+            
+            String assetName = new String(raw).trim();
+            
+            // ignore bad strings
+            if (assetName.isEmpty() || !StringUtils.isAsciiPrintable(assetName)) {
+                L.log(Level.FINEST, "Invalid/empty asset name");
+                return null;
+            }
+            
+            return assetName;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    
     private final Asset asset;
     private final DisUnitySettings settings;
     
@@ -214,38 +245,6 @@ public class AssetExtractor {
                 L.log(Level.INFO, "Writing {0}", subAssetFile);
                 subAsset.save(subAssetFile);
             }
-        }
-    }
-    
-    
-    public static String getAssetName(ByteBuffer bb) {
-        try {
-            // make sure we have enough bytes to read a string at all
-            if (bb.capacity() < 5) {
-                L.log(Level.FINEST, "Not enough data for an asset name");
-                return null;
-            }
-            
-            int len = bb.getInt();
-            if (len > 1024) {
-                L.log(Level.FINEST, "Asset name too long: {0}", len);
-                return null;
-            }
-            
-            byte[] raw = new byte[len];
-            bb.get(raw);
-            
-            String assetName = new String(raw).trim();
-            
-            // ignore bad strings
-            if (assetName.isEmpty() || !StringUtils.isAsciiPrintable(assetName)) {
-                L.log(Level.FINEST, "Invalid/empty asset name");
-                return null;
-            }
-            
-            return assetName;
-        } catch (Exception ex) {
-            return null;
         }
     }
 }

@@ -13,7 +13,7 @@ import info.ata4.unity.asset.Asset;
 import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.extract.AssetExtractor;
-import info.ata4.unity.extract.AssetStructure;
+import info.ata4.unity.extract.AssetUtils;
 import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.struct.ExternalReference;
 import java.io.File;
@@ -31,10 +31,6 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class DisUnity implements Runnable {
 
-    public enum Command {
-        STRUCT, LEARN, EXTRACT, RAW, INFO, STATS, UNBUNDLE, FIXREFS, SPLIT
-    }
-    
     private static final Logger L = Logger.getLogger(DisUnity.class.getName());
     
     public static final String VERSION = "0.0.3";
@@ -60,7 +56,7 @@ public class DisUnity implements Runnable {
     
     private void processAsset(File file, File dir) {
         try {
-            boolean map = settings.getCommand() != Command.FIXREFS;
+            boolean map = settings.getCommand() != DisUnityCommand.FIXREFS;
             
             Asset asset = new Asset();
             asset.load(file, map);
@@ -93,33 +89,43 @@ public class DisUnity implements Runnable {
     
     private void processAsset(Asset asset, String name, File sourceFile, File dir) {        
         try {
-            Command command = settings.getCommand();
+            DisUnityCommand command = settings.getCommand();
             switch (command) {
                 case UNBUNDLE:
                     L.log(Level.WARNING, "Asset files can''t be unbundled, skipping {0}", name);
                     return;
+                    
+                case DUMP:
+                    L.log(Level.INFO, "Dumping {0}", name);
+                    new AssetUtils(asset).dump(System.out);
+                    break;
                 
-                case STRUCT:
+                case STRUCT_DUMP:
                     L.log(Level.INFO, "Dumping structs from {0}", name);
                     FileUtils.forceMkdir(dir);
-                    new AssetStructure(asset).dumpStruct(dir);
+                    new AssetUtils(asset).dumpStruct(dir);
+                    break;
+                    
+                case STRUCT_LEARN:
+                    L.log(Level.INFO, "Learning structs from {0}", name);
+                    new AssetUtils(asset).learnStruct();
                     break;
                     
                 case INFO:
                     L.log(Level.INFO, "Printing information for {0}", name);
-                    new AssetStructure(asset).printInfo(System.out);
+                    new AssetUtils(asset).printInfo(System.out);
                     break;
                     
                 case STATS:
                     L.log(Level.INFO, "Printing class stats for {0}", name);
-                    new AssetStructure(asset).printStats(System.out);
+                    new AssetUtils(asset).printStats(System.out);
                     break;
                     
                 case EXTRACT:
-                case RAW:
+                case EXTRACT_RAW:
                 case SPLIT:
-                    boolean split = command == Command.SPLIT;
-                    boolean raw = command == Command.RAW;
+                    boolean split = command == DisUnityCommand.SPLIT;
+                    boolean raw = command == DisUnityCommand.EXTRACT_RAW;
 
                     if (split) {
                         L.log(Level.INFO, "Splitting assets from {0}", name);
@@ -160,11 +166,6 @@ public class DisUnity implements Runnable {
                     asset.save(sourceFile);
                     
                     break;
-                    
-                case LEARN:
-                    L.log(Level.INFO, "Learning structs from {0}", name);
-                    new AssetStructure(asset).learnStruct();
-                    break;
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't read " + name, ex);
@@ -173,12 +174,12 @@ public class DisUnity implements Runnable {
 
     private void processAssetBundle(File file, File dir) {
         try {
-            Command command = settings.getCommand();
+            DisUnityCommand command = settings.getCommand();
             
             AssetBundle ab = new AssetBundle();
             ab.load(file);
             
-            if (command == Command.UNBUNDLE) {
+            if (command == DisUnityCommand.UNBUNDLE) {
                 FileUtils.forceMkdir(dir);
                 ab.extractEntries(dir);
             } else {
@@ -187,7 +188,7 @@ public class DisUnity implements Runnable {
                     L.log(Level.INFO, "Uncompressing {0}", file.getName());
                 }
                 
-                if (command == Command.INFO) {
+                if (command == DisUnityCommand.INFO) {
                     L.log(Level.INFO, "Printing information about {0}", file.getName());
                     System.out.println("File version: " + ab.getFileVersion());
                     System.out.println("Version: " + ab.getVersion());
@@ -255,7 +256,8 @@ public class DisUnity implements Runnable {
             }
         }
         
-        if (settings.getCommand() == Command.LEARN) {
+        // update database after learning
+        if (settings.getCommand() == DisUnityCommand.STRUCT_LEARN) {
             StructDatabase.getInstance().update();
         }
     }

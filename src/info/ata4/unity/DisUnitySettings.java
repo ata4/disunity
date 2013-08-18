@@ -9,7 +9,6 @@
  */
 package info.ata4.unity;
 
-import info.ata4.unity.DisUnity.Command;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.Set;
 public class DisUnitySettings {
     
     private List<File> files = new ArrayList<>();
-    private Command command = Command.EXTRACT;
+    private DisUnityCommand command = DisUnityCommand.EXTRACT;
     private Set<Integer> classFilter;
     
     public List<File> getFiles() {
@@ -33,11 +32,11 @@ public class DisUnitySettings {
         this.files = files;
     }
 
-    public Command getCommand() {
+    public DisUnityCommand getCommand() {
         return command;
     }
 
-    public void setCommand(Command cmd) {
+    public void setCommand(DisUnityCommand cmd) {
         this.command = cmd;
     }
     
