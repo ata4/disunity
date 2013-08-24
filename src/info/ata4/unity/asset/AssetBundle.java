@@ -50,7 +50,7 @@ public class AssetBundle extends MappedFileHandler {
     public static boolean isAssetBundle(File file) {
         try (FileInputStream fis = new FileInputStream(file)) {
             DataInputReader in = new DataInputReader(new DataInputStream(fis));
-            String signature = in.readStringNull(8);
+            String signature = in.readStringFixed(8);
             return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
         } catch (IOException ex) {
             return false;
