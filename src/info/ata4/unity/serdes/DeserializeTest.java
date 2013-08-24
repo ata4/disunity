@@ -10,12 +10,21 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.Asset;
+import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.ObjectPath;
+import info.ata4.unity.struct.db.FieldNodeDatabase;
+import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
+import info.ata4.util.collection.Pair;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,49 +39,79 @@ public class DeserializeTest {
     public static void main(String[] args) {
         LogUtils.configure();
         
-        for (String arg : args) {
-            try {
-                File file = new File(arg);
+        if (args.length == 0) {
+            FieldNodeDatabase fndb = StructDatabase.getInstance().getFieldNodes();
+            Map<String, AtomicInteger> classCounts = new TreeMap<>();
+            Set<FieldNode> fieldNodes = new HashSet<>();
+            
+            int classCountMax = 0;
+            int classCountTotal = 0;
+            for (Map.Entry<Pair<Integer, String>, FieldNode> entry : fndb.entrySet()) {
+                String revision = entry.getKey().getRight();
+                fieldNodes.add(entry.getValue());
+                if (!classCounts.containsKey(revision)) {
+                    classCounts.put(revision, new AtomicInteger(1));
+                } else {
+                    AtomicInteger value = classCounts.get(revision);
+                    value.addAndGet(1);
+                    classCountMax = Math.max(classCountMax, value.get());
+                    classCountTotal++;
+                }
+            }
+            
+            for (Map.Entry<String, AtomicInteger> entry : classCounts.entrySet()) {
+                int classCount = entry.getValue().get();
+                float percent = classCount / (float) classCountMax * 100;
+                System.out.printf("%s: %d (%.2f%%)\n", entry.getKey(), classCount, percent);
+            }
+            
+            System.out.println("Total structs:  " + classCountTotal);
+            System.out.println("Unique structs: " + fieldNodes.size());
+        } else {
+            for (String arg : args) {
+                try {
+                    File file = new File(arg);
 
-                Asset asset = new Asset();
-                asset.load(file);
-                
-                Deserializer deser = new Deserializer(asset);
-                
-                boolean all = false;
-                
-                if (all) {
-                    for (ObjectPath path : asset.getObjectPaths()) {
-                        try {
-                            if (path.classID2 == 43 || path.classID2 == 83 || path.classID2 == 129 || path.classID1 < 0) {
-                                continue;
+                    Asset asset = new Asset();
+                    asset.load(file);
+
+                    Deserializer deser = new Deserializer(asset);
+
+                    boolean all = false;
+
+                    if (all) {
+                        for (ObjectPath path : asset.getObjectPaths()) {
+                            try {
+                                if (path.classID1 < 0) {
+                                    continue;
+                                }
+
+                                deser.deserialize(path);
+                            } catch (Exception ex) {
+                                L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getInstance().getNameForID(path.classID2) + ")", ex);
+                                break;
                             }
-
-                            deser.deserialize(path);
+                        }
+                    } else {
+                        try {
+                            ObjectPath path = asset.getPathsByID(129).get(0);
+                            UnityObject obj = deser.deserialize(path);
+                            dump(System.out, obj, 0);
                         } catch (Exception ex) {
-                            L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getNameForID(path.classID2) + ")", ex);
-                            break;
+                            L.log(Level.SEVERE, "Deserialization failed", ex);
+                        }
+
+                        try {
+                            ObjectPath path = asset.getPathsByID(141).get(0);
+                            UnityObject obj = deser.deserialize(path);
+                            dump(System.out, obj, 0);
+                        } catch (Exception ex) {
+                            L.log(Level.SEVERE, "Deserialization failed", ex);
                         }
                     }
-                } else {
-                    try {
-                        ObjectPath path = asset.getPathsByID(129).get(0);
-                        UnityObject obj = deser.deserialize(path);
-                        dump(System.out, obj, 0);
-                    } catch (Exception ex) {
-                        L.log(Level.SEVERE, "Deserialization failed", ex);
-                    }
-
-                    try {
-                        ObjectPath path = asset.getPathsByID(141).get(0);
-                        UnityObject obj = deser.deserialize(path);
-                        dump(System.out, obj, 0);
-                    } catch (Exception ex) {
-                        L.log(Level.SEVERE, "Deserialization failed", ex);
-                    }
+                } catch (IOException ex) {
+                    L.log(Level.SEVERE, "Can't read asset file", ex);
                 }
-            } catch (IOException ex) {
-                L.log(Level.SEVERE, "Can't read asset file", ex);
             }
         }
     }
