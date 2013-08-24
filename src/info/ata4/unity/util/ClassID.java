@@ -10,8 +10,10 @@
 package info.ata4.unity.util;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,16 +27,27 @@ import java.util.logging.Logger;
 public class ClassID {
     
     private static final Logger L = Logger.getLogger(ClassID.class.getName());
+    private static ClassID instance;
     
-    private static final Map<Integer, String> ID_TO_NAME = new HashMap<>();
-    private static final Map<String, Integer> NAME_TO_ID = new HashMap<>();
-
-    static {
+    public static ClassID getInstance() {
+        if (instance == null) {
+            instance = new ClassID();
+        }
+        return instance;
+    }
+    
+    private Map<Integer, String> ID_TO_NAME = new HashMap<>();
+    private Map<String, Integer> NAME_TO_ID = new HashMap<>();
+    private Path classIDFile = Paths.get("resources", "classid.txt");
+    
+    private ClassID() {
+        load();
+    }
+    
+    private void load() {
         try (
-            InputStream is = ClassID.class.getResource("ClassID.txt").openStream();
+            BufferedReader br = Files.newBufferedReader(classIDFile, Charset.forName("ASCII"));
         ) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
             for (String line; (line = br.readLine()) != null;) {
                 // skip comments
                 if (line.startsWith("#") || line.startsWith("//")) {
@@ -52,24 +65,26 @@ public class ClassID {
                 }
             }
         } catch (Exception ex) {
-            L.log(Level.WARNING, null, ex);
+            L.log(Level.WARNING, "Can't load class ID database", ex);
         }
     }
     
-    public static Integer getIDForName(String className) {
+    public Integer getIDForName(String className) {
         return NAME_TO_ID.get(className);
     }
     
-    public static String getNameForID(int classID) {
-        return ID_TO_NAME.get(classID);
-    }
-    
-    public static String getSafeNameForID(int classID) {
-        String className = getNameForID(classID);
+    public String getNameForID(int classID, boolean safe) {
+        String className = ID_TO_NAME.get(classID);
+        
         // custom/unknown class? then use placeholder
-        if (className == null) {
+        if (className == null && safe) {
             className = "Class" + classID;
         }
+        
         return className;
+    }
+    
+    public String getNameForID(int classID) {
+        return getNameForID(classID, false);
     }
 }

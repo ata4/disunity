@@ -121,7 +121,7 @@ public class DisUnityCli {
                     try {
                         classID = Integer.parseInt(className);
                     } catch (NumberFormatException e) {
-                        classID = ClassID.getIDForName(className);
+                        classID = ClassID.getInstance().getIDForName(className);
                         
                         if (classID == null) {
                             L.log(Level.WARNING, "Invalid class name or ID for filter: {0}", className);

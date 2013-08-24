@@ -77,7 +77,7 @@ public class AssetUtils {
                 continue;
             }
             
-            String className = ClassID.getSafeNameForID(classID);
+            String className = ClassID.getInstance().getNameForID(classID, true);
             StringBuilder indent = new StringBuilder(256);
             
             if (dir != null) {
@@ -133,7 +133,7 @@ public class AssetUtils {
         Map<String, Integer> classSizes = new HashMap<>();
         
         for (ObjectPath path : pathTable) {
-            String className = ClassID.getSafeNameForID(path.classID2);
+            String className = ClassID.getInstance().getNameForID(path.classID2, true);
             
             if (!classCounts.containsKey(className)) {
                 classCounts.put(className, 0);

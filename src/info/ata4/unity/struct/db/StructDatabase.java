@@ -9,22 +9,27 @@
  */
 package info.ata4.unity.struct.db;
 
+import static java.nio.file.StandardOpenOption.*;
+import static java.nio.file.StandardCopyOption.*;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldNode;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -43,8 +48,8 @@ public class StructDatabase {
     }
     
     private FieldNodeDatabase fndb = new FieldNodeDatabase();
-    private File dbFile = new File("structdb.dat");
-    private File dbFileBackup = new File("structdb.dat.1");
+    private Path dbFile = Paths.get("resources", "structdb.dat");
+    private Path dbFileBackup = Paths.get("resources", "structdb.dat.1");
     private int learnedTotal;
     
     private StructDatabase() {
@@ -63,9 +68,9 @@ public class StructDatabase {
         L.info("Loading struct database");
         
         // read database file if existing
-        if (dbFile.exists()) {
-            try (FileInputStream fis = new FileInputStream(dbFile)) {
-                DataInputReader dir = new DataInputReader(new DataInputStream(fis));
+        if (Files.exists(dbFile)) {
+            try (InputStream fis = Files.newInputStream(dbFile, READ)) {
+                DataInputReader dir = new DataInputReader(new DataInputStream(new BufferedInputStream(fis)));
                 fndb.read(dir);
             } catch (IOException ex) {
                 L.log(Level.SEVERE, "Can't read struct database", ex);
@@ -77,18 +82,17 @@ public class StructDatabase {
         L.info("Saving struct database");
         
         // create database backup
-        if (dbFile.exists()) {
+        if (Files.exists(dbFile)) {
             try {
-                FileUtils.deleteQuietly(dbFileBackup);
-                FileUtils.moveFile(dbFile, dbFileBackup);
+                Files.move(dbFile, dbFileBackup, REPLACE_EXISTING);
             } catch (IOException ex) {
                 L.log(Level.WARNING, "Can't create struct database backup", ex);
             }
         }
         
         // write updated database file
-        try (FileOutputStream fos = new FileOutputStream(dbFile)) {
-            DataOutputWriter dow = new DataOutputWriter(new DataOutputStream(fos));
+        try (OutputStream fos = Files.newOutputStream(dbFile, CREATE, WRITE)) {
+            DataOutputWriter dow = new DataOutputWriter(new DataOutputStream(new BufferedOutputStream(fos)));
             fndb.write(dow);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't write struct database", ex);
@@ -158,7 +162,7 @@ public class StructDatabase {
                 L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldNodeDB.type, hash1, hash2});
             }
 
-            if (ClassID.getNameForID(classID) == null) {
+            if (ClassID.getInstance().getNameForID(classID) == null) {
                 L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldNode.type});
             }
         }
