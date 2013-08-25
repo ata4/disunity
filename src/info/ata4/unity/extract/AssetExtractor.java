@@ -21,7 +21,7 @@ import info.ata4.unity.extract.handler.ShaderHandler;
 import info.ata4.unity.extract.handler.SubstanceArchiveHandler;
 import info.ata4.unity.extract.handler.TextAssetHandler;
 import info.ata4.unity.extract.handler.Texture2DHandler;
-import info.ata4.unity.serdes.DeserializationException;
+import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.AssetHeader;
@@ -171,7 +171,7 @@ public class AssetExtractor {
                     try {
                         UnityObject obj = deser.deserialize(path);
                         handler.extract(path, obj);
-                    } catch (DeserializationException ex) {
+                    } catch (DeserializerException ex) {
                         L.log(Level.WARNING, "Can't deserialize " + objectName, ex);
                     } catch (IOException ex) {
                         L.log(Level.WARNING, "Can't read or write " + objectName, ex);

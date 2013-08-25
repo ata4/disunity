@@ -9,35 +9,36 @@
  */
 package info.ata4.unity.serdes;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityObject extends LinkedHashMap<String, UnityField> {
+public class UnityObject extends UnityBase {
     
-    private String name;
-    private String type;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    private Map<String, UnityField> fields = new LinkedHashMap<>();
+    
+    public Collection<UnityField> getFields() {
+        return fields.values();
     }
     
+    public UnityField getField(String name) {
+        return fields.get(name);
+    }
+    
+    public UnityField addField(UnityField field) {
+        return fields.put(field.getName(), field);
+    }
+    
+    public UnityField removeField(UnityField field) {
+        return fields.remove(field.getName());
+    }
+
     public <T> T getValue(String name) {
-        UnityField f = get(name);
+        UnityField f = getField(name);
 
         if (f == null) {
             return null;
@@ -47,7 +48,7 @@ public class UnityObject extends LinkedHashMap<String, UnityField> {
     }
     
     public <T> void setValue(String name, T value) {
-        UnityField f = get(name);
+        UnityField f = getField(name);
         
         if (f != null) {
             f.setValue(value);

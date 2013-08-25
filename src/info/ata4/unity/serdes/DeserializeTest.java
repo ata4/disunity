@@ -125,7 +125,7 @@ public class DeserializeTest {
         
         level++;
 
-        for (UnityField field : obj.values()) {
+        for (UnityField field : obj.getFields()) {
             for (int i = 0; i < level; i++) {
                 ps.print("  ");
             }

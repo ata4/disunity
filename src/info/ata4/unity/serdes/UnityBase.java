@@ -1,5 +1,5 @@
 /*
- ** 2013 July 24
+ ** 2013 August 25
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -13,20 +13,24 @@ package info.ata4.unity.serdes;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityField<T> extends UnityBase {
+public class UnityBase {
     
-    private T value;
-
-    public T getValue() {
-        return value;
+    private String type;
+    private String name;
+    
+    public String getType() {
+        return type;
     }
 
-    public void setValue(T value) {
-        this.value = value;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

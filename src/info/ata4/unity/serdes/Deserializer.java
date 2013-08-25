@@ -39,7 +39,7 @@ public class Deserializer {
         this.asset = asset;
     }
     
-    public UnityObject deserialize(ObjectPath path) throws DeserializationException {
+    public UnityObject deserialize(ObjectPath path) throws DeserializerException {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
@@ -53,7 +53,7 @@ public class Deserializer {
         FieldNode classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
-            throw new DeserializationException("Class not found in type tree");
+            throw new DeserializerException("Class not found in type tree");
         }
         
         UnityObject ac = new UnityObject();
@@ -61,25 +61,25 @@ public class Deserializer {
         ac.setType(classNode.type);
 
         for (FieldNode fieldNode : classNode) {
-            ac.put(fieldNode.name, readField(fieldNode));
+            ac.addField(readField(fieldNode));
         }
         
         // read remaining bytes
         try {
             in.align();
         } catch (IOException ex) {
-            throw new DeserializationException("Alignment failed");
+            throw new DeserializerException("Alignment failed");
         }
         
         // check if all bytes have been read
         if (bb.hasRemaining()) {
-            throw new DeserializationException("Remaining bytes: " + bb.remaining());
+            throw new DeserializerException("Remaining bytes: " + bb.remaining());
         }
          
         return ac;
     }
     
-    private UnityField readField(FieldNode field) throws DeserializationException {
+    private UnityField readField(FieldNode field) throws DeserializerException {
         UnityField af = new UnityField();
         af.setName(field.name);
         af.setType(field.type);
@@ -90,13 +90,13 @@ public class Deserializer {
                 in.align();
             }
         } catch (IOException ex) {
-            throw new DeserializationException("Can't read value of field " + field.name, ex);
+            throw new DeserializerException("Can't read value of field " + field.name, ex);
         }
 
         return af;
     }
 
-    private Object readFieldValue(FieldNode field) throws IOException, DeserializationException {
+    private Object readFieldValue(FieldNode field) throws IOException, DeserializerException {
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -157,7 +157,7 @@ public class Deserializer {
         }
     }
     
-    private Object readVector(FieldNode field) throws IOException, DeserializationException {
+    private Object readVector(FieldNode field) throws IOException, DeserializerException {
         int size = in.readInt();
         FieldNode arrayField = field.get(0).get(1);
         
@@ -170,13 +170,13 @@ public class Deserializer {
         }
     }
     
-    private List<Object> readArray(FieldNode field) throws IOException, DeserializationException {
+    private List<Object> readArray(FieldNode field) throws IOException, DeserializerException {
         int size = in.readInt();
         FieldNode arrayField = field.get(1);
         return doReadArray(arrayField, size);
     }
     
-    private List<Object> doReadArray(FieldNode field, int size) throws IOException, DeserializationException {
+    private List<Object> doReadArray(FieldNode field, int size) throws IOException, DeserializerException {
         List<Object> objList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             objList.add(readFieldValue(field));
@@ -184,21 +184,21 @@ public class Deserializer {
         return objList;
     }
     
-    private Map<Object, Object> readMap(FieldNode field) throws IOException, DeserializationException {
+    private Map<Object, Object> readMap(FieldNode field) throws IOException, DeserializerException {
         List<Object> pairList = readArray(field.get(0));
         Map<Object, Object> map = new HashMap<>();
         
         for (Object pair : pairList) {
             UnityObject pairUnity = (UnityObject) pair;
-            Object first = pairUnity.get("first").getValue();
-            Object second = pairUnity.get("second").getValue();
+            Object first = pairUnity.getValue("first");
+            Object second = pairUnity.getValue("second");
             map.put(first, second);
         }
         
         return map;
     }
     
-    private Set<Object> readSet(FieldNode field) throws IOException, DeserializationException {
+    private Set<Object> readSet(FieldNode field) throws IOException, DeserializerException {
         Set<Object> set = new HashSet<>();
         set.addAll(readArray(field.get(0)));
         return set;
@@ -208,13 +208,13 @@ public class Deserializer {
         return ByteBuffer.wrap(in.readByteArray());
     }
     
-    private UnityObject readObject(FieldNode field) throws DeserializationException {
+    private UnityObject readObject(FieldNode field) throws DeserializerException {
         UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);
 
         for (FieldNode fieldNode : field) {
-            ac.put(fieldNode.name, readField(fieldNode));
+            ac.addField(readField(fieldNode));
         }
         
         return ac;
