@@ -47,7 +47,7 @@ public class StructDatabase {
         return instance;
     }
     
-    private FieldNodeDatabase fndb = new FieldNodeDatabase();
+    private FieldTypeMapper fndb = new FieldTypeMapper();
     private Path dbFile = Paths.get("resources", "structdb.dat");
     private Path dbFileBackup = Paths.get("resources", "structdb.dat.1");
     private int learnedTotal;
@@ -60,7 +60,7 @@ public class StructDatabase {
         return learnedTotal;
     }
     
-    public FieldNodeDatabase getFieldNodes() {
+    public FieldTypeMapper getFieldNodes() {
         return fndb;
     }
     

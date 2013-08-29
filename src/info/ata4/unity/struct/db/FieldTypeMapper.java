@@ -28,9 +28,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldType> implements Struct {
+public class FieldTypeMapper extends HashMap<Pair<Integer, String>, FieldType> implements Struct {
     
-    private static final Logger L = Logger.getLogger(FieldNodeDatabase.class.getName());
+    private static final Logger L = Logger.getLogger(FieldTypeMapper.class.getName());
 
     private static final int VERSION = 1;
 
