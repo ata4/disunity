@@ -40,13 +40,13 @@ public class DeserializeTest {
         LogUtils.configure();
         
         if (args.length == 0) {
-            FieldTypeMapper fndb = StructDatabase.getInstance().getFieldNodes();
+            FieldTypeMapper ftm = StructDatabase.getInstance().getTypeMapper();
             Map<String, AtomicInteger> classCounts = new TreeMap<>();
             Set<FieldType> fieldNodes = new HashSet<>();
             
             int classCountMax = 0;
             int classCountTotal = 0;
-            for (Map.Entry<Pair<Integer, String>, FieldType> entry : fndb.entrySet()) {
+            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
                 String revision = entry.getKey().getRight();
                 fieldNodes.add(entry.getValue());
                 if (!classCounts.containsKey(revision)) {

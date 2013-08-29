@@ -15,6 +15,7 @@ import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
+import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.BufferedInputStream;
@@ -27,6 +28,11 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +44,7 @@ import java.util.logging.Logger;
 public class StructDatabase {
     
     private static final Logger L = Logger.getLogger(StructDatabase.class.getName());
+    private static final int VERSION = 1;
     private static StructDatabase instance;
 
     public static StructDatabase getInstance() {
@@ -47,7 +54,7 @@ public class StructDatabase {
         return instance;
     }
     
-    private FieldTypeMapper fndb = new FieldTypeMapper();
+    private FieldTypeMapper ftm = new FieldTypeMapper();
     private Path dbFile = Paths.get("resources", "structdb.dat");
     private Path dbFileBackup = Paths.get("resources", "structdb.dat.1");
     private int learnedTotal;
@@ -60,8 +67,8 @@ public class StructDatabase {
         return learnedTotal;
     }
     
-    public FieldTypeMapper getFieldNodes() {
-        return fndb;
+    public FieldTypeMapper getTypeMapper() {
+        return ftm;
     }
     
     private void load() {
@@ -70,8 +77,45 @@ public class StructDatabase {
         // read database file if existing
         if (Files.exists(dbFile)) {
             try (InputStream fis = Files.newInputStream(dbFile, READ)) {
-                DataInputReader dir = new DataInputReader(new DataInputStream(new BufferedInputStream(fis)));
-                fndb.read(dir);
+                DataInputReader in = new DataInputReader(new DataInputStream(new BufferedInputStream(fis)));
+                
+                // read header
+                int version = in.readInt();
+
+                if (version != VERSION) {
+                    throw new RuntimeException("Wrong database version");
+                }
+
+                // read field node table
+                int fieldNodeSize = in.readInt();
+                List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
+
+                for (int i = 0; i < fieldNodeSize; i++) {
+                    FieldType fieldNode = new FieldType();
+                    fieldNode.read(in);
+                    fieldNodes.add(fieldNode);
+                }
+
+                // read revision string table
+                int revisionSize = in.readInt();
+                List<String> revisions = new ArrayList<>(revisionSize);
+
+                for (int i = 0; i < revisionSize; i++) {
+                    revisions.add(in.readStringNull());
+                }
+
+                // read mapping data
+                int fieldNodeKeySize = in.readInt();
+
+                for (int i = 0; i < fieldNodeKeySize; i++) {
+                    int index = in.readInt();
+                    int classID = in.readInt();
+                    int revisionIndex = in.readInt();
+                    String revision = revisions.get(revisionIndex);
+                    FieldType fieldNode = fieldNodes.get(index);
+
+                    ftm.add(classID, revision, fieldNode);
+                }
             } catch (IOException ex) {
                 L.log(Level.SEVERE, "Can't read struct database", ex);
             }
@@ -92,8 +136,55 @@ public class StructDatabase {
         
         // write updated database file
         try (OutputStream fos = Files.newOutputStream(dbFile, CREATE, WRITE)) {
-            DataOutputWriter dow = new DataOutputWriter(new DataOutputStream(new BufferedOutputStream(fos)));
-            fndb.write(dow);
+            DataOutputWriter out = new DataOutputWriter(new DataOutputStream(new BufferedOutputStream(fos)));
+            
+            // write header
+            out.writeInt(VERSION);
+
+            // write field node table
+            Set<FieldType> fieldNodes = new HashSet<>(ftm.values());
+            Map<FieldType, Integer> fieldNodeMap = new HashMap<>();
+
+            out.writeInt(fieldNodes.size());
+
+            int index = 0;
+            for (FieldType fieldNode : fieldNodes) {
+                fieldNodeMap.put(fieldNode, index++);
+                fieldNode.write(out);
+            }
+
+            Set<Pair<Integer, String>> fieldNodeKeys = ftm.keySet();
+
+            // write revision string table
+            Set<String> revisions = new HashSet<>();
+            Map<String, Integer> revisionMap = new HashMap<>();
+
+            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
+                revisions.add(entry.getKey().getRight());
+            }
+
+            out.writeInt(revisions.size());
+
+            index = 0;
+            for (String revision : revisions) {
+                revisionMap.put(revision, index++);
+                out.writeStringNull(revision);
+            }
+
+            // write mapping data
+            out.writeInt(fieldNodeKeys.size());
+
+            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
+                index = fieldNodeMap.get(entry.getValue());
+                Pair<Integer, String> fieldNodeKey = entry.getKey();
+
+                int classID = fieldNodeKey.getLeft();
+                String revision = fieldNodeKey.getRight();
+
+                out.writeInt(index);
+                out.writeInt(classID);
+                out.writeInt(revisionMap.get(revision));
+            }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't write struct database", ex);
         }
@@ -109,9 +200,9 @@ public class StructDatabase {
         }
         
         for (Integer classID : classIDs) {
-            FieldType fieldNode = fndb.get(classID, typeTree.revision, false);
-            if (fieldNode != null) {
-                typeTree.put(classID, fieldNode);
+            FieldType ft = ftm.get(classID, typeTree.revision, false);
+            if (ft != null) {
+                typeTree.put(classID, ft);
             }
         }
         
@@ -140,30 +231,30 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            FieldType fieldNode = typeTree.get(classID);
+            FieldType fieldType = typeTree.get(classID);
 
-            if (fieldNode == null) {
+            if (fieldType == null) {
                 continue;
             }
             
-            FieldType fieldNodeDB = fndb.get(classID, typeTree.revision);
+            FieldType fieldTypeMapped = ftm.get(classID, typeTree.revision);
 
-            if (fieldNodeDB == null) {
-                fieldNodeDB = fieldNode;
-                fndb.add(classID, typeTree.revision, fieldNodeDB);
+            if (fieldTypeMapped == null) {
+                fieldTypeMapped = fieldType;
+                ftm.add(classID, typeTree.revision, fieldTypeMapped);
                 learnedNew++;
             }
 
             // check the hashes, they must be identical at this point
-            int hash1 = fieldNode.hashCode();
-            int hash2 = fieldNodeDB.hashCode();
+            int hash1 = fieldType.hashCode();
+            int hash2 = fieldTypeMapped.hashCode();
 
             if (hash1 != hash2) {
-                L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldNodeDB.type, hash1, hash2});
+                L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldTypeMapped.type, hash1, hash2});
             }
 
             if (ClassID.getInstance().getNameForID(classID) == null) {
-                L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldNode.type});
+                L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldType.type});
             }
         }
         
