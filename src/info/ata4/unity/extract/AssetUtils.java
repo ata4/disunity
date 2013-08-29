@@ -11,7 +11,7 @@ package info.ata4.unity.extract;
 
 import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectPathTable;
@@ -71,7 +71,7 @@ public class AssetUtils {
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            FieldNode classField = typeTree.get(classID);
+            FieldType classField = typeTree.get(classID);
             
             if (classField == null) {
                 continue;
@@ -93,7 +93,7 @@ public class AssetUtils {
         L.log(Level.INFO, "Dumped {0} class structures", classIDs.size());
     }
     
-    private void printField(PrintStream ps, FieldNode field, StringBuilder indent, boolean last) {
+    private void printField(PrintStream ps, FieldType field, StringBuilder indent, boolean last) {
         ps.print(indent.toString());
         
         if (last) {
@@ -115,7 +115,7 @@ public class AssetUtils {
         ps.println();
         
         for (int i = 0; i < subFieldCount; i++) {
-            FieldNode subField = field.get(i);
+            FieldType subField = field.get(i);
             boolean lastField = i == subFieldCount - 1;
             printField(ps, subField, indent, lastField);
         }

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TypeTree extends LinkedHashMap<Integer, FieldNode> implements Struct {
+public class TypeTree extends LinkedHashMap<Integer, FieldType> implements Struct {
 
     private static final Logger L = Logger.getLogger(TypeTree.class.getName());
     
@@ -66,7 +66,7 @@ public class TypeTree extends LinkedHashMap<Integer, FieldNode> implements Struc
             int classID = in.readInt();
             L.log(Level.FINEST, "classID = {0}", classID);
 
-            FieldNode fn = new FieldNode();
+            FieldType fn = new FieldType();
             fn.read(in);
             
             put(classID, fn);
@@ -94,12 +94,12 @@ public class TypeTree extends LinkedHashMap<Integer, FieldNode> implements Struc
             out.writeInt(fields);
             L.log(Level.FINEST, "fields = {0}", fields);
 
-            for (Map.Entry<Integer, FieldNode> entry : entrySet()) {
+            for (Map.Entry<Integer, FieldType> entry : entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 L.log(Level.FINEST, "classID = {0}", classID);
 
-                FieldNode fn = entry.getValue();
+                FieldType fn = entry.getValue();
                 fn.write(out);
             }
         } else {

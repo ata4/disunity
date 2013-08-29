@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.struct.db;
 
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
@@ -28,18 +28,18 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode> implements Struct {
+public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldType> implements Struct {
     
     private static final Logger L = Logger.getLogger(FieldNodeDatabase.class.getName());
 
     private static final int VERSION = 1;
 
-    public FieldNode get(int classID, String revision) {
+    public FieldType get(int classID, String revision) {
         return get(classID, revision, true);
     }
 
-    public FieldNode get(int classID, String revision, boolean strict) {
-        FieldNode fieldNode = get(new Pair<>(classID, revision));
+    public FieldType get(int classID, String revision, boolean strict) {
+        FieldType fieldNode = get(new Pair<>(classID, revision));
 
         // if set to strict, only return exact matches or null
         if (fieldNode != null || strict) {
@@ -50,17 +50,17 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
         String revision2 = revision.substring(0, 3);
         String revision3 = revision.substring(0, 1);
 
-        FieldNode fieldNodeB = null;
+        FieldType fieldNodeB = null;
         String revisionB = null;
 
-        FieldNode fieldNodeC = null;
+        FieldType fieldNodeC = null;
         String revisionC = null;
 
 
-        for (Map.Entry<Pair<Integer, String>, FieldNode> entry : entrySet()) {
+        for (Map.Entry<Pair<Integer, String>, FieldType> entry : entrySet()) {
             Pair<Integer, String> fieldNodeKey = entry.getKey();
             if (fieldNodeKey.getLeft() == classID) {
-                FieldNode fieldNodeEntry = entry.getValue();
+                FieldType fieldNodeEntry = entry.getValue();
                 String revisionEntry = fieldNodeKey.getRight();
 
                 // if major and minor version matches, it will probably work
@@ -96,7 +96,7 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
         return null;
     }
 
-    public void add(int classID, String revision, FieldNode fieldNode) {
+    public void add(int classID, String revision, FieldType fieldNode) {
         put(new Pair<>(classID, revision), fieldNode);
     }
 
@@ -111,10 +111,10 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
 
         // read field node table
         int fieldNodeSize = in.readInt();
-        List<FieldNode> fieldNodes = new ArrayList<>(fieldNodeSize);
+        List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
 
         for (int i = 0; i < fieldNodeSize; i++) {
-            FieldNode fieldNode = new FieldNode();
+            FieldType fieldNode = new FieldType();
             fieldNode.read(in);
             fieldNodes.add(fieldNode);
         }
@@ -135,7 +135,7 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
             int classID = in.readInt();
             int revisionIndex = in.readInt();
             String revision = revisions.get(revisionIndex);
-            FieldNode fieldNode = fieldNodes.get(index);
+            FieldType fieldNode = fieldNodes.get(index);
 
             add(classID, revision, fieldNode);
         }
@@ -147,13 +147,13 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
         out.writeInt(VERSION);
 
         // write field node table
-        Set<FieldNode> fieldNodes = new HashSet<>(values());
-        Map<FieldNode, Integer> fieldNodeMap = new HashMap<>();
+        Set<FieldType> fieldNodes = new HashSet<>(values());
+        Map<FieldType, Integer> fieldNodeMap = new HashMap<>();
 
         out.writeInt(fieldNodes.size());
 
         int index = 0;
-        for (FieldNode fieldNode : fieldNodes) {
+        for (FieldType fieldNode : fieldNodes) {
             fieldNodeMap.put(fieldNode, index++);
             fieldNode.write(out);
         }
@@ -164,7 +164,7 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
         Set<String> revisions = new HashSet<>();
         Map<String, Integer> revisionMap = new HashMap<>();
 
-        for (Map.Entry<Pair<Integer, String>, FieldNode> entry : entrySet()) {
+        for (Map.Entry<Pair<Integer, String>, FieldType> entry : entrySet()) {
             revisions.add(entry.getKey().getRight());
         }
 
@@ -179,7 +179,7 @@ public class FieldNodeDatabase extends HashMap<Pair<Integer, String>, FieldNode>
         // write mapping data
         out.writeInt(fieldNodeKeys.size());
 
-        for (Map.Entry<Pair<Integer, String>, FieldNode> entry : entrySet()) {
+        for (Map.Entry<Pair<Integer, String>, FieldType> entry : entrySet()) {
             index = fieldNodeMap.get(entry.getValue());
             Pair<Integer, String> fieldNodeKey = entry.getKey();
 

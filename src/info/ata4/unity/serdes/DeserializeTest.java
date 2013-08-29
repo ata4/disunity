@@ -10,7 +10,7 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.db.FieldNodeDatabase;
 import info.ata4.unity.struct.db.StructDatabase;
@@ -42,11 +42,11 @@ public class DeserializeTest {
         if (args.length == 0) {
             FieldNodeDatabase fndb = StructDatabase.getInstance().getFieldNodes();
             Map<String, AtomicInteger> classCounts = new TreeMap<>();
-            Set<FieldNode> fieldNodes = new HashSet<>();
+            Set<FieldType> fieldNodes = new HashSet<>();
             
             int classCountMax = 0;
             int classCountTotal = 0;
-            for (Map.Entry<Pair<Integer, String>, FieldNode> entry : fndb.entrySet()) {
+            for (Map.Entry<Pair<Integer, String>, FieldType> entry : fndb.entrySet()) {
                 String revision = entry.getKey().getRight();
                 fieldNodes.add(entry.getValue());
                 if (!classCounts.containsKey(revision)) {

@@ -12,7 +12,7 @@ package info.ata4.unity.struct.db;
 import static java.nio.file.StandardOpenOption.*;
 import static java.nio.file.StandardCopyOption.*;
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.io.DataInputReader;
@@ -109,7 +109,7 @@ public class StructDatabase {
         }
         
         for (Integer classID : classIDs) {
-            FieldNode fieldNode = fndb.get(classID, typeTree.revision, false);
+            FieldType fieldNode = fndb.get(classID, typeTree.revision, false);
             if (fieldNode != null) {
                 typeTree.put(classID, fieldNode);
             }
@@ -140,13 +140,13 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            FieldNode fieldNode = typeTree.get(classID);
+            FieldType fieldNode = typeTree.get(classID);
 
             if (fieldNode == null) {
                 continue;
             }
             
-            FieldNode fieldNodeDB = fndb.get(classID, typeTree.revision);
+            FieldType fieldNodeDB = fndb.get(classID, typeTree.revision);
 
             if (fieldNodeDB == null) {
                 fieldNodeDB = fieldNode;

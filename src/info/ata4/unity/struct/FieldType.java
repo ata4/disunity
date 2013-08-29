@@ -21,9 +21,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldNode extends ArrayList<FieldNode> implements Struct {
+public class FieldType extends ArrayList<FieldType> implements Struct {
     
-    private static final Logger L = Logger.getLogger(FieldNode.class.getName());
+    private static final Logger L = Logger.getLogger(FieldType.class.getName());
     
     public static final int FLAG_FORCE_ALIGN = 0x4000;
 
@@ -95,7 +95,7 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         L.log(Level.FINEST, "children = {0}", children);
         
         for (int i = 0; i < children; i++) {
-            FieldNode fn = new FieldNode();
+            FieldType fn = new FieldType();
             fn.read(in);
             add(fn);
         }
@@ -128,7 +128,7 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         out.writeInt(children);
         L.log(Level.FINEST, "children = {0}", children);
         
-        for (FieldNode subField : this) {
+        for (FieldType subField : this) {
             subField.write(out);
         }
     }
@@ -146,7 +146,7 @@ public class FieldNode extends ArrayList<FieldNode> implements Struct {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FieldNode other = (FieldNode) obj;
+        final FieldType other = (FieldType) obj;
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }

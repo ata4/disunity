@@ -10,7 +10,7 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.DataInputReader;
@@ -50,7 +50,7 @@ public class Deserializer {
         // create asset input
         in = new SerializedInput(new DataInputReader(new ByteBufferInput(bb)));
 
-        FieldNode classNode = asset.getTypeTree().get(path.classID2);
+        FieldType classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
             throw new DeserializerException("Class not found in type tree");
@@ -60,7 +60,7 @@ public class Deserializer {
         ac.setName(classNode.name);
         ac.setType(classNode.type);
 
-        for (FieldNode fieldNode : classNode) {
+        for (FieldType fieldNode : classNode) {
             ac.addField(readField(fieldNode));
         }
         
@@ -79,7 +79,7 @@ public class Deserializer {
         return ac;
     }
     
-    private UnityField readField(FieldNode field) throws DeserializerException {
+    private UnityField readField(FieldType field) throws DeserializerException {
         UnityField af = new UnityField();
         af.setName(field.name);
         af.setType(field.type);
@@ -96,7 +96,7 @@ public class Deserializer {
         return af;
     }
 
-    private Object readFieldValue(FieldNode field) throws IOException, DeserializerException {
+    private Object readFieldValue(FieldType field) throws IOException, DeserializerException {
         switch (field.type) {
             case "UInt64":
                 return in.readLong();
@@ -157,9 +157,9 @@ public class Deserializer {
         }
     }
     
-    private Object readVector(FieldNode field) throws IOException, DeserializerException {
+    private Object readVector(FieldType field) throws IOException, DeserializerException {
         int size = in.readInt();
-        FieldNode arrayField = field.get(0).get(1);
+        FieldType arrayField = field.get(0).get(1);
         
         // use wrapped ByteBuffers for raw byte arrays, which is much faster and
         // more efficient than a list of Integer objects
@@ -170,13 +170,13 @@ public class Deserializer {
         }
     }
     
-    private List<Object> readArray(FieldNode field) throws IOException, DeserializerException {
+    private List<Object> readArray(FieldType field) throws IOException, DeserializerException {
         int size = in.readInt();
-        FieldNode arrayField = field.get(1);
+        FieldType arrayField = field.get(1);
         return doReadArray(arrayField, size);
     }
     
-    private List<Object> doReadArray(FieldNode field, int size) throws IOException, DeserializerException {
+    private List<Object> doReadArray(FieldType field, int size) throws IOException, DeserializerException {
         List<Object> objList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             objList.add(readFieldValue(field));
@@ -184,7 +184,7 @@ public class Deserializer {
         return objList;
     }
     
-    private Map<Object, Object> readMap(FieldNode field) throws IOException, DeserializerException {
+    private Map<Object, Object> readMap(FieldType field) throws IOException, DeserializerException {
         List<Object> pairList = readArray(field.get(0));
         Map<Object, Object> map = new HashMap<>();
         
@@ -198,22 +198,22 @@ public class Deserializer {
         return map;
     }
     
-    private Set<Object> readSet(FieldNode field) throws IOException, DeserializerException {
+    private Set<Object> readSet(FieldType field) throws IOException, DeserializerException {
         Set<Object> set = new HashSet<>();
         set.addAll(readArray(field.get(0)));
         return set;
     }
     
-    private ByteBuffer readTypelessData(FieldNode field) throws IOException {
+    private ByteBuffer readTypelessData(FieldType field) throws IOException {
         return ByteBuffer.wrap(in.readByteArray());
     }
     
-    private UnityObject readObject(FieldNode field) throws DeserializerException {
+    private UnityObject readObject(FieldType field) throws DeserializerException {
         UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);
 
-        for (FieldNode fieldNode : field) {
+        for (FieldType fieldNode : field) {
             ac.addField(readField(fieldNode));
         }
         

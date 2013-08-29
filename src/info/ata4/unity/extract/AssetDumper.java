@@ -10,7 +10,7 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.asset.Asset;
-import info.ata4.unity.struct.FieldNode;
+import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +46,7 @@ public class AssetDumper {
             
             Set<Integer> classIDs = asset.getClassIDs();
             for (Integer classID : classIDs) {
-                FieldNode classField = typeTree.get(classID);
+                FieldType classField = typeTree.get(classID);
                 if (classField == null) {
                     continue;
                 }
