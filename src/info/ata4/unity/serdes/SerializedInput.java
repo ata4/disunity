@@ -12,6 +12,7 @@ package info.ata4.unity.serdes;
 import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  *
@@ -56,6 +57,11 @@ public class SerializedInput {
     public long readLong() throws IOException {
         align();
         return in.readLong();
+    }
+    
+    public BigInteger readUnsignedLong() throws IOException {
+        align();
+        return in.readUnsignedLong();
     }
     
     public float readFloat() throws IOException {

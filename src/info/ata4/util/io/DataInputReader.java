@@ -11,7 +11,9 @@ package info.ata4.util.io;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.math.BigInteger;
 import org.apache.commons.io.EndianUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * DataInput extension for more data access methods.
@@ -94,6 +96,20 @@ public class DataInputReader extends DataInputWrapper {
      */
     public long readUnsignedInt() throws IOException {
         return readInt() & 0xffffffffL;
+    }
+    
+    /*
+     * Reads an unsigned long value and returns the value as BigInteger.
+     */
+    public BigInteger readUnsignedLong() throws IOException {
+        byte[] raw = new byte[8];
+        readFully(raw);
+        
+        if (swap) {
+            ArrayUtils.reverse(raw);
+        }
+        
+        return new BigInteger(raw);
     }
     
     /**

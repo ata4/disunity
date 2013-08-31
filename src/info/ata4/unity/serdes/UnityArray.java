@@ -49,4 +49,9 @@ public class UnityArray {
     public void setList(List<Object> listData) {
         this.listData = listData;
     }
+
+    @Override
+    public String toString() {
+        return isRaw() ? rawData.toString() : listData.toString();
+    }
 }
