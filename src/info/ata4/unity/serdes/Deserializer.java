@@ -93,7 +93,7 @@ public class Deserializer {
         af.setType(field.type);
         
         try {
-            af.setValue(readFieldValueAligned(field));
+            af.setValue(readFieldValue(field));
         } catch (IOException ex) {
             throw new DeserializerException("Can't read value of field " + field.name, ex);
         }
@@ -104,7 +104,23 @@ public class Deserializer {
     }
 
     private Object readFieldValue(FieldType field) throws IOException, DeserializerException {
-        switch (field.type) { 
+        Object value;
+        
+        if (field.isEmpty()) {
+            value = readPrimitive(field);
+        } else {
+            value = readComplex(field);
+        }
+        
+        if (field.isForceAlign()) {
+            in.align();
+        }
+        
+        return value;
+    }
+    
+    private Object readPrimitive(FieldType field) throws IOException, DeserializerException {
+        switch (field.type) {
             case "UInt64":
                 return in.readUnsignedLong();
 
@@ -143,31 +159,30 @@ public class Deserializer {
             case "bool":
                 return in.readBoolean();
                 
+            default:
+                throw new DeserializerException("Unknown primitive type: " + field.type);
+        }
+    }
+    
+    private Object readComplex(FieldType field) throws IOException, DeserializerException {
+        switch (field.type) {
             case "string":
                 return in.readString();
 
             case "Array":
             case "TypelessData":
                 return readArray(field);
-
+                
             default:
                 return readObject(field);
         }
-    }
-    
-    private Object readFieldValueAligned(FieldType field) throws IOException, DeserializerException {
-        Object value = readFieldValue(field);
-        if (field.isForceAlign()) {
-            in.align();
-        }
-        return value;
     }
     
     private UnityArray readArray(FieldType field) throws IOException, DeserializerException {
         //int size = in.readInt();
         FieldType sizeField = field.get(0);
         FieldType dataField = field.get(1);
-        int size = (int) readFieldValueAligned(sizeField);
+        int size = (int) readFieldValue(sizeField);
         UnityArray uarray = new UnityArray(dataField.type);
         
         // use wrapped ByteBuffers for raw byte arrays, which is much faster and
@@ -178,7 +193,7 @@ public class Deserializer {
         } else {
             List<Object> objList = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
-                objList.add(readFieldValueAligned(dataField));
+                objList.add(readFieldValue(dataField));
             }
             uarray.setList(objList);
         }
