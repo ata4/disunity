@@ -12,6 +12,7 @@ package info.ata4.unity;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetFileFilter;
+import info.ata4.unity.extract.AssetDumper;
 import info.ata4.unity.extract.AssetExtractor;
 import info.ata4.unity.extract.AssetUtils;
 import info.ata4.unity.struct.db.StructDatabase;
@@ -96,17 +97,16 @@ public class DisUnity implements Runnable {
                     return;
                     
                 case DUMP:
-                    L.log(Level.INFO, "Dumping {0}", name);
-                    new AssetUtils(asset).dump(System.out);
+                    L.log(Level.INFO, "Dumping data from {0}", name);
+                    new AssetDumper(asset).dumpData(System.out);
                     break;
                 
-                case STRUCT_DUMP:
+                case DUMP_STRUCT:
                     L.log(Level.INFO, "Dumping structs from {0}", name);
-                    FileUtils.forceMkdir(dir);
-                    new AssetUtils(asset).dumpStruct(dir);
+                    new AssetDumper(asset).dumpStruct(System.out);
                     break;
                     
-                case STRUCT_LEARN:
+                case LEARN:
                     L.log(Level.INFO, "Learning structs from {0}", name);
                     new AssetUtils(asset).learnStruct();
                     break;
@@ -257,7 +257,7 @@ public class DisUnity implements Runnable {
         }
         
         // update database after learning
-        if (settings.getCommand() == DisUnityCommand.STRUCT_LEARN) {
+        if (settings.getCommand() == DisUnityCommand.LEARN) {
             StructDatabase.getInstance().update();
         }
     }

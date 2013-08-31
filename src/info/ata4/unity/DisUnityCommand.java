@@ -16,10 +16,10 @@ package info.ata4.unity;
 public enum DisUnityCommand {
 
     DUMP,
-    STRUCT_LEARN,
-    STRUCT_DUMP,
+    DUMP_STRUCT,    
     EXTRACT,
     EXTRACT_RAW,
+    LEARN,
     INFO,
     STATS,
     UNBUNDLE,
