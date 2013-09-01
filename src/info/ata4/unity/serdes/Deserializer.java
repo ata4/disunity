@@ -168,7 +168,13 @@ public class Deserializer {
         switch (field.type) {
             case "string":
                 return in.readString();
-
+            
+            case "map":
+            case "vector":
+            case "staticvector":
+            case "set":
+                return readArray(field.get(0));
+            
             case "Array":
             case "TypelessData":
                 return readArray(field);
