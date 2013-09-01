@@ -68,7 +68,7 @@ public class AssetBundle extends MappedFileHandler {
         this.bb = bb;
         DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
 
-        String header = in.readStringNull(8);
+        String header = in.readStringFixed(8);
         switch (header) {
             case SIGNATURE_RAW:
                 compressed = false;
