@@ -40,10 +40,10 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
     public int index;
     
     // set to 1 if "type" is "Array" or "TypelessData"
-    public int rawArray;
+    public int arrayFlag;
     
     // observed values: 1-5, 8
-    public int unknown1;
+    public int flags1;
     
     // field flags
     // observed values:
@@ -54,17 +54,17 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
     // 0x8000
     // 0x200000
     // 0x400000
-    public int flags;
+    public int flags2;
     
     public boolean isForceAlign() {
-        return (flags & FLAG_FORCE_ALIGN) != 0;
+        return (flags2 & FLAG_FORCE_ALIGN) != 0;
     }
     
     public void setForceAlign(boolean forceAlign) {
         if (forceAlign) {
-            flags |= FLAG_FORCE_ALIGN;
+            flags2 |= FLAG_FORCE_ALIGN;
         } else {
-            flags &= ~FLAG_FORCE_ALIGN;
+            flags2 &= ~FLAG_FORCE_ALIGN;
         }
     }
     
@@ -82,14 +82,14 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         index = in.readInt();
         L.log(Level.FINEST, "index = {0}", index);
         
-        rawArray = in.readInt();
-        L.log(Level.FINEST, "rawArray = {0}", rawArray);
+        arrayFlag = in.readInt();
+        L.log(Level.FINEST, "arrayFlag = {0}", arrayFlag);
         
-        unknown1 = in.readInt();
-        L.log(Level.FINEST, "unknown1 = {0}", unknown1);
+        flags1 = in.readInt();
+        L.log(Level.FINEST, "flags1 = {0}", flags1);
         
-        flags = in.readInt();
-        L.log(Level.FINEST, "flags = {0}", flags);
+        flags2 = in.readInt();
+        L.log(Level.FINEST, "flags2 = {0}", flags2);
         
         int children = in.readInt();
         L.log(Level.FINEST, "children = {0}", children);
@@ -115,14 +115,14 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         out.writeInt(index);
         L.log(Level.FINEST, "index = {0}", index);
         
-        out.writeInt(rawArray);
-        L.log(Level.FINEST, "rawArray = {0}", rawArray);
+        out.writeInt(arrayFlag);
+        L.log(Level.FINEST, "arrayFlag = {0}", arrayFlag);
         
-        out.writeInt(unknown1);
-        L.log(Level.FINEST, "unknown1 = {0}", unknown1);
+        out.writeInt(flags1);
+        L.log(Level.FINEST, "flags1 = {0}", flags1);
         
-        out.writeInt(flags);
-        L.log(Level.FINEST, "flags = {0}", flags);
+        out.writeInt(flags2);
+        L.log(Level.FINEST, "flags2 = {0}", flags2);
         
         int children = size();
         out.writeInt(children);
@@ -159,13 +159,13 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         if (this.index != other.index) {
             return false;
         }
-        if (this.rawArray != other.rawArray) {
+        if (this.arrayFlag != other.arrayFlag) {
             return false;
         }
-//        if (this.unknown1 != other.unknown1) {
+//        if (this.flags1 != other.flags1) {
 //            return false;
 //        }
-//        if (this.flags != other.flags) {
+//        if (this.flags2 != other.flags2) {
 //            return false;
 //        }
         return super.equals(obj);
@@ -178,9 +178,9 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         hash = 47 * hash + Objects.hashCode(this.name);
         hash = 47 * hash + this.size;
         hash = 47 * hash + this.index;
-        hash = 47 * hash + this.rawArray;
-//        hash = 47 * hash + this.unknown1;
-//        hash = 47 * hash + this.flags;
+        hash = 47 * hash + this.arrayFlag;
+//        hash = 47 * hash + this.flags1;
+//        hash = 47 * hash + this.flags2;
         return hash;
     }
 }
