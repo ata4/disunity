@@ -55,13 +55,17 @@ public class AssetUtils {
         TypeTree fieldTree = asset.getTypeTree();
         
         ps.println("Header");
-        ps.println("  Revision: " + fieldTree.revision);
-        ps.println("  Version: " + fieldTree.version);
         ps.println("  File size: " + humanReadableByteCount(header.fileSize, true));
         ps.println("  Tree size: " + humanReadableByteCount(header.treeSize, true));
         ps.println("  Format: " + header.format);
         ps.println("  Data offset: " + header.dataOffset);
         ps.println("  Unknown: " + header.unknown);
+        ps.println();
+        
+        ps.println("Serialized data");
+        ps.println("  Revision: " + fieldTree.revision);
+        ps.println("  Version: " + fieldTree.version);
+        ps.println("  Standalone: " + (fieldTree.isStandalone() ? "yes" : "no"));
         ps.println("  Objects: " + objTable.size());
         ps.println();
         
