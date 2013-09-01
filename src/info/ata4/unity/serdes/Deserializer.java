@@ -185,7 +185,6 @@ public class Deserializer {
     }
     
     private UnityArray readArray(FieldType field) throws IOException, DeserializerException {
-        //int size = in.readInt();
         FieldType sizeField = field.get(0);
         FieldType dataField = field.get(1);
         int size = (int) readFieldValue(sizeField);

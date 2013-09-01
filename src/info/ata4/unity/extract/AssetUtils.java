@@ -11,8 +11,12 @@ package info.ata4.unity.extract;
 
 import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.asset.Asset;
+import info.ata4.unity.struct.AssetHeader;
+import info.ata4.unity.struct.ExternalReference;
+import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectPathTable;
+import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
 import java.io.PrintStream;
@@ -20,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to output information about an asset file.
@@ -44,6 +49,36 @@ public class AssetUtils {
     }
 
     public void printInfo(PrintStream ps) {
+        ObjectPathTable objTable = asset.getObjectPaths();
+        ExternalReferenceTable refTable = asset.getExternalRefs();
+        AssetHeader header = asset.getHeader();
+        TypeTree fieldTree = asset.getTypeTree();
+        
+        ps.println("Header");
+        ps.println("  Revision: " + fieldTree.revision);
+        ps.println("  Version: " + fieldTree.version);
+        ps.println("  File size: " + humanReadableByteCount(header.fileSize, true));
+        ps.println("  Tree size: " + humanReadableByteCount(header.treeSize, true));
+        ps.println("  Format: " + header.format);
+        ps.println("  Data offset: " + header.dataOffset);
+        ps.println("  Unknown: " + header.unknown);
+        ps.println("  Objects: " + objTable.size());
+        ps.println();
+        
+        if (!refTable.isEmpty()) {
+            ps.println("External references");
+            for (ExternalReference ref : refTable) {
+                if (!ref.assetPath.isEmpty()) {
+                    ps.printf("  Asset path: \"%s\"\n", ref.assetPath);
+                }
+                if (!ref.filePath.isEmpty()) {
+                    ps.printf("  File path: \"%s\"\n", ref.filePath);
+                }
+                ps.printf("  GUID: %s\n", DatatypeConverter.printHexBinary(ref.guid));
+                ps.printf("  Type: %d\n", ref.type);
+                ps.println();
+            }
+        }
     }
     
     public void printStats(PrintStream ps) {

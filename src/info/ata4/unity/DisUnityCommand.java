@@ -21,7 +21,7 @@ public enum DisUnityCommand {
     EXTRACT_RAW,
     LEARN,
     INFO,
-    STATS,
+    INFO_STATS,
     UNBUNDLE,
     FIXREFS,
     SPLIT;

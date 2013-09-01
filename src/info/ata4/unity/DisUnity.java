@@ -116,7 +116,7 @@ public class DisUnity implements Runnable {
                     new AssetUtils(asset).printInfo(System.out);
                     break;
                     
-                case STATS:
+                case INFO_STATS:
                     L.log(Level.INFO, "Printing class stats for {0}", name);
                     new AssetUtils(asset).printStats(System.out);
                     break;
