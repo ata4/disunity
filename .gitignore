@@ -5,6 +5,7 @@
 # builds
 /build/
 /dist/
+/releases/
 
 # other
 /private/
