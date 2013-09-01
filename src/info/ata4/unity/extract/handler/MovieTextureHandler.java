@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.extract.handler;
 
+import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
@@ -32,10 +33,11 @@ public class MovieTextureHandler extends ExtractHandler {
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        ByteBuffer movieData = obj.getValue("m_MovieData");
+        UnityArray movieData = obj.getValue("m_MovieData");
+        ByteBuffer movieBuffer = movieData.getRaw();
         
         String ext;
-        String fourCC = new String(movieData.array(), 0, 4);
+        String fourCC = new String(movieBuffer.array(), 0, 4);
         
         switch (fourCC) {
             case "OggS":
@@ -47,6 +49,6 @@ public class MovieTextureHandler extends ExtractHandler {
                 L.log(Level.WARNING, "Unrecognized movie fourCC \"{0}\"", fourCC);
         }
         
-        writeFile(movieData, path.pathID, name, ext);
+        writeFile(movieBuffer, path.pathID, name, ext);
     }
 }

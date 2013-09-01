@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.extract.handler;
 
+import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
@@ -34,7 +35,8 @@ public class FontHandler extends ExtractHandler {
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        ByteBuffer fontData = obj.getValue("m_FontData");
-        writeFile(fontData, path.pathID, name);
+        UnityArray fontData = obj.getValue("m_FontData");
+        ByteBuffer fontBuffer = fontData.getRaw();
+        writeFile(fontBuffer, path.pathID, name);
     }
 }

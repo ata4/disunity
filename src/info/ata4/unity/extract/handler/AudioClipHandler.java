@@ -10,13 +10,13 @@
 package info.ata4.unity.extract.handler;
 
 import info.ata4.unity.enums.AudioType;
+import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,9 +54,10 @@ public class AudioClipHandler extends ExtractHandler {
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        ByteBuffer audioData = obj.getValue("m_AudioData");
+        UnityArray audioData = obj.getValue("m_AudioData");
+        ByteBuffer audioBuffer = audioData.getRaw();
 
-        if (audioData.capacity() == 0) {
+        if (audioBuffer.capacity() == 0) {
             L.log(Level.WARNING, "Audio clip {0} empty", name);
             return;
         }
@@ -77,6 +78,6 @@ public class AudioClipHandler extends ExtractHandler {
             return;
         }
         
-        writeFile(audioData, path.pathID, name, ext);
+        writeFile(audioBuffer, path.pathID, name, ext);
     }
 }

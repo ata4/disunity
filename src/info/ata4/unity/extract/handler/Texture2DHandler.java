@@ -16,6 +16,7 @@ import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
+import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.dds.DDSHeader;
@@ -40,7 +41,7 @@ public class Texture2DHandler extends ExtractHandler {
     private ObjectPath path;
     private UnityObject obj;
     private String name;
-    private ByteBuffer imageData;
+    private ByteBuffer imageBuffer;
     
     @Override
     public String getClassName() {
@@ -53,10 +54,11 @@ public class Texture2DHandler extends ExtractHandler {
         this.obj = obj;
         
         name = obj.getValue("m_Name");
-        imageData = obj.getValue("image data");
+        UnityArray imageData = obj.getValue("image data");
+        imageBuffer = imageData.getRaw();
 
         // some textures don't have any image data, not sure why...
-        if (imageData.capacity() == 0) {
+        if (imageBuffer.capacity() == 0) {
             L.log(Level.WARNING, "Texture2D {0} is empty", name);
             return;
         }
@@ -202,7 +204,7 @@ public class Texture2DHandler extends ExtractHandler {
         
         // TODO: convert AG to RGB normal maps? (colorSpace = 0)
         
-        ByteBuffer bbTex = ByteBuffer.allocateDirect(128 + imageData.capacity());
+        ByteBuffer bbTex = ByteBuffer.allocateDirect(128 + imageBuffer.capacity());
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
@@ -210,7 +212,7 @@ public class Texture2DHandler extends ExtractHandler {
         dds.write(out);
         
         // write data
-        bbTex.put(imageData);
+        bbTex.put(imageBuffer);
         
         bbTex.rewind();
         
