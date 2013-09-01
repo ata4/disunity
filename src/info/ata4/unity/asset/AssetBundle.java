@@ -189,11 +189,6 @@ public class AssetBundle extends MappedFileHandler {
                     String entryName = entry.getName();
                     int entryOffset = entry.getOffset();
                     int entrySize = entry.getSize();
-                    
-                    // no file extension means it's a scene asset -> add .unity
-                    if (!entryName.contains(".")) {
-                        entryName += ".unity";
-                    }
 
                     L.log(Level.INFO, "Extracting {0}", entryName);
 
@@ -218,11 +213,6 @@ public class AssetBundle extends MappedFileHandler {
                 String entryName = entry.getName();
                 int entryOffset = entry.getOffset();
                 int entrySize = entry.getSize();
-                
-                // no file extension means it's a scene asset -> add .unity
-                if (!entryName.contains(".")) {
-                    entryName += ".unity";
-                }
                 
                 L.log(Level.INFO, "Extracting {0}", entryName);
                 
