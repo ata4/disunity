@@ -19,10 +19,12 @@ import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -31,9 +33,11 @@ import java.util.logging.Logger;
 public class AssetDumper {
     
     private static final Logger L = Logger.getLogger(AssetDumper.class.getName());
+    private static final String INDENT_STRING = "  ";
     
     private final Asset asset;
     private PrintStream ps;
+    private int indentLevel;
 
     public AssetDumper(Asset asset) {
         this.asset = asset;
@@ -77,15 +81,11 @@ public class AssetDumper {
                 continue;
             }
             
-            printField(classField);
+            printType(classField);
         }
     }
     
     private void printObject(UnityObject obj) {
-        printObject(obj, 0);
-    }
-    
-    private void printObject(UnityObject obj, int level) {
         ps.print(obj.getType());
         
         if (!obj.getName().equals("Base")) {
@@ -95,21 +95,23 @@ public class AssetDumper {
             ps.println();
         }
         
-        level++;
+        indentLevel++;
         
         for (UnityField field : obj.getFields()) {
-            printIndent(level);
+            printIndent();
             
             Object value = field.getValue();
             if (value instanceof UnityObject) {
-                printObject((UnityObject) value, level);
+                printObject((UnityObject) value);
             } else {
-                printField(field, level);
+                printField(field);
             }
         }
+        
+        indentLevel--;
     }
     
-    private void printField(UnityField field, int level) {
+    private void printField(UnityField field) {
         String name = field.getName();
         String type = field.getType();
         Object value = field.getValue();
@@ -120,24 +122,30 @@ public class AssetDumper {
             ps.printf("%s %s = ", type, name, value);
         }
         
-        printValue(value, level + 1);
+        indentLevel++;
+        
+        printValue(value);
+        
+        indentLevel--;
     }
     
-    private void printValue(Object value, int level) {
+    private void printValue(Object value) {
         if (value instanceof UnityObject) {
-            printObject((UnityObject) value, level + 1);
+            printObject((UnityObject) value);
         } else if (value instanceof UnityArray) {
             UnityArray array = (UnityArray) value;
             if (array.isRaw()) {
-                // TODO: print bytes?
                 ps.printf("byte[%d]\n", array.getRaw().capacity());
+                printBytes(array.getRaw());
             } else {
                 List<Object> list = array.getList();
                 ps.printf("%s[%d]\n", array.getType(), list.size());
+                
                 for (Object value2 : list) {
-                    printIndent(level + 1);
-                    printValue(value2, level + 1);
+                    printIndent();
+                    printValue(value2);
                 }
+                
             }
         } else if (value instanceof String) {
             ps.printf("\"%s\"\n", value);
@@ -145,22 +153,12 @@ public class AssetDumper {
             ps.println(value);
         }
     }
-    
-    private void printIndent(int level) {
-        for (int i = 0; i < level; i++) {
-            ps.print("  ");
-        }
-    }
-    
-    private void printField(FieldType field) {
-        printField(field, 0);
-    }
 
-    private void printField(FieldType field, int level) {
+    private void printType(FieldType field) {
         String name = field.name;
         String type = field.type;
         
-        printIndent(level);
+        printIndent();
         
         ps.print(type);
         
@@ -171,8 +169,30 @@ public class AssetDumper {
             ps.println();
         }
         
+        indentLevel++;
+        
         for (FieldType subField : field) {
-            printField(subField, level + 1);
+            printType(subField);
+        }
+        
+        indentLevel--;
+    }
+
+    private void printBytes(ByteBuffer bb) {
+        byte[] block = new byte[256];
+        ByteBuffer bb2 = bb.duplicate();
+        bb2.rewind();
+        while (bb2.hasRemaining()) {
+            int len = Math.min(bb2.remaining(), block.length);
+            bb2.get(block, 0, len);
+            printIndent();
+            ps.println(DatatypeConverter.printHexBinary(block));
+        }
+    }
+    
+    private void printIndent() {
+        for (int i = 0; i < indentLevel; i++) {
+            ps.print(INDENT_STRING);
         }
     }
 }
