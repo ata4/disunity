@@ -192,7 +192,7 @@ public class Deserializer {
         
         // use wrapped ByteBuffers for raw byte arrays, which is much faster and
         // more efficient than a list of Integer objects
-        if (dataField.type.equals("UInt8")) {
+        if (dataField.type.equals("UInt8") || dataField.type.equals("char")) {
             ByteBuffer raw = ByteBuffer.wrap(in.readByteArray(size));
             uarray.setRaw(raw);
         } else {
