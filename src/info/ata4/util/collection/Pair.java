@@ -9,6 +9,8 @@
  */
 package info.ata4.util.collection;
 
+import java.util.Objects;
+
 /**
  * Based on http://stackoverflow.com/a/521235
  * 
@@ -45,8 +47,7 @@ public class Pair<L, R> {
         if (!(o instanceof Pair)) {
             return false;
         }
-        Pair pairo = (Pair) o;
-        return this.left.equals(pairo.getLeft())
-                && this.right.equals(pairo.getRight());
+        Pair that = (Pair) o;
+        return Objects.equals(this.left, that.left) && Objects.equals(this.right, that.right);
     }
 }
