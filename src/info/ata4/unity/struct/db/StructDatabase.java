@@ -76,8 +76,8 @@ public class StructDatabase {
         
         // read database file if existing
         if (Files.exists(dbFile)) {
-            try (InputStream fis = Files.newInputStream(dbFile, READ)) {
-                DataInputReader in = new DataInputReader(new DataInputStream(new BufferedInputStream(fis)));
+            try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(dbFile, READ))) {
+                DataInputReader in = new DataInputReader(new DataInputStream(bis));
                 
                 // read header
                 int version = in.readInt();
@@ -135,8 +135,8 @@ public class StructDatabase {
         }
         
         // write updated database file
-        try (OutputStream fos = Files.newOutputStream(dbFile, CREATE, WRITE)) {
-            DataOutputWriter out = new DataOutputWriter(new DataOutputStream(new BufferedOutputStream(fos)));
+        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(dbFile, CREATE, WRITE))) {
+            DataOutputWriter out = new DataOutputWriter(new DataOutputStream(bos));
             
             // write header
             out.writeInt(VERSION);
@@ -152,8 +152,6 @@ public class StructDatabase {
                 fieldNodeMap.put(fieldNode, index++);
                 fieldNode.write(out);
             }
-
-            Set<Pair<Integer, String>> fieldNodeKeys = ftm.keySet();
 
             // write revision string table
             Set<String> revisions = new HashSet<>();
@@ -172,7 +170,7 @@ public class StructDatabase {
             }
 
             // write mapping data
-            out.writeInt(fieldNodeKeys.size());
+            out.writeInt(ftm.entrySet().size());
 
             for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
