@@ -98,12 +98,12 @@ public class DisUnity implements Runnable {
                     
                 case DUMP:
                     L.log(Level.INFO, "Dumping data from {0}", name);
-                    new AssetDumper(asset).dumpData(System.out);
+                    new AssetDumper(asset, settings).dumpData(System.out);
                     break;
                 
                 case DUMP_STRUCT:
                     L.log(Level.INFO, "Dumping structs from {0}", name);
-                    new AssetDumper(asset).dumpStruct(System.out);
+                    new AssetDumper(asset, settings).dumpStruct(System.out);
                     break;
                     
                 case LEARN:

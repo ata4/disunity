@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.extract;
 
+import info.ata4.unity.DisUnitySettings;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityArray;
@@ -36,11 +37,14 @@ public class AssetDumper {
     private static final String INDENT_STRING = "  ";
     
     private final Asset asset;
+    private final DisUnitySettings settings;
+    
     private PrintStream ps;
     private int indentLevel;
 
-    public AssetDumper(Asset asset) {
+    public AssetDumper(Asset asset, DisUnitySettings settings) {
         this.asset = asset;
+        this.settings = settings;
     }
     
     public void dumpData(PrintStream ps) {
@@ -50,7 +54,12 @@ public class AssetDumper {
         
         for (ObjectPath path : asset.getObjectPaths()) {
             try {
-                if (path.classID1 < 0) {
+                if (path.classID2 < 0) {
+                    continue;
+                }
+                
+                // skip filtered classes
+                if (settings.isClassFiltered(path.classID2)) {
                     continue;
                 }
 
@@ -75,6 +84,11 @@ public class AssetDumper {
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
+            // skip filtered classes
+            if (settings.isClassFiltered(classID)) {
+                continue;
+            }
+            
             FieldType classField = typeTree.get(classID);
             
             if (classField == null) {
