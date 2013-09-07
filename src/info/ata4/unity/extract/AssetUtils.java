@@ -17,7 +17,7 @@ import info.ata4.unity.struct.ExternalReferenceTable;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectPathTable;
 import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.util.ClassID;
+import info.ata4.unity.struct.db.ClassID;
 import info.ata4.util.collection.MapUtils;
 import java.io.PrintStream;
 import java.util.HashMap;

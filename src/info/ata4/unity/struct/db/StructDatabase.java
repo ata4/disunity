@@ -14,7 +14,6 @@ import static java.nio.file.StandardCopyOption.*;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
@@ -23,8 +22,6 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,20 +51,20 @@ public class StructDatabase {
         return instance;
     }
     
-    private FieldTypeMapper ftm = new FieldTypeMapper();
+    private FieldTypeMap ftm = new FieldTypeMap();
     private Path dbFile = Paths.get("resources", "structdb.dat");
     private Path dbFileBackup = Paths.get("resources", "structdb.dat.1");
-    private int learnedTotal;
+    private int learned;
     
     private StructDatabase() {
         load();
     }
     
     public int getLearned() {
-        return learnedTotal;
+        return learned;
     }
     
-    public FieldTypeMapper getTypeMapper() {
+    public FieldTypeMap getFieldTypeMap() {
         return ftm;
     }
     
@@ -256,16 +253,16 @@ public class StructDatabase {
             }
         }
         
-        learnedTotal += learnedNew;
+        learned += learnedNew;
         
         return learnedNew;
     }
     
     public void update() {
-        if (learnedTotal > 0) {
-            L.log(Level.INFO, "Adding {0} new struct(s) to database", learnedTotal);
+        if (learned > 0) {
+            L.log(Level.INFO, "Adding {0} new struct(s) to database", learned);
             save();
-            learnedTotal = 0;
+            learned = 0;
         }
     }
 }

@@ -12,9 +12,9 @@ package info.ata4.unity.serdes;
 import info.ata4.unity.asset.Asset;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.db.FieldTypeMapper;
+import info.ata4.unity.struct.db.FieldTypeMap;
 import info.ata4.unity.struct.db.StructDatabase;
-import info.ata4.unity.util.ClassID;
+import info.ata4.unity.struct.db.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
@@ -40,7 +40,7 @@ public class DeserializeTest {
         LogUtils.configure();
         
         if (args.length == 0) {
-            FieldTypeMapper ftm = StructDatabase.getInstance().getTypeMapper();
+            FieldTypeMap ftm = StructDatabase.getInstance().getFieldTypeMap();
             Map<String, AtomicInteger> classCounts = new TreeMap<>();
             Set<FieldType> fieldNodes = new HashSet<>();
             

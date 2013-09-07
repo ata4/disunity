@@ -28,7 +28,7 @@ import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectPathTable;
-import info.ata4.unity.util.ClassID;
+import info.ata4.unity.struct.db.ClassID;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

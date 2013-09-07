@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.util;
+package info.ata4.unity.struct.db;
 
 import java.io.BufferedReader;
 import java.nio.charset.Charset;

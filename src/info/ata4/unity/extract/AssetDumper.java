@@ -18,7 +18,7 @@ import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.util.ClassID;
+import info.ata4.unity.struct.db.ClassID;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.List;

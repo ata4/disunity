@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeMapper extends HashMap<Pair<Integer, String>, FieldType> {
+public class FieldTypeMap extends HashMap<Pair<Integer, String>, FieldType> {
     
-    private static final Logger L = Logger.getLogger(FieldTypeMapper.class.getName());
+    private static final Logger L = Logger.getLogger(FieldTypeMap.class.getName());
 
     public FieldType get(int classID, String revision) {
         return get(classID, revision, true);
