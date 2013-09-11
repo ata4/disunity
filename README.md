@@ -55,14 +55,14 @@ Support
 
 Type | Status
 --- | --- 
-AudioClipHandler | Ok
-CubemapHandler | Wrong texture flags
-FontHandler | Ok
-MovieTextureHandler | 2.6 only
-ShaderHandler | Ok
-SubstanceArchiveHandler | Ok
-TextAssetHandler | Ok
-Texture2DHandler | Missing support for PVR, ATC and some exotic color formats
+AudioClip | Ok
+Cubemap | Wrong texture flags
+Font | Ok
+MovieTexture | 2.6 only
+Shader | Ok
+SubstanceArchive | Ok
+TextAsset | Ok
+Texture2D | Missing support for PVR, ATC and some exotic color formats
 
 Dependencies
 ------------
