@@ -33,6 +33,6 @@ public class TextAssetHandler extends ExtractHandler {
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         String script = obj.getValue("m_Script");
-        writeFile(script.getBytes(), path.pathID, name);
+        writeFile(script.getBytes("UTF8"), path.pathID, name);
     }
 }
