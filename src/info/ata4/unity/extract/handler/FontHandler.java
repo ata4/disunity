@@ -37,6 +37,8 @@ public class FontHandler extends ExtractHandler {
         String name = obj.getValue("m_Name");
         UnityArray fontData = obj.getValue("m_FontData");
         ByteBuffer fontBuffer = fontData.getRaw();
-        writeFile(fontBuffer, path.pathID, name);
+        if (fontBuffer.capacity() > 0) {
+            writeFile(fontBuffer, path.pathID, name);
+        }
     }
 }
