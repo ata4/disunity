@@ -11,7 +11,6 @@ package info.ata4.unity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -26,12 +25,11 @@ public class DisUnitySettings {
     private Set<Integer> classFilter;
     
     public List<File> getFiles() {
-        return Collections.unmodifiableList(files);
+        return files;
     }
 
     public void setFiles(List<File> files) {
-        files.clear();
-        files.addAll(files);
+        this.files = files;
     }
 
     public DisUnityCommand getCommand() {
@@ -43,12 +41,11 @@ public class DisUnitySettings {
     }
     
     public Set<Integer> getClassFilter() {
-        return Collections.unmodifiableSet(classFilter);
+        return classFilter;
     }
     
     public void setClassFilter(Set<Integer> classFilter) {
-        classFilter.clear();
-        classFilter.addAll(classFilter);
+        this.classFilter = classFilter;
     }
     
     public boolean isClassFiltered(Integer classID) {
