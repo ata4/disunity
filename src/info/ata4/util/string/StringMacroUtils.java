@@ -17,6 +17,9 @@ package info.ata4.util.string;
  */
 public class StringMacroUtils {
     
+    private StringMacroUtils() {
+    }
+    
     /**
      * Simulates the MAKEID macro from the Source SDK. It makes a 4-byte
      * "packed ID" int out of a 4 character string.
