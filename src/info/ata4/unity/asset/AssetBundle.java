@@ -27,6 +27,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +41,7 @@ import org.apache.commons.io.input.CountingInputStream;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundle extends MappedFileHandler {
+public class AssetBundle extends MappedFileHandler implements Iterable<AssetBundleEntry> {
     
     private static final Logger L = Logger.getLogger(AssetBundle.class.getName());
     
@@ -60,7 +61,7 @@ public class AssetBundle extends MappedFileHandler {
     private ByteBuffer bb;
     private ByteBuffer bbData;
     private AssetBundleHeader info;
-    private List<Entry> entries;
+    private List<AssetBundleEntry> entries;
     private boolean compressed;
     
     @Override
@@ -94,10 +95,10 @@ public class AssetBundle extends MappedFileHandler {
             entries = new ArrayList<>(files);
 
             for (int i = 0; i < files; i++) {
-                Entry entry = new Entry();
-                entry.name = in.readStringNull(255);
-                entry.offset = in.readInt();
-                entry.length = in.readInt();
+                AssetBundleEntry entry = new AssetBundleEntry(this);
+                entry.setName(in.readStringNull(255));
+                entry.setOffset(in.readInt());
+                entry.setLength(in.readInt());
                 entries.add(entry);
             }
         }
@@ -179,13 +180,11 @@ public class AssetBundle extends MappedFileHandler {
         // for uncompressed files, use direct buffers
         if (isCompressed()) {
             // sort entries by offset
-            List<Entry> entriesSorted = new ArrayList<>(getEntries());
+            List<AssetBundleEntry> entriesSorted = new ArrayList<>(getEntries());
             Collections.sort(entriesSorted, new EntryOffsetComparator());
 
-            try (
-                CountingInputStream is = getDataInputStream()
-            ) {
-                for (Entry entry : entriesSorted) {
+            try (CountingInputStream is = getDataInputStream()) {
+                for (AssetBundleEntry entry : entriesSorted) {
                     String entryName = entry.getName();
                     int entryOffset = entry.getOffset();
                     int entrySize = entry.getSize();
@@ -201,15 +200,13 @@ public class AssetBundle extends MappedFileHandler {
                     
                     File entryFile = new File(dir, entryName);
 
-                    try (
-                        OutputStream os = FileUtils.openOutputStream(entryFile);
-                    ) {
+                    try (OutputStream os = FileUtils.openOutputStream(entryFile)) {
                         IOUtils.copyLarge(is, os, 0, entrySize);
                     }
                 }
             }
         } else {
-            for (Entry entry : entries) {
+            for (AssetBundleEntry entry : entries) {
                 String entryName = entry.getName();
                 int entryOffset = entry.getOffset();
                 int entrySize = entry.getSize();
@@ -222,53 +219,32 @@ public class AssetBundle extends MappedFileHandler {
                 
                 File entryFile = new File(dir, entryName);
                 
-                try (
-                    FileOutputStream os = FileUtils.openOutputStream(entryFile);
-                ) {
+                try (FileOutputStream os = FileUtils.openOutputStream(entryFile)) {
                     os.getChannel().write(entryBuffer);
                 }
             }
         }
     }
 
-    public List<Entry> getEntries() {
-        return entries;
+    public List<AssetBundleEntry> getEntries() {
+        return Collections.unmodifiableList(entries);
     }
 
-    public class Entry {
-
-        private String name;
-        private int offset;
-        private int length;
-        
-        public String getName() {
-            return name;
-        }
-        
-        public int getSize() {
-            return length;
-        }
-
-        public int getOffset() {
-            return offset;
-        }
-        
-        public ByteBuffer getByteBuffer() throws IOException {
-            ByteBuffer bbd = getDataByteBuffer();
-            bbd.position(getOffset());
-            ByteBuffer bb = bbd.slice();
-            bb.limit(getSize());
-            return bb;
-        }
+    @Override
+    public Iterator<AssetBundleEntry> iterator() {
+        return getEntries().iterator();
     }
     
-    private class EntryOffsetComparator implements Comparator<Entry> {
+    private class EntryOffsetComparator implements Comparator<AssetBundleEntry> {
+        
         @Override
-        public int compare(Entry o1, Entry o2) {
-            if (o1.offset == o2.offset) {
+        public int compare(AssetBundleEntry o1, AssetBundleEntry o2) {
+            int ofs1 = o1.getOffset();
+            int ofs2 = o2.getOffset();
+            if (ofs1 == ofs2) {
                 return 0;
             }
-            return o1.offset > o2.offset ? 1 : -1;
+            return ofs1 > ofs2 ? 1 : -1;
         }
     }
 }
