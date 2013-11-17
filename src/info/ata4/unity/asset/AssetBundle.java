@@ -49,6 +49,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     private static final String SIGNATURE_RAW = "UnityRaw";
     
     public static boolean isAssetBundle(File file) {
+        // check signature of the file
         try (FileInputStream fis = new FileInputStream(file)) {
             DataInputReader in = new DataInputReader(new DataInputStream(fis));
             String signature = in.readStringFixed(8);
@@ -129,11 +130,13 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
                 bb.order(ByteOrder.LITTLE_ENDIAN);
                 
                 long lzmaSize = bb.getLong();
-                
                 if (lzmaSize < 0) {
                     throw new IOException("Invalid LZMA size");
                 }
                 
+                // in theory, entries can be larger than 2GB and break memory
+                // mapping using one single buffer, although that would be a bit
+                // ridiculous for typical Unity web games
                 if (lzmaSize > Integer.MAX_VALUE) {
                     throw new IOException("Entry is too large for direct decompression");
                 }
@@ -173,14 +176,14 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         return info.revision;
     }
     
-    public void extractEntries(File dir) throws IOException {
+    public void extract(File dir) throws IOException {
         L.log(Level.INFO, "Extracting entries to {0}", dir);
         
-        // for compressed files, use sorted entries and streaming
-        // for uncompressed files, use direct buffers
+        // for compressed files, sort entries and use streaming;
+        // for uncompressed files, use channels
         if (isCompressed()) {
             // sort entries by offset
-            List<AssetBundleEntry> entriesSorted = new ArrayList<>(getEntries());
+            List<AssetBundleEntry> entriesSorted = new ArrayList<>(entries);
             Collections.sort(entriesSorted, new EntryOffsetComparator());
 
             try (CountingInputStream is = getDataInputStream()) {
