@@ -11,7 +11,7 @@ package info.ata4.unity.struct.db;
 
 import static java.nio.file.StandardOpenOption.*;
 import static java.nio.file.StandardCopyOption.*;
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
 import info.ata4.util.collection.Pair;
@@ -185,7 +185,7 @@ public class StructDatabase {
         }
     }
     
-    public void fill(Asset asset) {
+    public void fill(AssetFile asset) {
         TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
@@ -205,7 +205,7 @@ public class StructDatabase {
         typeTree.setStandalone(true);
     }
     
-    public int learn(Asset asset) {
+    public int learn(AssetFile asset) {
         TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         

@@ -10,7 +10,7 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.struct.db.StructDatabase;
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.ExternalReference;
 import info.ata4.unity.struct.ExternalReferenceTable;
@@ -35,9 +35,9 @@ public class AssetUtils {
     
     private static final Logger L = Logger.getLogger(AssetUtils.class.getName());
     
-    private final Asset asset;
+    private final AssetFile asset;
 
-    public AssetUtils(Asset asset) {
+    public AssetUtils(AssetFile asset) {
         this.asset = asset;
     }
     

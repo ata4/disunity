@@ -9,12 +9,12 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.unity.struct.AssetHeader;
 import info.ata4.unity.struct.ExternalReferenceTable;
-import info.ata4.unity.struct.TypeTree;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.ObjectPathTable;
+import info.ata4.unity.struct.TypeTree;
+import info.ata4.unity.struct.db.StructDatabase;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataInputReader;
@@ -26,7 +26,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +38,9 @@ import java.util.logging.Logger;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Asset extends MappedFileHandler {
+public class AssetFile extends MappedFileHandler {
     
-    private static final Logger L = Logger.getLogger(Asset.class.getName());
+    private static final Logger L = Logger.getLogger(AssetFile.class.getName());
     private static final int HEADER_SIZE = 20;
 
     private ByteBuffer bbData;

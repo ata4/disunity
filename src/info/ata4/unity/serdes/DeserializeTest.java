@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.serdes;
 
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.unity.struct.db.FieldTypeMap;
@@ -72,7 +72,7 @@ public class DeserializeTest {
                 try {
                     File file = new File(arg);
 
-                    Asset asset = new Asset();
+                    AssetFile asset = new AssetFile();
                     asset.load(file);
 
                     Deserializer deser = new Deserializer(asset);

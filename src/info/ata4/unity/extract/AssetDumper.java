@@ -10,7 +10,7 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.DisUnitySettings;
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityField;
@@ -36,13 +36,13 @@ public class AssetDumper {
     private static final Logger L = Logger.getLogger(AssetDumper.class.getName());
     private static final String INDENT_STRING = "  ";
     
-    private final Asset asset;
+    private final AssetFile asset;
     private final DisUnitySettings settings;
     
     private PrintStream ps;
     private int indentLevel;
 
-    public AssetDumper(Asset asset, DisUnitySettings settings) {
+    public AssetDumper(AssetFile asset, DisUnitySettings settings) {
         this.asset = asset;
         this.settings = settings;
     }

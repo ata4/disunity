@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.serdes;
 
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.ObjectPath;
 import info.ata4.util.io.ByteBufferInput;
@@ -27,11 +27,11 @@ import java.util.List;
  */
 public class Deserializer {
     
-    private final Asset asset;
+    private final AssetFile asset;
     private SerializedInput in;
     private ByteBuffer bb;
     
-    public Deserializer(Asset asset) {
+    public Deserializer(AssetFile asset) {
         this.asset = asset;
     }
     

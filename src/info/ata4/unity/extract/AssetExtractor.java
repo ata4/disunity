@@ -10,7 +10,7 @@
 package info.ata4.unity.extract;
 
 import info.ata4.unity.DisUnitySettings;
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFormat;
 import info.ata4.unity.extract.handler.AudioClipHandler;
 import info.ata4.unity.extract.handler.CubemapHandler;
@@ -82,13 +82,13 @@ public class AssetExtractor {
         }
     }
     
-    private final Asset asset;
+    private final AssetFile asset;
     private final DisUnitySettings settings;
     
     private Map<String, ExtractHandler> extractHandlerMap = new HashMap<>();
     private Set<ExtractHandler> extractHandlerSet = new HashSet<>();
     
-    public AssetExtractor(Asset asset, DisUnitySettings settings) {
+    public AssetExtractor(AssetFile asset, DisUnitySettings settings) {
         this.asset = asset;
         this.settings = settings;
         
@@ -202,7 +202,7 @@ public class AssetExtractor {
 
             String className = ClassID.getInstance().getNameForID(path.classID2, true);
             
-            Asset subAsset = new Asset();
+            AssetFile subAsset = new AssetFile();
             subAsset.getHeader().format = asset.getHeader().format;
             
             ObjectPath subFieldPath = new ObjectPath();

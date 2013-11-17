@@ -9,7 +9,7 @@
  */
 package info.ata4.unity;
 
-import info.ata4.unity.asset.Asset;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.extract.AssetDumper;
@@ -59,7 +59,7 @@ public class DisUnity implements Runnable {
         try {
             boolean map = settings.getCommand() != DisUnityCommand.FIXREFS;
             
-            Asset asset = new Asset();
+            AssetFile asset = new AssetFile();
             asset.load(file, map);
             
             processAsset(asset, file.getName(), file, dir);
@@ -79,7 +79,7 @@ public class DisUnity implements Runnable {
     
     private void processAsset(ByteBuffer bb, String name, File dir) {  
         try {
-            Asset asset = new Asset();
+            AssetFile asset = new AssetFile();
             asset.load(bb);
             
             processAsset(asset, name, null, dir);
@@ -88,7 +88,7 @@ public class DisUnity implements Runnable {
         }
     }
     
-    private void processAsset(Asset asset, String name, File sourceFile, File dir) {        
+    private void processAsset(AssetFile asset, String name, File sourceFile, File dir) {        
         try {
             DisUnityCommand command = settings.getCommand();
             switch (command) {
