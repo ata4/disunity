@@ -151,9 +151,7 @@ public class AssetExtractor {
                 
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
-                try (
-                    FileOutputStream os = new FileOutputStream(assetFile)
-                ) {
+                try (FileOutputStream os = new FileOutputStream(assetFile)) {
                     ByteBuffer bb = asset.getDataBuffer();
                     bb.position(path.offset);
                     
