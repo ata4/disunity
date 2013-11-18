@@ -34,7 +34,7 @@ public class DisUnitySettings {
     }
     
     public boolean isClassFiltered(Integer classID) {
-        return classFilter != null && !classFilter.contains(classID);
+        return !classFilter.isEmpty() && !classFilter.contains(classID);
     }
 
     public DisUnityCommand getCommand() {
