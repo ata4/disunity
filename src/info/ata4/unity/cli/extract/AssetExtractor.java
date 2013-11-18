@@ -121,11 +121,11 @@ public class AssetExtractor {
         TypeTree typeTree = asset.getTypeTree();
         ObjectPathTable pathTable = asset.getObjectPaths();
         
-        
         Deserializer deser = new Deserializer(asset);
         AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
         
         for (ExtractHandler extractHandler : extractHandlerSet) {
+            extractHandler.reset();
             extractHandler.setExtractDir(dir);
             extractHandler.setAssetFormat(format);
         }

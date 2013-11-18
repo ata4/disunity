@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +30,13 @@ public abstract class ExtractHandler {
     private static final Logger L = Logger.getLogger(ExtractHandler.class.getName());
 
     private File extractDir;
+    private Set<File> filesWritten = new HashSet<>();
     private AssetFormat format;
     private boolean usePrefix = false;
+    
+    public void reset() {
+        filesWritten.clear();
+    }
 
     public File getExtractDir() {
         return extractDir;
@@ -63,27 +70,26 @@ public abstract class ExtractHandler {
             classDir.mkdir();
         }
         
-        String assetFileName;
+        String fileName;
+        String fileExt = ext;
         
-        if (ext == null) {
-            ext = getFileExtension();
+        if (fileExt == null) {
+            fileExt = getFileExtension();
         }
         
         if (name == null || name.isEmpty()) {
-            assetFileName = String.format("%06d.%s", id, ext);
+            fileName = String.format("%06d", id);
         } else if (usePrefix) {
-            assetFileName = String.format("%06d_%s.%s", id, name, ext);
+            fileName = String.format("%06d_%s", id, name);
         } else {
-            assetFileName = String.format("%s.%s", name, ext);
+            fileName = name;
         }
 
-        File assetFile = new File(classDir, assetFileName);
+        File assetFile = getUniqueFile(classDir, fileName, fileExt);
         
-        L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
+        L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, fileName});
         
-        try (
-            FileOutputStream os = new FileOutputStream(assetFile)
-        ) {
+        try (FileOutputStream os = new FileOutputStream(assetFile)) {
             os.getChannel().write(bb);
         } catch (Exception ex) {
             L.log(Level.WARNING, "Failed writing " + assetFile, ex);
@@ -100,5 +106,19 @@ public abstract class ExtractHandler {
     
     protected void writeFile(byte[] data, int id, String name) throws IOException {
         writeFile(data, id, name, null);
+    }
+    
+    private File getUniqueFile(File parent, String fileName, String ext) {
+        File file = new File(parent, String.format("%s.%s", fileName, ext));
+        int fileNum = 1;
+        
+        while (filesWritten.contains(file)) {
+            file = new File(parent, String.format("%s_%d.%s", fileName, fileNum, ext));
+            fileNum++;
+        }
+        
+        filesWritten.add(file);
+        
+        return file;
     }
 }
