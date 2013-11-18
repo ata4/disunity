@@ -13,9 +13,9 @@ import info.ata4.unity.asset.AssetBundle;
 import info.ata4.unity.asset.AssetBundleEntry;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFileFilter;
+import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
-import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.struct.ExternalReference;
 import info.ata4.unity.struct.db.StructDatabase;
 import java.io.File;
@@ -33,8 +33,6 @@ import org.apache.commons.io.FilenameUtils;
 public class DisUnityProcessor implements Runnable {
 
     private static final Logger L = Logger.getLogger(DisUnityProcessor.class.getName());
-    
-    public static final String VERSION = "0.1.1";
     
     private final AssetFileFilter assetFilter = new AssetFileFilter();
     private final DisUnitySettings settings = new DisUnitySettings();
