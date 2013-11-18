@@ -9,8 +9,6 @@
  */
 package info.ata4.unity.struct.db;
 
-import static java.nio.file.StandardOpenOption.*;
-import static java.nio.file.StandardCopyOption.*;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.struct.FieldType;
 import info.ata4.unity.struct.TypeTree;
@@ -21,10 +19,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -42,6 +40,8 @@ public class StructDatabase {
     
     private static final Logger L = Logger.getLogger(StructDatabase.class.getName());
     private static final int VERSION = 1;
+    private static final String FILENAME = "structdb.dat";
+    
     private static StructDatabase instance;
 
     public static StructDatabase getInstance() {
@@ -52,8 +52,6 @@ public class StructDatabase {
     }
     
     private FieldTypeMap ftm = new FieldTypeMap();
-    private Path dbFile = Paths.get("resources", "structdb.dat");
-    private Path dbFileBackup = Paths.get("resources", "structdb.dat.1");
     private int learned;
     
     private StructDatabase() {
@@ -71,68 +69,73 @@ public class StructDatabase {
     private void load() {
         L.info("Loading struct database");
         
-        // read database file if existing
-        if (Files.exists(dbFile)) {
-            try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(dbFile, READ))) {
-                DataInputReader in = new DataInputReader(new DataInputStream(bis));
-                
-                // read header
-                int version = in.readInt();
+        // read database file, external or internal otherwise
+        InputStream is;
+        try {
+            File dbFile = new File(FILENAME);
+            String dbPath = "resources/" + FILENAME;
 
-                if (version != VERSION) {
-                    throw new RuntimeException("Wrong database version");
-                }
-
-                // read field node table
-                int fieldNodeSize = in.readInt();
-                List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
-
-                for (int i = 0; i < fieldNodeSize; i++) {
-                    FieldType fieldNode = new FieldType();
-                    fieldNode.read(in);
-                    fieldNodes.add(fieldNode);
-                }
-
-                // read revision string table
-                int revisionSize = in.readInt();
-                List<String> revisions = new ArrayList<>(revisionSize);
-
-                for (int i = 0; i < revisionSize; i++) {
-                    revisions.add(in.readStringNull());
-                }
-
-                // read mapping data
-                int fieldNodeKeySize = in.readInt();
-
-                for (int i = 0; i < fieldNodeKeySize; i++) {
-                    int index = in.readInt();
-                    int classID = in.readInt();
-                    int revisionIndex = in.readInt();
-                    String revision = revisions.get(revisionIndex);
-                    FieldType fieldNode = fieldNodes.get(index);
-
-                    ftm.add(classID, revision, fieldNode);
-                }
-            } catch (IOException ex) {
-                L.log(Level.SEVERE, "Can't read struct database", ex);
+            if (dbFile.exists()) {
+                is = FileUtils.openInputStream(dbFile);
+            } else {
+                is = getClass().getResourceAsStream(dbPath);
             }
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't open struct database", ex);
+            return;
+        }
+
+        try (BufferedInputStream bis = new BufferedInputStream(is)) {
+            DataInputReader in = new DataInputReader(new DataInputStream(bis));
+
+            // read header
+            int version = in.readInt();
+
+            if (version != VERSION) {
+                throw new RuntimeException("Wrong database version");
+            }
+
+            // read field node table
+            int fieldNodeSize = in.readInt();
+            List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
+
+            for (int i = 0; i < fieldNodeSize; i++) {
+                FieldType fieldNode = new FieldType();
+                fieldNode.read(in);
+                fieldNodes.add(fieldNode);
+            }
+
+            // read revision string table
+            int revisionSize = in.readInt();
+            List<String> revisions = new ArrayList<>(revisionSize);
+
+            for (int i = 0; i < revisionSize; i++) {
+                revisions.add(in.readStringNull());
+            }
+
+            // read mapping data
+            int fieldNodeKeySize = in.readInt();
+
+            for (int i = 0; i < fieldNodeKeySize; i++) {
+                int index = in.readInt();
+                int classID = in.readInt();
+                int revisionIndex = in.readInt();
+                String revision = revisions.get(revisionIndex);
+                FieldType fieldNode = fieldNodes.get(index);
+
+                ftm.add(classID, revision, fieldNode);
+            }
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't read struct database", ex);
         }
     }
     
     private void save() {
         L.info("Saving struct database");
         
-        // create database backup
-        if (Files.exists(dbFile)) {
-            try {
-                Files.move(dbFile, dbFileBackup, REPLACE_EXISTING);
-            } catch (IOException ex) {
-                L.log(Level.WARNING, "Can't create struct database backup", ex);
-            }
-        }
-        
-        // write updated database file
-        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(dbFile, CREATE, WRITE))) {
+        // write database file
+        File dbFile = new File(FILENAME);
+        try (BufferedOutputStream bos = new BufferedOutputStream(FileUtils.openOutputStream(dbFile))) {
             DataOutputWriter out = new DataOutputWriter(new DataOutputStream(bos));
             
             // write header

@@ -10,10 +10,12 @@
 package info.ata4.unity.struct.db;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -27,6 +29,9 @@ import java.util.logging.Logger;
 public class ClassID {
     
     private static final Logger L = Logger.getLogger(ClassID.class.getName());
+    private static final String FILENAME = "classid.txt";
+    private static final String CHARSET = "ASCII";
+    
     private static ClassID instance;
     
     public static ClassID getInstance() {
@@ -38,16 +43,14 @@ public class ClassID {
     
     private Map<Integer, String> ID_TO_NAME = new HashMap<>();
     private Map<String, Integer> NAME_TO_ID = new HashMap<>();
-    private Path classIDFile = Paths.get("resources", "classid.txt");
     
     private ClassID() {
         load();
     }
     
     private void load() {
-        try (
-            BufferedReader br = Files.newBufferedReader(classIDFile, Charset.forName("ASCII"));
-        ) {
+        try (InputStream is = getClass().getResourceAsStream("resources/" + FILENAME)) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, CHARSET));
             for (String line; (line = br.readLine()) != null;) {
                 // skip comments
                 if (line.startsWith("#") || line.startsWith("//")) {
