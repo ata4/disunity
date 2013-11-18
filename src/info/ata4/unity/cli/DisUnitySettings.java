@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity;
+package info.ata4.unity.cli;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class DisUnitySettings {
     
     private List<File> files = new ArrayList<>();
     private Set<Integer> classFilter = new HashSet<>();
+    private DisUnityCommand command;
     
     public List<File> getFiles() {
         return files;
@@ -34,5 +35,13 @@ public class DisUnitySettings {
     
     public boolean isClassFiltered(Integer classID) {
         return classFilter != null && !classFilter.contains(classID);
+    }
+
+    public DisUnityCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(DisUnityCommand command) {
+        this.command = command;
     }
 }

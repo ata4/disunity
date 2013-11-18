@@ -1,5 +1,5 @@
 /*
- ** 2013 June 19
+ ** 2013 June 16
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.extract.handler;
+package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
@@ -19,26 +19,23 @@ import java.nio.ByteBuffer;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FontHandler extends ExtractHandler {
-
+public class SubstanceArchiveHandler extends ExtractHandler {
+    
     @Override
     public String getClassName() {
-        return "Font";
+        return "SubstanceArchive";
     }
-
-    @Override
-    public String getFileExtension() {
-        // TODO: detect OpenType fonts and use "otf" in these cases
-        return "ttf";
+    
+    public String getExtension() {
+        return "sbsar";
     }
 
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        UnityArray fontData = obj.getValue("m_FontData");
-        ByteBuffer fontBuffer = fontData.getRaw();
-        if (fontBuffer.capacity() > 0) {
-            writeFile(fontBuffer, path.pathID, name);
-        }
+        UnityArray packageData = obj.getValue("m_PackageData");
+        ByteBuffer packageBuffer = packageData.getRaw();
+        
+        writeFile(packageBuffer, path.pathID, name);
     }
 }

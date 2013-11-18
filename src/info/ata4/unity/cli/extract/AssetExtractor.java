@@ -7,20 +7,20 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.extract;
+package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.DisUnitySettings;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFormat;
-import info.ata4.unity.extract.handler.AudioClipHandler;
-import info.ata4.unity.extract.handler.CubemapHandler;
-import info.ata4.unity.extract.handler.ExtractHandler;
-import info.ata4.unity.extract.handler.FontHandler;
-import info.ata4.unity.extract.handler.MovieTextureHandler;
-import info.ata4.unity.extract.handler.ShaderHandler;
-import info.ata4.unity.extract.handler.SubstanceArchiveHandler;
-import info.ata4.unity.extract.handler.TextAssetHandler;
-import info.ata4.unity.extract.handler.Texture2DHandler;
+import info.ata4.unity.cli.DisUnitySettings;
+import info.ata4.unity.cli.extract.handler.AudioClipHandler;
+import info.ata4.unity.cli.extract.handler.CubemapHandler;
+import info.ata4.unity.cli.extract.handler.ExtractHandler;
+import info.ata4.unity.cli.extract.handler.FontHandler;
+import info.ata4.unity.cli.extract.handler.MovieTextureHandler;
+import info.ata4.unity.cli.extract.handler.ShaderHandler;
+import info.ata4.unity.cli.extract.handler.SubstanceArchiveHandler;
+import info.ata4.unity.cli.extract.handler.TextAssetHandler;
+import info.ata4.unity.cli.extract.handler.Texture2DHandler;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.UnityObject;

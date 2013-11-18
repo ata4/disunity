@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.extract.handler;
+package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.ATC_RGB4;
