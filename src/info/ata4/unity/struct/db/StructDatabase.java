@@ -73,14 +73,18 @@ public class StructDatabase {
         InputStream is;
         try {
             File dbFile = new File(FILENAME);
-            String dbPath = "resources/" + FILENAME;
+            String dbPath = "/resources/" + FILENAME;
 
             if (dbFile.exists()) {
                 is = FileUtils.openInputStream(dbFile);
             } else {
                 is = getClass().getResourceAsStream(dbPath);
             }
-        } catch (IOException ex) {
+            
+            if (is == null) {
+                throw new IOException("Internal database not found");
+            }
+        } catch (Exception ex) {
             L.log(Level.SEVERE, "Can't open struct database", ex);
             return;
         }

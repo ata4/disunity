@@ -49,7 +49,12 @@ public class ClassID {
     }
     
     private void load() {
-        try (InputStream is = getClass().getResourceAsStream("resources/" + FILENAME)) {
+        String dbPath = "/resources/" + FILENAME;
+        try (InputStream is = getClass().getResourceAsStream(dbPath)) {
+            if (is == null) {
+                throw new IOException("Internal database not found");
+            }
+            
             BufferedReader br = new BufferedReader(new InputStreamReader(is, CHARSET));
             for (String line; (line = br.readLine()) != null;) {
                 // skip comments
