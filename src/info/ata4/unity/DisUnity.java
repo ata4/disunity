@@ -9,8 +9,6 @@
  */
 package info.ata4.unity;
 
-import java.util.logging.Logger;
-
 /**
  * DisUnity main processing class.
  * 
@@ -18,9 +16,7 @@ import java.util.logging.Logger;
  */
 public class DisUnity {
 
-    private static final Logger L = Logger.getLogger(DisUnity.class.getName());
-    
-    private static final String VERSION = "0.1.1";
+    private static final String VERSION = "0.1.2";
     
     public static String getVersion() {
         return VERSION;
