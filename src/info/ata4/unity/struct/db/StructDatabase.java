@@ -82,7 +82,7 @@ public class StructDatabase {
             }
             
             if (is == null) {
-                throw new IOException("Internal database not found");
+                throw new IOException("Struct database file not found");
             }
         } catch (Exception ex) {
             L.log(Level.SEVERE, "Can't open struct database", ex);
