@@ -16,6 +16,7 @@ import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
+import static info.ata4.unity.enums.TextureFormat.ETC_RGB4;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.ObjectPath;
@@ -86,6 +87,10 @@ public class Texture2DHandler extends ExtractHandler {
                 extractATC();
                 break;
                 
+            case ETC_RGB4:
+                extractPKM();
+                break;
+
             default:
                 extractDDS();
         }
@@ -227,5 +232,30 @@ public class Texture2DHandler extends ExtractHandler {
     private void extractATC() {
         // TODO
         throw new UnsupportedOperationException("ATC not yet implemented");
+    }
+
+    private void extractPKM() throws IOException {
+        int width = obj.getValue("m_Width");
+        int height = obj.getValue("m_Height");
+
+        // texWidth and texHeight are width and height rounded up to multiple of 4.
+        int texWidth = ((width - 1) | 3) + 1;
+        int texHeight = ((height - 1) | 3) + 1;
+
+        ByteBuffer res = ByteBuffer.allocateDirect(16 + imageBuffer.capacity());
+        res.order(ByteOrder.BIG_ENDIAN);
+
+        res.putLong(0x504b4d2031300000L); // PKM 10\0\0
+
+        res.putShort((short) texWidth);
+        res.putShort((short) texHeight);
+        res.putShort((short) width);
+        res.putShort((short) height);
+
+        res.put(imageBuffer);
+
+        res.rewind();
+
+        writeFile(res, path.pathID, name, "pkm");
     }
 }
