@@ -22,6 +22,9 @@ import java.util.Map;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class MapUtils {
+    
+    private MapUtils() {
+    }
 
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, final boolean desc) {
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
