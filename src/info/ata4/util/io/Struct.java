@@ -9,8 +9,6 @@
  */
 package info.ata4.util.io;
 
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
 
 /**

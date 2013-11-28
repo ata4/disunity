@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,8 +23,6 @@ import java.util.logging.Logger;
  */
 public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
 
-    private static final Logger L = Logger.getLogger(AssetTypeTree.class.getName());
-    
     public String revision;
     public int version;
     
@@ -54,18 +50,12 @@ public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implem
         // TODO: validate
         if (format >= 7) {
             revision = in.readStringNull(255);
-            L.log(Level.FINEST, "revision = {0}", revision);
-
             version = in.readInt();
-            L.log(Level.FINEST, "version = {0}", version);
         }
         
         int fields = in.readInt();
-        L.log(Level.FINEST, "fields = {0}", fields);
-        
         for (int i = 0; i < fields; i++) {
             int classID = in.readInt();
-            L.log(Level.FINEST, "classID = {0}", classID);
 
             AssetFieldType fn = new AssetFieldType();
             fn.read(in);
@@ -84,22 +74,17 @@ public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implem
         // TODO: validate
         if (format >= 7) {
             out.writeStringNull(revision);
-            L.log(Level.FINEST, "revision = {0}", revision);
-            
             out.writeInt(version);
-            L.log(Level.FINEST, "version = {0}", version);
         }
         
         if (!standalone) {
             int fields = size();
             out.writeInt(fields);
-            L.log(Level.FINEST, "fields = {0}", fields);
 
             for (Map.Entry<Integer, AssetFieldType> entry : entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
-                L.log(Level.FINEST, "classID = {0}", classID);
-
+                
                 AssetFieldType fn = entry.getValue();
                 fn.write(out);
             }

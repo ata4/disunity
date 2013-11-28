@@ -13,17 +13,12 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetRef implements Struct {
-    
-    private static final Logger L = Logger.getLogger(AssetRef.class.getName());
     
     public byte[] guid = new byte[16];
     public String filePath;
@@ -33,16 +28,9 @@ public class AssetRef implements Struct {
     @Override
     public void read(DataInputReader in) throws IOException {
         in.readFully(guid);
-        L.log(Level.FINEST, "guid = {0}", DatatypeConverter.printHexBinary(guid));
-
         type = in.readInt();
-        L.log(Level.FINEST, "type = {0}", type);
-
         filePath = in.readStringNull();
-        L.log(Level.FINEST, "filePath = {0}", filePath);
-
         assetPath = in.readStringNull();
-        L.log(Level.FINEST, "assetPath = {0}", assetPath);
     }
 
     @Override

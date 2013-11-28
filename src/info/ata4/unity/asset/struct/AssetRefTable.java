@@ -14,8 +14,6 @@ import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,15 +21,11 @@ import java.util.logging.Logger;
  */
 public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
 
-    private static final Logger L = Logger.getLogger(AssetRefTable.class.getName());
-    
     public byte unknown;
     
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
-        L.log(Level.FINEST, "entries = {0}", entries);
-        
         unknown = in.readByte();
         
         for (int i = 0; i < entries; i++) {
@@ -45,8 +39,7 @@ public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
     public void write(DataOutputWriter out) throws IOException {
         int entries = size();
         out.writeInt(entries);
-        L.log(Level.FINEST, "entries = {0}", entries);
-        
+
         for (AssetRef ref : this) {
             ref.write(out);
         }

@@ -16,7 +16,7 @@ import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
-import info.ata4.unity.serdes.struct.StructDatabase;
+import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
 import java.io.PrintStream;

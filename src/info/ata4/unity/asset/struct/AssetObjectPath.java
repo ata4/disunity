@@ -13,8 +13,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,8 +20,6 @@ import java.util.logging.Logger;
  */
 public class AssetObjectPath implements Struct {
     
-    private static final Logger L = Logger.getLogger(AssetObjectPath.class.getName());
-
     public int pathID;
     public int offset;
     public int length;
@@ -33,36 +29,18 @@ public class AssetObjectPath implements Struct {
     @Override
     public void read(DataInputReader in) throws IOException {
         pathID = in.readInt();
-        L.log(Level.FINEST, "pathID = {0}", pathID);
-        
         offset = in.readInt();
-        L.log(Level.FINEST, "offset = {0}", offset);
-        
         length = in.readInt();
-        L.log(Level.FINEST, "length = {0}", length);
-        
         classID1 = in.readInt();
-        L.log(Level.FINEST, "classID1 = {0}", classID1);
-        
         classID2 = in.readInt();
-        L.log(Level.FINEST, "classID2 = {0}", classID2);
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
         out.writeInt(pathID);
-        L.log(Level.FINEST, "pathID = {0}", pathID);
-        
         out.writeInt(offset);
-        L.log(Level.FINEST, "offset = {0}", offset);
-        
         out.writeInt(length);
-        L.log(Level.FINEST, "length = {0}", length);
-        
         out.writeInt(classID1);
-        L.log(Level.FINEST, "classID1 = {0}", classID1);
-        
         out.writeInt(classID2);
-        L.log(Level.FINEST, "classID2 = {0}", classID2);
     }
 }

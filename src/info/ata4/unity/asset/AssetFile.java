@@ -14,7 +14,7 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
-import info.ata4.unity.serdes.struct.StructDatabase;
+import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataInputReader;

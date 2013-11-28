@@ -13,8 +13,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,8 +20,6 @@ import java.util.logging.Logger;
  */
 public class AssetHeader implements Struct {
     
-    private static final Logger L = Logger.getLogger(AssetHeader.class.getName());
-
     // size of the structure data
     public int treeSize;
     
@@ -46,36 +42,18 @@ public class AssetHeader implements Struct {
     @Override
     public void read(DataInputReader in) throws IOException {
         treeSize = in.readInt();
-        L.log(Level.FINEST, "treeSize = {0}", treeSize);
-        
         fileSize = in.readInt();
-        L.log(Level.FINEST, "fileSize = {0}", fileSize);
-        
         format = in.readInt();
-        L.log(Level.FINEST, "format = {0}", format);
-        
         dataOffset = in.readInt();
-        L.log(Level.FINEST, "dataOffset = {0}", dataOffset);
-        
         unknown = in.readInt();
-        L.log(Level.FINEST, "unknown = {0}", unknown);
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
         out.writeInt(treeSize);
-        L.log(Level.FINEST, "treeSize = {0}", treeSize);
-        
         out.writeInt(fileSize);
-        L.log(Level.FINEST, "fileSize = {0}", fileSize);
-        
         out.writeInt(format);
-        L.log(Level.FINEST, "format = {0}", format);
-        
         out.writeInt(dataOffset);
-        L.log(Level.FINEST, "dataOffset = {0}", dataOffset);
-        
         out.writeInt(unknown);
-        L.log(Level.FINEST, "unknown = {0}", unknown);
     }
 }

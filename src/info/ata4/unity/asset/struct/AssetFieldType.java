@@ -15,16 +15,12 @@ import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct {
-    
-    private static final Logger L = Logger.getLogger(AssetFieldType.class.getName());
     
     public static final int FLAG_FORCE_ALIGN = 0x4000;
 
@@ -72,29 +68,15 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
     @Override
     public void read(DataInputReader in) throws IOException {
         type = in.readStringNull(256);
-        L.log(Level.FINEST, "type = {0}", type);
-        
         name = in.readStringNull(256);
-        L.log(Level.FINEST, "name = {0}", name);
-        
         size = in.readInt();
-        L.log(Level.FINEST, "size = {0}", size);
-        
         index = in.readInt();
-        L.log(Level.FINEST, "index = {0}", index);
-        
         arrayFlag = in.readInt();
-        L.log(Level.FINEST, "arrayFlag = {0}", arrayFlag);
-        
         flags1 = in.readInt();
-        L.log(Level.FINEST, "flags1 = {0}", flags1);
-        
         flags2 = in.readInt();
-        L.log(Level.FINEST, "flags2 = {0}", flags2);
-        
+
         int children = in.readInt();
-        L.log(Level.FINEST, "children = {0}", children);
-        
+
         for (int i = 0; i < children; i++) {
             AssetFieldType fn = new AssetFieldType();
             fn.read(in);
@@ -105,29 +87,15 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
     @Override
     public void write(DataOutputWriter out) throws IOException {
         out.writeStringNull(type);
-        L.log(Level.FINEST, "type = {0}", type);
-        
         out.writeStringNull(name);
-        L.log(Level.FINEST, "name = {0}", name);
-        
         out.writeInt(size);
-        L.log(Level.FINEST, "size = {0}", size);
-        
         out.writeInt(index);
-        L.log(Level.FINEST, "index = {0}", index);
-        
         out.writeInt(arrayFlag);
-        L.log(Level.FINEST, "arrayFlag = {0}", arrayFlag);
-        
         out.writeInt(flags1);
-        L.log(Level.FINEST, "flags1 = {0}", flags1);
-        
         out.writeInt(flags2);
-        L.log(Level.FINEST, "flags2 = {0}", flags2);
         
         int children = size();
         out.writeInt(children);
-        L.log(Level.FINEST, "children = {0}", children);
         
         for (AssetFieldType subField : this) {
             subField.write(out);

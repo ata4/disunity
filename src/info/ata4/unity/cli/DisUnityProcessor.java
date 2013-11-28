@@ -17,7 +17,7 @@ import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
-import info.ata4.unity.serdes.struct.StructDatabase;
+import info.ata4.unity.serdes.db.StructDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;

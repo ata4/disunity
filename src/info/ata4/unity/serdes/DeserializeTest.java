@@ -9,11 +9,11 @@
  */
 package info.ata4.unity.serdes;
 
+import info.ata4.unity.serdes.db.StructDatabase;
+import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.serdes.struct.FieldTypeMap;
-import info.ata4.unity.serdes.struct.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.log.LogUtils;

@@ -14,8 +14,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,13 +21,10 @@ import java.util.logging.Logger;
  */
 public class AssetObjectPathTable extends ArrayList<AssetObjectPath> implements Struct {
     
-    private static final Logger L = Logger.getLogger(AssetObjectPathTable.class.getName());
-    
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
-        L.log(Level.FINEST, "entries = {0}", entries);
-        
+
         for (int i = 0; i < entries; i++) {
             AssetObjectPath path = new AssetObjectPath();
             path.read(in);
@@ -41,8 +36,7 @@ public class AssetObjectPathTable extends ArrayList<AssetObjectPath> implements 
     public void write(DataOutputWriter out) throws IOException {
         int entries = size();
         out.writeInt(entries);
-        L.log(Level.FINEST, "entries = {0}", entries);
-        
+
         for (AssetObjectPath path : this) {
             path.write(out);
         }
