@@ -38,7 +38,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 
 /**
- * Reader for Unity asset bundles (aka UnityWebStream).
+ * Reader for Unity asset bundles.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
@@ -64,11 +64,26 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     private ByteBuffer bbData;
     private AssetBundleHeader info;
     private List<AssetBundleEntry> entries;
- 
+    private boolean compressed;
+    
     @Override
     public void load(ByteBuffer bb) throws IOException {
         this.bb = bb;
         DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
+
+        String header = in.readStringFixed(8);
+        switch (header) {
+            case SIGNATURE_RAW:
+                compressed = false;
+                break;
+
+            case SIGNATURE_WEB:
+                compressed = true;
+                break;
+
+            default:
+                throw new AssetException("Invalid signature");
+        }
 
         info = new AssetBundleHeader();
         info.read(in);
@@ -147,7 +162,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     }
     
     public boolean isCompressed() {
-        return info.isCompressed();
+        return compressed;
     }
     
     public byte getFileVersion() {
