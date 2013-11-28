@@ -9,12 +9,12 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.ExternalReferenceTable;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectPathTable;
-import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.struct.db.StructDatabase;
+import info.ata4.unity.asset.struct.AssetHeader;
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.AssetObjectPathTable;
+import info.ata4.unity.asset.struct.AssetRefTable;
+import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.serdes.struct.StructDatabase;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataInputReader;
@@ -45,9 +45,9 @@ public class AssetFile extends MappedFileHandler {
 
     private ByteBuffer bbData;
     private AssetHeader header = new AssetHeader();
-    private TypeTree typeTree = new TypeTree();
-    private ObjectPathTable objTable = new ObjectPathTable();
-    private ExternalReferenceTable refTable = new ExternalReferenceTable();
+    private AssetTypeTree typeTree = new AssetTypeTree();
+    private AssetObjectPathTable objTable = new AssetObjectPathTable();
+    private AssetRefTable refTable = new AssetRefTable();
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
@@ -165,22 +165,22 @@ public class AssetFile extends MappedFileHandler {
         return header;
     }
 
-    public TypeTree getTypeTree() {
+    public AssetTypeTree getTypeTree() {
         return typeTree;
     }
 
-    public ObjectPathTable getObjectPaths() {
+    public AssetObjectPathTable getObjectPaths() {
         return objTable;
     }
     
-    public ExternalReferenceTable getExternalRefs() {
+    public AssetRefTable getReferences() {
         return refTable;
     }
     
-    public List<ObjectPath> getPathsByID(int cid) {
-        List<ObjectPath> paths = new ArrayList<>();
+    public List<AssetObjectPath> getPathsByID(int cid) {
+        List<AssetObjectPath> paths = new ArrayList<>();
         
-        for (ObjectPath path : objTable) {
+        for (AssetObjectPath path : objTable) {
             if (path.classID1 == cid) {
                 paths.add(path);
             }
@@ -191,7 +191,7 @@ public class AssetFile extends MappedFileHandler {
     
     public Set<Integer> getClassIDs() {
         Set<Integer> classIDs = new TreeSet<>();
-        for (ObjectPath path : objTable) {
+        for (AssetObjectPath path : objTable) {
             classIDs.add(path.classID2);
         }
         return classIDs;

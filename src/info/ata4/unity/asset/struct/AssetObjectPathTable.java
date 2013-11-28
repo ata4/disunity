@@ -1,5 +1,5 @@
 /*
- ** 2013 August 16
+ ** 2013 June 17
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,8 +7,9 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct;
+package info.ata4.unity.asset.struct;
 
+import info.ata4.util.io.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
@@ -20,23 +21,19 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ExternalReferenceTable extends ArrayList<ExternalReference> implements Struct {
-
-    private static final Logger L = Logger.getLogger(ExternalReferenceTable.class.getName());
+public class AssetObjectPathTable extends ArrayList<AssetObjectPath> implements Struct {
     
-    public byte unknown;
+    private static final Logger L = Logger.getLogger(AssetObjectPathTable.class.getName());
     
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
         L.log(Level.FINEST, "entries = {0}", entries);
         
-        unknown = in.readByte();
-        
         for (int i = 0; i < entries; i++) {
-            ExternalReference ref = new ExternalReference();
-            ref.read(in);
-            add(ref);
+            AssetObjectPath path = new AssetObjectPath();
+            path.read(in);
+            add(path);
         }
     }
 
@@ -46,10 +43,8 @@ public class ExternalReferenceTable extends ArrayList<ExternalReference> impleme
         out.writeInt(entries);
         L.log(Level.FINEST, "entries = {0}", entries);
         
-        for (ExternalReference ref : this) {
-            ref.write(out);
+        for (AssetObjectPath path : this) {
+            path.write(out);
         }
-        
-        out.writeByte(unknown); 
-    }
+    }    
 }

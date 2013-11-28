@@ -10,8 +10,8 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.struct.FieldType;
-import info.ata4.unity.struct.ObjectPath;
+import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class Deserializer {
         this.asset = asset;
     }
     
-    public UnityObject deserialize(ObjectPath path) throws DeserializerException {
+    public UnityObject deserialize(AssetObjectPath path) throws DeserializerException {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
         bbData.position(path.offset);
@@ -46,7 +46,7 @@ public class Deserializer {
         // create asset input
         in = new SerializedInput(new DataInputReader(new ByteBufferInput(bb)));
 
-        FieldType classNode = asset.getTypeTree().get(path.classID2);
+        AssetFieldType classNode = asset.getTypeTree().get(path.classID2);
         
         if (classNode == null) {
             throw new DeserializerException("Class not found in type tree");
@@ -56,7 +56,7 @@ public class Deserializer {
         ac.setName(classNode.name);
         ac.setType(classNode.type);
 
-        for (FieldType fieldNode : classNode) {
+        for (AssetFieldType fieldNode : classNode) {
             ac.addField(readField(fieldNode));
         }
         
@@ -75,19 +75,19 @@ public class Deserializer {
         return ac;
     }
     
-    private UnityObject readObject(FieldType field) throws DeserializerException {
+    private UnityObject readObject(AssetFieldType field) throws DeserializerException {
         UnityObject ac = new UnityObject();
         ac.setName(field.name);
         ac.setType(field.type);
         
-        for (FieldType fieldNode : field) {
+        for (AssetFieldType fieldNode : field) {
             ac.addField(readField(fieldNode));
         }
         
         return ac;
     }
     
-    private UnityField readField(FieldType field) throws DeserializerException {
+    private UnityField readField(AssetFieldType field) throws DeserializerException {
         UnityField af = new UnityField();
         af.setName(field.name);
         af.setType(field.type);
@@ -103,7 +103,7 @@ public class Deserializer {
         return af;
     }
 
-    private Object readFieldValue(FieldType field) throws IOException, DeserializerException {
+    private Object readFieldValue(AssetFieldType field) throws IOException, DeserializerException {
         Object value;
         
         if (field.isEmpty()) {
@@ -119,7 +119,7 @@ public class Deserializer {
         return value;
     }
     
-    private Object readPrimitive(FieldType field) throws IOException, DeserializerException {
+    private Object readPrimitive(AssetFieldType field) throws IOException, DeserializerException {
         switch (field.type) {
             case "UInt64":
                 return in.readUnsignedLong();
@@ -164,7 +164,7 @@ public class Deserializer {
         }
     }
     
-    private Object readComplex(FieldType field) throws IOException, DeserializerException {
+    private Object readComplex(AssetFieldType field) throws IOException, DeserializerException {
         switch (field.type) {
             case "string":
                 return in.readString();
@@ -184,9 +184,9 @@ public class Deserializer {
         }
     }
     
-    private UnityArray readArray(FieldType field) throws IOException, DeserializerException {
-        FieldType sizeField = field.get(0);
-        FieldType dataField = field.get(1);
+    private UnityArray readArray(AssetFieldType field) throws IOException, DeserializerException {
+        AssetFieldType sizeField = field.get(0);
+        AssetFieldType dataField = field.get(1);
         int size = (int) readFieldValue(sizeField);
         UnityArray uarray = new UnityArray(dataField.type);
         

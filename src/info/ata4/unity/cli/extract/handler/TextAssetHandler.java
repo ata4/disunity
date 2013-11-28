@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.cli.extract.handler;
 
+import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 
 /**
@@ -30,7 +30,7 @@ public class TextAssetHandler extends ExtractHandler {
     }
 
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         String script = obj.getValue("m_Script");
         writeFile(script.getBytes("UTF8"), path.pathID, name);

@@ -10,14 +10,14 @@
 package info.ata4.unity.cli.utils;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.ExternalReference;
-import info.ata4.unity.struct.ExternalReferenceTable;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectPathTable;
-import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.struct.db.ClassID;
-import info.ata4.unity.struct.db.StructDatabase;
+import info.ata4.unity.asset.struct.AssetHeader;
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.AssetObjectPathTable;
+import info.ata4.unity.asset.struct.AssetRef;
+import info.ata4.unity.asset.struct.AssetRefTable;
+import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.serdes.struct.StructDatabase;
+import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -49,10 +49,10 @@ public class AssetUtils {
     }
 
     public void printInfo(PrintStream ps) {
-        ObjectPathTable objTable = asset.getObjectPaths();
-        ExternalReferenceTable refTable = asset.getExternalRefs();
+        AssetObjectPathTable objTable = asset.getObjectPaths();
+        AssetRefTable refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
-        TypeTree fieldTree = asset.getTypeTree();
+        AssetTypeTree fieldTree = asset.getTypeTree();
         
         ps.println("Header");
         ps.println("  File size: " + humanReadableByteCount(header.fileSize, true));
@@ -71,7 +71,7 @@ public class AssetUtils {
         
         if (!refTable.isEmpty()) {
             ps.println("External references");
-            for (ExternalReference ref : refTable) {
+            for (AssetRef ref : refTable) {
                 if (!ref.assetPath.isEmpty()) {
                     ps.printf("  Asset path: \"%s\"\n", ref.assetPath);
                 }
@@ -86,11 +86,11 @@ public class AssetUtils {
     }
     
     public void printStats(PrintStream ps) {
-        ObjectPathTable pathTable = asset.getObjectPaths();
+        AssetObjectPathTable pathTable = asset.getObjectPaths();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();
         
-        for (ObjectPath path : pathTable) {
+        for (AssetObjectPath path : pathTable) {
             String className = ClassID.getInstance().getNameForID(path.classID2, true);
             
             if (!classCounts.containsKey(className)) {

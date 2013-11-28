@@ -10,7 +10,7 @@
 package info.ata4.unity.cli;
 
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.struct.db.ClassID;
+import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
 import java.util.Arrays;

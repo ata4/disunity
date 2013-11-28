@@ -7,10 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct;
+package info.ata4.unity.asset.struct;
 
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -21,9 +22,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldType extends ArrayList<FieldType> implements Struct {
+public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct {
     
-    private static final Logger L = Logger.getLogger(FieldType.class.getName());
+    private static final Logger L = Logger.getLogger(AssetFieldType.class.getName());
     
     public static final int FLAG_FORCE_ALIGN = 0x4000;
 
@@ -95,7 +96,7 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         L.log(Level.FINEST, "children = {0}", children);
         
         for (int i = 0; i < children; i++) {
-            FieldType fn = new FieldType();
+            AssetFieldType fn = new AssetFieldType();
             fn.read(in);
             add(fn);
         }
@@ -128,7 +129,7 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         out.writeInt(children);
         L.log(Level.FINEST, "children = {0}", children);
         
-        for (FieldType subField : this) {
+        for (AssetFieldType subField : this) {
             subField.write(out);
         }
     }
@@ -146,7 +147,7 @@ public class FieldType extends ArrayList<FieldType> implements Struct {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FieldType other = (FieldType) obj;
+        final AssetFieldType other = (AssetFieldType) obj;
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }

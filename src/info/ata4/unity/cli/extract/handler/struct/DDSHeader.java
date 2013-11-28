@@ -7,11 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct.dds;
+package info.ata4.unity.cli.extract.handler.struct;
 
-import info.ata4.unity.struct.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import info.ata4.util.string.StringMacroUtils;
 import java.io.IOException;
 

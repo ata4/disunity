@@ -7,9 +7,10 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.asset;
+package info.ata4.unity.assetbundle;
 
-import info.ata4.unity.struct.AssetBundleHeader;
+import info.ata4.unity.asset.AssetException;
+import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferInputStream;
 import info.ata4.util.io.ByteBufferOutputStream;

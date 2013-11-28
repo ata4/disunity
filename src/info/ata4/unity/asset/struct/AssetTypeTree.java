@@ -7,10 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct;
+package info.ata4.unity.asset.struct;
 
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,9 +23,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TypeTree extends LinkedHashMap<Integer, FieldType> implements Struct {
+public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
 
-    private static final Logger L = Logger.getLogger(TypeTree.class.getName());
+    private static final Logger L = Logger.getLogger(AssetTypeTree.class.getName());
     
     public String revision;
     public int version;
@@ -66,7 +67,7 @@ public class TypeTree extends LinkedHashMap<Integer, FieldType> implements Struc
             int classID = in.readInt();
             L.log(Level.FINEST, "classID = {0}", classID);
 
-            FieldType fn = new FieldType();
+            AssetFieldType fn = new AssetFieldType();
             fn.read(in);
             
             put(classID, fn);
@@ -94,12 +95,12 @@ public class TypeTree extends LinkedHashMap<Integer, FieldType> implements Struc
             out.writeInt(fields);
             L.log(Level.FINEST, "fields = {0}", fields);
 
-            for (Map.Entry<Integer, FieldType> entry : entrySet()) {
+            for (Map.Entry<Integer, AssetFieldType> entry : entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 L.log(Level.FINEST, "classID = {0}", classID);
 
-                FieldType fn = entry.getValue();
+                AssetFieldType fn = entry.getValue();
                 fn.write(out);
             }
         } else {
@@ -120,7 +121,7 @@ public class TypeTree extends LinkedHashMap<Integer, FieldType> implements Struc
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TypeTree other = (TypeTree) obj;
+        final AssetTypeTree other = (AssetTypeTree) obj;
         if (!Objects.equals(this.revision, other.revision)) {
             return false;
         }

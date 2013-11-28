@@ -11,6 +11,10 @@ package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFormat;
+import info.ata4.unity.asset.struct.AssetHeader;
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.AssetObjectPathTable;
+import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.CubemapHandler;
@@ -24,11 +28,7 @@ import info.ata4.unity.cli.extract.handler.Texture2DHandler;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.AssetHeader;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.ObjectPathTable;
-import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.struct.db.ClassID;
+import info.ata4.unity.util.ClassID;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -118,8 +118,8 @@ public class AssetExtractor {
 
     public void extract(File dir, boolean raw) throws IOException {
         AssetHeader header = asset.getHeader();
-        TypeTree typeTree = asset.getTypeTree();
-        ObjectPathTable pathTable = asset.getObjectPaths();
+        AssetTypeTree typeTree = asset.getTypeTree();
+        AssetObjectPathTable pathTable = asset.getObjectPaths();
         
         Deserializer deser = new Deserializer(asset);
         AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
@@ -130,7 +130,7 @@ public class AssetExtractor {
             extractHandler.setAssetFormat(format);
         }
         
-        for (ObjectPath path : pathTable) {
+        for (AssetObjectPath path : pathTable) {
             // skip filtered classes
             if (settings.isClassFiltered(path.classID2)) {
                 continue;
@@ -182,8 +182,8 @@ public class AssetExtractor {
     }
 
     public void split(File dir) throws IOException {
-        ObjectPathTable pathTable = asset.getObjectPaths();
-        TypeTree typeTree = asset.getTypeTree();
+        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        AssetTypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -192,7 +192,7 @@ public class AssetExtractor {
             return;
         }
         
-        for (ObjectPath path : pathTable) {
+        for (AssetObjectPath path : pathTable) {
             // skip filtered classes
             if (settings.isClassFiltered(path.classID2)) {
                 continue;
@@ -203,7 +203,7 @@ public class AssetExtractor {
             AssetFile subAsset = new AssetFile();
             subAsset.getHeader().format = asset.getHeader().format;
             
-            ObjectPath subFieldPath = new ObjectPath();
+            AssetObjectPath subFieldPath = new AssetObjectPath();
             subFieldPath.classID1 = path.classID1;
             subFieldPath.classID2 = path.classID2;
             subFieldPath.length = path.length;
@@ -211,7 +211,7 @@ public class AssetExtractor {
             subFieldPath.pathID = 1;
             subAsset.getObjectPaths().add(subFieldPath);
             
-            TypeTree subTypeTree = subAsset.getTypeTree();
+            AssetTypeTree subTypeTree = subAsset.getTypeTree();
             subTypeTree.revision = typeTree.revision;
             subTypeTree.version = -2;
             subTypeTree.setFormat(typeTree.getFormat());

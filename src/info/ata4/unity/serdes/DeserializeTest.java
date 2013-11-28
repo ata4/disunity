@@ -10,11 +10,11 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.struct.FieldType;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.db.FieldTypeMap;
-import info.ata4.unity.struct.db.StructDatabase;
-import info.ata4.unity.struct.db.ClassID;
+import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.serdes.struct.FieldTypeMap;
+import info.ata4.unity.serdes.struct.StructDatabase;
+import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
@@ -42,11 +42,11 @@ public class DeserializeTest {
         if (args.length == 0) {
             FieldTypeMap ftm = StructDatabase.getInstance().getFieldTypeMap();
             Map<String, AtomicInteger> classCounts = new TreeMap<>();
-            Set<FieldType> fieldNodes = new HashSet<>();
+            Set<AssetFieldType> fieldNodes = new HashSet<>();
             
             int classCountMax = 0;
             int classCountTotal = 0;
-            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
                 String revision = entry.getKey().getRight();
                 fieldNodes.add(entry.getValue());
                 if (!classCounts.containsKey(revision)) {
@@ -80,7 +80,7 @@ public class DeserializeTest {
                     boolean all = false;
 
                     if (all) {
-                        for (ObjectPath path : asset.getObjectPaths()) {
+                        for (AssetObjectPath path : asset.getObjectPaths()) {
                             try {
                                 if (path.classID1 < 0) {
                                     continue;
@@ -94,7 +94,7 @@ public class DeserializeTest {
                         }
                     } else {
                         try {
-                            ObjectPath path = asset.getPathsByID(129).get(0);
+                            AssetObjectPath path = asset.getPathsByID(129).get(0);
                             UnityObject obj = deser.deserialize(path);
                             dump(System.out, obj, 0);
                         } catch (Exception ex) {
@@ -102,7 +102,7 @@ public class DeserializeTest {
                         }
 
                         try {
-                            ObjectPath path = asset.getPathsByID(141).get(0);
+                            AssetObjectPath path = asset.getPathsByID(141).get(0);
                             UnityObject obj = deser.deserialize(path);
                             dump(System.out, obj, 0);
                         } catch (Exception ex) {

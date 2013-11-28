@@ -7,10 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct;
+package info.ata4.unity.asset.struct;
 
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +21,9 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ExternalReference implements Struct {
+public class AssetRef implements Struct {
     
-    private static final Logger L = Logger.getLogger(ExternalReference.class.getName());
+    private static final Logger L = Logger.getLogger(AssetRef.class.getName());
     
     public byte[] guid = new byte[16];
     public String filePath;

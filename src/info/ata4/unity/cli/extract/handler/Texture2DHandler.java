@@ -9,19 +9,19 @@
  */
 package info.ata4.unity.cli.extract.handler;
 
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.handler.struct.DDSHeader;
+import info.ata4.unity.cli.extract.handler.struct.DDSPixelFormat;
 import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.ATC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.ATC_RGBA8;
+import static info.ata4.unity.enums.TextureFormat.ETC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
-import static info.ata4.unity.enums.TextureFormat.ETC_RGB4;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.dds.DDSHeader;
-import info.ata4.unity.struct.dds.DDSPixelFormat;
 import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class Texture2DHandler extends ExtractHandler {
     private static final Logger L = Logger.getLogger(Texture2DHandler.class.getName());
     
     private TextureFormat tf;
-    private ObjectPath path;
+    private AssetObjectPath path;
     private UnityObject obj;
     private String name;
     private ByteBuffer imageBuffer;
@@ -50,7 +50,7 @@ public class Texture2DHandler extends ExtractHandler {
     }
     
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         this.path = path;
         this.obj = obj;
         

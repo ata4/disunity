@@ -1,5 +1,5 @@
 /*
- ** 2013 June 17
+ ** 2013 August 16
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,10 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct;
+package info.ata4.unity.asset.struct;
 
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,19 +21,23 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectPathTable extends ArrayList<ObjectPath> implements Struct {
+public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
+
+    private static final Logger L = Logger.getLogger(AssetRefTable.class.getName());
     
-    private static final Logger L = Logger.getLogger(ObjectPathTable.class.getName());
+    public byte unknown;
     
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
         L.log(Level.FINEST, "entries = {0}", entries);
         
+        unknown = in.readByte();
+        
         for (int i = 0; i < entries; i++) {
-            ObjectPath path = new ObjectPath();
-            path.read(in);
-            add(path);
+            AssetRef ref = new AssetRef();
+            ref.read(in);
+            add(ref);
         }
     }
 
@@ -42,8 +47,10 @@ public class ObjectPathTable extends ArrayList<ObjectPath> implements Struct {
         out.writeInt(entries);
         L.log(Level.FINEST, "entries = {0}", entries);
         
-        for (ObjectPath path : this) {
-            path.write(out);
+        for (AssetRef ref : this) {
+            ref.write(out);
         }
-    }    
+        
+        out.writeByte(unknown); 
+    }
 }

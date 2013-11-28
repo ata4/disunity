@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.cli.extract.handler;
 
+import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -31,7 +31,7 @@ public class SubstanceArchiveHandler extends ExtractHandler {
     }
 
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         UnityArray packageData = obj.getValue("m_PackageData");
         ByteBuffer packageBuffer = packageData.getRaw();

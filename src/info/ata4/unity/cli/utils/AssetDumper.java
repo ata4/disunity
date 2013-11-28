@@ -9,16 +9,16 @@
  */
 package info.ata4.unity.cli.utils;
 
-import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityField;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.FieldType;
-import info.ata4.unity.struct.ObjectPath;
-import info.ata4.unity.struct.TypeTree;
-import info.ata4.unity.struct.db.ClassID;
+import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -52,7 +52,7 @@ public class AssetDumper {
         
         Deserializer deser = new Deserializer(asset);
         
-        for (ObjectPath path : asset.getObjectPaths()) {
+        for (AssetObjectPath path : asset.getObjectPaths()) {
             try {
                 if (path.classID2 < 0) {
                     continue;
@@ -74,7 +74,7 @@ public class AssetDumper {
     public void dumpStruct(PrintStream ps) {
         this.ps = ps;
         
-        TypeTree typeTree = asset.getTypeTree();
+        AssetTypeTree typeTree = asset.getTypeTree();
         
         if (typeTree.isStandalone()) {
             L.info("No type tree available");
@@ -89,7 +89,7 @@ public class AssetDumper {
                 continue;
             }
             
-            FieldType classField = typeTree.get(classID);
+            AssetFieldType classField = typeTree.get(classID);
             
             if (classField == null) {
                 continue;
@@ -168,7 +168,7 @@ public class AssetDumper {
         }
     }
 
-    private void printType(FieldType field) {
+    private void printType(AssetFieldType field) {
         String name = field.name;
         String type = field.type;
         
@@ -185,7 +185,7 @@ public class AssetDumper {
         
         indentLevel++;
         
-        for (FieldType subField : field) {
+        for (AssetFieldType subField : field) {
             printType(subField);
         }
         

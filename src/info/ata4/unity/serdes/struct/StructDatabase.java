@@ -7,11 +7,12 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct.db;
+package info.ata4.unity.serdes.struct;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.struct.FieldType;
-import info.ata4.unity.struct.TypeTree;
+import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
@@ -101,10 +102,10 @@ public class StructDatabase {
 
             // read field node table
             int fieldNodeSize = in.readInt();
-            List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
+            List<AssetFieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
 
             for (int i = 0; i < fieldNodeSize; i++) {
-                FieldType fieldNode = new FieldType();
+                AssetFieldType fieldNode = new AssetFieldType();
                 fieldNode.read(in);
                 fieldNodes.add(fieldNode);
             }
@@ -125,7 +126,7 @@ public class StructDatabase {
                 int classID = in.readInt();
                 int revisionIndex = in.readInt();
                 String revision = revisions.get(revisionIndex);
-                FieldType fieldNode = fieldNodes.get(index);
+                AssetFieldType fieldNode = fieldNodes.get(index);
 
                 ftm.add(classID, revision, fieldNode);
             }
@@ -146,13 +147,13 @@ public class StructDatabase {
             out.writeInt(VERSION);
 
             // write field node table
-            Set<FieldType> fieldNodes = new HashSet<>(ftm.values());
-            Map<FieldType, Integer> fieldNodeMap = new HashMap<>();
+            Set<AssetFieldType> fieldNodes = new HashSet<>(ftm.values());
+            Map<AssetFieldType, Integer> fieldNodeMap = new HashMap<>();
 
             out.writeInt(fieldNodes.size());
 
             int index = 0;
-            for (FieldType fieldNode : fieldNodes) {
+            for (AssetFieldType fieldNode : fieldNodes) {
                 fieldNodeMap.put(fieldNode, index++);
                 fieldNode.write(out);
             }
@@ -161,7 +162,7 @@ public class StructDatabase {
             Set<String> revisions = new HashSet<>();
             Map<String, Integer> revisionMap = new HashMap<>();
 
-            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
                 revisions.add(entry.getKey().getRight());
             }
 
@@ -176,7 +177,7 @@ public class StructDatabase {
             // write mapping data
             out.writeInt(ftm.entrySet().size());
 
-            for (Map.Entry<Pair<Integer, String>, FieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
                 Pair<Integer, String> fieldNodeKey = entry.getKey();
 
@@ -193,7 +194,7 @@ public class StructDatabase {
     }
     
     public void fill(AssetFile asset) {
-        TypeTree typeTree = asset.getTypeTree();
+        AssetTypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (typeTree.revision == null) {
@@ -202,7 +203,7 @@ public class StructDatabase {
         }
         
         for (Integer classID : classIDs) {
-            FieldType ft = ftm.get(classID, typeTree.revision, false);
+            AssetFieldType ft = ftm.get(classID, typeTree.revision, false);
             if (ft != null) {
                 typeTree.put(classID, ft);
             }
@@ -213,7 +214,7 @@ public class StructDatabase {
     }
     
     public int learn(AssetFile asset) {
-        TypeTree typeTree = asset.getTypeTree();
+        AssetTypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (typeTree.isStandalone()) {
@@ -233,13 +234,13 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            FieldType fieldType = typeTree.get(classID);
+            AssetFieldType fieldType = typeTree.get(classID);
 
             if (fieldType == null) {
                 continue;
             }
             
-            FieldType fieldTypeMapped = ftm.get(classID, typeTree.revision);
+            AssetFieldType fieldTypeMapped = ftm.get(classID, typeTree.revision);
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;

@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.serdes;
 
-import info.ata4.unity.struct.Struct;
+import info.ata4.util.io.Struct;
 import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
 import java.math.BigInteger;

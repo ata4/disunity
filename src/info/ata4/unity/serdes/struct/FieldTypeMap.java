@@ -7,9 +7,9 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.struct.db;
+package info.ata4.unity.serdes.struct;
 
-import info.ata4.unity.struct.FieldType;
+import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.util.collection.Pair;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,16 +20,16 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeMap extends HashMap<Pair<Integer, String>, FieldType> {
+public class FieldTypeMap extends HashMap<Pair<Integer, String>, AssetFieldType> {
     
     private static final Logger L = Logger.getLogger(FieldTypeMap.class.getName());
 
-    public FieldType get(int classID, String revision) {
+    public AssetFieldType get(int classID, String revision) {
         return get(classID, revision, true);
     }
 
-    public FieldType get(int classID, String revision, boolean strict) {
-        FieldType fieldNode = get(new Pair<>(classID, revision));
+    public AssetFieldType get(int classID, String revision, boolean strict) {
+        AssetFieldType fieldNode = get(new Pair<>(classID, revision));
 
         // if set to strict, only return exact matches or null
         if (fieldNode != null || strict) {
@@ -40,17 +40,17 @@ public class FieldTypeMap extends HashMap<Pair<Integer, String>, FieldType> {
         String revision2 = revision.substring(0, 3);
         String revision3 = revision.substring(0, 1);
 
-        FieldType fieldNodeB = null;
+        AssetFieldType fieldNodeB = null;
         String revisionB = null;
 
-        FieldType fieldNodeC = null;
+        AssetFieldType fieldNodeC = null;
         String revisionC = null;
 
 
-        for (Map.Entry<Pair<Integer, String>, FieldType> entry : entrySet()) {
+        for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : entrySet()) {
             Pair<Integer, String> fieldNodeKey = entry.getKey();
             if (fieldNodeKey.getLeft() == classID) {
-                FieldType fieldNodeEntry = entry.getValue();
+                AssetFieldType fieldNodeEntry = entry.getValue();
                 String revisionEntry = fieldNodeKey.getRight();
 
                 // if major and minor version matches, it will probably work
@@ -86,7 +86,7 @@ public class FieldTypeMap extends HashMap<Pair<Integer, String>, FieldType> {
         return null;
     }
 
-    public void add(int classID, String revision, FieldType fieldNode) {
+    public void add(int classID, String revision, AssetFieldType fieldNode) {
         put(new Pair<>(classID, revision), fieldNode);
     }
 }

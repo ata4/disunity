@@ -9,15 +9,15 @@
  */
 package info.ata4.unity.cli;
 
-import info.ata4.unity.asset.AssetBundle;
-import info.ata4.unity.asset.AssetBundleEntry;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFileFilter;
+import info.ata4.unity.asset.struct.AssetRef;
+import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
-import info.ata4.unity.struct.ExternalReference;
-import info.ata4.unity.struct.db.StructDatabase;
+import info.ata4.unity.serdes.struct.StructDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -149,7 +149,7 @@ public class DisUnityProcessor implements Runnable {
                     
                     String fixedPath = sourceFile.getParent().replace("\\", "/").toLowerCase();
                     
-                    for (ExternalReference ref : asset.getExternalRefs()) {
+                    for (AssetRef ref : asset.getReferences()) {
                         if (isAsset(ref.filePath)) {
                             String pathOld = ref.filePath;
                             ref.filePath = fixedPath + "/" + FilenameUtils.getName(ref.filePath);

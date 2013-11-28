@@ -10,8 +10,8 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.AssetFormat;
+import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.ObjectPath;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public abstract class ExtractHandler {
 
     public abstract String getClassName();
 
-    public abstract void extract(ObjectPath path, UnityObject obj) throws IOException;
+    public abstract void extract(AssetObjectPath path, UnityObject obj) throws IOException;
     
     protected void writeFile(ByteBuffer bb, int id, String name, String ext) throws IOException {
         String className = getClassName();
