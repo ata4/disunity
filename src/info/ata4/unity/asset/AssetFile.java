@@ -54,7 +54,7 @@ public class AssetFile extends MappedFileHandler {
         DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
         
         header.read(in);
-
+        
         in.setSwap(true);
         
         typeTree.clear();        
@@ -191,9 +191,11 @@ public class AssetFile extends MappedFileHandler {
     
     public Set<Integer> getClassIDs() {
         Set<Integer> classIDs = new TreeSet<>();
+        
         for (AssetObjectPath path : objTable) {
             classIDs.add(path.classID2);
         }
+        
         return classIDs;
     }
 }

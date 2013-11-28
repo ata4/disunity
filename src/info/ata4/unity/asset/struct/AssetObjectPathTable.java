@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.asset.struct;
 
-import info.ata4.util.io.Struct;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
 
