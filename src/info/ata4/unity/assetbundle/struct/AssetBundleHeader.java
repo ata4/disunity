@@ -20,6 +20,15 @@ import java.io.IOException;
  */
 public class AssetBundleHeader implements Struct {
     
+    public static final String SIGNATURE_WEB = "UnityWeb";
+    public static final String SIGNATURE_RAW = "UnityRaw";
+    
+    public static boolean isValidSignature(String signature) {
+        return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
+    }
+    
+    public String signature;
+    
     // always 0?
     public int unknown1;
     

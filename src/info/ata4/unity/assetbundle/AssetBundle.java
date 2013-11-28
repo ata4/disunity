@@ -46,15 +46,12 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     
     private static final Logger L = Logger.getLogger(AssetBundle.class.getName());
     
-    private static final String SIGNATURE_WEB = "UnityWeb";
-    private static final String SIGNATURE_RAW = "UnityRaw";
-    
     public static boolean isAssetBundle(File file) {
         // check signature of the file
         try (FileInputStream fis = new FileInputStream(file)) {
             DataInputReader in = new DataInputReader(new DataInputStream(fis));
             String signature = in.readStringFixed(8);
-            return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
+            return AssetBundleHeader.isValidSignature(signature);
         } catch (IOException ex) {
             return false;
         }
@@ -64,29 +61,19 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     private ByteBuffer bbData;
     private AssetBundleHeader info;
     private List<AssetBundleEntry> entries;
-    private boolean compressed;
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
         this.bb = bb;
+        
         DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
-
-        String header = in.readStringFixed(8);
-        switch (header) {
-            case SIGNATURE_RAW:
-                compressed = false;
-                break;
-
-            case SIGNATURE_WEB:
-                compressed = true;
-                break;
-
-            default:
-                throw new AssetException("Invalid signature");
-        }
 
         info = new AssetBundleHeader();
         info.read(in);
+        
+        if (!AssetBundleHeader.isValidSignature(info.signature)) {
+            throw new AssetException("Invalid signature");
+        }
 
         bb.position(info.dataOffset);
 
@@ -162,7 +149,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     }
     
     public boolean isCompressed() {
-        return compressed;
+        return info.signature.equals(AssetBundleHeader.SIGNATURE_WEB);
     }
     
     public byte getFileVersion() {
