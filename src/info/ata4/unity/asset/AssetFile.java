@@ -15,14 +15,11 @@ import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.serdes.db.StructDatabase;
-import info.ata4.util.io.ByteBufferInput;
-import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.MappedFileHandler;
 import info.ata4.util.io.NIOFileUtils;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -51,7 +48,7 @@ public class AssetFile extends MappedFileHandler {
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
+        DataInputReader in = new DataInputReader(bb);
         
         header.read(in);
         
@@ -111,7 +108,7 @@ public class AssetFile extends MappedFileHandler {
         
         // build struct info
         ByteArrayOutputStream bosStruct = new ByteArrayOutputStream();
-        DataOutputWriter outStruct = new DataOutputWriter(new DataOutputStream(bosStruct));
+        DataOutputWriter outStruct = new DataOutputWriter(bosStruct);
         outStruct.setSwap(true);
         
         typeTree.setFormat(header.format);
@@ -138,7 +135,7 @@ public class AssetFile extends MappedFileHandler {
         
         // open file
         ByteBuffer bb = NIOFileUtils.openReadWrite(file, 0, header.fileSize);
-        DataOutputWriter out = new DataOutputWriter(new ByteBufferOutput(bb));
+        DataOutputWriter out = new DataOutputWriter(bb);
         
         // write header
         header.write(out);

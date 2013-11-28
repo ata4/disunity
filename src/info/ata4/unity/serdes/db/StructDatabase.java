@@ -18,8 +18,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +89,7 @@ public class StructDatabase {
         }
 
         try (BufferedInputStream bis = new BufferedInputStream(is)) {
-            DataInputReader in = new DataInputReader(new DataInputStream(bis));
+            DataInputReader in = new DataInputReader(bis);
 
             // read header
             int version = in.readInt();
@@ -141,7 +139,7 @@ public class StructDatabase {
         // write database file
         File dbFile = new File(FILENAME);
         try (BufferedOutputStream bos = new BufferedOutputStream(FileUtils.openOutputStream(dbFile))) {
-            DataOutputWriter out = new DataOutputWriter(new DataOutputStream(bos));
+            DataOutputWriter out = new DataOutputWriter(bos);
             
             // write header
             out.writeInt(VERSION);

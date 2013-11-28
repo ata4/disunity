@@ -22,7 +22,6 @@ import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
 import info.ata4.unity.serdes.UnityArray;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.util.io.ByteBufferOutput;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -213,7 +212,7 @@ public class Texture2DHandler extends ExtractHandler {
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
-        DataOutputWriter out = new DataOutputWriter(new ByteBufferOutput(bbTex));
+        DataOutputWriter out = new DataOutputWriter(bbTex);
         dds.write(out);
         
         // write data

@@ -44,7 +44,7 @@ public class Deserializer {
         bb.order(ByteOrder.LITTLE_ENDIAN);
         
         // create asset input
-        in = new SerializedInput(new DataInputReader(new ByteBufferInput(bb)));
+        in = new SerializedInput(new DataInputReader(bb));
 
         AssetFieldType classNode = asset.getTypeTree().get(path.classID2);
         

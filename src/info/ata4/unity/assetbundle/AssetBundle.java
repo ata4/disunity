@@ -11,12 +11,10 @@ package info.ata4.unity.assetbundle;
 
 import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
-import info.ata4.util.io.ByteBufferInput;
 import info.ata4.util.io.ByteBufferInputStream;
 import info.ata4.util.io.ByteBufferOutputStream;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.MappedFileHandler;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,7 +47,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     public static boolean isAssetBundle(File file) {
         // check signature of the file
         try (FileInputStream fis = new FileInputStream(file)) {
-            DataInputReader in = new DataInputReader(new DataInputStream(fis));
+            DataInputReader in = new DataInputReader(fis);
             String signature = in.readStringFixed(8);
             return AssetBundleHeader.isValidSignature(signature);
         } catch (IOException ex) {
@@ -66,7 +64,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     public void load(ByteBuffer bb) throws IOException {
         this.bb = bb;
         
-        DataInputReader in = new DataInputReader(new ByteBufferInput(bb));
+        DataInputReader in = new DataInputReader(bb);
 
         info = new AssetBundleHeader();
         info.read(in);
@@ -78,7 +76,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         bb.position(info.dataOffset);
 
         try (InputStream is = getDataInputStream()) {
-            in = new DataInputReader(new DataInputStream(is));
+            in = new DataInputReader(is);
 
             int files = in.readInt();
             entries = new ArrayList<>(files);
