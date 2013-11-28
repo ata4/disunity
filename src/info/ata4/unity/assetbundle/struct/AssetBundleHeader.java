@@ -65,7 +65,7 @@ public class AssetBundleHeader implements Struct {
     
     private void checkSignature() throws IOException {
         if (!signature.equals(SIGNATURE_WEB) && !signature.equals(SIGNATURE_RAW)) {
-            throw new IOException("Invalid signature");
+            throw new IOException();
         }
     }
     
