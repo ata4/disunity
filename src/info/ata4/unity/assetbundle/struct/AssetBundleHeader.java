@@ -20,6 +20,11 @@ import java.io.IOException;
  */
 public class AssetBundleHeader implements Struct {
     
+    public static final String SIGNATURE_WEB = "UnityWeb";
+    public static final String SIGNATURE_RAW = "UnityRaw";
+    
+    public String signature = SIGNATURE_WEB;
+    
     // always 0?
     public int unknown1;
     
@@ -54,8 +59,22 @@ public class AssetBundleHeader implements Struct {
     // possible values: 52
     public int unknown2;
     
+    public boolean isCompressed() {
+        return signature.equals(SIGNATURE_WEB);
+    }
+    
+    private void checkSignature() throws IOException {
+        if (!signature.equals(SIGNATURE_WEB) && !signature.equals(SIGNATURE_RAW)) {
+            throw new IOException();
+        }
+    }
+    
     @Override
     public void read(DataInputReader in) throws IOException {
+        signature = in.readStringFixed(8);
+        
+        checkSignature();
+        
         unknown1 = in.readInt();
         fileVersion = in.readByte();
         version = in.readStringNull(255);
