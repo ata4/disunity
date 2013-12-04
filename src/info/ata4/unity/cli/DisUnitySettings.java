@@ -23,7 +23,7 @@ public class DisUnitySettings {
     
     private List<File> files = new ArrayList<>();
     private Set<Integer> classFilter = new HashSet<>();
-    private DisUnityCommand command;
+    private DisUnityCommand command = DisUnityCommand.EXTRACT;
     
     public List<File> getFiles() {
         return files;
