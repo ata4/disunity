@@ -65,6 +65,7 @@ public class AssetBundleHeader implements Struct {
     
     @Override
     public void read(DataInputReader in) throws IOException {
+        signature = in.readStringFixed(8);
         unknown1 = in.readInt();
         fileVersion = in.readByte();
         version = in.readStringNull(255);
