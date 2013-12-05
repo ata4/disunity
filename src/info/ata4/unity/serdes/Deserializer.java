@@ -13,6 +13,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.util.io.ByteBufferInput;
+import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -38,9 +39,7 @@ public class Deserializer {
     public UnityObject deserialize(AssetObjectPath path) throws DeserializerException {
         // create a byte buffer for the data area
         ByteBuffer bbData = asset.getDataBuffer();
-        bbData.position(path.offset);
-        bb = bbData.slice();
-        bb.limit(path.length);
+        bb = ByteBufferUtils.getSlice(bbData, path.offset, path.length);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         
         // create asset input

@@ -29,6 +29,7 @@ import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
+import info.ata4.util.io.ByteBufferUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -152,11 +153,8 @@ public class AssetExtractor {
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
                 try (FileOutputStream os = new FileOutputStream(assetFile)) {
-                    ByteBuffer bb = asset.getDataBuffer();
-                    bb.position(path.offset);
-                    
-                    ByteBuffer bbAsset = bb.slice();
-                    bbAsset.limit(path.length);
+                    ByteBuffer bbAssets = asset.getDataBuffer();
+                    ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.offset, path.length);
 
                     os.getChannel().write(bbAsset);
                 } catch (Exception ex) {
@@ -218,9 +216,7 @@ public class AssetExtractor {
             subTypeTree.put(path.classID2, typeTree.get(path.classID2));
             
             // create a byte buffer for the data area
-            bb.position(path.offset);
-            ByteBuffer bbAsset = bb.slice();
-            bbAsset.limit(path.length);
+            ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.offset, path.length);
             bbAsset.order(ByteOrder.LITTLE_ENDIAN);
             
             // probe asset name

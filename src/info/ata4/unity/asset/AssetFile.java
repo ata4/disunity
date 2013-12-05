@@ -15,6 +15,7 @@ import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.serdes.db.StructDatabase;
+import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.MappedFileHandler;
@@ -66,11 +67,7 @@ public class AssetFile extends MappedFileHandler {
             case 8:
                 // first data, then struct
                 int treeOffset = header.fileSize - header.treeSize + 1;
-                
-                bb.position(0);
-                bbData = bb.slice();
-                bbData.limit(treeOffset);
-                
+                bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
                 bb.position(treeOffset);
 
                 typeTree.read(in);
@@ -84,8 +81,7 @@ public class AssetFile extends MappedFileHandler {
                 objTable.read(in);
                 refTable.read(in);
                 
-                bb.position(header.dataOffset);
-                bbData = bb.slice();
+                bbData = ByteBufferUtils.getSlice(bb, header.dataOffset);
                 break;
                 
             default:
