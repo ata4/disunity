@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.assetbundle;
 
+import info.ata4.util.io.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -56,10 +57,7 @@ public class AssetBundleEntry {
     }
 
     public ByteBuffer getByteBuffer() throws IOException {
-        ByteBuffer bbd = bundle.getDataByteBuffer();
-        bbd.position(getOffset());
-        ByteBuffer bb = bbd.slice();
-        bb.limit(getSize());
-        return bb;
+        ByteBuffer bb = bundle.getDataByteBuffer();
+        return ByteBufferUtils.getSlice(bb, offset, length);
     }
 }

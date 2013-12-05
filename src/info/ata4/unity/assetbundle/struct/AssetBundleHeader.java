@@ -23,65 +23,65 @@ public class AssetBundleHeader implements Struct {
     public static final String SIGNATURE_WEB = "UnityWeb";
     public static final String SIGNATURE_RAW = "UnityRaw";
     
-    public static boolean isValidSignature(String signature) {
-        return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
-    }
-    
+    // UnityWeb or UnityRaw
     public String signature;
     
-    // always 0?
-    public int unknown1;
-    
-    // major version byte 
+    // file version
+    // 3 in Unity 3.5 and 4
+    // 2 in Unity 2.6 to 3.4
+    // 1 in Unity 1 to 2.6
     public byte fileVersion;
     
-    // file version
+    // engine version string
+    // 2.x.x in Unity 2
+    // 3.x.x in Unity 3/4
     public String version;
     
-    // engine revision
+    // full engine version string
     public String revision;
     
-    // size of the whole file
+    // size of the whole file, most of the time
     public int fileSize;
     
-    // offset to the bundle data
+    // offset to the bundle data or size of the bundle header
     public int dataOffset;
     
-    // unknown flags
-    public int flag1;
-    public int flag2;
+    // equal to files2 or 1
+    public int assets1;
     
-    // compressed data size
-    public int dataSizeCompressed;
-    
-    // uncompressed data size, equal to dataSizeCompressed in UnityRaw
-    public int dataSizeUncompressed;
-    
-    // always equal to fileSize?
-    public int fileSize2;
-    
-    // possible values: 52
-    public int unknown2;
+    // number of asset files?
+    public int assets2;
     
     @Override
     public void read(DataInputReader in) throws IOException {
         signature = in.readStringFixed(8);
-        unknown1 = in.readInt();
+        
+        // padding bytes presumably
+        int dummy = in.readInt();
+        assert dummy == 0;
+        
         fileVersion = in.readByte();
         version = in.readStringNull(255);
         revision = in.readStringNull(255);
         fileSize = in.readInt();
         dataOffset = in.readInt();
-        flag1 = in.readInt();
-        flag2 = in.readInt();
-        dataSizeCompressed = in.readInt();
-        dataSizeUncompressed = in.readInt();
-        fileSize2 = in.readInt();
-        unknown2 = in.readInt();
+        
+        assets1 = in.readInt();
+        assets2 = in.readInt();
+        
+        assert assets1 == assets2 || assets1 == 1;
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public boolean hasValidSignature() {
+        return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
+    }
+    
+    public boolean isCompressed() {
+        return signature.equals(SIGNATURE_WEB);
     }
 }

@@ -13,6 +13,7 @@ import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import info.ata4.util.io.ByteBufferInputStream;
 import info.ata4.util.io.ByteBufferOutputStream;
+import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.MappedFileHandler;
 import java.io.File;
@@ -48,8 +49,9 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         // check signature of the file
         try (FileInputStream fis = new FileInputStream(file)) {
             DataInputReader in = new DataInputReader(fis);
-            String signature = in.readStringFixed(8);
-            return AssetBundleHeader.isValidSignature(signature);
+            AssetBundleHeader info = new AssetBundleHeader();
+            info.signature = in.readStringFixed(8);
+            return info.hasValidSignature();
         } catch (IOException ex) {
             return false;
         }
@@ -69,7 +71,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         info = new AssetBundleHeader();
         info.read(in);
         
-        if (!AssetBundleHeader.isValidSignature(info.signature)) {
+        if (!info.hasValidSignature()) {
             throw new AssetException("Invalid signature");
         }
 
@@ -112,6 +114,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     public ByteBuffer getDataByteBuffer() throws IOException {
         if (bbData == null) {
             if (isCompressed()) {
+                // get uncompressed data size from LZMA headers
                 bb.position(info.dataOffset + 5);
                 bb.order(ByteOrder.LITTLE_ENDIAN);
                 
@@ -131,6 +134,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
                 
                 bb.position(info.dataOffset);
                 
+                // decompress data
                 InputStream is = new LzmaInputStream(new ByteBufferInputStream(bb));
                 OutputStream os = new ByteBufferOutputStream(bbData);
                 
@@ -138,8 +142,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
                 
                 bbData.rewind();
             } else {
-                bb.position(info.dataOffset);
-                bbData = bb.slice();
+                bbData = ByteBufferUtils.getSlice(bb, info.dataOffset);
             }
         }
 
@@ -147,7 +150,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     }
     
     public boolean isCompressed() {
-        return info.signature.equals(AssetBundleHeader.SIGNATURE_WEB);
+        return info.isCompressed();
     }
     
     public byte getFileVersion() {
