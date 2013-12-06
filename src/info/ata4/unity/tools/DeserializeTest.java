@@ -12,13 +12,10 @@ package info.ata4.unity.tools;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityField;
-import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +30,10 @@ public class DeserializeTest {
     public static void main(String[] args) {
         LogUtils.configure();
         
+        int objTested = 0;
+        int objFailed = 0;
+        boolean retryDebug = true;
+        
         for (String arg : args) {
             try {
                 File file = new File(arg);
@@ -42,69 +43,40 @@ public class DeserializeTest {
 
                 Deserializer deser = new Deserializer(asset);
 
-                boolean all = true;
-
-                if (all) {
-                    for (AssetObjectPath path : asset.getObjectPaths()) {
-                        try {
-                            if (path.classID1 < 0) {
-                                continue;
+                for (AssetObjectPath path : asset.getObjectPaths()) {
+                    if (path.classID1 < 0) {
+                        continue;
+                    }
+                    
+                    try {
+                        deser.deserialize(path);
+                    } catch (Exception ex) {
+                        L.log(Level.INFO, "Deserialization failed for " + path.pathID + " (" + ClassID.getInstance().getNameForID(path.classID2) + ")", ex);
+                        objFailed++;
+                        
+                        if (retryDebug) {
+                            // try again in debug mode
+                            deser.setDebug(true);
+                            try {
+                                deser.deserialize(path);
+                            } catch (Exception ex2) {
                             }
-
-                            deser.deserialize(path);
-                        } catch (Exception ex) {
-                            L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getInstance().getNameForID(path.classID2) + ")", ex);
-                            break;
+                            deser.setDebug(false);
                         }
                     }
-                } else {
-                    try {
-                        AssetObjectPath path = asset.getPathsByID(129).get(0);
-                        UnityObject obj = deser.deserialize(path);
-                        dump(System.out, obj, 0);
-                    } catch (Exception ex) {
-                        L.log(Level.SEVERE, "Deserialization failed", ex);
-                    }
-
-                    try {
-                        AssetObjectPath path = asset.getPathsByID(141).get(0);
-                        UnityObject obj = deser.deserialize(path);
-                        dump(System.out, obj, 0);
-                    } catch (Exception ex) {
-                        L.log(Level.SEVERE, "Deserialization failed", ex);
-                    }
+                    
+                    objTested++;
                 }
             } catch (IOException ex) {
                 L.log(Level.SEVERE, "Can't read asset file", ex);
             }
         }
-    }
-    
-    public static void dump(PrintStream ps, UnityObject obj, int level) {
-        if (obj.getName().equals("Base")) {
-            ps.println(obj.getType());
-        } else {
-            ps.println(obj.getType() + " " + obj.getName());
-        }
         
-        level++;
-
-        for (UnityField field : obj.getFields()) {
-            for (int i = 0; i < level; i++) {
-                ps.print("  ");
-            }
-            
-            String name = field.getName();
-            String type = field.getType();
-            Object value = field.getValue();
-            
-            if (field.getValue() instanceof UnityObject) {
-                dump(ps, (UnityObject) field.getValue(), level);
-            } else if (field.getValue() instanceof String) {
-                ps.printf("%s %s = \"%s\"\n", type, name, value);
-            } else {
-                ps.printf("%s %s = %s\n", type, name, value);
-            }
+        L.log(Level.INFO, "Tested objects: {0}", objTested);
+        if (objFailed == 0) {
+            L.info("All objects successfully deserialized!");
+        } else {
+            L.log(Level.INFO, "Failed deserializations: {0}", objFailed);
         }
     }
 }
