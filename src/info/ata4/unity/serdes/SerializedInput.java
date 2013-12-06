@@ -44,6 +44,16 @@ public class SerializedInput {
         return in.readBoolean();
     }
     
+    public short readShort() throws IOException {
+        bytes += 2;
+        return in.readShort();
+    }
+
+    public int readUnsignedShort() throws IOException {
+        bytes += 2;
+        return in.readUnsignedShort();
+    }
+    
     public int readInt() throws IOException {
         align();
         return in.readInt();
@@ -72,16 +82,6 @@ public class SerializedInput {
     public double readDouble() throws IOException {
         align();
         return in.readDouble();
-    }
-    
-    public short readShort() throws IOException {
-        align();
-        return in.readShort();
-    }
-
-    public int readUnsignedShort() throws IOException {
-        align();
-        return in.readUnsignedShort();
     }
     
     public byte[] readByteArray(int size) throws IOException {
