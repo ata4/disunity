@@ -1,5 +1,5 @@
 /*
- ** 2013 July 24
+ ** 2013 December 07
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,29 +9,26 @@
  */
 package info.ata4.unity.serdes;
 
+import java.nio.ByteBuffer;
+
 /**
- * Unity object that can carry a value.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityField<T> extends UnityNamed {
+public class UnityBuffer extends UnityType {
     
-    private T value;
-    
-    public UnityField(String type) {
+    private ByteBuffer bb;
+
+    public UnityBuffer(String type, ByteBuffer bb) {
         super(type);
+        this.bb = bb;
+    }
+    
+    public UnityBuffer(String type, byte[] data) {
+        this(type, ByteBuffer.wrap(data));
     }
 
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+    public ByteBuffer getBuffer() {
+        return bb;
     }
 }

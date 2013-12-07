@@ -15,7 +15,7 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityArray;
+import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityField;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
@@ -146,23 +146,20 @@ public class AssetDumper {
     private void printValue(Object value) {
         if (value instanceof UnityObject) {
             printObject((UnityObject) value);
-        } else if (value instanceof UnityArray) {
-            UnityArray array = (UnityArray) value;
-            if (array.isRaw()) {
-                ps.printf("byte[%d]\n", array.getRaw().capacity());
-                printBytes(array.getRaw());
-            } else {
-                List<Object> list = array.getList();
-                ps.printf("%s[%d]\n", array.getType(), list.size());
-                
-                for (Object value2 : list) {
-                    printIndent();
-                    printValue(value2);
-                }
-                
+        } else if (value instanceof UnityList) {
+            UnityList array = (UnityList) value;
+            List<Object> list = array.getList();
+            ps.printf("%s[%d]\n", array.getType(), list.size());
+            for (Object value2 : list) {
+                printIndent();
+                printValue(value2);
             }
         } else if (value instanceof String) {
             ps.printf("\"%s\"\n", value);
+        } else if (value instanceof ByteBuffer) {
+            ByteBuffer bb = (ByteBuffer) value;
+            ps.printf("byte[%d]\n", bb.capacity());
+            printBytes(bb);
         } else {
             ps.println(value);
         }

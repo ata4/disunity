@@ -20,6 +20,7 @@ import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.CubemapHandler;
 import info.ata4.unity.cli.extract.handler.ExtractHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
+import info.ata4.unity.cli.extract.handler.MeshHandler;
 import info.ata4.unity.cli.extract.handler.MovieTextureHandler;
 import info.ata4.unity.cli.extract.handler.ShaderHandler;
 import info.ata4.unity.cli.extract.handler.SubstanceArchiveHandler;
@@ -101,6 +102,7 @@ public class AssetExtractor {
         addExtractHandler(new FontHandler());
         addExtractHandler(new TextAssetHandler());
         addExtractHandler(new MovieTextureHandler());
+        addExtractHandler(new MeshHandler());
     }
     
     public final void addExtractHandler(ExtractHandler handler) {

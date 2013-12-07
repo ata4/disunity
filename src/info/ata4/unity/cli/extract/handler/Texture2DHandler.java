@@ -20,7 +20,7 @@ import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB4;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
 import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
-import info.ata4.unity.serdes.UnityArray;
+import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataOutputWriter;
 import java.io.IOException;
@@ -54,8 +54,8 @@ public class Texture2DHandler extends ExtractHandler {
         this.obj = obj;
         
         name = obj.getValue("m_Name");
-        UnityArray imageData = obj.getValue("image data");
-        imageBuffer = imageData.getRaw();
+        UnityBuffer imageData = obj.getValue("image data");
+        imageBuffer = imageData.getBuffer();
 
         // some textures don't have any image data, not sure why...
         if (imageBuffer.capacity() == 0) {

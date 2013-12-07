@@ -67,9 +67,8 @@ public class Deserializer {
             throw new DeserializationException("Class not found in type tree");
         }
         
-        UnityObject ac = new UnityObject();
+        UnityObject ac = new UnityObject(classNode.type);
         ac.setName(classNode.name);
-        ac.setType(classNode.type);
 
         for (AssetFieldType fieldNode : classNode) {
             ac.addField(readField(fieldNode));
@@ -91,9 +90,8 @@ public class Deserializer {
     }
     
     private UnityObject readObject(AssetFieldType field) throws DeserializationException {
-        UnityObject ac = new UnityObject();
+        UnityObject ac = new UnityObject(field.type);
         ac.setName(field.name);
-        ac.setType(field.type);
         
         for (AssetFieldType fieldNode : field) {
             ac.addField(readField(fieldNode));
@@ -103,9 +101,8 @@ public class Deserializer {
     }
     
     private UnityField readField(AssetFieldType field) throws DeserializationException {
-        UnityField af = new UnityField();
+        UnityField af = new UnityField(field.type);
         af.setName(field.name);
-        af.setType(field.type);
         
         int pos = 0;
         
@@ -209,28 +206,28 @@ public class Deserializer {
         }
     }
     
-    private UnityArray readArray(AssetFieldType field) throws IOException, DeserializationException {
+    private UnityType readArray(AssetFieldType field) throws IOException, DeserializationException {
         AssetFieldType sizeField = field.get(0);
         AssetFieldType dataField = field.get(1);
         int size = (int) readFieldValue(sizeField);
-        UnityArray uarray = new UnityArray(dataField.type);
+        String dataType = dataField.type;
         
-        if (dataField.type.equals("UInt8") || dataField.type.equals("char")) {
+        if (dataType.equals("UInt8") || dataType.equals("char")) {
             // read byte arrays natively and wrap them as ByteBuffers, which is
             // much faster and more efficient than a list of bytes wrapped as
             // integer objects
-            ByteBuffer raw = ByteBuffer.wrap(in.readByteArray(size));
-            uarray.setRaw(raw);
+            byte[] data = in.readByteArray(size);
+            return new UnityBuffer(dataType, data);
         } else {
             // read a list of objects
+            UnityList uarray = new UnityList(dataType);
             List<Object> objList = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
                 objList.add(readFieldValue(dataField));
             }
             uarray.setList(objList);
+            return uarray;
         }
-        
-        return uarray;
     }
 
     public boolean isDebug() {

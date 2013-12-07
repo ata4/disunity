@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.serdes.UnityArray;
+import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,8 +33,8 @@ public class MovieTextureHandler extends ExtractHandler {
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        UnityArray movieData = obj.getValue("m_MovieData");
-        ByteBuffer movieBuffer = movieData.getRaw();
+        UnityBuffer movieData = obj.getValue("m_MovieData");
+        ByteBuffer movieBuffer = movieData.getBuffer();
         
         String ext;
         String fourCC = new String(movieBuffer.array(), 0, 4);

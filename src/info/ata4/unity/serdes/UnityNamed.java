@@ -1,5 +1,5 @@
 /*
- ** 2013 July 24
+ ** 2013 August 25
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -10,28 +10,23 @@
 package info.ata4.unity.serdes;
 
 /**
- * Unity object that can carry a value.
+ * Unity object with an associated name and immutable type string.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityField<T> extends UnityNamed {
+public class UnityNamed extends UnityType {
     
-    private T value;
-    
-    public UnityField(String type) {
+    public UnityNamed(String type) {
         super(type);
     }
 
-    public T getValue() {
-        return value;
+    private String name;
+
+    public String getName() {
+        return name;
     }
 
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+    public void setName(String name) {
+        this.name = name;
     }
 }

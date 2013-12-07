@@ -11,7 +11,7 @@ package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.enums.AudioType;
-import info.ata4.unity.serdes.UnityArray;
+import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -54,8 +54,8 @@ public class AudioClipHandler extends ExtractHandler {
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        UnityArray audioData = obj.getValue("m_AudioData");
-        ByteBuffer audioBuffer = audioData.getRaw();
+        UnityBuffer audioData = obj.getValue("m_AudioData");
+        ByteBuffer audioBuffer = audioData.getBuffer();
 
         if (audioBuffer.capacity() == 0) {
             L.log(Level.WARNING, "Audio clip {0} empty", name);

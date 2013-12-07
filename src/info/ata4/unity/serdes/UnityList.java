@@ -9,37 +9,18 @@
  */
 package info.ata4.unity.serdes;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityArray {
+public class UnityList extends UnityType {
     
-    private final String type;
-    private ByteBuffer rawData;
     private List<Object> listData;
     
-    public UnityArray(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-    
-    public boolean isRaw() {
-        return rawData != null;
-    }
-
-    public ByteBuffer getRaw() {
-        return rawData;
-    }
-    
-    public void setRaw(ByteBuffer rawData) {
-        this.rawData = rawData;
+    public UnityList(String type) {
+        super(type);
     }
 
     public List<Object> getList() {
@@ -52,6 +33,6 @@ public class UnityArray {
 
     @Override
     public String toString() {
-        return isRaw() ? rawData.toString() : listData.toString();
+        return listData.toString();
     }
 }

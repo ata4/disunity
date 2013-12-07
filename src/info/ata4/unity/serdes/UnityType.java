@@ -1,5 +1,5 @@
 /*
- ** 2013 August 25
+ ** 2013 December 07
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -10,27 +10,19 @@
 package info.ata4.unity.serdes;
 
 /**
- *
+ * Unity object with an associated immutable type string.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityBase {
+public class UnityType {
     
-    private String type;
-    private String name;
+    private final String type;
+
+    public UnityType(String type) {
+        this.type = type;
+    }
     
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

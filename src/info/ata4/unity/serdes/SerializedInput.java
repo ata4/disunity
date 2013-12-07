@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 /**
- *
+ * Low-level input layer for reading serialized data and handling alignment.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class SerializedInput {

@@ -14,12 +14,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
+ * Unity object that can carry fields.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityObject extends UnityBase {
+public class UnityObject extends UnityNamed {
     
     private Map<String, UnityField> fields = new LinkedHashMap<>();
+    
+    public UnityObject(String type) {
+        super(type);
+    }
     
     public Collection<UnityField> getFields() {
         return fields.values();
@@ -35,6 +40,10 @@ public class UnityObject extends UnityBase {
     
     public UnityField removeField(UnityField field) {
         return fields.remove(field.getName());
+    }
+    
+    public void removeAllFields() {
+        fields.clear();
     }
 
     public <T> T getValue(String name) {
