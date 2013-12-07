@@ -215,12 +215,14 @@ public class Deserializer {
         int size = (int) readFieldValue(sizeField);
         UnityArray uarray = new UnityArray(dataField.type);
         
-        // use wrapped ByteBuffers for raw byte arrays, which is much faster and
-        // more efficient than a list of Integer objects
         if (dataField.type.equals("UInt8") || dataField.type.equals("char")) {
+            // read byte arrays natively and wrap them as ByteBuffers, which is
+            // much faster and more efficient than a list of bytes wrapped as
+            // integer objects
             ByteBuffer raw = ByteBuffer.wrap(in.readByteArray(size));
             uarray.setRaw(raw);
         } else {
+            // read a list of objects
             List<Object> objList = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
                 objList.add(readFieldValue(dataField));
