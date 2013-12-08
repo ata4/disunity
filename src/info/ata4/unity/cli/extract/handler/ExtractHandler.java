@@ -92,6 +92,11 @@ public abstract class ExtractHandler {
             classDir.mkdir();
         }
         
+        // remove any chars that could cause troubles on various file systems
+        if (name != null && !name.isEmpty()) {
+            name = name.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+        }
+        
         String fileName = name;
         String fileExt = ext;
         
