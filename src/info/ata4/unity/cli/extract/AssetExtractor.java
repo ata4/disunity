@@ -227,6 +227,9 @@ public class AssetExtractor {
             
             if (subAssetName == null) {
                 continue;
+            } else {
+                // remove any chars that could cause troubles on various file systems
+                subAssetName = subAssetName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
             }
             
             subAsset.setDataBuffer(bbAsset);
