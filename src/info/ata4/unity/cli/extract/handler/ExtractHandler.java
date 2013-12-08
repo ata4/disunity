@@ -63,31 +63,10 @@ public abstract class ExtractHandler {
     public abstract void extract(AssetObjectPath path, UnityObject obj) throws IOException;
     
     protected void writeFile(ByteBuffer bb, int id, String name, String ext) throws IOException {
-        String className = getClassName();
-        File classDir = new File(extractDir, className);
+        File assetFile = getAssetFile(id, name, ext);
         
-        if (!classDir.exists()) {
-            classDir.mkdir();
-        }
-        
-        String fileName;
-        String fileExt = ext;
-        
-        if (fileExt == null) {
-            fileExt = getFileExtension();
-        }
-        
-        if (name == null || name.isEmpty()) {
-            fileName = String.format("%06d", id);
-        } else if (usePrefix) {
-            fileName = String.format("%06d_%s", id, name);
-        } else {
-            fileName = name;
-        }
-
-        File assetFile = getUniqueFile(classDir, fileName, fileExt);
-        
-        L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, fileName});
+        L.log(Level.INFO, "Writing {0} {1}",
+                new Object[] {getClassName(), assetFile.getName()});
         
         try (FileOutputStream os = new FileOutputStream(assetFile)) {
             os.getChannel().write(bb);
@@ -108,12 +87,42 @@ public abstract class ExtractHandler {
         writeFile(data, id, name, null);
     }
     
-    private File getUniqueFile(File parent, String fileName, String ext) {
-        File file = new File(parent, String.format("%s.%s", fileName, ext));
+    protected File getAssetFile(int id, String name, String ext) {
+        String className = getClassName();
+        File classDir = new File(extractDir, className);
+        
+        if (!classDir.exists()) {
+            classDir.mkdir();
+        }
+        
+        String fileName = name;
+        String fileExt = ext;
+        
+        if (fileExt == null || fileExt.isEmpty()) {
+            fileExt = getFileExtension();
+        }
+        
+        if (fileName == null || fileName.isEmpty()) {
+            fileName = String.format("%06d", id);
+        } else if (usePrefix) {
+            fileName = String.format("%06d_%s", id, name);
+        }
+        
+        File assetFile = getUniqueFile(classDir, fileName, fileExt);
+        
+        return assetFile;
+    }
+    
+    protected File getAssetFile(int id, String name) {
+        return getAssetFile(id, name, null);
+    }
+    
+    private File getUniqueFile(File parent, String name, String ext) {
+        File file = new File(parent, String.format("%s.%s", name, ext));
         int fileNum = 1;
         
         while (filesWritten.contains(file)) {
-            file = new File(parent, String.format("%s_%d.%s", fileName, fileNum, ext));
+            file = new File(parent, String.format("%s_%d.%s", name, fileNum, ext));
             fileNum++;
         }
         
