@@ -19,6 +19,7 @@ import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataInputReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -61,13 +62,13 @@ public class MeshHandler extends ExtractHandler {
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         this.obj = obj;
+        name = obj.getValue("m_Name");
         
         readIndexData();
         readVertexData();
-        
-        name = obj.getValue("m_Name");
 
-        try (PrintStream ps = new PrintStream(getAssetFile(path.pathID, name))) {
+        File objFile = getAssetFile(path.pathID, name);
+        try (PrintStream ps = new PrintStream(objFile)) {
             writeMesh(ps);
         }
         
@@ -228,7 +229,7 @@ public class MeshHandler extends ExtractHandler {
         long firstByte = subMeshObj.getValue("firstByte");
         long indexCount = subMeshObj.getValue("indexCount");
         
-        ps.printf("usemtl %s_submesh_%02d\n", name, subMeshIndex);
+        ps.printf("usemtl %s_submesh_%d\n", name, subMeshIndex);
 
         try {
             DataInputReader in = new DataInputReader(indexBuffer);
