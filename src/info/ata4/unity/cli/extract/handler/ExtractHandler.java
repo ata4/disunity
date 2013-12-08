@@ -65,9 +65,6 @@ public abstract class ExtractHandler {
     protected void writeFile(ByteBuffer bb, int id, String name, String ext) throws IOException {
         File assetFile = getAssetFile(id, name, ext);
         
-        L.log(Level.INFO, "Writing {0} {1}",
-                new Object[] {getClassName(), assetFile.getName()});
-        
         try (FileOutputStream os = new FileOutputStream(assetFile)) {
             os.getChannel().write(bb);
         } catch (Exception ex) {
@@ -109,6 +106,9 @@ public abstract class ExtractHandler {
         }
         
         File assetFile = getUniqueFile(classDir, fileName, fileExt);
+        
+        L.log(Level.INFO, "Writing {0} {1}",
+                new Object[] {getClassName(), assetFile.getName()});
         
         return assetFile;
     }
