@@ -15,8 +15,9 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityList;
+import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityField;
+import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
@@ -154,12 +155,12 @@ public class AssetDumper {
                 printIndent();
                 printValue(value2);
             }
-        } else if (value instanceof String) {
-            ps.printf("\"%s\"\n", value);
-        } else if (value instanceof ByteBuffer) {
-            ByteBuffer bb = (ByteBuffer) value;
+        } else if (value instanceof UnityBuffer) {
+            ByteBuffer bb = ((UnityBuffer) value).getBuffer();
             ps.printf("byte[%d]\n", bb.capacity());
             printBytes(bb);
+        } else if (value instanceof String) {
+            ps.printf("\"%s\"\n", value);
         } else {
             ps.println(value);
         }
