@@ -20,18 +20,34 @@ import java.io.IOException;
  */
 public class Vector2f implements Struct {
     
+    protected final boolean half;
+    
+    public Vector2f(boolean half) {
+        this.half = half;
+    }
+    
     public float x;
     public float y;
 
     @Override
     public void read(DataInputReader in) throws IOException {
-        x = in.readFloat();
-        y = in.readFloat();
+        if (half) {
+            x = in.readHalf();
+            y = in.readHalf();
+        } else {
+            x = in.readFloat();
+            y = in.readFloat();
+        }
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        out.writeFloat(x);
-        out.writeFloat(y);
+        if (half) {
+            out.writeHalf(x);
+            out.writeHalf(y);
+        } else {
+            out.writeFloat(x);
+            out.writeFloat(y);
+        }
     }
 }

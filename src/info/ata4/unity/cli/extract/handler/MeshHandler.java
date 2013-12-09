@@ -41,6 +41,7 @@ public class MeshHandler extends ExtractHandler {
     private ByteBuffer vertexBuffer;
     private UnityObject obj;
     private String name;
+    private boolean debug;
 
     private List<Vector3f> vertices = new ArrayList<>();
     private List<Vector3f> normals = new ArrayList<>();
@@ -75,11 +76,24 @@ public class MeshHandler extends ExtractHandler {
         clear();
     }
     
-    private void readIndexData() {
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+    
+    private void readIndexData() throws IOException {
         // get index buffer
         UnityBuffer indexBufferObj = obj.getValue("m_IndexBuffer");
         indexBuffer = indexBufferObj.getBuffer();
         indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        
+        if (debug) {
+            writeFile(indexBuffer, 0, name + "_IndexBuffer", "bin");
+            indexBuffer.rewind();
+        }
 
         L.log(Level.FINE, "Index buffer size: {0}", indexBuffer.capacity());
     }
@@ -96,11 +110,38 @@ public class MeshHandler extends ExtractHandler {
         UnityBuffer dataSizeObj = vertexDataObj.getValue("m_DataSize");
         vertexBuffer = dataSizeObj.getBuffer();
         vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        
+        if (debug) {
+            writeFile(vertexBuffer, 0, name + "_DataSize", "bin");
+            vertexBuffer.rewind();
+        }
 
         L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
         
-        // extract vertex data
+        UnityList channelsObj = vertexDataObj.getValue("m_Channels");
+        List<ChannelInfo> channels = new ArrayList<>();
+        
+        // Known channels:
+        // 0 - Empty
+        // 1 - Coordinates (Vector3f)
+        // 2 - Normals (Vector3f)
+        // 3 - Colors (Color32)
+        // 4 - UV layer 1 (Vector2f)
+        // 5 - UV layer 2 (Vector2f)
+        // 6 - Tangents (Vector4f)
+        for (Object channel : channelsObj.getList()) {
+            UnityObject channelObj = (UnityObject) channel;
+            channels.add(new ChannelInfo(channelObj));
+        }
+        
+        // StreamInfo data
+        //   UInt32 channelMask  - Channel type mask (see above)
+        //   UInt32 offset       - Vertex buffer offset
+        //   UInt8 stride        - Total bytes per vertex chunk
+        //   UInt8 dividerOp     - ???
+        //   UInt16 frequency    - ???
         UnityList streams = vertexDataObj.getValue("m_Streams");
+ 
         long vertexCount = vertexDataObj.getValue("m_VertexCount");
         
         DataInputReader in = new DataInputReader(vertexBuffer);
@@ -111,43 +152,63 @@ public class MeshHandler extends ExtractHandler {
             long channelMask = streamObj.getValue("channelMask");
             long offset = streamObj.getValue("offset");
             
+            // skip empty channels
+            if (channelMask == 0) {
+                continue;
+            }
+            
             vertexBuffer.position((int) offset);
             
+            // read vertex data from each vertex and channel
             for (int i = 0; i < vertexCount; i++) {
-                if ((channelMask & 1) != 0) {
-                    Vector3f v = new Vector3f();
-                    v.read(in);
-                    vertices.add(v);
-                }
-                
-                if ((channelMask & 2) != 0) {
-                    Vector3f n = new Vector3f();
-                    n.read(in);
-                    normals.add(n);
-                }
-                
-                if ((channelMask & 4) != 0) {
-                    Color32 c = new Color32();
-                    c.read(in);
-                    colors.add(c);
-                }
-                
-                if ((channelMask & 8) != 0) {
-                    Vector2f uv = new Vector2f();
-                    uv.read(in);
-                    uv1.add(uv);
-                }
-                
-                if ((channelMask & 16) != 0) {
-                    Vector2f uv = new Vector2f();
-                    uv.read(in);
-                    uv2.add(uv);
-                }
-                
-                if ((channelMask & 32) != 0) {
-                    Vector4f t = new Vector4f();
-                    t.read(in);
-                    tangents.add(t);
+                for (int j = 0; j < channels.size(); j++) {
+                    // skip unselected channels
+                    if ((channelMask & 1 << j) == 0) {
+                        continue;
+                    }
+                    
+                    ChannelInfo channel = channels.get(j);
+                    boolean half = channel.format == 1;
+                    
+                    switch (j) {
+                        case 0:
+                            Vector3f v = new Vector3f(half);
+                            v.read(in);
+                            vertices.add(v);
+                            break;
+                            
+                        case 1:
+                            Vector3f n = new Vector3f(half);
+                            n.read(in);
+                            normals.add(n);
+                            if (half && channel.dimension == 4) {
+                                in.skipBytes(2); // padding?
+                            }
+                            break;
+                            
+                        case 2:
+                            Color32 c = new Color32();
+                            c.read(in);
+                            colors.add(c);
+                            break;
+                            
+                        case 3:
+                        case 4:
+                            Vector2f uv = new Vector2f(half);
+                            uv.read(in);
+                            if (j == 3) {
+                                uv1.add(uv);
+                            } else {
+                                uv2.add(uv);
+                            }
+                            break;
+                            
+                        case 5:
+                            Vector4f t = new Vector4f(half);
+                            t.read(in);
+                            tangents.add(t);
+                            break;
+                    }
                 }
             }
         }
@@ -229,7 +290,7 @@ public class MeshHandler extends ExtractHandler {
         long firstByte = subMeshObj.getValue("firstByte");
         long indexCount = subMeshObj.getValue("indexCount");
         
-        ps.printf("usemtl %s_submesh_%d\n", name, subMeshIndex);
+        ps.printf("usemtl %s_%d\n", name, subMeshIndex);
 
         try {
             DataInputReader in = new DataInputReader(indexBuffer);
@@ -247,6 +308,26 @@ public class MeshHandler extends ExtractHandler {
             ps.println();
         } catch (Exception ex) {
             L.log(Level.SEVERE, "Index buffer reading error", ex);
+        }
+    }
+    
+    private class ChannelInfo {
+        
+        int stream;
+        int offset;
+        int format;
+        int dimension;
+        
+        ChannelInfo(UnityObject obj) {
+            // ChannelInfo data
+            //   UInt8 stream    - Index into m_Streams
+            //   UInt8 offset    - Vertex chunk offset
+            //   UInt8 format    - 0 = full precision, 1 = half precision
+            //   UInt8 dimension - Number of fields?
+            stream = obj.getValue("stream");
+            offset = obj.getValue("offset");
+            format = obj.getValue("format");
+            dimension = obj.getValue("dimension");
         }
     }
 }
