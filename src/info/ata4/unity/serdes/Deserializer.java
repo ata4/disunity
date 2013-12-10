@@ -59,12 +59,12 @@ public class Deserializer {
 
         AssetFieldType classNode = asset.getTypeTree().get(path.classID2);
         
-        if (classNode.isEmpty()) {
-            classNode = asset.getTypeTree().get(path.classID1);
-        }
-        
         if (classNode == null) {
             throw new DeserializationException("Class not found in type tree");
+        }
+        
+        if (classNode.isEmpty()) {
+            classNode = asset.getTypeTree().get(path.classID1);
         }
         
         UnityObject ac = new UnityObject(classNode.type);
