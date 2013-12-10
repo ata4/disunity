@@ -147,10 +147,14 @@ public class DisUnityProcessor implements Runnable {
                         break;
                     }
                     
+                    // create backup first
+                    File backupFile = new File(sourceFile.getPath() + ".bak");
+                    FileUtils.copyFile(sourceFile, backupFile);
+                    
                     String fixedPath = sourceFile.getParent().replace("\\", "/").toLowerCase();
                     
                     for (AssetRef ref : asset.getReferences()) {
-                        if (isAsset(ref.filePath)) {
+                        if (isAsset(ref.filePath) && ref.filePath.endsWith(".sharedassets")) {
                             String pathOld = ref.filePath;
                             ref.filePath = fixedPath + "/" + FilenameUtils.getName(ref.filePath);
                             L.log(Level.FINE, "Fixing ref: {0} -> {1}", new Object[]{pathOld, ref.filePath});
