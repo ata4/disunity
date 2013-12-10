@@ -39,11 +39,10 @@ public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
     public void write(DataOutputWriter out) throws IOException {
         int entries = size();
         out.writeInt(entries);
+        out.writeByte(unknown); 
 
         for (AssetRef ref : this) {
             ref.write(out);
         }
-        
-        out.writeByte(unknown); 
     }
 }
