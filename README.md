@@ -61,13 +61,14 @@ Support
 Type | Status
 --- | --- 
 AudioClip | Ok
-Cubemap | Wrong texture flags
-Font | Ok
-MovieTexture | 2.6 only
-Shader | Ok
-SubstanceArchive | Ok
+Font | Ok, but wrong file extension for OpenType fonts
+Mesh | Unity 4 and uncompressed only
 TextAsset | Ok
+Shader | Ok
 Texture2D | Missing support for PVR, ATC and some exotic color formats
+Cubemap | Wrong texture flags
+SubstanceArchive | Ok
+MovieTexture | Unity 2.6 only
 
 Dependencies
 ------------
