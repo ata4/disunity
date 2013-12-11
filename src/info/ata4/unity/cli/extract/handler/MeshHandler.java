@@ -65,6 +65,11 @@ public class MeshHandler extends ExtractHandler {
         this.obj = obj;
         name = obj.getValue("m_Name");
         
+        if (!getAssetFormat().getRevision().startsWith("4")) {
+            // TODO
+            throw new UnsupportedOperationException("Unity 4 format is supported only");
+        }
+        
         readIndexData();
         readVertexData();
 
