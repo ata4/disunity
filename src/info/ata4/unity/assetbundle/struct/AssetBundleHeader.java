@@ -46,7 +46,7 @@ public class AssetBundleHeader implements Struct {
     // offset to the bundle data or size of the bundle header
     public int dataOffset;
     
-    // equal to files2 or 1
+    // equal to assets2 or 1
     public int assets1;
     
     // number of asset files?

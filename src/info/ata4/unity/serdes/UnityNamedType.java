@@ -14,13 +14,13 @@ package info.ata4.unity.serdes;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityNamed extends UnityType {
+public class UnityNamedType extends UnityType {
     
-    public UnityNamed(String type) {
+    private String name;
+    
+    public UnityNamedType(String type) {
         super(type);
     }
-
-    private String name;
 
     public String getName() {
         return name;

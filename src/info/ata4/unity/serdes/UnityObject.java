@@ -18,7 +18,7 @@ import java.util.Map;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityObject extends UnityNamed {
+public class UnityObject extends UnityNamedType {
     
     private Map<String, UnityField> fields = new LinkedHashMap<>();
     

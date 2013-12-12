@@ -14,7 +14,7 @@ package info.ata4.unity.serdes;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityField<T> extends UnityNamed {
+public class UnityField<T> extends UnityNamedType {
     
     private T value;
     
