@@ -19,12 +19,16 @@ import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Helper class to output information about an asset file.
@@ -82,6 +86,54 @@ public class AssetUtils {
                 ps.printf("  Type: %d\n", ref.type);
                 ps.println();
             }
+        }
+    }
+    
+    public void fixRefs() throws IOException {
+        File sourceFile = asset.getSourceFile();
+        
+        try {
+            // create backup first
+            File backupFile = new File(sourceFile.getPath() + ".bak");
+            FileUtils.copyFile(sourceFile, backupFile);
+        } catch (IOException ex) {
+            // backup is mandatory, don't risk any loss of data 
+            throw new IOException("Can't create backup copy", ex);
+        }
+        
+        File sourceParent = sourceFile.getParentFile();
+        String assetPath;
+        
+        if (sourceParent == null) {
+            assetPath = "";
+        } else {
+            assetPath = sourceParent.getAbsolutePath();
+            assetPath = FilenameUtils.separatorsToUnix(assetPath) + "/";
+        }
+
+        // fix path for all assets with .sharedassets extension
+        boolean changed = false;
+        for (AssetRef ref : asset.getReferences()) {
+            File refFile = new File(ref.filePath);
+            if (refFile.getName().endsWith(".sharedassets") && !refFile.exists()) {
+                String filePathOld = ref.filePath;
+                String filePathNew = assetPath + FilenameUtils.getName(ref.filePath);
+                File refFileNew = new File(filePathNew);
+                
+                if (refFileNew.exists()) {
+                    L.log(Level.FINE, "Fixed reference: {0} -> {1}", new Object[]{filePathOld, filePathNew});
+                    ref.filePath = filePathNew;
+                    changed = true;
+                } else {
+                    L.log(Level.FINE, "Fixed reference not found: {0}", refFileNew);
+                }
+            }
+        }
+
+        if (changed) {
+            asset.save(sourceFile);
+        } else {
+            L.fine("No references changed, skipping saving");
         }
     }
     

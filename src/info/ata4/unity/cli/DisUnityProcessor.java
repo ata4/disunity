@@ -11,7 +11,6 @@ package info.ata4.unity.cli;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFileFilter;
-import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.cli.extract.AssetExtractor;
@@ -56,7 +55,7 @@ public class DisUnityProcessor implements Runnable {
             AssetFile asset = new AssetFile();
             asset.load(file, map);
             
-            processAsset(asset, file.getName(), file, dir);
+            processAsset(asset, file.getName(), dir);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't open " + file, ex);
         }
@@ -76,13 +75,13 @@ public class DisUnityProcessor implements Runnable {
             AssetFile asset = new AssetFile();
             asset.load(bb);
             
-            processAsset(asset, name, null, dir);
+            processAsset(asset, name, dir);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't load " + name, ex);
         }
     }
     
-    private void processAsset(AssetFile asset, String name, File sourceFile, File dir) {        
+    private void processAsset(AssetFile asset, String name, File dir) {        
         try {
             DisUnityCommand cmd = settings.getCommand();
             switch (cmd) {
@@ -142,39 +141,30 @@ public class DisUnityProcessor implements Runnable {
                     L.log(Level.INFO, "Fixing asset references for {0}", name);
                     
                     // we need a file for this
-                    if (sourceFile == null) {
+                    if (asset.getSourceFile() == null) {
                         L.warning("Can't fix references of assets in asset bundles!");
                         break;
                     }
                     
-                    // create backup first
-                    File backupFile = new File(sourceFile.getPath() + ".bak");
-                    FileUtils.copyFile(sourceFile, backupFile);
-                    
-                    String fixedPath = sourceFile.getParent().replace("\\", "/").toLowerCase();
-                    
-                    for (AssetRef ref : asset.getReferences()) {
-                        if (isAsset(ref.filePath) && ref.filePath.endsWith(".sharedassets")) {
-                            String pathOld = ref.filePath;
-                            ref.filePath = fixedPath + "/" + FilenameUtils.getName(ref.filePath);
-                            L.log(Level.FINE, "Fixing ref: {0} -> {1}", new Object[]{pathOld, ref.filePath});
-                        }
-                    }
-
-                    asset.save(sourceFile);
-                    
+                    new AssetUtils(asset).fixRefs();
                     break;
             }
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't read " + name, ex);
+            L.log(Level.SEVERE, "Can't process " + name, ex);
         }
     }
 
     private void processAssetBundle(File file, File dir) {
+        AssetBundle ab = new AssetBundle();
+        
         try {
-            AssetBundle ab = new AssetBundle();
             ab.load(file);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't open " + file, ex);
+            return;
+        }
             
+        try {
             DisUnityCommand cmd = settings.getCommand();
             if (cmd == DisUnityCommand.UNBUNDLE) {
                 FileUtils.forceMkdir(dir);
@@ -184,7 +174,7 @@ public class DisUnityProcessor implements Runnable {
                 if (ab.isCompressed()) {
                     L.log(Level.INFO, "Uncompressing {0}", file.getName());
                 }
-                
+
                 if (cmd == DisUnityCommand.INFO) {
                     L.log(Level.INFO, "Printing information about {0}", file.getName());
                     System.out.println("File version: " + ab.getFileVersion());
@@ -194,13 +184,13 @@ public class DisUnityProcessor implements Runnable {
                     System.out.println("Entries: " + ab.getEntries().size());
                     System.out.println();
                 }
-                
+
                 for (AssetBundleEntry entry : ab) {
                     // skip non-asset entries
                     if (!isAsset(entry.getName())) {
                         continue;
                     }
-                    
+
                     // skip dummy asset from Unity3D Obfuscator
                     // TODO: random number?
                     if (entry.getName().equals("33Obf")) {
@@ -212,8 +202,9 @@ public class DisUnityProcessor implements Runnable {
                 }
             }
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't open " + file, ex);
+            L.log(Level.SEVERE, "Can't process " + file, ex);
         }
+
     }
     
     private void processAssetBundle(File file) {

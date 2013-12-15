@@ -18,8 +18,15 @@ import java.nio.ByteBuffer;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class MappedFileHandler {
+    
+    private File sourceFile;
+    
+    public File getSourceFile() {
+        return sourceFile;
+    }
 
     public void load(File file, boolean map) throws IOException {
+        sourceFile = file;
         load(map ? NIOFileUtils.openReadOnly(file) : NIOFileUtils.load(file));
     }
     
