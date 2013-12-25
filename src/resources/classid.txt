@@ -1,4 +1,5 @@
-# based on http://docs.unity3d.com/Documentation/Manual/ClassIDReference.html
+# Mapping list between class names and IDs
+# Based on http://docs.unity3d.com/Documentation/Manual/ClassIDReference.html
 1	GameObject
 2	Component
 3	LevelGameManager
