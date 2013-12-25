@@ -13,14 +13,9 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.cli.extract.handler.struct.DDSHeader;
 import info.ata4.unity.cli.extract.handler.struct.DDSPixelFormat;
+import info.ata4.unity.cli.extract.handler.struct.TGAHeader;
 import info.ata4.unity.enums.TextureFormat;
-import static info.ata4.unity.enums.TextureFormat.ATC_RGB4;
-import static info.ata4.unity.enums.TextureFormat.ATC_RGBA8;
-import static info.ata4.unity.enums.TextureFormat.ETC_RGB4;
-import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB2;
-import static info.ata4.unity.enums.TextureFormat.PVRTC_RGB4;
-import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA2;
-import static info.ata4.unity.enums.TextureFormat.PVRTC_RGBA4;
+import static info.ata4.unity.enums.TextureFormat.*;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataOutputWriter;
@@ -70,24 +65,40 @@ public class Texture2DHandler extends AssetExtractHandler {
         
         // choose a fitting container format
         switch (tf) {
+            case Alpha8:
+            case RGB24:
+            case RGBA32:
+            case BGRA32:
+            case ARGB32:
+                extractTGA();
+                break;
+            
             case PVRTC_RGB2:
             case PVRTC_RGBA2:
             case PVRTC_RGB4:
             case PVRTC_RGBA4:
                 extractPVR();
                 break;
-                
+
             case ATC_RGB4:
             case ATC_RGBA8:
                 extractATC();
                 break;
-                
+
             case ETC_RGB4:
                 extractPKM();
                 break;
-
-            default:
+                
+            case ARGB4444:
+            case RGB565:
+            case DXT1:
+            case DXT5:
                 extractDDS();
+                break;
+                
+            default:
+                L.log(Level.WARNING, "Texture2D {0} has unsupported texture format {1}",
+                        new Object[] {name, tf});
         }
     }
     
@@ -173,11 +184,9 @@ public class Texture2DHandler extends AssetExtractHandler {
             case DXT5:
                 dds.ddspf.dwFourCC = DDSPixelFormat.PF_DXT5; 
                 break;
-                             
+                
             default:
-                L.log(Level.WARNING, "Texture2D {0} has unsupported texture format {1}",
-                        new Object[] {name, tf});
-                return;
+                throw new IllegalStateException("Invalid texture format for DDS: " + tf);
         }
 
         // set mip map flags if required
@@ -254,5 +263,81 @@ public class Texture2DHandler extends AssetExtractHandler {
 
         setFileExtension("pkm");
         writeFile(res, path.pathID, name);
+    }
+
+    private void extractTGA() throws IOException {
+        int width = obj.getValue("m_Width");
+        int height = obj.getValue("m_Height");
+        boolean convert = false;
+        
+        TGAHeader tgah = new TGAHeader();
+        tgah.imageWidth = width;
+        tgah.imageHeight = height;
+        
+        switch (tf) {
+            case Alpha8:
+                tgah.imageType = 3;
+                tgah.pixelDepth = 8;
+                break;
+                
+            case RGB24:
+                tgah.imageType = 2;
+                tgah.pixelDepth = 24;
+                break;
+                
+            case RGBA32:
+                tgah.imageType = 2;
+                tgah.pixelDepth = 32;
+                break;
+                
+            case ARGB32:
+            case BGRA32:
+                tgah.imageType = 2;
+                tgah.pixelDepth = 32;
+                convert = true;
+                break;
+                
+            default:
+                throw new IllegalStateException("Invalid texture format for TGA: " + tf);
+        }
+        
+        // discard mip-maps
+        imageBuffer.limit(width * height * tgah.pixelDepth / 8);
+        
+        // convert non-native color formats
+        if (convert) {
+            for (int i = 0; i < imageBuffer.limit() / 4; i++) {
+                imageBuffer.mark();
+                int pixelOld = imageBuffer.getInt();
+                int pixelNew;
+
+                if (tf == ARGB32) {
+                    // rotate left: ARGB -> RGBA
+                    pixelNew = Integer.rotateLeft(pixelOld, 8);
+                } else {
+                    // swap B and R
+                    pixelNew = pixelOld & 0x00ff00ff; // get G & A
+                    pixelNew |= (pixelOld & 0xff000000) >>> 16; // add B
+                    pixelNew |= (pixelOld & 0x0000ff00) << 16; // add R
+                }
+
+                imageBuffer.reset();
+                imageBuffer.putInt(pixelNew);
+            }
+            
+            imageBuffer.rewind();
+        }
+        
+        ByteBuffer bb = ByteBuffer.allocateDirect(18 + imageBuffer.capacity());
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        
+        DataOutputWriter out = new DataOutputWriter(bb);
+        tgah.write(out);
+        
+        bb.put(imageBuffer);
+        bb.rewind();
+        
+        setFileExtension("tga");
+        writeFile(bb, path.pathID, name);
     }
 }
