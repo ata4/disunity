@@ -11,6 +11,7 @@ package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.cli.extract.handler.struct.Color32;
 import info.ata4.unity.cli.extract.handler.struct.Vector2f;
 import info.ata4.unity.cli.extract.handler.struct.Vector3f;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class MeshHandler extends ExtractHandler {
+public class MeshHandler extends AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(MeshHandler.class.getName());
     
@@ -49,16 +50,6 @@ public class MeshHandler extends ExtractHandler {
     private List<Vector2f> uv1 = new ArrayList<>();
     private List<Vector2f> uv2 = new ArrayList<>();
     private List<Vector4f> tangents = new ArrayList<>();
-    
-    @Override
-    public String getClassName() {
-        return "Mesh";
-    }
-    
-    @Override
-    public String getFileExtension() {
-        return "obj";
-    }
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
@@ -73,6 +64,7 @@ public class MeshHandler extends ExtractHandler {
         readIndexData();
         readVertexData();
 
+        setFileExtension("obj");
         File objFile = getAssetFile(path.pathID, name);
         try (PrintStream ps = new PrintStream(objFile)) {
             writeMesh(ps);
@@ -96,7 +88,8 @@ public class MeshHandler extends ExtractHandler {
         indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {
-            writeFile(indexBuffer, 0, name + "_IndexBuffer", "bin");
+            setFileExtension("bin");
+            writeFile(indexBuffer, 0, name + "_IndexBuffer");
             indexBuffer.rewind();
         }
 
@@ -117,7 +110,8 @@ public class MeshHandler extends ExtractHandler {
         vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {
-            writeFile(vertexBuffer, 0, name + "_DataSize", "bin");
+            setFileExtension("bin");
+            writeFile(vertexBuffer, 0, name + "_DataSize");
             vertexBuffer.rewind();
         }
 

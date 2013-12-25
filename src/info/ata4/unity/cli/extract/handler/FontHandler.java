@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
@@ -19,25 +20,16 @@ import java.nio.ByteBuffer;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FontHandler extends ExtractHandler {
-
-    @Override
-    public String getClassName() {
-        return "Font";
-    }
-
-    @Override
-    public String getFileExtension() {
-        // TODO: detect OpenType fonts and use "otf" in these cases
-        return "ttf";
-    }
-
+public class FontHandler extends AssetExtractHandler {
+    
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         UnityBuffer fontData = obj.getValue("m_FontData");
         ByteBuffer fontBuffer = fontData.getBuffer();
         if (fontBuffer.capacity() > 0) {
+            // TODO: detect OpenType fonts and use "otf" in these cases
+            setFileExtension("ttf");
             writeFile(fontBuffer, path.pathID, name);
         }
     }

@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
@@ -19,15 +20,10 @@ import java.nio.ByteBuffer;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class SubstanceArchiveHandler extends ExtractHandler {
-    
-    @Override
-    public String getClassName() {
-        return "SubstanceArchive";
-    }
-    
-    public String getExtension() {
-        return "sbsar";
+public class SubstanceArchiveHandler extends AssetExtractHandler {
+
+    public SubstanceArchiveHandler() {
+        setFileExtension("sbsar");
     }
 
     @Override

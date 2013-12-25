@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.cli.extract.handler.struct.DDSHeader;
 import info.ata4.unity.cli.extract.handler.struct.DDSPixelFormat;
 import info.ata4.unity.enums.TextureFormat;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Texture2DHandler extends ExtractHandler {
+public class Texture2DHandler extends AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(Texture2DHandler.class.getName());
     
@@ -42,11 +43,6 @@ public class Texture2DHandler extends ExtractHandler {
     private UnityObject obj;
     private String name;
     private ByteBuffer imageBuffer;
-    
-    @Override
-    public String getClassName() {
-        return "Texture2D";
-    }
     
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
@@ -220,7 +216,8 @@ public class Texture2DHandler extends ExtractHandler {
         
         bbTex.rewind();
         
-        writeFile(bbTex, path.pathID, name, "dds");
+        setFileExtension("dds");
+        writeFile(bbTex, path.pathID, name);
     }
 
     private void extractPVR() {
@@ -255,6 +252,7 @@ public class Texture2DHandler extends ExtractHandler {
 
         res.rewind();
 
-        writeFile(res, path.pathID, name, "pkm");
+        setFileExtension("pkm");
+        writeFile(res, path.pathID, name);
     }
 }

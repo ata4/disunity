@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.AudioType;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
@@ -25,32 +26,27 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AudioClipHandler extends ExtractHandler {
+public class AudioClipHandler extends AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(AudioClipHandler.class.getName());
     
     private static final Map<AudioType, String> AUDIO_EXT;
     
     static {
-        Map<AudioType, String> audioTypes = new EnumMap<>(AudioType.class);
-        audioTypes.put(AudioType.OGGVORBIS, "ogg");
-        audioTypes.put(AudioType.WAV, "wav");
-        audioTypes.put(AudioType.GCADPCM, "adp");
-        audioTypes.put(AudioType.MPEG, "mp3");
-        audioTypes.put(AudioType.AIFF, "aif");
-        audioTypes.put(AudioType.XM, "xm");
-        audioTypes.put(AudioType.XMA, "xma");
-        audioTypes.put(AudioType.S3M, "s3m");
-        audioTypes.put(AudioType.MOD, "mod");
-        audioTypes.put(AudioType.AUDIOQUEUE, "caf");
-        AUDIO_EXT = Collections.unmodifiableMap(audioTypes);
+        Map<AudioType, String> extMap = new EnumMap<>(AudioType.class);
+        extMap.put(AudioType.OGGVORBIS, "ogg");
+        extMap.put(AudioType.WAV, "wav");
+        extMap.put(AudioType.GCADPCM, "adp");
+        extMap.put(AudioType.MPEG, "mp3");
+        extMap.put(AudioType.AIFF, "aif");
+        extMap.put(AudioType.XM, "xm");
+        extMap.put(AudioType.XMA, "xma");
+        extMap.put(AudioType.S3M, "s3m");
+        extMap.put(AudioType.MOD, "mod");
+        extMap.put(AudioType.AUDIOQUEUE, "caf");
+        AUDIO_EXT = Collections.unmodifiableMap(extMap);
     }
-    
-    @Override
-    public String getClassName() {
-        return "AudioClip";
-    }
-    
+
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
@@ -78,6 +74,7 @@ public class AudioClipHandler extends ExtractHandler {
             return;
         }
         
-        writeFile(audioBuffer, path.pathID, name, ext);
+        setFileExtension(ext);
+        writeFile(audioBuffer, path.pathID, name);
     }
 }

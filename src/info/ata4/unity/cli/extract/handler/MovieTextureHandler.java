@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
@@ -21,14 +22,9 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class MovieTextureHandler extends ExtractHandler {
+public class MovieTextureHandler extends AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(MovieTextureHandler.class.getName());
-
-    @Override
-    public String getClassName() {
-        return "MovieTexture";
-    }
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
@@ -49,6 +45,7 @@ public class MovieTextureHandler extends ExtractHandler {
                 L.log(Level.WARNING, "Unrecognized movie fourCC \"{0}\"", fourCC);
         }
         
-        writeFile(movieBuffer, path.pathID, name, ext);
+        setFileExtension(ext);
+        writeFile(movieBuffer, path.pathID, name);
     }
 }

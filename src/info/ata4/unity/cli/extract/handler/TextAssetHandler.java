@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 
@@ -17,16 +18,10 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TextAssetHandler extends ExtractHandler {
-
-    @Override
-    public String getClassName() {
-        return "TextAsset";
-    }
+public class TextAssetHandler extends AssetExtractHandler {
     
-    @Override
-    public String getFileExtension() {
-        return "txt";
+    public TextAssetHandler(String ext) {
+        setFileExtension(ext);
     }
 
     @Override

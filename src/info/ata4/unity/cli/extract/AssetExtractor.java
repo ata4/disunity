@@ -17,12 +17,9 @@ import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.cli.DisUnitySettings;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
-import info.ata4.unity.cli.extract.handler.CubemapHandler;
-import info.ata4.unity.cli.extract.handler.ExtractHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
 import info.ata4.unity.cli.extract.handler.MeshHandler;
 import info.ata4.unity.cli.extract.handler.MovieTextureHandler;
-import info.ata4.unity.cli.extract.handler.ShaderHandler;
 import info.ata4.unity.cli.extract.handler.SubstanceArchiveHandler;
 import info.ata4.unity.cli.extract.handler.TextAssetHandler;
 import info.ata4.unity.cli.extract.handler.Texture2DHandler;
@@ -37,9 +34,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
@@ -87,36 +82,34 @@ public class AssetExtractor {
     private final AssetFile asset;
     private final DisUnitySettings settings;
     
-    private Map<String, ExtractHandler> extractHandlerMap = new HashMap<>();
-    private Set<ExtractHandler> extractHandlerSet = new HashSet<>();
+    private Map<String, AssetExtractHandler> extractHandlerMap = new HashMap<>();
     
     public AssetExtractor(AssetFile asset, DisUnitySettings settings) {
         this.asset = asset;
         this.settings = settings;
         
-        addExtractHandler(new AudioClipHandler());
-        addExtractHandler(new ShaderHandler());
-        addExtractHandler(new SubstanceArchiveHandler());
-        addExtractHandler(new Texture2DHandler());
-        addExtractHandler(new CubemapHandler());
-        addExtractHandler(new FontHandler());
-        addExtractHandler(new TextAssetHandler());
-        addExtractHandler(new MovieTextureHandler());
-        addExtractHandler(new MeshHandler());
+        addHandler("AudioClip", new AudioClipHandler());
+        addHandler("Shader", new TextAssetHandler("shader"));
+        addHandler("SubstanceArchive", new SubstanceArchiveHandler());
+        addHandler("Texture2D", new Texture2DHandler());
+        addHandler("Cubemap", new Texture2DHandler());
+        addHandler("Font", new FontHandler());
+        addHandler("TextAsset", new TextAssetHandler("txt"));
+        addHandler("MovieTexture", new MovieTextureHandler());
+        addHandler("Mesh", new MeshHandler());
     }
     
-    public final void addExtractHandler(ExtractHandler handler) {
-        extractHandlerMap.put(handler.getClassName(), handler);
-        extractHandlerSet.add(handler);
+    public final void addHandler(String className, AssetExtractHandler handler) {
+        handler.setClassName(className);
+        extractHandlerMap.put(className, handler);
     }
     
-    public final ExtractHandler getExtractHandler(String className) {
+    public final AssetExtractHandler getHandler(String className) {
         return extractHandlerMap.get(className);
     }
     
-    public final void clearExtractHandlers() {
+    public final void clearHandlers() {
         extractHandlerMap.clear();
-        extractHandlerSet.clear();
     }
 
     public void extract(File dir, boolean raw) throws IOException {
@@ -127,8 +120,7 @@ public class AssetExtractor {
         Deserializer deser = new Deserializer(asset);
         AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
         
-        for (ExtractHandler extractHandler : extractHandlerSet) {
-            extractHandler.reset();
+        for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
             extractHandler.setExtractDir(dir);
             extractHandler.setAssetFormat(format);
         }
@@ -163,7 +155,7 @@ public class AssetExtractor {
                     L.log(Level.WARNING, "Can't write " + objectName + " to " + assetFile, ex);
                 }
             } else {
-                ExtractHandler handler = getExtractHandler(className);
+                AssetExtractHandler handler = getHandler(className);
                 
                 if (handler != null) {
                     try {

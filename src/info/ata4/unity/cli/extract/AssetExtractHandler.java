@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.handler;
+package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.asset.AssetFormat;
 import info.ata4.unity.asset.struct.AssetObjectPath;
@@ -25,18 +25,15 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class ExtractHandler {
+public abstract class AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(ExtractHandler.class.getName());
+    private static final Logger L = Logger.getLogger(AssetExtractHandler.class.getName());
 
     private File extractDir;
-    private Set<File> filesWritten = new HashSet<>();
     private AssetFormat format;
-    private boolean usePrefix = false;
-    
-    public void reset() {
-        filesWritten.clear();
-    }
+    private String className;
+    private String fileExtension = "bin";
+    private Set<File> filesWritten = new HashSet<>();
 
     public File getExtractDir() {
         return extractDir;
@@ -44,6 +41,9 @@ public abstract class ExtractHandler {
 
     public void setExtractDir(File extractDir) {
         this.extractDir = extractDir;
+        
+        // new output directory, clear list of written files
+        filesWritten.clear();
     }
     
     public AssetFormat getAssetFormat() {
@@ -55,16 +55,25 @@ public abstract class ExtractHandler {
     }
     
     public String getFileExtension() {
-        return "bin";
+        return fileExtension;
+    }
+    
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
-    public abstract String getClassName();
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
     public abstract void extract(AssetObjectPath path, UnityObject obj) throws IOException;
     
-    protected void writeFile(ByteBuffer bb, int id, String name, String ext) throws IOException {
-        File assetFile = getAssetFile(id, name, ext);
-        
+    protected void writeFile(ByteBuffer bb, int id, String name) throws IOException {
+        File assetFile = getAssetFile(id, name);
         try (FileOutputStream os = new FileOutputStream(assetFile)) {
             os.getChannel().write(bb);
         } catch (Exception ex) {
@@ -72,20 +81,11 @@ public abstract class ExtractHandler {
         }
     }
     
-    protected void writeFile(ByteBuffer bb, int id, String name) throws IOException {
-        writeFile(bb, id, name, null);
-    }
-    
-    protected void writeFile(byte[] data, int id, String name, String ext) throws IOException {
-        writeFile(ByteBuffer.wrap(data), id, name, ext);
-    }
-    
     protected void writeFile(byte[] data, int id, String name) throws IOException {
-        writeFile(data, id, name, null);
+        writeFile(ByteBuffer.wrap(data), id, name);
     }
     
-    protected File getAssetFile(int id, String name, String ext) {
-        String className = getClassName();
+    protected File getAssetFile(int id, String name) {
         File classDir = new File(extractDir, className);
         
         if (!classDir.exists()) {
@@ -98,16 +98,10 @@ public abstract class ExtractHandler {
         }
         
         String fileName = name;
-        String fileExt = ext;
-        
-        if (fileExt == null || fileExt.isEmpty()) {
-            fileExt = getFileExtension();
-        }
+        String fileExt = getFileExtension();
         
         if (fileName == null || fileName.isEmpty()) {
             fileName = String.format("%06d", id);
-        } else if (usePrefix) {
-            fileName = String.format("%06d_%s", id, name);
         }
         
         File assetFile = getUniqueFile(classDir, fileName, fileExt);
@@ -116,10 +110,6 @@ public abstract class ExtractHandler {
                 new Object[] {getClassName(), assetFile.getName()});
         
         return assetFile;
-    }
-    
-    protected File getAssetFile(int id, String name) {
-        return getAssetFile(id, name, null);
     }
     
     private File getUniqueFile(File parent, String name, String ext) {
