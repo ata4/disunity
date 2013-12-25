@@ -51,7 +51,7 @@ public class DeserializeTest {
                     try {
                         deser.deserialize(path);
                     } catch (Exception ex) {
-                        L.log(Level.INFO, "Deserialization failed for " + path.pathID + " (" + ClassID.getInstance().getNameForID(path.classID2) + ")", ex);
+                        L.log(Level.INFO, "Deserialization failed for " + path.pathID + " (" + ClassID.getNameForID(path.classID2) + ")", ex);
                         objFailed++;
                         
                         if (retryDebug) {

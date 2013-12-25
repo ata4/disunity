@@ -233,7 +233,7 @@ public class StructDatabase {
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
             AssetFieldType fieldType = typeTree.get(classID);
-            String fieldClassName = ClassID.getInstance().getNameForID(classID);
+            String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {
                 continue;

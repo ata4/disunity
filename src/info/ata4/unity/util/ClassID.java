@@ -9,14 +9,15 @@
  */
 package info.ata4.unity.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Helper class to translate Unity class names and IDs.
@@ -26,36 +27,25 @@ import java.util.logging.Logger;
 public class ClassID {
     
     private static final Logger L = Logger.getLogger(ClassID.class.getName());
-    private static final String FILENAME = "classid.txt";
+    private static final String CLASSID_PATH = "/resources/classid.txt";
     private static final String CHARSET = "ASCII";
     
-    private static ClassID instance;
-    
-    public static ClassID getInstance() {
-        if (instance == null) {
-            instance = new ClassID();
-        }
-        return instance;
-    }
-    
-    private Map<Integer, String> ID_TO_NAME = new HashMap<>();
-    private Map<String, Integer> NAME_TO_ID = new HashMap<>();
-    
-    private ClassID() {
-        load();
-    }
-    
-    private void load() {
-        String dbPath = "/resources/" + FILENAME;
-        try (InputStream is = getClass().getResourceAsStream(dbPath)) {
+    private static final Map<Integer, String> ID_TO_NAME;
+    private static final Map<String, Integer> NAME_TO_ID;
+
+    static {
+        Map<Integer, String> IDToName = new HashMap<>();
+        Map<String, Integer> nameToID = new HashMap<>();
+        
+        try (InputStream is = ClassID.class.getResourceAsStream(CLASSID_PATH)) {
             if (is == null) {
                 throw new IOException("Class ID database not found");
             }
             
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, CHARSET));
-            for (String line; (line = br.readLine()) != null;) {
-                // skip comments
-                if (line.startsWith("#") || line.startsWith("//")) {
+            List<String> lines = IOUtils.readLines(is, CHARSET);
+            for (String line : lines) {
+                // skip comments and blank lines
+                if (line.startsWith("#") || line.startsWith("//") || line.trim().isEmpty()) {
                     continue;
                 }
                 
@@ -65,20 +55,23 @@ public class ClassID {
                     int id = Integer.parseInt(parts[0]);
                     String name = parts[1];
 
-                    ID_TO_NAME.put(id, name);
-                    NAME_TO_ID.put(name, id);
+                    IDToName.put(id, name);
+                    nameToID.put(name, id);
                 }
             }
         } catch (Exception ex) {
             L.log(Level.WARNING, "Can't load class ID database", ex);
         }
+        
+        ID_TO_NAME = Collections.unmodifiableMap(IDToName);
+        NAME_TO_ID = Collections.unmodifiableMap(nameToID);
     }
     
-    public Integer getIDForName(String className) {
+    public static Integer getIDForName(String className) {
         return NAME_TO_ID.get(className);
     }
     
-    public String getNameForID(int classID, boolean safe) {
+    public static String getNameForID(int classID, boolean safe) {
         String className = ID_TO_NAME.get(classID);
         
         // custom/unknown class? then use placeholder
@@ -89,7 +82,10 @@ public class ClassID {
         return className;
     }
     
-    public String getNameForID(int classID) {
+    public static String getNameForID(int classID) {
         return getNameForID(classID, false);
+    }
+    
+    private ClassID() {
     }
 }

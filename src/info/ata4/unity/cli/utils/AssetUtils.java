@@ -143,7 +143,7 @@ public class AssetUtils {
         Map<String, Integer> classSizes = new HashMap<>();
         
         for (AssetObjectPath path : pathTable) {
-            String className = ClassID.getInstance().getNameForID(path.classID2, true);
+            String className = ClassID.getNameForID(path.classID2, true);
             
             if (!classCounts.containsKey(className)) {
                 classCounts.put(className, 0);

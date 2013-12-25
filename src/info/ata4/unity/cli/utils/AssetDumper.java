@@ -66,7 +66,7 @@ public class AssetDumper {
 
                 printObject(deser.deserialize(path));
             } catch (Exception ex) {
-                L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getInstance().getNameForID(path.classID2) + ")", ex);
+                L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getNameForID(path.classID2) + ")", ex);
                 break;
             }
         }

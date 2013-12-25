@@ -131,7 +131,7 @@ public class AssetExtractor {
                 continue;
             }
             
-            String className = ClassID.getInstance().getNameForID(path.classID2, true);
+            String className = ClassID.getNameForID(path.classID2, true);
             String objectName = String.format("Object #%d (ClassID: %d, Class: %s)", path.pathID, path.classID2, className);
 
             // write just the serialized object data or parsed and extracted content?
@@ -190,7 +190,7 @@ public class AssetExtractor {
                 continue;
             }
 
-            String className = ClassID.getInstance().getNameForID(path.classID2, true);
+            String className = ClassID.getNameForID(path.classID2, true);
             
             AssetFile subAsset = new AssetFile();
             subAsset.getHeader().format = asset.getHeader().format;
