@@ -13,6 +13,8 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
+import static info.ata4.unity.cli.DisUnityCommand.DUMP;
+import static info.ata4.unity.cli.DisUnityCommand.DUMP_STRUCT;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
@@ -90,15 +92,18 @@ public class DisUnityProcessor implements Runnable {
                     return;
                     
                 case DUMP:
-                    L.log(Level.INFO, "Dumping data from {0}", name);
-                    new AssetDumper(asset, settings).dumpData(System.out);
+                case DUMP_STRUCT:
+                    AssetDumper ad = new AssetDumper(System.out);
+                    ad.setClassFilter(settings.getClassFilter());
+                    if (cmd == DUMP) {
+                        L.log(Level.INFO, "Dumping data from {0}", name);
+                        ad.printData(asset);
+                    } else {
+                        L.log(Level.INFO, "Dumping structs from {0}", name);
+                        ad.printStruct(asset);
+                    }
                     break;
                 
-                case DUMP_STRUCT:
-                    L.log(Level.INFO, "Dumping structs from {0}", name);
-                    new AssetDumper(asset, settings).dumpStruct(System.out);
-                    break;
-                    
                 case LEARN:
                     L.log(Level.INFO, "Learning structs from {0}", name);
                     new AssetUtils(asset).learnStruct();
@@ -127,7 +132,8 @@ public class DisUnityProcessor implements Runnable {
                     }
 
                     FileUtils.forceMkdir(dir);
-                    AssetExtractor ae = new AssetExtractor(asset, settings);
+                    AssetExtractor ae = new AssetExtractor(asset);
+                    ae.setClassFilter(settings.getClassFilter());
 
                     if (split) {
                         ae.split(dir);

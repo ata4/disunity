@@ -15,7 +15,7 @@ import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
-import info.ata4.unity.cli.DisUnitySettings;
+import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
 import info.ata4.unity.cli.extract.handler.MeshHandler;
@@ -80,13 +80,12 @@ public class AssetExtractor {
     }
     
     private final AssetFile asset;
-    private final DisUnitySettings settings;
+    private ClassFilter cf;
     
     private Map<String, AssetExtractHandler> extractHandlerMap = new HashMap<>();
     
-    public AssetExtractor(AssetFile asset, DisUnitySettings settings) {
+    public AssetExtractor(AssetFile asset) {
         this.asset = asset;
-        this.settings = settings;
         
         addHandler("AudioClip", new AudioClipHandler());
         addHandler("Shader", new TextAssetHandler("shader"));
@@ -111,6 +110,14 @@ public class AssetExtractor {
     public final void clearHandlers() {
         extractHandlerMap.clear();
     }
+    
+    public ClassFilter getClassFilter() {
+        return cf;
+    }
+
+    public void setClassFilter(ClassFilter cf) {
+        this.cf = cf;
+    }
 
     public void extract(File dir, boolean raw) throws IOException {
         AssetHeader header = asset.getHeader();
@@ -127,7 +134,7 @@ public class AssetExtractor {
         
         for (AssetObjectPath path : pathTable) {
             // skip filtered classes
-            if (settings.isClassFiltered(path.classID2)) {
+            if (cf != null && !cf.accept(path)) {
                 continue;
             }
             
@@ -186,7 +193,7 @@ public class AssetExtractor {
         
         for (AssetObjectPath path : pathTable) {
             // skip filtered classes
-            if (settings.isClassFiltered(path.classID2)) {
+            if (cf != null && !cf.accept(path)) {
                 continue;
             }
 

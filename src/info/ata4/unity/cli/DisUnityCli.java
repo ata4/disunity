@@ -10,6 +10,7 @@
 package info.ata4.unity.cli;
 
 import info.ata4.unity.DisUnity;
+import info.ata4.unity.cli.classfilter.SimpleClassFilter;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
@@ -112,24 +113,27 @@ public class DisUnityCli {
             if (cl.hasOption(optClassFilter.getOpt())) {
                 String value = cl.getOptionValue(optClassFilter.getOpt());
                 String[] valueSplit = value.split(",");
-                Set<Integer> classFilter = new HashSet<>();
                 
+                SimpleClassFilter classFilter = new SimpleClassFilter();
+
                 for (String className : valueSplit) {
                     Integer classID;
+                    
                     try {
                         classID = Integer.parseInt(className);
                     } catch (NumberFormatException e) {
                         classID = ClassID.getIDForName(className);
-                        
+
                         if (classID == null) {
                             L.log(Level.WARNING, "Invalid class name or ID for filter: {0}", className);
                             continue;
                         }
                     }
-                    classFilter.add(classID);
+                    
+                    classFilter.getAcceptedIDs().add(classID);
                 }
                 
-                settings.getClassFilter().addAll(classFilter);
+                settings.setClassFilter(classFilter);
             }
             
             if (cl.hasOption(optVerbose.getOpt())) {

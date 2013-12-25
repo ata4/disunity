@@ -13,7 +13,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetTypeTree;
-import info.ata4.unity.cli.DisUnitySettings;
+import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityField;
@@ -37,30 +37,41 @@ public class AssetDumper {
     private static final Logger L = Logger.getLogger(AssetDumper.class.getName());
     private static final String INDENT_STRING = "  ";
     
-    private final AssetFile asset;
-    private final DisUnitySettings settings;
-    
     private PrintStream ps;
+    private ClassFilter cf;
     private int indentLevel;
+    
+    public AssetDumper(PrintStream ps) {
+        this.ps = ps;
+    }
 
-    public AssetDumper(AssetFile asset, DisUnitySettings settings) {
-        this.asset = asset;
-        this.settings = settings;
+    public PrintStream getPrintStream() {
+        return ps;
+    }
+
+    public void setPrintStream(PrintStream ps) {
+        this.ps = ps;
     }
     
-    public void dumpData(PrintStream ps) {
-        this.ps = ps;
-        
+    public ClassFilter getClassFilter() {
+        return cf;
+    }
+
+    public void setClassFilter(ClassFilter cf) {
+        this.cf = cf;
+    }
+    
+    public void printData(AssetFile asset) {
         Deserializer deser = new Deserializer(asset);
-        
+
         for (AssetObjectPath path : asset.getObjectPaths()) {
             try {
                 if (path.classID2 < 0) {
                     continue;
                 }
-                
+
                 // skip filtered classes
-                if (settings.isClassFiltered(path.classID2)) {
+                if (cf != null && !cf.accept(path)) {
                     continue;
                 }
 
@@ -72,9 +83,7 @@ public class AssetDumper {
         }
     }
     
-    public void dumpStruct(PrintStream ps) {
-        this.ps = ps;
-        
+    public void printStruct(AssetFile asset) {
         AssetTypeTree typeTree = asset.getTypeTree();
         
         if (typeTree.isStandalone()) {
@@ -85,12 +94,12 @@ public class AssetDumper {
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
+            AssetFieldType classField = typeTree.get(classID);
+            
             // skip filtered classes
-            if (settings.isClassFiltered(classID)) {
+            if (cf != null && !cf.accept(classID)) {
                 continue;
             }
-            
-            AssetFieldType classField = typeTree.get(classID);
             
             if (classField == null) {
                 continue;
@@ -100,7 +109,7 @@ public class AssetDumper {
         }
     }
     
-    private void printObject(UnityObject obj) {
+    public void printObject(UnityObject obj) {
         ps.print(obj.getType());
         
         if (!obj.getName().equals("Base")) {
@@ -126,7 +135,7 @@ public class AssetDumper {
         indentLevel--;
     }
     
-    private void printField(UnityField field) {
+    public void printField(UnityField field) {
         String name = field.getName();
         String type = field.getType();
         Object value = field.getValue();

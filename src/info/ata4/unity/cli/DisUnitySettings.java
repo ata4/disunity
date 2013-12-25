@@ -9,11 +9,10 @@
  */
 package info.ata4.unity.cli;
 
+import info.ata4.unity.cli.classfilter.ClassFilter;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -22,21 +21,21 @@ import java.util.Set;
 public class DisUnitySettings {
     
     private List<File> files = new ArrayList<>();
-    private Set<Integer> classFilter = new HashSet<>();
+    private ClassFilter classFilter;
     private DisUnityCommand command = DisUnityCommand.EXTRACT;
     
     public List<File> getFiles() {
         return files;
     }
     
-    public Set<Integer> getClassFilter() {
+    public ClassFilter getClassFilter() {
         return classFilter;
     }
-    
-    public boolean isClassFiltered(Integer classID) {
-        return !classFilter.isEmpty() && !classFilter.contains(classID);
-    }
 
+    public void setClassFilter(ClassFilter classFilter) {
+        this.classFilter = classFilter;
+    }
+    
     public DisUnityCommand getCommand() {
         return command;
     }
