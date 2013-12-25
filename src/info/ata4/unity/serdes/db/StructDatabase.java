@@ -233,6 +233,7 @@ public class StructDatabase {
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
             AssetFieldType fieldType = typeTree.get(classID);
+            String fieldClassName = ClassID.getInstance().getNameForID(classID);
 
             if (fieldType == null) {
                 continue;
@@ -242,6 +243,7 @@ public class StructDatabase {
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
+                L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
                 ftm.add(classID, typeTree.revision, fieldTypeMapped);
                 learnedNew++;
             }
@@ -254,7 +256,7 @@ public class StructDatabase {
                 L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldTypeMapped.type, hash1, hash2});
             }
 
-            if (ClassID.getInstance().getNameForID(classID) == null) {
+            if (fieldClassName == null) {
                 L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldType.type});
             }
         }
