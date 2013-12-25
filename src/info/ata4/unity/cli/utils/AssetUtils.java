@@ -91,16 +91,6 @@ public class AssetUtils {
     
     public void fixRefs() throws IOException {
         File sourceFile = asset.getSourceFile();
-        
-        try {
-            // create backup first
-            File backupFile = new File(sourceFile.getPath() + ".bak");
-            FileUtils.copyFile(sourceFile, backupFile);
-        } catch (IOException ex) {
-            // backup is mandatory, don't risk any loss of data 
-            throw new IOException("Can't create backup copy", ex);
-        }
-        
         File sourceParent = sourceFile.getParentFile();
         String assetPath;
         
@@ -115,7 +105,8 @@ public class AssetUtils {
         boolean changed = false;
         for (AssetRef ref : asset.getReferences()) {
             File refFile = new File(ref.filePath);
-            if (refFile.getName().endsWith(".sharedassets") && !refFile.exists()) {
+            String refExt = FilenameUtils.getExtension(refFile.getName());
+            if (refExt.endsWith("assets") && !refFile.exists()) {
                 String filePathOld = ref.filePath;
                 String filePathNew = assetPath + FilenameUtils.getName(ref.filePath);
                 File refFileNew = new File(filePathNew);
@@ -131,6 +122,15 @@ public class AssetUtils {
         }
 
         if (changed) {
+            // create backup first
+            try {
+                File backupFile = new File(sourceFile.getPath() + ".bak");
+                FileUtils.copyFile(sourceFile, backupFile);
+            } catch (IOException ex) {
+                // backup is mandatory, don't risk any loss of data 
+                throw new IOException("Can't create backup copy", ex);
+            }
+            
             asset.save(sourceFile);
         } else {
             L.fine("No references changed, skipping saving");
