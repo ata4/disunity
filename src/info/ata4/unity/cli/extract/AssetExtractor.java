@@ -178,6 +178,11 @@ public class AssetExtractor {
                 }
             }
         }
+
+        // delete directory if empty
+        if (dir.list().length == 0) {
+            dir.delete();
+        }
     }
 
     public void split(File dir) throws IOException {
