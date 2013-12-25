@@ -15,8 +15,6 @@ import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
