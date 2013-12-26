@@ -12,18 +12,20 @@ package info.ata4.unity.tools;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.serdes.db.StructDatabase;
+import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.log.LogUtils;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * Utility program to print structure database stats.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class StructDBStats {
@@ -34,28 +36,60 @@ public class StructDBStats {
         LogUtils.configure();
         
         FieldTypeMap ftm = StructDatabase.getInstance().getFieldTypeMap();
-        Map<String, AtomicInteger> classCounts = new TreeMap<>();
         Set<AssetFieldType> fieldNodes = new HashSet<>();
+        Set<String> revs = new TreeSet<>();
+        Set<Integer> classIDs = new TreeSet<>();
 
-        int classCountTotal = 0;
         for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
-            String revision = entry.getKey().getRight();
+            revs.add(entry.getKey().getRight());
+            classIDs.add(entry.getKey().getLeft());
             fieldNodes.add(entry.getValue());
-            if (!classCounts.containsKey(revision)) {
-                classCounts.put(revision, new AtomicInteger(1));
+        }
+        
+        L.log(Level.INFO, "Class IDs: {0}", classIDs.size());
+        L.log(Level.INFO, "Revisions: {0}", revs.size());
+        L.log(Level.INFO, "Fields: {0}", fieldNodes.size());
+        
+        System.out.println();
+        System.out.print("        |");
+        
+        for (Integer classID : classIDs) {
+            System.out.print(StringUtils.leftPad(String.valueOf(classID), 4));
+            System.out.print(" |");
+        }
+        
+        System.out.println();
+        System.out.print("--------|");
+        System.out.print(StringUtils.repeat("-----|", classIDs.size()));
+        System.out.println();
+        
+        for (String rev : revs) {
+            System.out.print(rev);
+            System.out.print(" |");
+            
+            for (Integer classID : classIDs) {
+                System.out.print("  ");
+                if (ftm.containsKey(new Pair(classID, rev))) {
+                    System.out.print("x");
+                } else {
+                    System.out.print(" ");
+                }
+                System.out.print("  |");
+            }
+            
+            System.out.println();
+        }
+        
+        System.out.println();
+
+        for (Integer classID : classIDs) {
+            String className = ClassID.getNameForID(classID);
+            String classIDStr = StringUtils.rightPad(String.valueOf(classID), 3);
+            if (className == null) {
+                System.out.printf("%s : ???\n", classIDStr);
             } else {
-                AtomicInteger value = classCounts.get(revision);
-                value.addAndGet(1);
-                classCountTotal++;
+                System.out.printf("%s : %s\n", classIDStr, className);
             }
         }
-
-        for (Map.Entry<String, AtomicInteger> entry : classCounts.entrySet()) {
-            int classCount = entry.getValue().get();
-            L.log(Level.INFO, "{0}: {1}", new Object[]{entry.getKey(), classCount});
-        }
-
-        L.log(Level.INFO, "Total structs:  {0}", classCountTotal);
-        L.log(Level.INFO, "Unique structs: {0}", fieldNodes.size());
     }
 }
