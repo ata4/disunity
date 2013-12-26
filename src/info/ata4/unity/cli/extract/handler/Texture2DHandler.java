@@ -11,14 +11,14 @@ package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
-import info.ata4.unity.cli.extract.handler.struct.DDSHeader;
-import info.ata4.unity.cli.extract.handler.struct.DDSPixelFormat;
-import info.ata4.unity.cli.extract.handler.struct.TGAHeader;
 import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.*;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataOutputWriter;
+import info.ata4.util.io.image.dds.DDSHeader;
+import info.ata4.util.io.image.dds.DDSPixelFormat;
+import info.ata4.util.io.image.tga.TGAHeader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
