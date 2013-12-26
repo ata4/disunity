@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.tools;
+package info.ata4.unity.cli.tools;
 
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.serdes.db.FieldTypeMap;
