@@ -266,13 +266,11 @@ public class Texture2DHandler extends AssetExtractHandler {
     }
 
     private void extractTGA() throws IOException {
-        int width = obj.getValue("m_Width");
-        int height = obj.getValue("m_Height");
         boolean convert = false;
         
         TGAHeader tgah = new TGAHeader();
-        tgah.imageWidth = width;
-        tgah.imageHeight = height;
+        tgah.imageWidth = obj.getValue("m_Width");
+        tgah.imageHeight = obj.getValue("m_Height");
         
         switch (tf) {
             case Alpha8:
@@ -301,9 +299,6 @@ public class Texture2DHandler extends AssetExtractHandler {
                 throw new IllegalStateException("Invalid texture format for TGA: " + tf);
         }
         
-        // discard mip-maps
-        imageBuffer.limit(width * height * tgah.pixelDepth / 8);
-        
         // convert non-native color formats
         if (convert) {
             for (int i = 0; i < imageBuffer.limit() / 4; i++) {
@@ -327,17 +322,46 @@ public class Texture2DHandler extends AssetExtractHandler {
             
             imageBuffer.rewind();
         }
+
+        boolean mipMap = obj.getValue("m_MipMap");
+        int mipMapCount = getMipMapCount(tgah.imageWidth, tgah.imageHeight);
         
-        ByteBuffer bb = ByteBuffer.allocateDirect(18 + imageBuffer.capacity());
-        bb.order(ByteOrder.LITTLE_ENDIAN);
+        if (!mipMap) {
+            mipMapCount = 1;
+        }
         
-        DataOutputWriter out = new DataOutputWriter(bb);
-        tgah.write(out);
+        for (int i = 0; i < mipMapCount; i++) {
+            int imageSize = tgah.imageWidth * tgah.imageHeight * tgah.pixelDepth / 8;
+ 
+            ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
+            bb.order(ByteOrder.LITTLE_ENDIAN);
+
+            // write TGA header
+            DataOutputWriter out = new DataOutputWriter(bb);
+            tgah.write(out);
+
+            // write image data
+            imageBuffer.limit(imageBuffer.position() + imageSize);
+            bb.put(imageBuffer);
+            
+            assert !bb.hasRemaining();
+            
+            // write file
+            bb.rewind();
+            
+            String fileName = name;
+            if (mipMap) {
+                fileName += "_mip_" + i;
+            }
+
+            setFileExtension("tga");
+            writeFile(bb, path.pathID, fileName);
+            
+            // prepare for the next mip map
+            tgah.imageWidth /= 2;
+            tgah.imageHeight /= 2;
+        }
         
-        bb.put(imageBuffer);
-        bb.rewind();
-        
-        setFileExtension("tga");
-        writeFile(bb, path.pathID, name);
+        assert !imageBuffer.hasRemaining();
     }
 }
