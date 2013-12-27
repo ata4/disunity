@@ -28,7 +28,7 @@ public enum TextureFormat {
     DXT1,
     UNUSED11,
     DXT5,
-    UNUSED13,
+    RGBA4444,
     UNUSED14,
     UNUSED15,
     UNUSED16,
