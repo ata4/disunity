@@ -271,17 +271,8 @@ public class Texture2DHandler extends AssetExtractHandler {
                 header.imageType = 3;
                 header.pixelDepth = 8;
                 break;
-                
-            case RGB24:
-                header.imageType = 2;
-                header.pixelDepth = 24;
-                break;
-                
+
             case RGBA32:
-                header.imageType = 2;
-                header.pixelDepth = 32;
-                break;
-                
             case ARGB32:
             case BGRA32:
             case RGBA4444:
@@ -289,12 +280,13 @@ public class Texture2DHandler extends AssetExtractHandler {
                 header.imageType = 2;
                 header.pixelDepth = 32;
                 break;
-                
+
+            case RGB24:
             case RGB565:
                 header.imageType = 2;
                 header.pixelDepth = 24;
                 break;
-                
+
             default:
                 throw new IllegalStateException("Invalid texture format for TGA: " + tf);
         }
