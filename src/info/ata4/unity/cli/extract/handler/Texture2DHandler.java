@@ -18,6 +18,7 @@ import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.image.dds.DDSHeader;
 import info.ata4.util.io.image.dds.DDSPixelFormat;
+import info.ata4.util.io.image.ktx.KTXHeader;
 import info.ata4.util.io.image.tga.TGAHeader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -77,16 +78,10 @@ public class Texture2DHandler extends AssetExtractHandler {
             case PVRTC_RGBA2:
             case PVRTC_RGB4:
             case PVRTC_RGBA4:
-                extractPVR();
-                break;
-
             case ATC_RGB4:
             case ATC_RGBA8:
-                extractATC();
-                break;
-
             case ETC_RGB4:
-                extractPKM();
+                extractKTX();
                 break;
                 
             case ARGB4444:
@@ -114,75 +109,75 @@ public class Texture2DHandler extends AssetExtractHandler {
         int width = obj.getValue("m_Width");
         int height = obj.getValue("m_Height");
         
-        DDSHeader dds = new DDSHeader();
-        dds.dwWidth = width;
-        dds.dwHeight = height;
+        DDSHeader header = new DDSHeader();
+        header.dwWidth = width;
+        header.dwHeight = height;
 
         switch (tf) {
             case Alpha8:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_ALPHA;
-                dds.ddspf.dwABitMask = 0xff;
-                dds.ddspf.dwRGBBitCount = 8;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_ALPHA;
+                header.ddspf.dwABitMask = 0xff;
+                header.ddspf.dwRGBBitCount = 8;
                 break;
                 
             case RGB24:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGB;
-                dds.ddspf.dwRBitMask = 0xff0000;
-                dds.ddspf.dwGBitMask = 0x00ff00;
-                dds.ddspf.dwBBitMask = 0x0000ff;
-                dds.ddspf.dwRGBBitCount = 24;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGB;
+                header.ddspf.dwRBitMask = 0xff0000;
+                header.ddspf.dwGBitMask = 0x00ff00;
+                header.ddspf.dwBBitMask = 0x0000ff;
+                header.ddspf.dwRGBBitCount = 24;
                 break;
                 
             case RGBA32:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
-                dds.ddspf.dwRBitMask = 0x000000ff;
-                dds.ddspf.dwGBitMask = 0x0000ff00;
-                dds.ddspf.dwBBitMask = 0x00ff0000;
-                dds.ddspf.dwABitMask = 0xff000000;
-                dds.ddspf.dwRGBBitCount = 32;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
+                header.ddspf.dwRBitMask = 0x000000ff;
+                header.ddspf.dwGBitMask = 0x0000ff00;
+                header.ddspf.dwBBitMask = 0x00ff0000;
+                header.ddspf.dwABitMask = 0xff000000;
+                header.ddspf.dwRGBBitCount = 32;
                 break;
                 
             case BGRA32:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
-                dds.ddspf.dwRBitMask = 0x00ff0000;
-                dds.ddspf.dwGBitMask = 0x0000ff00;
-                dds.ddspf.dwBBitMask = 0x000000ff;
-                dds.ddspf.dwABitMask = 0xff000000;
-                dds.ddspf.dwRGBBitCount = 32;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
+                header.ddspf.dwRBitMask = 0x00ff0000;
+                header.ddspf.dwGBitMask = 0x0000ff00;
+                header.ddspf.dwBBitMask = 0x000000ff;
+                header.ddspf.dwABitMask = 0xff000000;
+                header.ddspf.dwRGBBitCount = 32;
                 break;
                 
             case ARGB32:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
-                dds.ddspf.dwRBitMask = 0x0000ff00;
-                dds.ddspf.dwGBitMask = 0x00ff0000;
-                dds.ddspf.dwBBitMask = 0xff000000;
-                dds.ddspf.dwABitMask = 0x000000ff;
-                dds.ddspf.dwRGBBitCount = 32;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
+                header.ddspf.dwRBitMask = 0x0000ff00;
+                header.ddspf.dwGBitMask = 0x00ff0000;
+                header.ddspf.dwBBitMask = 0xff000000;
+                header.ddspf.dwABitMask = 0x000000ff;
+                header.ddspf.dwRGBBitCount = 32;
                 break;
                     
             case ARGB4444:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
-                dds.ddspf.dwRBitMask = 0x0f00;
-                dds.ddspf.dwGBitMask = 0x00f0;
-                dds.ddspf.dwBBitMask = 0x000f;
-                dds.ddspf.dwABitMask = 0xf000;
-                dds.ddspf.dwRGBBitCount = 16;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
+                header.ddspf.dwRBitMask = 0x0f00;
+                header.ddspf.dwGBitMask = 0x00f0;
+                header.ddspf.dwBBitMask = 0x000f;
+                header.ddspf.dwABitMask = 0xf000;
+                header.ddspf.dwRGBBitCount = 16;
                 break;
                 
             case RGB565:
-                dds.ddspf.dwFlags = DDSPixelFormat.DDPF_RGB;
-                dds.ddspf.dwRBitMask = 0xf800;
-                dds.ddspf.dwGBitMask = 0x07e0;
-                dds.ddspf.dwBBitMask = 0x001f;
-                dds.ddspf.dwRGBBitCount = 16;
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGB;
+                header.ddspf.dwRBitMask = 0xf800;
+                header.ddspf.dwGBitMask = 0x07e0;
+                header.ddspf.dwBBitMask = 0x001f;
+                header.ddspf.dwRGBBitCount = 16;
                 break;
             
             case DXT1:
-                dds.ddspf.dwFourCC = DDSPixelFormat.PF_DXT1;
+                header.ddspf.dwFourCC = DDSPixelFormat.PF_DXT1;
                 break;
             
             case DXT5:
-                dds.ddspf.dwFourCC = DDSPixelFormat.PF_DXT5; 
+                header.ddspf.dwFourCC = DDSPixelFormat.PF_DXT5; 
                 break;
                 
             default:
@@ -192,23 +187,23 @@ public class Texture2DHandler extends AssetExtractHandler {
         // set mip map flags if required
         boolean mipMap = obj.getValue("m_MipMap");
         if (mipMap) {
-            dds.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_MIPMAP;
-            dds.dwCaps |= DDSHeader.DDS_SURFACE_FLAGS_MIPMAP;
-            dds.dwMipMapCount = getMipMapCount(dds.dwWidth, dds.dwHeight);
+            header.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_MIPMAP;
+            header.dwCaps |= DDSHeader.DDS_SURFACE_FLAGS_MIPMAP;
+            header.dwMipMapCount = getMipMapCount(header.dwWidth, header.dwHeight);
         }
         
         // set and calculate linear size
-        dds.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_LINEARSIZE;
-        if (dds.ddspf.dwFourCC != 0) {
-            dds.dwPitchOrLinearSize = dds.dwWidth * dds.dwHeight;
+        header.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_LINEARSIZE;
+        if (header.ddspf.dwFourCC != 0) {
+            header.dwPitchOrLinearSize = header.dwWidth * header.dwHeight;
             
             if (tf == TextureFormat.DXT1) {
-                dds.dwPitchOrLinearSize /= 2;
+                header.dwPitchOrLinearSize /= 2;
             }
             
-            dds.ddspf.dwFlags |= DDSPixelFormat.DDPF_FOURCC;
+            header.ddspf.dwFlags |= DDSPixelFormat.DDPF_FOURCC;
         } else {
-            dds.dwPitchOrLinearSize = (width * height * dds.ddspf.dwRGBBitCount) / 8;
+            header.dwPitchOrLinearSize = (width * height * header.ddspf.dwRGBBitCount) / 8;
         }
         
         // TODO: convert AG to RGB normal maps? (colorSpace = 0)
@@ -218,7 +213,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         
         // write header
         DataOutputWriter out = new DataOutputWriter(bbTex);
-        dds.write(out);
+        header.write(out);
         
         // write data
         bbTex.put(imageBuffer);
@@ -227,16 +222,6 @@ public class Texture2DHandler extends AssetExtractHandler {
         
         setFileExtension("dds");
         writeFile(bbTex, path.pathID, name);
-    }
-
-    private void extractPVR() {
-        // TODO
-        throw new UnsupportedOperationException("PVR not yet implemented");
-    }
-    
-    private void extractATC() {
-        // TODO
-        throw new UnsupportedOperationException("ATC not yet implemented");
     }
 
     private void extractPKM() throws IOException {
@@ -268,30 +253,30 @@ public class Texture2DHandler extends AssetExtractHandler {
     private void extractTGA() throws IOException {
         boolean convert = false;
         
-        TGAHeader tgah = new TGAHeader();
-        tgah.imageWidth = obj.getValue("m_Width");
-        tgah.imageHeight = obj.getValue("m_Height");
+        TGAHeader header = new TGAHeader();
+        header.imageWidth = obj.getValue("m_Width");
+        header.imageHeight = obj.getValue("m_Height");
         
         switch (tf) {
             case Alpha8:
-                tgah.imageType = 3;
-                tgah.pixelDepth = 8;
+                header.imageType = 3;
+                header.pixelDepth = 8;
                 break;
                 
             case RGB24:
-                tgah.imageType = 2;
-                tgah.pixelDepth = 24;
+                header.imageType = 2;
+                header.pixelDepth = 24;
                 break;
                 
             case RGBA32:
-                tgah.imageType = 2;
-                tgah.pixelDepth = 32;
+                header.imageType = 2;
+                header.pixelDepth = 32;
                 break;
                 
             case ARGB32:
             case BGRA32:
-                tgah.imageType = 2;
-                tgah.pixelDepth = 32;
+                header.imageType = 2;
+                header.pixelDepth = 32;
                 convert = true;
                 break;
                 
@@ -324,21 +309,21 @@ public class Texture2DHandler extends AssetExtractHandler {
         }
 
         boolean mipMap = obj.getValue("m_MipMap");
-        int mipMapCount = getMipMapCount(tgah.imageWidth, tgah.imageHeight);
+        int mipMapCount = getMipMapCount(header.imageWidth, header.imageHeight);
         
         if (!mipMap) {
             mipMapCount = 1;
         }
         
         for (int i = 0; i < mipMapCount; i++) {
-            int imageSize = tgah.imageWidth * tgah.imageHeight * tgah.pixelDepth / 8;
+            int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
  
             ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
             // write TGA header
             DataOutputWriter out = new DataOutputWriter(bb);
-            tgah.write(out);
+            header.write(out);
 
             // write image data
             imageBuffer.limit(imageBuffer.position() + imageSize);
@@ -358,10 +343,78 @@ public class Texture2DHandler extends AssetExtractHandler {
             writeFile(bb, path.pathID, fileName);
             
             // prepare for the next mip map
-            tgah.imageWidth /= 2;
-            tgah.imageHeight /= 2;
+            header.imageWidth /= 2;
+            header.imageHeight /= 2;
         }
         
         assert !imageBuffer.hasRemaining();
+    }
+    
+    private void extractKTX() throws IOException {
+        boolean mipMap = obj.getValue("m_MipMap");
+        
+        KTXHeader header = new KTXHeader();
+        header.swap = true;
+        header.glTypeSize = 1;
+        header.glBaseInternalFormat = KTXHeader.GL_RGB;
+        header.pixelWidth = obj.getValue("m_Width");
+        header.pixelHeight = obj.getValue("m_Height");
+        header.pixelDepth = 0;
+        header.numberOfFaces = 1;
+        header.numberOfMipmapLevels = mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
+        
+        switch (tf) {
+            case PVRTC_RGB2:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+                break;
+                
+            case PVRTC_RGBA2:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+                header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                break;
+
+            case PVRTC_RGB4:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+                break;
+                
+            case PVRTC_RGBA4:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+                header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                break;
+                
+            case ATC_RGB4:
+                header.glInternalFormat = KTXHeader.GL_ATC_RGB_AMD;
+                break;
+
+            case ATC_RGBA8:
+                header.glInternalFormat = KTXHeader.GL_ATC_RGBA_EXPLICIT_ALPHA_AMD;
+                header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                break;
+                
+            case ETC_RGB4:
+                header.glInternalFormat = KTXHeader.GL_ETC1_RGB8_OES;        
+                break;
+                
+            default:
+                throw new IllegalStateException("Invalid texture format for KTX: " + tf);
+        }
+        
+        int imageSize = imageBuffer.capacity() + 4;
+        ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 64);
+        
+        // write header
+        header.write(new DataOutputWriter(bb));
+        
+        // TODO: missing in header or image data? PVR only?
+        bb.putInt(header.pixelWidth);
+        
+        // write image data
+        bb.put(imageBuffer);
+        
+        // write file
+        bb.rewind();
+
+        setFileExtension("ktx");
+        writeFile(bb, path.pathID, name);
     }
 }
