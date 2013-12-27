@@ -85,6 +85,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             case ARGB4444:
+            case RGBA4444:
             case RGB565:
             case DXT1:
             case DXT5:
@@ -161,6 +162,15 @@ public class Texture2DHandler extends AssetExtractHandler {
                 header.ddspf.dwGBitMask = 0x00f0;
                 header.ddspf.dwBBitMask = 0x000f;
                 header.ddspf.dwABitMask = 0xf000;
+                header.ddspf.dwRGBBitCount = 16;
+                break;
+                
+            case RGBA4444:
+                header.ddspf.dwFlags = DDSPixelFormat.DDPF_RGBA;
+                header.ddspf.dwRBitMask = 0xf000;
+                header.ddspf.dwGBitMask = 0x0f00;
+                header.ddspf.dwBBitMask = 0x00f0;
+                header.ddspf.dwABitMask = 0x000f;
                 header.ddspf.dwRGBBitCount = 16;
                 break;
                 
