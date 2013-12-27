@@ -50,26 +50,31 @@ public class DisUnityProcessor implements Runnable {
         return assetFilter.accept(file.getParentFile(), file.getName());
     }
     
-    private void processAsset(File file, File dir) {
+    private void processAsset(File file, File outputDIr) {
         try {
             boolean map = settings.getCommand() != DisUnityCommand.FIXREFS;
-            
+
             AssetFile asset = new AssetFile();
             asset.load(file, map);
-            
-            processAsset(asset, file.getName(), dir);
+
+            processAsset(asset, file.getName(), outputDIr);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't open " + file, ex);
         }
     }
     
     private void processAsset(File file) {
-        String fileName = FilenameUtils.getBaseName(file.getName());
-        if (FilenameUtils.getExtension(file.getName()).isEmpty()) {
-            fileName += "_";
+        String fileName = file.getName();
+        String assetName = FilenameUtils.removeExtension(fileName);
+        
+        // if the file has no extension, append a "_" to the output directory
+        // name so the file system won't have a file and dir with the same name
+        if (FilenameUtils.getExtension(fileName).isEmpty()) {
+            assetName += "_";
         }
-        File dir = new File(file.getParentFile(), fileName);
-        processAsset(file, dir);
+        
+        File outputDir = new File(file.getParentFile(), assetName);
+        processAsset(file, outputDir);
     }
     
     private void processAsset(ByteBuffer bb, String name, File dir) {  
@@ -83,7 +88,7 @@ public class DisUnityProcessor implements Runnable {
         }
     }
     
-    private void processAsset(AssetFile asset, String name, File dir) {        
+    private void processAsset(AssetFile asset, String name, File outputDir) {        
         try {
             DisUnityCommand cmd = settings.getCommand();
             switch (cmd) {
@@ -131,14 +136,14 @@ public class DisUnityProcessor implements Runnable {
                         L.log(Level.INFO, "Extracting resources from {0}", name);
                     }
 
-                    FileUtils.forceMkdir(dir);
+                    FileUtils.forceMkdir(outputDir);
                     AssetExtractor ae = new AssetExtractor(asset);
                     ae.setClassFilter(settings.getClassFilter());
 
                     if (split) {
-                        ae.split(dir);
+                        ae.split(outputDir);
                     } else {
-                        ae.extract(dir, raw);
+                        ae.extract(outputDir, raw);
                     }
 
                     break;
