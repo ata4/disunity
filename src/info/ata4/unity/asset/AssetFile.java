@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 
 
 /**
@@ -46,6 +47,42 @@ public class AssetFile extends MappedFileHandler {
     private AssetTypeTree typeTree = new AssetTypeTree();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
+    
+    @Override
+    public void load(File file, boolean map) throws IOException {
+        String fileName = file.getName();
+        
+        // join split asset files before loading
+        if (fileName.endsWith(".split0")) {
+            fileName = FilenameUtils.removeExtension(fileName);
+            List<File> fileParts = new ArrayList<>();
+            int assetSize = 0;
+            int splitIndex = 0;
+            File splitFile = file;
+            
+            // collect all files with .splitN extension
+            while (splitFile.exists()) {
+                fileParts.add(splitFile);
+                assetSize += splitFile.length();
+                splitIndex++;
+                String splitName = String.format("%s.split%d", fileName, splitIndex);
+                splitFile = new File(file.getParentFile(), splitName);
+            }
+            
+            // load all parts into one byte buffer
+            ByteBuffer bb = ByteBuffer.allocateDirect(assetSize);
+            
+            for (File filePart : fileParts) {
+                bb.put(NIOFileUtils.openReadOnly(filePart));
+            }
+            
+            bb.rewind();
+            
+            load(bb);
+        } else {
+            super.load(file, map);
+        }
+    }
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
