@@ -16,6 +16,8 @@ import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.serdes.Deserializer;
+import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
@@ -29,6 +31,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Helper class to output information about an asset file.
@@ -170,6 +173,73 @@ public class AssetUtils {
             ps.printf("  %s: %s\n", className, classSize);
         }
         ps.println();
+    }
+    
+    public void list(PrintStream out) {
+        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        Deserializer deser = new Deserializer(asset);
+        
+        // dirty hardcoded table printer
+        int p1 = 12;
+        int p2 = 4;
+        int p3 = 24;
+        int p4 = 10;
+        int p5 = 10;
+        int p6 = 11;
+        
+        System.out.print(StringUtils.rightPad("PID", p1));
+        System.out.print(" | ");
+        System.out.print(StringUtils.rightPad("CID", p2));
+        System.out.print(" | ");
+        System.out.print(StringUtils.rightPad("Class name", p3));
+        System.out.print(" | ");
+        System.out.print(StringUtils.rightPad("Offset", p4));
+        System.out.print(" | ");
+        System.out.print(StringUtils.leftPad("Length", p5));
+        System.out.print(" | ");
+        System.out.print(StringUtils.rightPad("Object name", p6));
+        System.out.println();
+        
+        System.out.print(StringUtils.repeat("-", p1));
+        System.out.print(" | ");
+        System.out.print(StringUtils.repeat("-", p2));
+        System.out.print(" | ");
+        System.out.print(StringUtils.repeat("-", p3));
+        System.out.print(" | ");
+        System.out.print(StringUtils.repeat("-", p4));
+        System.out.print(" | ");
+        System.out.print(StringUtils.repeat("-", p5));
+        System.out.print(" | ");
+        System.out.print(StringUtils.repeat("-", p6));
+        System.out.println();
+        
+        for (AssetObjectPath path : pathTable) {
+            String name;
+            
+            try {
+                UnityObject obj = deser.deserialize(path);
+                name = obj.getValue("m_Name");
+                if (name == null) {
+                    name = "";
+                }
+            } catch (Exception ex) {
+                // safety not guaranteed
+                name = "<error>";
+            }
+            
+            System.out.print(StringUtils.rightPad(String.valueOf(path.pathID), p1));
+            System.out.print(" | ");
+            System.out.print(StringUtils.rightPad(String.valueOf(path.classID2), p2));
+            System.out.print(" | ");
+            System.out.print(StringUtils.rightPad(ClassID.getNameForID(path.classID2, true), p3));
+            System.out.print(" | ");
+            System.out.print(StringUtils.rightPad(String.format("0x%x", path.offset), p4));
+            System.out.print(" | ");
+            System.out.print(StringUtils.leftPad(String.valueOf(path.length), p5));
+            System.out.print(" | ");
+            System.out.print(name);
+            System.out.println();
+        }
     }
     
     private String humanReadableByteCount(long bytes, boolean si) {

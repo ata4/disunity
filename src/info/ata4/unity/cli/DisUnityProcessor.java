@@ -113,6 +113,11 @@ public class DisUnityProcessor implements Runnable {
                     L.log(Level.INFO, "Printing class stats for {0}", name);
                     new AssetUtils(asset).printStats(System.out);
                     break;
+                    
+                case LIST:
+                    L.log(Level.INFO, "Listing objects in {0}", name);
+                    new AssetUtils(asset).list(System.out);
+                    break;
      
                 case EXTRACT:
                 case EXTRACT_RAW:

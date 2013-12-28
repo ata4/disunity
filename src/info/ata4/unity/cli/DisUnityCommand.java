@@ -22,6 +22,7 @@ public enum DisUnityCommand {
     LEARN,
     INFO,
     INFO_STATS,
+    LIST,
     UNBUNDLE,
     FIXREFS,
     SPLIT;
