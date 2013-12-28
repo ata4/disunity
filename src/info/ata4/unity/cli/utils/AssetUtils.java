@@ -175,7 +175,7 @@ public class AssetUtils {
         ps.println();
     }
     
-    public void list(PrintStream out) {
+    public void list(PrintStream ps) {
         AssetObjectPathTable pathTable = asset.getObjectPaths();
         Deserializer deser = new Deserializer(asset);
         
@@ -187,31 +187,31 @@ public class AssetUtils {
         int p5 = 10;
         int p6 = 11;
         
-        System.out.print(StringUtils.rightPad("PID", p1));
-        System.out.print(" | ");
-        System.out.print(StringUtils.rightPad("CID", p2));
-        System.out.print(" | ");
-        System.out.print(StringUtils.rightPad("Class name", p3));
-        System.out.print(" | ");
-        System.out.print(StringUtils.rightPad("Offset", p4));
-        System.out.print(" | ");
-        System.out.print(StringUtils.leftPad("Length", p5));
-        System.out.print(" | ");
-        System.out.print(StringUtils.rightPad("Object name", p6));
-        System.out.println();
+        ps.print(StringUtils.rightPad("PID", p1));
+        ps.print(" | ");
+        ps.print(StringUtils.rightPad("CID", p2));
+        ps.print(" | ");
+        ps.print(StringUtils.rightPad("Class name", p3));
+        ps.print(" | ");
+        ps.print(StringUtils.rightPad("Offset", p4));
+        ps.print(" | ");
+        ps.print(StringUtils.leftPad("Length", p5));
+        ps.print(" | ");
+        ps.print(StringUtils.rightPad("Object name", p6));
+        ps.println();
         
-        System.out.print(StringUtils.repeat("-", p1));
-        System.out.print(" | ");
-        System.out.print(StringUtils.repeat("-", p2));
-        System.out.print(" | ");
-        System.out.print(StringUtils.repeat("-", p3));
-        System.out.print(" | ");
-        System.out.print(StringUtils.repeat("-", p4));
-        System.out.print(" | ");
-        System.out.print(StringUtils.repeat("-", p5));
-        System.out.print(" | ");
-        System.out.print(StringUtils.repeat("-", p6));
-        System.out.println();
+        ps.print(StringUtils.repeat("-", p1));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p2));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p3));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p4));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p5));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p6));
+        ps.println();
         
         for (AssetObjectPath path : pathTable) {
             String name;
@@ -227,18 +227,18 @@ public class AssetUtils {
                 name = "<error>";
             }
             
-            System.out.print(StringUtils.rightPad(String.valueOf(path.pathID), p1));
-            System.out.print(" | ");
-            System.out.print(StringUtils.rightPad(String.valueOf(path.classID2), p2));
-            System.out.print(" | ");
-            System.out.print(StringUtils.rightPad(ClassID.getNameForID(path.classID2, true), p3));
-            System.out.print(" | ");
-            System.out.print(StringUtils.rightPad(String.format("0x%x", path.offset), p4));
-            System.out.print(" | ");
-            System.out.print(StringUtils.leftPad(String.valueOf(path.length), p5));
-            System.out.print(" | ");
-            System.out.print(name);
-            System.out.println();
+            ps.print(StringUtils.rightPad(String.valueOf(path.pathID), p1));
+            ps.print(" | ");
+            ps.print(StringUtils.rightPad(String.valueOf(path.classID2), p2));
+            ps.print(" | ");
+            ps.print(StringUtils.rightPad(ClassID.getNameForID(path.classID2, true), p3));
+            ps.print(" | ");
+            ps.print(StringUtils.rightPad(String.format("0x%x", path.offset), p4));
+            ps.print(" | ");
+            ps.print(StringUtils.leftPad(String.valueOf(path.length), p5));
+            ps.print(" | ");
+            ps.print(name);
+            ps.println();
         }
     }
     
