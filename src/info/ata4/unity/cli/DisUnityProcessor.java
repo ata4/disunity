@@ -10,7 +10,6 @@
 package info.ata4.unity.cli;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.AssetFileFilter;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import static info.ata4.unity.cli.DisUnityCommand.DUMP;
@@ -35,19 +34,10 @@ public class DisUnityProcessor implements Runnable {
 
     private static final Logger L = Logger.getLogger(DisUnityProcessor.class.getName());
     
-    private final AssetFileFilter assetFilter = new AssetFileFilter();
     private final DisUnitySettings settings = new DisUnitySettings();
     
     public DisUnitySettings getSettings() {
         return settings;
-    }
-
-    public boolean isAsset(String fileName) {
-        return assetFilter.accept(null, fileName);
-    }
-    
-    public boolean isAsset(File file) {
-        return assetFilter.accept(file.getParentFile(), file.getName());
     }
     
     private void processAsset(File file, File outputDIr) {
@@ -123,7 +113,7 @@ public class DisUnityProcessor implements Runnable {
                     L.log(Level.INFO, "Printing class stats for {0}", name);
                     new AssetUtils(asset).printStats(System.out);
                     break;
-                    
+     
                 case EXTRACT:
                 case EXTRACT_RAW:
                 case SPLIT:
@@ -197,8 +187,8 @@ public class DisUnityProcessor implements Runnable {
                 }
 
                 for (AssetBundleEntry entry : ab) {
-                    // skip non-asset entries
-                    if (!isAsset(entry.getName())) {
+                    // skip non-asset entries in subfolders
+                    if (entry.getName().contains("/")) {
                         continue;
                     }
 
@@ -215,7 +205,6 @@ public class DisUnityProcessor implements Runnable {
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't process " + file, ex);
         }
-
     }
     
     private void processAssetBundle(File file) {
@@ -224,7 +213,6 @@ public class DisUnityProcessor implements Runnable {
         File dir = new File(file.getParentFile(), fileName);
         processAssetBundle(file, dir);
     }
-    
     
     @Override
     public void run() {
