@@ -189,11 +189,6 @@ public class DisUnityProcessor implements Runnable {
                     new AssetBundleUtils(ab).printInfo(System.out);
                     
                 default:
-                    // may take a while to decompress it in-memory
-                    if (ab.isCompressed()) {
-                        L.log(Level.INFO, "Uncompressing {0}", file.getName());
-                    }
-
                     for (AssetBundleEntry entry : ab) {
                         String name = entry.getName();
                         

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.contrapunctus.lzma.LzmaInputStream;
 import org.apache.commons.io.IOUtils;
@@ -109,6 +110,9 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     public ByteBuffer getDataByteBuffer() throws IOException {
         if (bbData == null) {
             if (isCompressed()) {
+                // may take a while to decompress it in-memory
+                L.log(Level.INFO, "Uncompressing {0}", getSourceFile().getName());
+                
                 // get uncompressed data size from LZMA headers
                 bb.position(info.dataOffset + 5);
                 bb.order(ByteOrder.LITTLE_ENDIAN);
