@@ -87,7 +87,15 @@ public class SerializedInput {
     
     public byte[] readByteArray(int size) throws IOException {
         byte[] data = new byte[size];
-        in.readFully(data);
+        
+        // NOTE: AudioClips "fake" the size of m_AudioData when the stream is
+        // stored in a separate file. The array contains just an offset integer
+        // in that case, so pay attention to the bytes remaining in the buffer
+        // as well to avoid EOFExceptions.
+        // TODO: is there a flag for this behavior?
+        size = Math.min(size, (int) in.remaining());
+        
+        in.readFully(data, 0, size);
         bytes = size;
         align();
         return data;
