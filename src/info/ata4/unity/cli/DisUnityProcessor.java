@@ -15,6 +15,7 @@ import info.ata4.unity.assetbundle.AssetBundleEntry;
 import static info.ata4.unity.cli.DisUnityCommand.DUMP;
 import static info.ata4.unity.cli.DisUnityCommand.DUMP_STRUCT;
 import info.ata4.unity.cli.extract.AssetExtractor;
+import info.ata4.unity.cli.utils.AssetBundleUtils;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
 import info.ata4.unity.serdes.db.StructDatabase;
@@ -172,40 +173,44 @@ public class DisUnityProcessor implements Runnable {
             
         try {
             DisUnityCommand cmd = settings.getCommand();
-            if (cmd == DisUnityCommand.UNBUNDLE) {
-                FileUtils.forceMkdir(dir);
-                ab.extract(dir);
-            } else {
-                // may take a while to decompress it in-memory
-                if (ab.isCompressed()) {
-                    L.log(Level.INFO, "Uncompressing {0}", file.getName());
-                }
-
-                if (cmd == DisUnityCommand.INFO) {
+            switch (cmd) {
+                case UNBUNDLE:
+                    L.log(Level.INFO, "Extracting entries to {0}", dir);
+                    new AssetBundleUtils(ab).extract(dir);
+                    break;
+                    
+                case LIST:
+                    L.log(Level.INFO, "Listing files in {0}", file.getName());
+                    new AssetBundleUtils(ab).list(System.out);
+                    break;
+                    
+                case INFO:
                     L.log(Level.INFO, "Printing information about {0}", file.getName());
-                    System.out.println("File version: " + ab.getFileVersion());
-                    System.out.println("Version: " + ab.getVersion());
-                    System.out.println("Revision: " + ab.getRevision());
-                    System.out.println("Compressed: " + (ab.isCompressed() ? "yes" : "no"));
-                    System.out.println("Entries: " + ab.getEntries().size());
-                    System.out.println();
-                }
-
-                for (AssetBundleEntry entry : ab) {
-                    // skip non-asset entries in subfolders
-                    if (entry.getName().contains("/")) {
-                        continue;
+                    new AssetBundleUtils(ab).printInfo(System.out);
+                    
+                default:
+                    // may take a while to decompress it in-memory
+                    if (ab.isCompressed()) {
+                        L.log(Level.INFO, "Uncompressing {0}", file.getName());
                     }
 
-                    // skip dummy asset from Unity3D Obfuscator
-                    // TODO: random number?
-                    if (entry.getName().equals("33Obf")) {
-                        continue;
-                    }
+                    for (AssetBundleEntry entry : ab) {
+                        String name = entry.getName();
+                        
+                        // skip libraries
+                        if (name.endsWith(".dll")) {
+                            continue;
+                        }
 
-                    String assetName = file.getName() + ":" + entry.getName();
-                    processAsset(entry.getByteBuffer(), assetName, dir);
-                }
+                        // skip dummy asset from Unity3D Obfuscator
+                        // TODO: random number?
+                        if (name.equals("33Obf")) {
+                            continue;
+                        }
+
+                        String assetName = file.getName() + ":" + entry.getName();
+                        processAsset(entry.getByteBuffer(), assetName, dir);
+                    }
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't process " + file, ex);

@@ -18,7 +18,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.MappedFileHandler;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,15 +25,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.contrapunctus.lzma.LzmaInputStream;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.CountingInputStream;
 
 /**
  * Reader for Unity asset bundles.
@@ -98,7 +93,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public CountingInputStream getDataInputStream() throws IOException {
+    public InputStream getDataInputStream() throws IOException {
         ByteBuffer bbd = bb.duplicate();
         bbd.position(info.dataOffset);
         
@@ -108,7 +103,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
             is = new LzmaInputStream(is);
         }
         
-        return new CountingInputStream(is);
+        return is;
     }
     
     public ByteBuffer getDataByteBuffer() throws IOException {
@@ -164,59 +159,6 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     public String getRevision() {
         return info.revision;
     }
-    
-    public void extract(File dir) throws IOException {
-        L.log(Level.INFO, "Extracting entries to {0}", dir);
-        
-        // for compressed files, sort entries and use streaming;
-        // for uncompressed files, use channels
-        if (isCompressed()) {
-            // sort entries by offset
-            List<AssetBundleEntry> entriesSorted = new ArrayList<>(entries);
-            Collections.sort(entriesSorted, new EntryOffsetComparator());
-
-            try (CountingInputStream is = getDataInputStream()) {
-                for (AssetBundleEntry entry : entriesSorted) {
-                    String entryName = entry.getName();
-                    int entryOffset = entry.getOffset();
-                    int entrySize = entry.getSize();
-
-                    L.log(Level.INFO, "Extracting {0}", entryName);
-
-                    // skip gaps between entries
-                    if (is.getByteCount() < entry.getOffset()) {
-                        long skipBytes = entryOffset - is.getByteCount();
-                        L.log(Level.FINER, "Entry offset after current offset, skipped {0} bytes", skipBytes);
-                        is.skip(skipBytes);
-                    }
-                    
-                    File entryFile = new File(dir, entryName);
-
-                    try (OutputStream os = FileUtils.openOutputStream(entryFile)) {
-                        IOUtils.copyLarge(is, os, 0, entrySize);
-                    }
-                }
-            }
-        } else {
-            for (AssetBundleEntry entry : entries) {
-                String entryName = entry.getName();
-                int entryOffset = entry.getOffset();
-                int entrySize = entry.getSize();
-                
-                L.log(Level.INFO, "Extracting {0}", entryName);
-                
-                bb.position(info.dataOffset + entryOffset);
-                ByteBuffer entryBuffer = bb.slice();
-                entryBuffer.limit(entrySize);
-                
-                File entryFile = new File(dir, entryName);
-                
-                try (FileOutputStream os = FileUtils.openOutputStream(entryFile)) {
-                    os.getChannel().write(entryBuffer);
-                }
-            }
-        }
-    }
 
     public List<AssetBundleEntry> getEntries() {
         return Collections.unmodifiableList(entries);
@@ -225,18 +167,5 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     @Override
     public Iterator<AssetBundleEntry> iterator() {
         return getEntries().iterator();
-    }
-    
-    private class EntryOffsetComparator implements Comparator<AssetBundleEntry> {
-        
-        @Override
-        public int compare(AssetBundleEntry o1, AssetBundleEntry o2) {
-            int ofs1 = o1.getOffset();
-            int ofs2 = o2.getOffset();
-            if (ofs1 == ofs2) {
-                return 0;
-            }
-            return ofs1 > ofs2 ? 1 : -1;
-        }
     }
 }
