@@ -27,7 +27,7 @@ public abstract class MappedFileHandler {
 
     public void load(File file, boolean map) throws IOException {
         sourceFile = file;
-        load(map ? NIOFileUtils.openReadOnly(file) : NIOFileUtils.load(file));
+        load(map ? ByteBufferUtils.openReadOnly(file) : ByteBufferUtils.load(file));
     }
     
     public void load(File file) throws IOException {

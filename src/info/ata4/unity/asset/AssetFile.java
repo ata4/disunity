@@ -19,7 +19,6 @@ import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.MappedFileHandler;
-import info.ata4.util.io.NIOFileUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +72,7 @@ public class AssetFile extends MappedFileHandler {
             ByteBuffer bb = ByteBuffer.allocateDirect(assetSize);
             
             for (File filePart : fileParts) {
-                bb.put(NIOFileUtils.openReadOnly(filePart));
+                bb.put(ByteBufferUtils.openReadOnly(filePart));
             }
             
             bb.rewind();
@@ -167,7 +166,7 @@ public class AssetFile extends MappedFileHandler {
         header.fileSize = header.dataOffset + bbData.limit();
         
         // open file
-        ByteBuffer bb = NIOFileUtils.openReadWrite(file, 0, header.fileSize);
+        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.fileSize);
         DataOutputWriter out = new DataOutputWriter(bb);
         
         // write header

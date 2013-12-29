@@ -14,7 +14,6 @@ import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.NIOFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,7 +47,7 @@ public class Deserializer {
         if (debug) {
             try {
                 File dumpFile = new File(String.format("0x%x.bin", path.offset));
-                NIOFileUtils.save(dumpFile, bbAsset);
+                ByteBufferUtils.save(dumpFile, bbAsset);
                 bbAsset.rewind();
             } catch (IOException ex) {
                 ex.printStackTrace();
