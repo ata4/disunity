@@ -14,8 +14,10 @@ import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.AudioType;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.util.io.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -46,19 +48,40 @@ public class AudioClipHandler extends AssetExtractHandler {
         extMap.put(AudioType.AUDIOQUEUE, "caf");
         AUDIO_EXT = Collections.unmodifiableMap(extMap);
     }
+    
+    private ByteBuffer audioBufferAux;
+    
+    public ByteBuffer getAudioBuffer() {
+        return audioBufferAux;
+    }
+
+    public void setAudioBuffer(ByteBuffer audioBufferAux) {
+        this.audioBufferAux = audioBufferAux;
+    }
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
+        
         UnityBuffer audioData = obj.getValue("m_AudioData");
         ByteBuffer audioBuffer = audioData.getBuffer();
-
-        if (audioBuffer.capacity() == 0) {
-            L.log(Level.WARNING, "Audio clip {0} empty", name);
-            return;
-        }
+        audioBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
-        AudioType type = AudioType.fromOrdinal((int) obj.getValue("m_Type"));
+        // load audio buffer from external buffer if stream is set to 2
+        int stream = obj.getValue("m_Stream");
+        if (stream == 2) {
+            L.log(Level.FINE, "{0} uses external audio buffer", name);
+            
+            int offset = audioBuffer.getInt();
+            int size = audioBuffer.capacity();
+            audioBuffer.rewind();
+            
+            audioBuffer.put(ByteBufferUtils.getSlice(audioBufferAux, offset, size));
+            audioBuffer.rewind();
+        }
+
+        int typeInt = obj.getValue("m_Type");
+        AudioType type = AudioType.fromOrdinal(typeInt);
         
         if (type == null) {
             L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",

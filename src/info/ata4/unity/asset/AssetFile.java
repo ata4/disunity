@@ -44,6 +44,7 @@ public class AssetFile extends MappedFileHandler {
     private static final int HEADER_SIZE = 20;
 
     private ByteBuffer bbData;
+    private ByteBuffer bbAudio;
     private AssetHeader header = new AssetHeader();
     private AssetTypeTree typeTree = new AssetTypeTree();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
@@ -74,6 +75,12 @@ public class AssetFile extends MappedFileHandler {
             load(bb);
         } else {
             super.load(file, map);
+        }
+        
+        // load audio stream if existing
+        File audioStreamFile = new File(file.getParentFile(), fileName + ".resS");
+        if (audioStreamFile.exists()) {
+            bbAudio = ByteBufferUtils.load(audioStreamFile.toPath());
         }
     }
     
@@ -182,6 +189,14 @@ public class AssetFile extends MappedFileHandler {
     
     public void setDataBuffer(ByteBuffer bbData) {
         this.bbData = bbData;
+    }
+    
+    public ByteBuffer getAudioBuffer() {
+        return bbAudio;
+    }
+
+    public void setAudioBuffer(ByteBuffer bbAudio) {
+        this.bbAudio = bbAudio;
     }
 
     public AssetHeader getHeader() {

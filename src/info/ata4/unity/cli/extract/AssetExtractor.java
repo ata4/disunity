@@ -130,6 +130,11 @@ public class AssetExtractor {
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
             extractHandler.setExtractDir(dir);
             extractHandler.setAssetFormat(format);
+            
+            // set external audio buffer for AudioClips
+            if (extractHandler instanceof AudioClipHandler) {
+                ((AudioClipHandler) extractHandler).setAudioBuffer(asset.getAudioBuffer());
+            }
         }
         
         for (AssetObjectPath path : pathTable) {
