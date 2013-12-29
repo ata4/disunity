@@ -23,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -54,28 +56,20 @@ public class AssetFile extends MappedFileHandler {
         // join split asset files before loading
         if (fileName.endsWith(".split0")) {
             fileName = FilenameUtils.removeExtension(fileName);
-            List<File> fileParts = new ArrayList<>();
-            int assetSize = 0;
+            List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
-            File splitFile = file;
+            Path part = file.toPath();
             
-            // collect all files with .splitN extension
-            while (splitFile.exists()) {
-                fileParts.add(splitFile);
-                assetSize += splitFile.length();
+            // collect all files with .split0 to .splitN extension
+            while (Files.exists(part)) {
+                parts.add(part);
                 splitIndex++;
                 String splitName = String.format("%s.split%d", fileName, splitIndex);
-                splitFile = new File(file.getParentFile(), splitName);
+                part = new File(file.getParentFile(), splitName).toPath();
             }
             
             // load all parts into one byte buffer
-            ByteBuffer bb = ByteBuffer.allocateDirect(assetSize);
-            
-            for (File filePart : fileParts) {
-                bb.put(ByteBufferUtils.openReadOnly(filePart));
-            }
-            
-            bb.rewind();
+            ByteBuffer bb = ByteBufferUtils.load(parts);
             
             load(bb);
         } else {
@@ -166,7 +160,7 @@ public class AssetFile extends MappedFileHandler {
         header.fileSize = header.dataOffset + bbData.limit();
         
         // open file
-        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.fileSize);
+        ByteBuffer bb = ByteBufferUtils.openReadWrite(file.toPath(), 0, header.fileSize);
         DataOutputWriter out = new DataOutputWriter(bb);
         
         // write header

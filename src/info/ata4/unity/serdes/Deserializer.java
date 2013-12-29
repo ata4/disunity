@@ -47,7 +47,7 @@ public class Deserializer {
         if (debug) {
             try {
                 File dumpFile = new File(String.format("0x%x.bin", path.offset));
-                ByteBufferUtils.save(dumpFile, bbAsset);
+                ByteBufferUtils.save(dumpFile.toPath(), bbAsset);
                 bbAsset.rewind();
             } catch (IOException ex) {
                 ex.printStackTrace();
