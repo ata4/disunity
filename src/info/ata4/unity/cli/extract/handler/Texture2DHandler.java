@@ -15,6 +15,7 @@ import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.*;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.image.dds.DDSHeader;
 import info.ata4.util.io.image.dds.DDSPixelFormat;
@@ -364,7 +365,7 @@ public class Texture2DHandler extends AssetExtractHandler {
 
             imageBuffer.rewind();
         } else if (tf == ARGB4444 || tf == RGBA4444) {
-            // convert 16 bit RGBA/ARGB to 32 bit RGBA
+            // convert 16 bit RGBA/ARGB to 32 bit BGRA
             int newImageSize = imageBuffer.capacity() * 2;
             ByteBuffer imageBufferNew = ByteBuffer.allocateDirect(newImageSize);
             
@@ -447,55 +448,75 @@ public class Texture2DHandler extends AssetExtractHandler {
         header.pixelDepth = 0;
         header.numberOfFaces = 1;
         header.numberOfMipmapLevels = mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
+        int bpp;
         
         switch (tf) {
             case PVRTC_RGB2:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+                bpp = 2;
                 break;
                 
             case PVRTC_RGBA2:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
                 header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                bpp = 2;
                 break;
 
             case PVRTC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+                bpp = 4;
                 break;
                 
             case PVRTC_RGBA4:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
                 header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                bpp = 4;
                 break;
                 
             case ATC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_ATC_RGB_AMD;
+                bpp = 4;
                 break;
 
             case ATC_RGBA8:
                 header.glInternalFormat = KTXHeader.GL_ATC_RGBA_EXPLICIT_ALPHA_AMD;
                 header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                bpp = 8;
                 break;
                 
             case ETC_RGB4:
-                header.glInternalFormat = KTXHeader.GL_ETC1_RGB8_OES;        
+                header.glInternalFormat = KTXHeader.GL_ETC1_RGB8_OES;
+                bpp = 4;
                 break;
                 
             default:
                 throw new IllegalStateException("Invalid texture format for KTX: " + tf);
         }
         
-        int imageSize = imageBuffer.capacity() + 4;
-        ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 64);
+        // header + raw image data + mip map image sizes
+        int imageSizeTotal = 64 + imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
+        ByteBuffer bb = ByteBuffer.allocateDirect(imageSizeTotal);
         
         // write header
         header.write(new DataOutputWriter(bb));
         
-        // TODO: missing in header or image data? PVR only?
-        bb.putInt(header.pixelWidth);
-        
-        // write image data
-        bb.put(imageBuffer);
-        
+        int mipMapWidth = header.pixelWidth;
+        int mipMapHeight = header.pixelHeight;
+        int mipMapOffset = 0;
+        for (int i = 0; i < header.numberOfMipmapLevels; i++) {
+            bb.putInt(mipMapWidth);
+            
+            int mipMapSize = (mipMapWidth * mipMapHeight * bpp) / 8;
+            ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(imageBuffer, mipMapOffset, mipMapSize);
+
+            // write image data
+            bb.put(mipMapBuffer);
+            
+            mipMapWidth /= 2;
+            mipMapHeight /= 2;
+            mipMapOffset += mipMapSize;
+        }
+
         // write file
         bb.rewind();
 
