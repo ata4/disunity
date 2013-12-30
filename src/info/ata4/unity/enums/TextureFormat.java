@@ -10,7 +10,7 @@
 package info.ata4.unity.enums;
 
 /**
- * Converted TextureFormat enum from the Unity SDK.
+ * Converted TextureFormat and TextureImporterFormat enums from the Unity SDK.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
@@ -35,14 +35,14 @@ public enum TextureFormat {
     UNUSED17,
     UNUSED18,
     UNUSED19,
-    UNUSED20,
-    UNUSED21,
-    UNUSED22,
-    UNUSED23,
-    UNUSED24,
-    UNUSED25,
-    UNUSED26,
-    UNUSED27,
+    WiiI4,
+    WiiI8,
+    WiiIA4,
+    WiiIA8,
+    WiiRGB565,
+    WiiRGB5A3,
+    WiiRGBA8,
+    WiiCMPR,
     UNUSED28,
     UNUSED29,
     PVRTC_RGB2,
@@ -55,7 +55,26 @@ public enum TextureFormat {
     BGRA32,
     ATF_RGB_DXT1,
     ATF_RGBA_JPG,
-    ATF_RGB_JPG;
+    ATF_RGB_JPG,
+    EAC_R,
+    EAC_R_SIGNED,
+    EAC_RG,
+    EAC_RG_SIGNED,
+    ETC2_RGB4,
+    ETC2_RGB4_PUNCHTHROUGH_ALPHA,
+    ETC2_RGBA8,
+    ASTC_RGB_4x4,
+    ASTC_RGB_5x5,
+    ASTC_RGB_6x6,
+    ASTC_RGB_8x8,
+    ASTC_RGB_10x10,
+    ASTC_RGB_12x12,
+    ASTC_RGBA_4x4,
+    ASTC_RGBA_5x5,
+    ASTC_RGBA_6x6,
+    ASTC_RGBA_8x8,
+    ASTC_RGBA_10x10,
+    ASTC_RGBA_12x12;
     
     private static final TextureFormat[] VALUES = values();
     
