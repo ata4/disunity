@@ -89,6 +89,10 @@ public class Texture2DHandler extends AssetExtractHandler {
             case ETC2_RGB4:
             case ETC2_RGB4_PUNCHTHROUGH_ALPHA:
             case ETC2_RGBA8:
+            case EAC_R:
+            case EAC_R_SIGNED:
+            case EAC_RG:
+            case EAC_RG_SIGNED:
                 extractKTX();
                 break;
 
@@ -445,7 +449,6 @@ public class Texture2DHandler extends AssetExtractHandler {
         KTXHeader header = new KTXHeader();
         header.swap = true;
         header.glTypeSize = 1;
-        header.glBaseInternalFormat = KTXHeader.GL_RGB;
         header.pixelWidth = obj.getValue("m_Width");
         header.pixelHeight = obj.getValue("m_Height");
         header.pixelDepth = 0;
@@ -456,6 +459,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         switch (tf) {
             case PVRTC_RGB2:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+                header.glBaseInternalFormat = KTXHeader.GL_RGB;
                 bpp = 2;
                 break;
                 
@@ -467,6 +471,7 @@ public class Texture2DHandler extends AssetExtractHandler {
 
             case PVRTC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+                header.glBaseInternalFormat = KTXHeader.GL_RGB;
                 bpp = 4;
                 break;
                 
@@ -478,6 +483,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                 
             case ATC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_ATC_RGB_AMD;
+                header.glBaseInternalFormat = KTXHeader.GL_RGB;
                 bpp = 4;
                 break;
 
@@ -489,11 +495,13 @@ public class Texture2DHandler extends AssetExtractHandler {
                 
             case ETC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_ETC1_RGB8_OES;
+                header.glBaseInternalFormat = KTXHeader.GL_RGB;
                 bpp = 4;
                 break;
                 
             case ETC2_RGB4:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB8_ETC2;
+                header.glBaseInternalFormat = KTXHeader.GL_RGB;
                 bpp = 4;
                 break;
                 
@@ -507,6 +515,30 @@ public class Texture2DHandler extends AssetExtractHandler {
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA8_ETC2_EAC;
                 header.glBaseInternalFormat = KTXHeader.GL_RGBA;
                 bpp = 8;
+                break;
+         
+            case EAC_R:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_R11_EAC;
+                header.glBaseInternalFormat = KTXHeader.GL_RED;
+                bpp = 4;
+                break;
+                
+            case EAC_R_SIGNED:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_SIGNED_R11_EAC;
+                header.glBaseInternalFormat = KTXHeader.GL_RED;
+                bpp = 4;
+                break;
+                
+            case EAC_RG:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RG11_EAC;
+                header.glBaseInternalFormat = KTXHeader.GL_RG;
+                bpp = 8;
+                break;
+                
+            case EAC_RG_SIGNED:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_SIGNED_RG11_EAC;
+                header.glBaseInternalFormat = KTXHeader.GL_RG;
+                bpp = 4;
                 break;
                 
             default:
@@ -524,14 +556,17 @@ public class Texture2DHandler extends AssetExtractHandler {
         int mipMapHeight = header.pixelHeight;
         int mipMapOffset = 0;
         for (int i = 0; i < header.numberOfMipmapLevels; i++) {
+            // write mip map size
             bb.putInt(mipMapWidth);
             
+            // get mip map image data
             int mipMapSize = (mipMapWidth * mipMapHeight * bpp) / 8;
             ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(imageBuffer, mipMapOffset, mipMapSize);
 
             // write image data
             bb.put(mipMapBuffer);
             
+            // prepare next mip map
             mipMapWidth /= 2;
             mipMapHeight /= 2;
             mipMapOffset += mipMapSize;

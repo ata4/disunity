@@ -50,9 +50,13 @@ public class KTXHeader implements Struct {
     public static final int GL_COMPRESSED_SIGNED_RG11_EAC = 0x9273;
     
     // constants for glBaseInternalFormat
-    public static final int GL_ALPHA = 6406;
-    public static final int GL_RGB = 6407;
-    public static final int GL_RGBA = 6408;
+    public static final int GL_RED = 0x1903;
+    public static final int GL_GREEN = 0x1904;
+    public static final int GL_BLUE = 0x1905;
+    public static final int GL_ALPHA = 0x1906;
+    public static final int GL_RGB = 0x1907;
+    public static final int GL_RGBA = 0x1908;
+    public static final int GL_RG = 0x8227;
     
     public boolean swap;
     public int glType;
