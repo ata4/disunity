@@ -86,6 +86,9 @@ public class Texture2DHandler extends AssetExtractHandler {
             case ATC_RGB4:
             case ATC_RGBA8:
             case ETC_RGB4:
+            case ETC2_RGB4:
+            case ETC2_RGB4_PUNCHTHROUGH_ALPHA:
+            case ETC2_RGBA8:
                 extractKTX();
                 break;
 
@@ -487,6 +490,23 @@ public class Texture2DHandler extends AssetExtractHandler {
             case ETC_RGB4:
                 header.glInternalFormat = KTXHeader.GL_ETC1_RGB8_OES;
                 bpp = 4;
+                break;
+                
+            case ETC2_RGB4:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB8_ETC2;
+                bpp = 4;
+                break;
+                
+            case ETC2_RGB4_PUNCHTHROUGH_ALPHA:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+                header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                bpp = 4;
+                break;
+                
+            case ETC2_RGBA8:
+                header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGBA8_ETC2_EAC;
+                header.glBaseInternalFormat = KTXHeader.GL_RGBA;
+                bpp = 8;
                 break;
                 
             default:
