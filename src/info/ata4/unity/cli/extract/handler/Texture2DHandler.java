@@ -37,7 +37,7 @@ public class Texture2DHandler extends AssetExtractHandler {
     
     private TextureFormat tf;
     private AssetObjectPath path;
-    private UnityObject obj;
+    protected UnityObject obj;
     private String name;
     private ByteBuffer imageBuffer;
     
@@ -262,7 +262,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         writeFile(res, path.pathID, name);
     }
 
-    private void extractTGA() throws IOException {
+    protected void extractTGA() throws IOException {
         TGAHeader header = new TGAHeader();
         header.imageWidth = obj.getValue("m_Width");
         header.imageHeight = obj.getValue("m_Height");
@@ -300,43 +300,51 @@ public class Texture2DHandler extends AssetExtractHandler {
         if (!mipMap) {
             mipMapCount = 1;
         }
-        
-        for (int i = 0; i < mipMapCount; i++) {
-            int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
- 
-            ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
 
-            // write TGA header
-            DataOutputWriter out = new DataOutputWriter(bb);
-            header.write(out);
+		extractTGAImages(header, mipMap, mipMapCount);
 
-            // write image data
-            imageBuffer.limit(imageBuffer.position() + imageSize);
-            bb.put(imageBuffer);
-            
-            assert !bb.hasRemaining();
-            
-            // write file
-            bb.rewind();
-            
-            String fileName = name;
-            if (mipMap) {
-                fileName += "_mip_" + i;
-            }
-
-            setFileExtension("tga");
-            writeFile(bb, path.pathID, fileName);
-            
-            // prepare for the next mip map
-            header.imageWidth /= 2;
-            header.imageHeight /= 2;
-        }
-        
-        assert !imageBuffer.hasRemaining();
+		assert !imageBuffer.hasRemaining();
     }
-    
-    private void convertToRGBA32() {
+
+	protected void extractTGAImages(TGAHeader header, boolean mipMap, int mipMapCount) throws IOException {
+		for (int i = 0; i < mipMapCount; i++) {
+			extractTGAImage(header, mipMap, Integer.toString(i));
+		}
+	}
+
+	protected void extractTGAImage(TGAHeader header, boolean mipMap, String fileNameAppender) throws IOException {
+		int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
+
+		ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+
+		// write TGA header
+		DataOutputWriter out = new DataOutputWriter(bb);
+		header.write(out);
+
+		// write image data
+		imageBuffer.limit(imageBuffer.position() + imageSize);
+		bb.put(imageBuffer);
+
+		assert !bb.hasRemaining();
+
+		// write file
+		bb.rewind();
+
+		String fileName = name;
+		if (mipMap) {
+			fileName += "_mip_" + fileNameAppender;
+		}
+
+		setFileExtension("tga");
+		writeFile(bb, path.pathID, fileName);
+
+		// prepare for the next mip map
+		header.imageWidth /= 2;
+		header.imageHeight /= 2;
+	}
+
+	private void convertToRGBA32() {
         // convert ARGB and BGRA directly by swapping the bytes to get BGRA
         if (tf == RGBA32 || tf == ARGB32 || tf == BGRA32) {
             byte[] pixelOld = new byte[4];
