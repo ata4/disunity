@@ -19,7 +19,7 @@ import java.io.IOException;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TGAHeader implements Struct {
+public class TGAHeader implements Struct, Cloneable {
     
     public byte idLength;
     public byte colorMapType;
@@ -65,5 +65,22 @@ public class TGAHeader implements Struct {
         out.writeByte(pixelDepth);
         out.writeByte(imageDesc);
     }
-    
+
+	@Override
+	public TGAHeader clone() {
+		TGAHeader tgaHeader = new TGAHeader();
+		tgaHeader.idLength = this.idLength;
+		tgaHeader.colorMapType = this.colorMapType;
+		tgaHeader.imageType = this.imageType;
+		tgaHeader.cmFirstIndex = this.cmFirstIndex;
+		tgaHeader.cmLength = this.cmLength;
+		tgaHeader.cmEntrySize = this.cmEntrySize;
+		tgaHeader.originX = this.originX;
+		tgaHeader.originY = this.originY;
+		tgaHeader.imageWidth = this.imageWidth;
+		tgaHeader.imageHeight = this.imageHeight;
+		tgaHeader.pixelDepth = this.pixelDepth;
+		tgaHeader.imageDesc = this.imageDesc;
+		return tgaHeader;
+	}
 }
