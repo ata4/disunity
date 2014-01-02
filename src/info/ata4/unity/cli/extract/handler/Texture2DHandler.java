@@ -35,39 +35,25 @@ public class Texture2DHandler extends AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(Texture2DHandler.class.getName());
     
-    private TextureFormat tf;
     private AssetObjectPath path;
-    private UnityObject obj;
-    private String name;
-    private ByteBuffer imageBuffer;
+    private Texture2D tex;
     
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         this.path = path;
-        this.obj = obj;
+
+        // create Texture2D from serialized object
+        tex = new Texture2D();
         
-        name = obj.getValue("m_Name");
-        UnityBuffer imageData = obj.getValue("image data");
-        imageBuffer = imageData.getBuffer();
-        imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        
-        // some textures don't have any image data, not sure why...
-        if (imageBuffer.capacity() == 0) {
-            L.log(Level.WARNING, "Texture2D {0} is empty", name);
-            return;
-        }
-        
-        // get texture format
-        int textureFormat = obj.getValue("m_TextureFormat");
-        tf = TextureFormat.fromOrdinal(textureFormat);
-        if (tf == null) {
-            L.log(Level.WARNING, "Texture2D {0} has unknown texture format {1}",
-                    new Object[]{name, textureFormat});
+        try {
+            tex.read(obj);
+        } catch (RuntimeException ex) {
+            L.log(Level.WARNING, "Texture2D {0}: {1}", new Object[]{tex.name, ex.getMessage()});
             return;
         }
         
         // choose a fitting container format
-        switch (tf) {
+        switch (tex.textureFormat) {
             case Alpha8:
             case RGB24:
             case RGBA32:
@@ -102,8 +88,8 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             default:
-                L.log(Level.WARNING, "Texture2D {0} has unsupported texture format {1}",
-                        new Object[] {name, tf});
+                L.log(Level.WARNING, "Texture2D {0}: Unsupported texture format {1}",
+                        new Object[] {tex.name, tex.textureFormat});
         }
     }
     
@@ -116,14 +102,11 @@ public class Texture2DHandler extends AssetExtractHandler {
     }
     
     private void extractDDS() throws IOException {
-        int width = obj.getValue("m_Width");
-        int height = obj.getValue("m_Height");
-        
         DDSHeader header = new DDSHeader();
-        header.dwWidth = width;
-        header.dwHeight = height;
+        header.dwWidth = tex.width;
+        header.dwHeight = tex.height;
 
-        switch (tf) {
+        switch (tex.textureFormat) {
             case Alpha8:
                 header.ddspf.dwFlags = DDSPixelFormat.DDPF_ALPHA;
                 header.ddspf.dwABitMask = 0xff;
@@ -200,12 +183,11 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             default:
-                throw new IllegalStateException("Invalid texture format for DDS: " + tf);
+                throw new IllegalStateException("Invalid texture format for DDS: " + tex.textureFormat);
         }
 
         // set mip map flags if required
-        boolean mipMap = obj.getValue("m_MipMap");
-        if (mipMap) {
+        if (tex.mipMap) {
             header.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_MIPMAP;
             header.dwCaps |= DDSHeader.DDS_SURFACE_FLAGS_MIPMAP;
             header.dwMipMapCount = getMipMapCount(header.dwWidth, header.dwHeight);
@@ -216,18 +198,16 @@ public class Texture2DHandler extends AssetExtractHandler {
         if (header.ddspf.dwFourCC != 0) {
             header.dwPitchOrLinearSize = header.dwWidth * header.dwHeight;
             
-            if (tf == TextureFormat.DXT1) {
+            if (tex.textureFormat == TextureFormat.DXT1) {
                 header.dwPitchOrLinearSize /= 2;
             }
             
             header.ddspf.dwFlags |= DDSPixelFormat.DDPF_FOURCC;
         } else {
-            header.dwPitchOrLinearSize = (width * height * header.ddspf.dwRGBBitCount) / 8;
+            header.dwPitchOrLinearSize = (tex.width * tex.height * header.ddspf.dwRGBBitCount) / 8;
         }
         
-        // TODO: convert AG to RGB normal maps? (colorSpace = 0)
-        
-        ByteBuffer bbTex = ByteBuffer.allocateDirect(128 + imageBuffer.capacity());
+        ByteBuffer bbTex = ByteBuffer.allocateDirect(128 + tex.imageBuffer.capacity());
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
@@ -235,46 +215,43 @@ public class Texture2DHandler extends AssetExtractHandler {
         header.write(out);
         
         // write data
-        bbTex.put(imageBuffer);
+        bbTex.put(tex.imageBuffer);
         
         bbTex.rewind();
         
         setFileExtension("dds");
-        writeFile(bbTex, path.pathID, name);
+        writeFile(bbTex, path.pathID, tex.name);
     }
 
     private void extractPKM() throws IOException {
-        int width = obj.getValue("m_Width");
-        int height = obj.getValue("m_Height");
-
         // texWidth and texHeight are width and height rounded up to multiple of 4.
-        int texWidth = ((width - 1) | 3) + 1;
-        int texHeight = ((height - 1) | 3) + 1;
+        int texWidth = ((tex.width - 1) | 3) + 1;
+        int texHeight = ((tex.height - 1) | 3) + 1;
 
-        ByteBuffer res = ByteBuffer.allocateDirect(16 + imageBuffer.capacity());
+        ByteBuffer res = ByteBuffer.allocateDirect(16 + tex.imageBuffer.capacity());
         res.order(ByteOrder.BIG_ENDIAN);
 
         res.putLong(0x504b4d2031300000L); // PKM 10\0\0
 
         res.putShort((short) texWidth);
         res.putShort((short) texHeight);
-        res.putShort((short) width);
-        res.putShort((short) height);
+        res.putShort((short) tex.width);
+        res.putShort((short) tex.height);
 
-        res.put(imageBuffer);
+        res.put(tex.imageBuffer);
 
         res.rewind();
 
         setFileExtension("pkm");
-        writeFile(res, path.pathID, name);
+        writeFile(res, path.pathID, tex.name);
     }
 
     private void extractTGA() throws IOException {
         TGAHeader header = new TGAHeader();
-        header.imageWidth = obj.getValue("m_Width");
-        header.imageHeight = obj.getValue("m_Height");
+        header.imageWidth = tex.width;
+        header.imageHeight = tex.height;
         
-        switch (tf) {
+        switch (tex.textureFormat) {
             case Alpha8:
                 header.imageType = 3;
                 header.pixelDepth = 8;
@@ -296,15 +273,14 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
 
             default:
-                throw new IllegalStateException("Invalid texture format for TGA: " + tf);
+                throw new IllegalStateException("Invalid texture format for TGA: " + tex.textureFormat);
         }
         
         convertToRGBA32();
 
-        boolean mipMap = obj.getValue("m_MipMap");
         int mipMapCount = getMipMapCount(header.imageWidth, header.imageHeight);
         
-        if (!mipMap) {
+        if (!tex.mipMap) {
             mipMapCount = 1;
         }
         
@@ -319,16 +295,16 @@ public class Texture2DHandler extends AssetExtractHandler {
             header.write(out);
 
             // write image data
-            imageBuffer.limit(imageBuffer.position() + imageSize);
-            bb.put(imageBuffer);
+            tex.imageBuffer.limit(tex.imageBuffer.position() + imageSize);
+            bb.put(tex.imageBuffer);
             
             assert !bb.hasRemaining();
             
             // write file
             bb.rewind();
             
-            String fileName = name;
-            if (mipMap) {
+            String fileName = tex.name;
+            if (tex.mipMap) {
                 fileName += "_mip_" + i;
             }
 
@@ -340,10 +316,13 @@ public class Texture2DHandler extends AssetExtractHandler {
             header.imageHeight /= 2;
         }
         
-        assert !imageBuffer.hasRemaining();
+        assert !tex.imageBuffer.hasRemaining();
     }
     
     private void convertToRGBA32() {
+        ByteBuffer imageBuffer = tex.imageBuffer;
+        TextureFormat tf = tex.textureFormat;
+        
         // convert ARGB and BGRA directly by swapping the bytes to get BGRA
         if (tf == RGBA32 || tf == ARGB32 || tf == BGRA32) {
             byte[] pixelOld = new byte[4];
@@ -441,22 +420,22 @@ public class Texture2DHandler extends AssetExtractHandler {
             imageBufferNew.rewind();
             imageBuffer = imageBufferNew;
         }
+        
+        tex.imageBuffer = imageBuffer;
     }
     
     private void extractKTX() throws IOException {
-        boolean mipMap = obj.getValue("m_MipMap");
-        
         KTXHeader header = new KTXHeader();
         header.swap = true;
         header.glTypeSize = 1;
-        header.pixelWidth = obj.getValue("m_Width");
-        header.pixelHeight = obj.getValue("m_Height");
+        header.pixelWidth = tex.width;
+        header.pixelHeight = tex.height;
         header.pixelDepth = 0;
         header.numberOfFaces = 1;
-        header.numberOfMipmapLevels = mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
+        header.numberOfMipmapLevels = tex.mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
         int bpp;
         
-        switch (tf) {
+        switch (tex.textureFormat) {
             case PVRTC_RGB2:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
                 header.glBaseInternalFormat = KTXHeader.GL_RGB;
@@ -542,11 +521,11 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             default:
-                throw new IllegalStateException("Invalid texture format for KTX: " + tf);
+                throw new IllegalStateException("Invalid texture format for KTX: " + tex.textureFormat);
         }
         
         // header + raw image data + mip map image sizes
-        int imageSizeTotal = 64 + imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
+        int imageSizeTotal = 64 + tex.imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
         ByteBuffer bb = ByteBuffer.allocateDirect(imageSizeTotal);
         
         // write header
@@ -561,7 +540,7 @@ public class Texture2DHandler extends AssetExtractHandler {
             
             // get mip map image data
             int mipMapSize = (mipMapWidth * mipMapHeight * bpp) / 8;
-            ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(imageBuffer, mipMapOffset, mipMapSize);
+            ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(tex.imageBuffer, mipMapOffset, mipMapSize);
 
             // write image data
             bb.put(mipMapBuffer);
@@ -576,6 +555,53 @@ public class Texture2DHandler extends AssetExtractHandler {
         bb.rewind();
 
         setFileExtension("ktx");
-        writeFile(bb, path.pathID, name);
+        writeFile(bb, path.pathID, tex.name);
+    }
+    
+    private class Texture2D {
+        
+        String name;
+        int width;
+        int height;
+        int completeImageSize;
+        TextureFormat textureFormat;
+        boolean mipMap;
+        boolean isReadable;
+        boolean readAllowed;
+        int imageCount;
+        int textureDimension;
+        int lightmapFormat;
+        int colorSpace;
+        ByteBuffer imageBuffer;
+        
+        void read(UnityObject obj) {
+            name = obj.getValue("m_Name");
+            width = obj.getValue("m_Width");
+            height = obj.getValue("m_Height");
+            completeImageSize = obj.getValue("m_CompleteImageSize");
+            
+            int textureFormatOrd = obj.getValue("m_TextureFormat");
+            textureFormat = TextureFormat.fromOrdinal(textureFormatOrd);
+            if (textureFormat == null) {
+                throw new RuntimeException("Unknown texture format " + textureFormatOrd);
+            }
+            
+            mipMap = obj.getValue("m_MipMap");
+            isReadable = obj.getValue("m_IsReadable");
+            readAllowed = obj.getValue("m_ReadAllowed");
+            imageCount = obj.getValue("m_ImageCount");
+            textureDimension = obj.getValue("m_TextureDimension");
+            lightmapFormat = obj.getValue("m_LightmapFormat");
+            colorSpace = obj.getValue("m_ColorSpace");
+            
+            UnityBuffer imageData = obj.getValue("image data");
+            imageBuffer = imageData.getBuffer();
+            imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            
+            // some textures (font textures?) don't have any image data, not sure why...
+            if (imageBuffer.capacity() == 0) {
+                throw new RuntimeException("Empty image buffer");
+            }
+        }
     }
 }
