@@ -23,11 +23,26 @@ import java.util.Objects;
  */
 public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
 
-    public String revision;
-    public int version;
-    
+    private String revision;
+    private int version;
     private int format;
     private boolean standalone = false;
+    
+    public String getRevision() {
+        return revision;
+    }
+
+    public void setRevision(String revision) {
+        this.revision = revision;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
     
     public int getFormat() {
         return format;

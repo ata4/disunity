@@ -210,8 +210,8 @@ public class AssetExtractor {
             subAsset.getObjectPaths().add(subFieldPath);
             
             AssetTypeTree subTypeTree = subAsset.getTypeTree();
-            subTypeTree.revision = typeTree.revision;
-            subTypeTree.version = -2;
+            subTypeTree.setRevision(typeTree.getRevision());
+            subTypeTree.setVersion(-2);
             subTypeTree.setFormat(typeTree.getFormat());
             subTypeTree.put(path.classID2, typeTree.get(path.classID2));
             

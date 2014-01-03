@@ -70,8 +70,8 @@ public class AssetUtils {
         ps.println();
         
         ps.println("Serialized data");
-        ps.println("  Revision: " + fieldTree.revision);
-        ps.println("  Version: " + fieldTree.version);
+        ps.println("  Revision: " + fieldTree.getRevision());
+        ps.println("  Version: " + fieldTree.getVersion());
         ps.println("  Standalone: " + (fieldTree.isStandalone() ? "yes" : "no"));
         ps.println("  Objects: " + objTable.size());
         ps.println();

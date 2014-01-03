@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
 
-    public byte unknown;
+    private byte unknown;
     
     @Override
     public void read(DataInputReader in) throws IOException {

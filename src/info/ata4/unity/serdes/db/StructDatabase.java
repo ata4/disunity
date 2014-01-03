@@ -195,13 +195,13 @@ public class StructDatabase {
         AssetTypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (typeTree.revision == null) {
+        if (typeTree.getRevision() == null) {
             L.warning("typeTree.revision = null");
             return;
         }
         
         for (Integer classID : classIDs) {
-            AssetFieldType ft = ftm.get(classID, typeTree.revision, false);
+            AssetFieldType ft = ftm.get(classID, typeTree.getRevision(), false);
             if (ft != null) {
                 typeTree.put(classID, ft);
             }
@@ -222,7 +222,7 @@ public class StructDatabase {
         
         // older file formats don't contain the revision in the header, override
         // it manually here
-        if (typeTree.revision == null) {
+        if (typeTree.getRevision() == null) {
             //typeTree.revision = "2.6.0f7";
             L.warning("typeTree.revision = null");
             return 0;
@@ -239,12 +239,12 @@ public class StructDatabase {
                 continue;
             }
             
-            AssetFieldType fieldTypeMapped = ftm.get(classID, typeTree.revision);
+            AssetFieldType fieldTypeMapped = ftm.get(classID, typeTree.getRevision());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                ftm.add(classID, typeTree.revision, fieldTypeMapped);
+                ftm.add(classID, typeTree.getRevision(), fieldTypeMapped);
                 learnedNew++;
             }
 
