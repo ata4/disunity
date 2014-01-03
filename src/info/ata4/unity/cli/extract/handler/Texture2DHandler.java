@@ -248,8 +248,6 @@ public class Texture2DHandler extends AssetExtractHandler {
 
     private void extractTGA() throws IOException {
         TGAHeader header = new TGAHeader();
-        header.imageWidth = tex.width;
-        header.imageHeight = tex.height;
         
         switch (tex.textureFormat) {
             case Alpha8:
@@ -284,39 +282,52 @@ public class Texture2DHandler extends AssetExtractHandler {
             mipMapCount = 1;
         }
         
-        for (int i = 0; i < mipMapCount; i++) {
-            int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
- 
-            ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
+        int totalImageSize = 0;
+        
+        for (int i = 0; i < tex.imageCount; i++) {
+            header.imageWidth = tex.width;
+            header.imageHeight = tex.height;
+            
+            for (int j = 0; j < mipMapCount; j++) {
+                int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
+                totalImageSize += imageSize;
 
-            // write TGA header
-            DataOutputWriter out = new DataOutputWriter(bb);
-            header.write(out);
+                ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
+                bb.order(ByteOrder.LITTLE_ENDIAN);
 
-            // write image data
-            tex.imageBuffer.limit(tex.imageBuffer.position() + imageSize);
-            bb.put(tex.imageBuffer);
-            
-            assert !bb.hasRemaining();
-            
-            // write file
-            bb.rewind();
-            
-            String fileName = tex.name;
-            if (tex.mipMap) {
-                fileName += "_mip_" + i;
+                // write TGA header
+                DataOutputWriter out = new DataOutputWriter(bb);
+                header.write(out);
+
+                // write image data
+                tex.imageBuffer.limit(tex.imageBuffer.position() + imageSize);
+                bb.put(tex.imageBuffer);
+
+                assert !bb.hasRemaining();
+
+                // write file
+                bb.rewind();
+
+                String fileName = tex.name;
+                
+                if (tex.imageCount > 1) {
+                    fileName += "_" + i;
+                }
+                
+                if (tex.mipMap) {
+                    fileName += "_mip_" + j;
+                }
+
+                setFileExtension("tga");
+                writeFile(bb, path.pathID, fileName);
+
+                // prepare for the next mip map
+                header.imageWidth /= 2;
+                header.imageHeight /= 2;
             }
-
-            setFileExtension("tga");
-            writeFile(bb, path.pathID, fileName);
-            
-            // prepare for the next mip map
-            header.imageWidth /= 2;
-            header.imageHeight /= 2;
         }
         
-        assert !tex.imageBuffer.hasRemaining();
+        assert totalImageSize == tex.imageBuffer.capacity();
     }
     
     private void convertToRGBA32() {
