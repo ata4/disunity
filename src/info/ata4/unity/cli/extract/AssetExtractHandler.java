@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.asset.AssetFormat;
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.File;
@@ -29,11 +29,19 @@ public abstract class AssetExtractHandler {
     
     private static final Logger L = Logger.getLogger(AssetExtractHandler.class.getName());
 
+    private AssetFile asset;
     private File extractDir;
-    private AssetFormat format;
     private String className;
     private String fileExtension = "bin";
     private Set<File> filesWritten = new HashSet<>();
+    
+    public AssetFile getAssetFile() {
+        return asset;
+    }
+
+    public void setAssetFile(AssetFile asset) {
+        this.asset = asset;
+    }
 
     public File getExtractDir() {
         return extractDir;
@@ -44,14 +52,6 @@ public abstract class AssetExtractHandler {
         
         // new output directory, clear list of written files
         filesWritten.clear();
-    }
-    
-    public AssetFormat getAssetFormat() {
-        return format;
-    }
-
-    public void setAssetFormat(AssetFormat format) {
-        this.format = format;
     }
     
     public String getFileExtension() {

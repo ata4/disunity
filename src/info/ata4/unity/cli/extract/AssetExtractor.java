@@ -10,8 +10,6 @@
 package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.AssetFormat;
-import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
@@ -120,21 +118,12 @@ public class AssetExtractor {
     }
 
     public void extract(File dir, boolean raw) throws IOException {
-        AssetHeader header = asset.getHeader();
-        AssetTypeTree typeTree = asset.getTypeTree();
         AssetObjectPathTable pathTable = asset.getObjectPaths();
-        
         Deserializer deser = new Deserializer(asset);
-        AssetFormat format = new AssetFormat(typeTree.version, typeTree.revision, header.format);
-        
+
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
+            extractHandler.setAssetFile(asset);
             extractHandler.setExtractDir(dir);
-            extractHandler.setAssetFormat(format);
-            
-            // set external audio buffer for AudioClips
-            if (extractHandler instanceof AudioClipHandler) {
-                ((AudioClipHandler) extractHandler).setAudioBuffer(asset.getAudioBuffer());
-            }
         }
         
         for (AssetObjectPath path : pathTable) {

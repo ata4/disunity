@@ -48,16 +48,6 @@ public class AudioClipHandler extends AssetExtractHandler {
         extMap.put(AudioType.AUDIOQUEUE, "caf");
         AUDIO_EXT = Collections.unmodifiableMap(extMap);
     }
-    
-    private ByteBuffer audioBufferAux;
-    
-    public ByteBuffer getAudioBuffer() {
-        return audioBufferAux;
-    }
-
-    public void setAudioBuffer(ByteBuffer audioBufferAux) {
-        this.audioBufferAux = audioBufferAux;
-    }
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
@@ -76,6 +66,7 @@ public class AudioClipHandler extends AssetExtractHandler {
             int size = audioBuffer.capacity();
             audioBuffer.rewind();
             
+            ByteBuffer audioBufferAux = getAssetFile().getAudioBuffer();
             audioBuffer.put(ByteBufferUtils.getSlice(audioBufferAux, offset, size));
             audioBuffer.rewind();
         }
