@@ -347,8 +347,8 @@ public class Texture2DHandler extends AssetExtractHandler {
         ByteBuffer imageBuffer = tex.imageBuffer;
         TextureFormat tf = tex.textureFormat;
         
-        // convert ARGB and RGBA directly by swapping the bytes to get BGRA
         if (tf == RGBA32 || tf == ARGB32) {
+            // convert ARGB and RGBA directly by swapping the bytes to get BGRA
             byte[] pixelOld = new byte[4];
             byte[] pixelNew = new byte[4];
             for (int i = 0; i < imageBuffer.capacity() / 4; i++) {
@@ -368,6 +368,23 @@ public class Texture2DHandler extends AssetExtractHandler {
                     pixelNew[2] = pixelOld[0];
                     pixelNew[3] = pixelOld[3];
                 }
+                
+                imageBuffer.reset();
+                imageBuffer.put(pixelNew);
+            }
+
+            imageBuffer.rewind();
+        } if (tf == RGB24) {
+            // convert RGB directly to BGR
+            byte[] pixelOld = new byte[3];
+            byte[] pixelNew = new byte[3];
+            for (int i = 0; i < imageBuffer.capacity() / 3; i++) {
+                imageBuffer.mark();
+                imageBuffer.get(pixelOld);
+                
+                pixelNew[0] = pixelOld[2];
+                pixelNew[1] = pixelOld[1];
+                pixelNew[2] = pixelOld[0];
                 
                 imageBuffer.reset();
                 imageBuffer.put(pixelNew);
