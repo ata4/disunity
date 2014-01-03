@@ -37,6 +37,15 @@ public class Texture2DHandler extends AssetExtractHandler {
     
     private AssetObjectPath path;
     private Texture2D tex;
+    private boolean tgaSaveMipMaps = true;
+    
+    public boolean isTargaSaveMipMaps() {
+        return tgaSaveMipMaps;
+    }
+
+    public void setTargaSaveMipMaps(boolean tgaSaveMipMaps) {
+        this.tgaSaveMipMaps = tgaSaveMipMaps;
+    }
     
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
@@ -275,14 +284,14 @@ public class Texture2DHandler extends AssetExtractHandler {
         }
         
         convertToRGBA32();
+        
+        ByteBuffer bb = tex.imageBuffer;
 
-        int mipMapCount = getMipMapCount(header.imageWidth, header.imageHeight);
+        int mipMapCount = 1;
         
-        if (!tex.mipMap) {
-            mipMapCount = 1;
+        if (tex.mipMap) {
+            mipMapCount = getMipMapCount(tex.width, tex.height);
         }
-        
-        int totalImageSize = 0;
         
         for (int i = 0; i < tex.imageCount; i++) {
             header.imageWidth = tex.width;
@@ -290,44 +299,48 @@ public class Texture2DHandler extends AssetExtractHandler {
             
             for (int j = 0; j < mipMapCount; j++) {
                 int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
-                totalImageSize += imageSize;
-
-                ByteBuffer bb = ByteBuffer.allocateDirect(imageSize + 18);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-
-                // write TGA header
-                DataOutputWriter out = new DataOutputWriter(bb);
-                header.write(out);
-
-                // write image data
-                tex.imageBuffer.limit(tex.imageBuffer.position() + imageSize);
-                bb.put(tex.imageBuffer);
-
-                assert !bb.hasRemaining();
-
-                // write file
-                bb.rewind();
-
-                String fileName = tex.name;
                 
-                if (tex.imageCount > 1) {
-                    fileName += "_" + i;
-                }
-                
-                if (tex.mipMap) {
-                    fileName += "_mip_" + j;
-                }
+                if (tgaSaveMipMaps || j == 0) {
+                    ByteBuffer bbTga = ByteBuffer.allocateDirect(imageSize + 18);
+                    bbTga.order(ByteOrder.LITTLE_ENDIAN);
 
-                setFileExtension("tga");
-                writeFile(bb, path.pathID, fileName);
+                    // write TGA header
+                    DataOutputWriter out = new DataOutputWriter(bbTga);
+                    header.write(out);
+
+                    // write image data
+                    bb.limit(bb.position() + imageSize);
+                    bbTga.put(bb);
+                    bb.limit(bb.capacity());
+
+                    assert !bbTga.hasRemaining();
+
+                    // write file
+                    bbTga.rewind();
+
+                    String fileName = tex.name;
+
+                    if (tex.imageCount > 1) {
+                        fileName += "_" + i;
+                    }
+
+                    if (tex.mipMap && tgaSaveMipMaps) {
+                        fileName += "_mip_" + j;
+                    }
+
+                    setFileExtension("tga");
+                    writeFile(bbTga, path.pathID, fileName);
+                } else {
+                    bb.position(bb.position() + imageSize);
+                }
 
                 // prepare for the next mip map
                 header.imageWidth /= 2;
                 header.imageHeight /= 2;
             }
         }
-        
-        assert totalImageSize == tex.imageBuffer.capacity();
+
+        assert !bb.hasRemaining();
     }
     
     private void convertToRGBA32() {
@@ -442,7 +455,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         header.pixelWidth = tex.width;
         header.pixelHeight = tex.height;
         header.pixelDepth = 0;
-        header.numberOfFaces = 1;
+        header.numberOfFaces = tex.imageCount;
         header.numberOfMipmapLevels = tex.mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
         int bpp;
         
