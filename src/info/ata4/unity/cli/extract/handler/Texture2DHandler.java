@@ -301,7 +301,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                 int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
                 
                 if (tgaSaveMipMaps || j == 0) {
-                    ByteBuffer bbTga = ByteBuffer.allocateDirect(imageSize + 18);
+                    ByteBuffer bbTga = ByteBuffer.allocateDirect(TGAHeader.SIZE + imageSize);
                     bbTga.order(ByteOrder.LITTLE_ENDIAN);
 
                     // write TGA header

@@ -21,6 +21,8 @@ import java.io.IOException;
  */
 public class TGAHeader implements Struct {
     
+    public static final int SIZE = 18;
+    
     public byte idLength;
     public byte colorMapType;
     public byte imageType;
