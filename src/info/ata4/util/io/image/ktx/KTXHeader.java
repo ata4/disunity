@@ -22,6 +22,8 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class KTXHeader implements Struct {
     
+    public static final int SIZE = 64;
+    
     public static byte[] IDENTIFIER = DatatypeConverter.parseHexBinary("AB4B5458203131BB0D0A1A0A");
     public static byte[] ENDIANESS_LE = new byte[] {1, 2, 3, 4};
     public static byte[] ENDIANESS_BE = new byte[] {4, 3, 2, 1};

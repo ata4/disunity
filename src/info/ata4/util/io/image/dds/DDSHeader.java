@@ -24,6 +24,8 @@ public class DDSHeader implements Struct {
     public static final int DDS_MAGIC = StringMacroUtils.makeID("DDS ");
     public static final int DDS_STRUCT_SIZE = 124;
     
+    public static final int SIZE = DDS_STRUCT_SIZE + 4;
+    
     public static final int DDS_FOURCC      = 0x00000004 ; // DDPF_FOURCC
     public static final int DDS_RGB         = 0x00000040 ; // DDPF_RGB
     public static final int DDS_RGBA        = 0x00000041 ; // DDPF_RGB | DDPF_ALPHAPIXELS

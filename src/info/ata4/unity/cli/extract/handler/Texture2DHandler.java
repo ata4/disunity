@@ -216,7 +216,7 @@ public class Texture2DHandler extends AssetExtractHandler {
             header.dwPitchOrLinearSize = (tex.width * tex.height * header.ddspf.dwRGBBitCount) / 8;
         }
         
-        ByteBuffer bbTex = ByteBuffer.allocateDirect(128 + tex.imageBuffer.capacity());
+        ByteBuffer bbTex = ByteBuffer.allocateDirect(DDSHeader.SIZE + tex.imageBuffer.capacity());
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
@@ -566,7 +566,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         }
         
         // header + raw image data + mip map image sizes
-        int imageSizeTotal = 64 + tex.imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
+        int imageSizeTotal = KTXHeader.SIZE + tex.imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
         ByteBuffer bb = ByteBuffer.allocateDirect(imageSizeTotal);
         
         // write header
