@@ -20,6 +20,8 @@ import java.io.IOException;
  */
 public class AssetHeader implements Struct {
     
+    public static final int SIZE = 20;
+    
     // size of the structure data
     public int treeSize;
     

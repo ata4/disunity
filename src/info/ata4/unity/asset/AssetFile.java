@@ -41,7 +41,6 @@ import org.apache.commons.io.FilenameUtils;
 public class AssetFile extends MappedFileHandler {
     
     private static final Logger L = Logger.getLogger(AssetFile.class.getName());
-    private static final int HEADER_SIZE = 20;
 
     private ByteBuffer bbData;
     private ByteBuffer bbAudio;
@@ -151,7 +150,7 @@ public class AssetFile extends MappedFileHandler {
         
         // align block to 16 bytes
         int structSize = bosStruct.size();
-        int structOffset = structSize + HEADER_SIZE;
+        int structOffset = structSize + AssetHeader.SIZE;
         int structAlign = 16;
         outStruct.align(structOffset, structAlign);
         
@@ -159,11 +158,11 @@ public class AssetFile extends MappedFileHandler {
         
         // calculate padding
         int minSize = 4096;
-        int padding = Math.max(0, minSize - HEADER_SIZE - bbStruct.limit());
+        int padding = Math.max(0, minSize - AssetHeader.SIZE - bbStruct.limit());
         
         // configure header
         header.treeSize = structSize;
-        header.dataOffset = HEADER_SIZE + bbStruct.limit() + padding;
+        header.dataOffset = AssetHeader.SIZE + bbStruct.limit() + padding;
         header.fileSize = header.dataOffset + bbData.limit();
         
         // open file
