@@ -66,7 +66,7 @@ public class AssetDumper {
 
         for (AssetObjectPath path : asset.getObjectPaths()) {
             try {
-                if (path.classID2 < 0) {
+                if (path.classID1 < 0) {
                     continue;
                 }
 
