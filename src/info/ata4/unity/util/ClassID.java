@@ -49,7 +49,7 @@ public class ClassID {
                     continue;
                 }
                 
-                String[] parts = line.split("\t");
+                String[] parts = line.split("\\W+");
 
                 if (parts.length == 2) {
                     int id = Integer.parseInt(parts[0]);
