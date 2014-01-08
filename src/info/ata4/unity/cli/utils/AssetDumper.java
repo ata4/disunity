@@ -176,8 +176,8 @@ public class AssetDumper {
     }
 
     private void printType(AssetFieldType field) {
-        String name = field.name;
-        String type = field.type;
+        String name = field.getName();
+        String type = field.getType();
         
         printIndent();
         

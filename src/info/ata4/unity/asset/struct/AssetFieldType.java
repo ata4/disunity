@@ -14,33 +14,38 @@ import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct {
+public class AssetFieldType implements Struct, Iterable<AssetFieldType> {
     
     public static final int FLAG_FORCE_ALIGN = 0x4000;
+    
+    // child fields
+    private List<AssetFieldType> children = new ArrayList<>();
 
     // field type string
-    public String type;
+    private String type;
     
     // field name string
-    public String name;
+    private String name;
     
     // size of the field value in bytes or -1 if the field contains sub-fields only
-    public int size;
+    private int size;
     
     // field index for the associated parent field
-    public int index;
+    private int index;
     
     // set to 1 if "type" is "Array" or "TypelessData"
-    public int arrayFlag;
+    private int arrayFlag;
     
     // observed values: 1-5, 8
-    public int flags1;
+    private int flags1;
     
     // field flags
     // observed values:
@@ -51,7 +56,7 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
     // 0x8000
     // 0x200000
     // 0x400000
-    public int flags2;
+    private int flags2;
     
     public boolean isForceAlign() {
         return (flags2 & FLAG_FORCE_ALIGN) != 0;
@@ -65,6 +70,76 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
         }
     }
     
+    public List<AssetFieldType> getChildren() {
+        return children;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getArrayFlag() {
+        return arrayFlag;
+    }
+
+    public void setArrayFlag(int arrayFlag) {
+        this.arrayFlag = arrayFlag;
+    }
+
+    public int getFlags1() {
+        return flags1;
+    }
+
+    public void setFlags1(int flags1) {
+        this.flags1 = flags1;
+    }
+
+    public int getFlags2() {
+        return flags2;
+    }
+
+    public void setFlags2(int flags2) {
+        this.flags2 = flags2;
+    }
+
+    @Override
+    public Iterator<AssetFieldType> iterator() {
+        return children.iterator();
+    }
+    
+    @Override
+    public String toString() {
+        return type + ":" + name;
+    }
+    
     @Override
     public void read(DataInputReader in) throws IOException {
         type = in.readStringNull(256);
@@ -75,12 +150,11 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
         flags1 = in.readInt();
         flags2 = in.readInt();
 
-        int children = in.readInt();
-
-        for (int i = 0; i < children; i++) {
+        int numChildren = in.readInt();
+        for (int i = 0; i < numChildren; i++) {
             AssetFieldType fn = new AssetFieldType();
             fn.read(in);
-            add(fn);
+            children.add(fn);
         }
     }
 
@@ -94,20 +168,13 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
         out.writeInt(flags1);
         out.writeInt(flags2);
         
-        int children = size();
-        out.writeInt(children);
-        
-        for (AssetFieldType subField : this) {
+        out.writeInt(children.size());
+        for (AssetFieldType subField : children) {
             subField.write(out);
         }
     }
-
-    @Override
-    public String toString() {
-        return type + ":" + name;
-    }
     
-   @Override
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -116,6 +183,9 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
             return false;
         }
         final AssetFieldType other = (AssetFieldType) obj;
+        if (!Objects.equals(this.children, other.children)) {
+            return false;
+        }
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
@@ -131,25 +201,18 @@ public class AssetFieldType extends ArrayList<AssetFieldType> implements Struct 
         if (this.arrayFlag != other.arrayFlag) {
             return false;
         }
-//        if (this.flags1 != other.flags1) {
-//            return false;
-//        }
-//        if (this.flags2 != other.flags2) {
-//            return false;
-//        }
-        return super.equals(obj);
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = super.hashCode();
-        hash = 47 * hash + Objects.hashCode(this.type);
-        hash = 47 * hash + Objects.hashCode(this.name);
-        hash = 47 * hash + this.size;
-        hash = 47 * hash + this.index;
-        hash = 47 * hash + this.arrayFlag;
-//        hash = 47 * hash + this.flags1;
-//        hash = 47 * hash + this.flags2;
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(this.children);
+        hash = 31 * hash + Objects.hashCode(this.type);
+        hash = 31 * hash + Objects.hashCode(this.name);
+        hash = 31 * hash + this.size;
+        hash = 31 * hash + this.index;
+        hash = 31 * hash + this.arrayFlag;
         return hash;
     }
 }

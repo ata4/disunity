@@ -63,12 +63,12 @@ public class Deserializer {
             throw new DeserializationException("Class not found in type tree");
         }
         
-        if (classNode.isEmpty()) {
+        if (classNode.getChildren().isEmpty()) {
             classNode = asset.getTypeTree().get(path.classID1);
         }
         
-        UnityObject ac = new UnityObject(classNode.type);
-        ac.setName(classNode.name);
+        UnityObject ac = new UnityObject(classNode.getType());
+        ac.setName(classNode.getName());
 
         for (AssetFieldType fieldNode : classNode) {
             ac.addField(readField(fieldNode));
@@ -90,8 +90,8 @@ public class Deserializer {
     }
     
     private UnityObject readObject(AssetFieldType field) throws DeserializationException {
-        UnityObject ac = new UnityObject(field.type);
-        ac.setName(field.name);
+        UnityObject ac = new UnityObject(field.getType());
+        ac.setName(field.getName());
         
         for (AssetFieldType fieldNode : field) {
             ac.addField(readField(fieldNode));
@@ -101,8 +101,8 @@ public class Deserializer {
     }
     
     private UnityField readField(AssetFieldType field) throws DeserializationException {
-        UnityField af = new UnityField(field.type);
-        af.setName(field.name);
+        UnityField af = new UnityField(field.getType());
+        af.setName(field.getName());
         
         int pos = 0;
         
@@ -113,13 +113,13 @@ public class Deserializer {
         try {
             af.setValue(readFieldValue(field));
         } catch (IOException ex) {
-            throw new DeserializationException("Can't read value of field " + field.name, ex);
+            throw new DeserializationException("Can't read value of field " + field.getName(), ex);
         }
         
         if (debug) {
             int bytes = bbAsset.position() - pos;
             System.out.printf("0x%x: %s %s = %s, bytes: %d, flags: 0x%x 0x%x\n",
-                    pos, af.getType(), af.getName(), af.getValue(), bytes, field.flags1, field.flags2);
+                    pos, af.getType(), af.getName(), af.getValue(), bytes, field.getFlags1(), field.getFlags2());
         }
 
         return af;
@@ -128,7 +128,7 @@ public class Deserializer {
     private Object readFieldValue(AssetFieldType field) throws IOException, DeserializationException {
         Object value;
         
-        if (field.isEmpty()) {
+        if (field.getChildren().isEmpty()) {
             value = readPrimitive(field);
         } else {
             value = readComplex(field);
@@ -142,7 +142,7 @@ public class Deserializer {
     }
     
     private Object readPrimitive(AssetFieldType field) throws IOException, DeserializationException {
-        switch (field.type) {
+        switch (field.getType()) {
             case "UInt64":
                 return in.readUnsignedLong();
 
@@ -182,12 +182,12 @@ public class Deserializer {
                 return in.readBoolean();
                 
             default:
-                throw new DeserializationException("Unknown primitive type: " + field.type);
+                throw new DeserializationException("Unknown primitive type: " + field.getType());
         }
     }
     
     private Object readComplex(AssetFieldType field) throws IOException, DeserializationException {
-        switch (field.type) {
+        switch (field.getType()) {
             case "string":
                 return in.readString();
             
@@ -195,7 +195,7 @@ public class Deserializer {
             case "vector":
             case "staticvector":
             case "set":
-                return readArray(field.get(0));
+                return readArray(field.getChildren().get(0));
             
             case "Array":
             case "TypelessData":
@@ -207,10 +207,11 @@ public class Deserializer {
     }
     
     private UnityType readArray(AssetFieldType field) throws IOException, DeserializationException {
-        AssetFieldType sizeField = field.get(0);
-        AssetFieldType dataField = field.get(1);
+        List<AssetFieldType> children = field.getChildren();
+        AssetFieldType sizeField = children.get(0);
+        AssetFieldType dataField = children.get(1);
         int size = (int) readFieldValue(sizeField);
-        String dataType = dataField.type;
+        String dataType = dataField.getType();
         
         if (dataType.equals("UInt8") || dataType.equals("char")) {
             // read byte arrays natively and wrap them as ByteBuffers, which is

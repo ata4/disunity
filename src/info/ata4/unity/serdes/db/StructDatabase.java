@@ -256,11 +256,11 @@ public class StructDatabase {
             int hash2 = fieldTypeMapped.hashCode();
 
             if (hash1 != hash2) {
-                L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldTypeMapped.type, hash1, hash2});
+                L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}", new Object[] {fieldTypeMapped.getType(), hash1, hash2});
             }
 
             if (fieldClassName == null) {
-                L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldType.type});
+                L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}", new Object[] {classID, fieldType.getType()});
             }
         }
         
