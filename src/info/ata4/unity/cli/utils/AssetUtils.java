@@ -10,10 +10,10 @@
 package info.ata4.unity.cli.utils;
 
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetRef;
-import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.serdes.db.StructDatabase;
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -78,14 +77,14 @@ public class AssetUtils {
         if (!refTable.isEmpty()) {
             ps.println("External references");
             for (AssetRef ref : refTable) {
-                if (!ref.assetPath.isEmpty()) {
-                    ps.printf("  Asset path: \"%s\"\n", ref.assetPath);
+                if (!ref.getAssetPath().isEmpty()) {
+                    ps.printf("  Asset path: \"%s\"\n", ref.getAssetPath());
                 }
-                if (!ref.filePath.isEmpty()) {
-                    ps.printf("  File path: \"%s\"\n", ref.filePath);
+                if (!ref.getFilePath().isEmpty()) {
+                    ps.printf("  File path: \"%s\"\n", ref.getFilePath());
                 }
-                ps.printf("  GUID: %s\n", DatatypeConverter.printHexBinary(ref.guid));
-                ps.printf("  Type: %d\n", ref.type);
+                ps.printf("  GUID: %s\n", ref.getGUID());
+                ps.printf("  Type: %d\n", ref.getType());
                 ps.println();
             }
         }
@@ -106,16 +105,16 @@ public class AssetUtils {
         // fix path for all assets with .sharedassets extension
         boolean changed = false;
         for (AssetRef ref : asset.getReferences()) {
-            Path refFile = Paths.get(ref.filePath);
+            Path refFile = Paths.get(ref.getFilePath());
             String refExt = FilenameUtils.getExtension(refFile.getFileName().toString());
             if (refExt.endsWith("assets") && !Files.exists(refFile)) {
-                String filePathOld = ref.filePath;
-                String filePathNew = assetPath + FilenameUtils.getName(ref.filePath);
+                String filePathOld = ref.getFilePath();
+                String filePathNew = assetPath + FilenameUtils.getName(ref.getFilePath());
                 Path refFileNew = Paths.get(filePathNew);
                 
                 if (Files.exists(refFileNew)) {
                     L.log(Level.FINE, "Fixed reference: {0} -> {1}", new Object[]{filePathOld, filePathNew});
-                    ref.filePath = filePathNew;
+                    ref.setFilePath(filePathNew);
                     changed = true;
                 } else {
                     L.log(Level.FINE, "Fixed reference not found: {0}", refFileNew);
