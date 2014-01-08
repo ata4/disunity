@@ -23,23 +23,23 @@ public class AssetHeader implements Struct {
     public static final int SIZE = 20;
     
     // size of the structure data
-    public int treeSize;
+    private int treeSize;
     
     // size of the whole asset file
-    public int fileSize;
+    private int fileSize;
     
     // 5 = 2.0
     // 6 = 2.6
     // 7 = ???
     // 8 = 3.1 - 3.4
     // 9 = 3.5 - 4.1
-    public int format;
+    private int format;
     
     // apparently the offset to the serialized data
-    public int dataOffset;
+    private int dataOffset;
     
     // always 0?
-    public int unknown;
+    private int unknown;
 
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -57,5 +57,37 @@ public class AssetHeader implements Struct {
         out.writeInt(format);
         out.writeInt(dataOffset);
         out.writeInt(unknown);
+    }
+
+    public int getTreeSize() {
+        return treeSize;
+    }
+
+    public void setTreeSize(int treeSize) {
+        this.treeSize = treeSize;
+    }
+
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public int getFormat() {
+        return format;
+    }
+
+    public void setFormat(int format) {
+        this.format = format;
+    }
+
+    public int getDataOffset() {
+        return dataOffset;
+    }
+
+    public void setDataOffset(int dataOffset) {
+        this.dataOffset = dataOffset;
     }
 }

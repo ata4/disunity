@@ -63,11 +63,10 @@ public class AssetUtils {
         AssetTypeTree fieldTree = asset.getTypeTree();
         
         ps.println("Header");
-        ps.println("  File size: " + humanReadableByteCount(header.fileSize, true));
-        ps.println("  Tree size: " + humanReadableByteCount(header.treeSize, true));
-        ps.println("  Format: " + header.format);
-        ps.println("  Data offset: " + header.dataOffset);
-        ps.println("  Unknown: " + header.unknown);
+        ps.println("  File size: " + humanReadableByteCount(header.getFileSize(), true));
+        ps.println("  Tree size: " + humanReadableByteCount(header.getTreeSize(), true));
+        ps.println("  Format: " + header.getFormat());
+        ps.println("  Data offset: " + header.getDataOffset());
         ps.println();
         
         ps.println("Serialized data");

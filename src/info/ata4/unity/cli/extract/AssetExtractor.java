@@ -204,7 +204,7 @@ public class AssetExtractor {
             String className = ClassID.getNameForID(path.classID2, true);
             
             AssetFile subAsset = new AssetFile();
-            subAsset.getHeader().format = asset.getHeader().format;
+            subAsset.getHeader().setFormat(asset.getHeader().getFormat());
             
             AssetObjectPath subFieldPath = new AssetObjectPath();
             subFieldPath.classID1 = path.classID1;

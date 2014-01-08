@@ -94,14 +94,14 @@ public class AssetFile extends MappedFileHandler {
         objTable.clear();
         refTable.clear();
         
-        typeTree.setFormat(header.format);
+        typeTree.setFormat(header.getFormat());
         
-        switch (header.format) {
+        switch (header.getFormat()) {
             case 6:
             case 7:
             case 8:
                 // first data, then struct
-                int treeOffset = header.fileSize - header.treeSize + 1;
+                int treeOffset = header.getFileSize() - header.getTreeSize() + 1;
                 bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
                 bb.position(treeOffset);
 
@@ -116,11 +116,11 @@ public class AssetFile extends MappedFileHandler {
                 objTable.read(in);
                 refTable.read(in);
                 
-                bbData = ByteBufferUtils.getSlice(bb, header.dataOffset);
+                bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
                 break;
                 
             default:
-                throw new AssetException("Unknown asset format " + header.format);
+                throw new AssetException("Unknown asset format " + header.getFormat());
         }
         
         // try to get struct from database if the embedded one is empty
@@ -133,7 +133,7 @@ public class AssetFile extends MappedFileHandler {
     @Override
     public void save(Path file) throws IOException {
         // TODO: support older formats
-        if (header.format != 9) {
+        if (header.getFormat() != 9) {
             throw new AssetException("Only format 9 is supported right now");
         }
         
@@ -142,7 +142,7 @@ public class AssetFile extends MappedFileHandler {
         DataOutputWriter outStruct = new DataOutputWriter(bosStruct);
         outStruct.setSwap(true);
         
-        typeTree.setFormat(header.format);
+        typeTree.setFormat(header.getFormat());
         typeTree.write(outStruct);
         objTable.write(outStruct);
         refTable.write(outStruct);
@@ -160,12 +160,12 @@ public class AssetFile extends MappedFileHandler {
         int padding = Math.max(0, minSize - AssetHeader.SIZE - bbStruct.limit());
         
         // configure header
-        header.treeSize = structSize;
-        header.dataOffset = AssetHeader.SIZE + bbStruct.limit() + padding;
-        header.fileSize = header.dataOffset + bbData.limit();
+        header.setTreeSize(structSize);
+        header.setDataOffset(AssetHeader.SIZE + bbStruct.limit() + padding);
+        header.setFileSize(header.getDataOffset() + bbData.limit());
         
         // open file
-        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.fileSize);
+        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.getFileSize());
         DataOutputWriter out = new DataOutputWriter(bb);
         
         // write header
