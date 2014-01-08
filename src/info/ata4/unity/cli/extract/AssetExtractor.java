@@ -12,7 +12,7 @@ package info.ata4.unity.cli.extract;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
-import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
@@ -187,7 +187,7 @@ public class AssetExtractor {
 
     public void split(Path dir) throws IOException {
         List<AssetObjectPath> pathTable = asset.getPaths();
-        AssetTypeTree typeTree = asset.getTypeTree();
+        AssetClassType typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -215,7 +215,7 @@ public class AssetExtractor {
             subFieldPath.pathID = 1;
             subAsset.getPaths().add(subFieldPath);
             
-            AssetTypeTree subTypeTree = subAsset.getTypeTree();
+            AssetClassType subTypeTree = subAsset.getTypeTree();
             subTypeTree.setRevision(typeTree.getRevision());
             subTypeTree.setVersion(-2);
             subTypeTree.setFormat(typeTree.getFormat());

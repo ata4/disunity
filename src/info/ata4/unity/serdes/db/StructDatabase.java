@@ -11,7 +11,7 @@ package info.ata4.unity.serdes.db;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
-import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
@@ -195,7 +195,7 @@ public class StructDatabase {
     }
     
     public void fill(AssetFile asset) {
-        AssetTypeTree typeTree = asset.getTypeTree();
+        AssetClassType typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (typeTree.getRevision() == null) {
@@ -215,7 +215,7 @@ public class StructDatabase {
     }
     
     public int learn(AssetFile asset) {
-        AssetTypeTree typeTree = asset.getTypeTree();
+        AssetClassType typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (typeTree.isStandalone()) {

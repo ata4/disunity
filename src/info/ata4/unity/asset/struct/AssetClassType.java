@@ -21,7 +21,7 @@ import java.util.Objects;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
+public class AssetClassType extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
 
     private String revision;
     private int version;
@@ -121,7 +121,7 @@ public class AssetTypeTree extends LinkedHashMap<Integer, AssetFieldType> implem
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AssetTypeTree other = (AssetTypeTree) obj;
+        final AssetClassType other = (AssetClassType) obj;
         if (!Objects.equals(this.revision, other.revision)) {
             return false;
         }

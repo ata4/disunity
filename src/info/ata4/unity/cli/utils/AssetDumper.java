@@ -12,7 +12,7 @@ package info.ata4.unity.cli.utils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityBuffer;
@@ -84,7 +84,7 @@ public class AssetDumper {
     }
     
     public void printStruct(AssetFile asset) {
-        AssetTypeTree typeTree = asset.getTypeTree();
+        AssetClassType typeTree = asset.getTypeTree();
         
         if (typeTree.isStandalone()) {
             L.info("No type tree available");

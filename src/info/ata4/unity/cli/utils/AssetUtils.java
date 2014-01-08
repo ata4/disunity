@@ -13,7 +13,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetRef;
-import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.serdes.db.StructDatabase;
@@ -59,7 +59,7 @@ public class AssetUtils {
         List<AssetObjectPath> paths = asset.getPaths();
         List<AssetRef> refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
-        AssetTypeTree fieldTree = asset.getTypeTree();
+        AssetClassType fieldTree = asset.getTypeTree();
         
         ps.println("Header");
         ps.println("  File size: " + humanReadableByteCount(header.getFileSize(), true));

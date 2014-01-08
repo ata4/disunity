@@ -14,7 +14,7 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
-import info.ata4.unity.asset.struct.AssetTypeTree;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
@@ -45,7 +45,7 @@ public class AssetFile extends MappedFileHandler {
     private ByteBuffer bbData;
     private ByteBuffer bbAudio;
     private AssetHeader header = new AssetHeader();
-    private AssetTypeTree typeTree = new AssetTypeTree();
+    private AssetClassType typeTree = new AssetClassType();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
     
@@ -91,7 +91,7 @@ public class AssetFile extends MappedFileHandler {
         
         in.setSwap(true);
         
-        typeTree = new AssetTypeTree();        
+        typeTree = new AssetClassType();        
         objTable = new AssetObjectPathTable();
         refTable = new AssetRefTable();
         
@@ -202,7 +202,7 @@ public class AssetFile extends MappedFileHandler {
         return header;
     }
 
-    public AssetTypeTree getTypeTree() {
+    public AssetClassType getTypeTree() {
         return typeTree;
     }
 
