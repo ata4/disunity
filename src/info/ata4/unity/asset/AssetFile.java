@@ -9,12 +9,13 @@
  */
 package info.ata4.unity.asset;
 
+import info.ata4.unity.asset.struct.AssetClassType;
+import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
-import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
@@ -27,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -45,7 +47,7 @@ public class AssetFile extends MappedFileHandler {
     private ByteBuffer bbData;
     private ByteBuffer bbAudio;
     private AssetHeader header = new AssetHeader();
-    private AssetClassType typeTree = new AssetClassType();
+    private AssetClassType classType = new AssetClassType();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
     
@@ -91,11 +93,11 @@ public class AssetFile extends MappedFileHandler {
         
         in.setSwap(true);
         
-        typeTree = new AssetClassType();        
+        classType = new AssetClassType();        
         objTable = new AssetObjectPathTable();
         refTable = new AssetRefTable();
         
-        typeTree.setFormat(header.getFormat());
+        classType.setFormat(header.getFormat());
         
         switch (header.getFormat()) {
             case 6:
@@ -106,14 +108,14 @@ public class AssetFile extends MappedFileHandler {
                 bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
                 bb.position(treeOffset);
 
-                typeTree.read(in);
+                classType.read(in);
                 objTable.read(in);
                 refTable.read(in);
                 break;
                 
             case 9:
                 // first struct, then data
-                typeTree.read(in);
+                classType.read(in);
                 objTable.read(in);
                 refTable.read(in);
                 
@@ -125,7 +127,7 @@ public class AssetFile extends MappedFileHandler {
         }
         
         // try to get struct from database if the embedded one is empty
-        if (typeTree.isEmpty()) {
+        if (classType.getMapping().isEmpty()) {
             L.info("Standalone asset file detected, using structure from database");
             StructDatabase.getInstance().fill(this);
         }
@@ -143,8 +145,8 @@ public class AssetFile extends MappedFileHandler {
         DataOutputWriter outStruct = new DataOutputWriter(bosStruct);
         outStruct.setSwap(true);
         
-        typeTree.setFormat(header.getFormat());
-        typeTree.write(outStruct);
+        classType.setFormat(header.getFormat());
+        classType.write(outStruct);
         objTable.write(outStruct);
         refTable.write(outStruct);
         
@@ -202,8 +204,8 @@ public class AssetFile extends MappedFileHandler {
         return header;
     }
 
-    public AssetClassType getTypeTree() {
-        return typeTree;
+    public AssetClassType getClassType() {
+        return classType;
     }
 
     public List<AssetObjectPath> getPaths() {

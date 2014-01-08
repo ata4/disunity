@@ -187,7 +187,7 @@ public class AssetExtractor {
 
     public void split(Path dir) throws IOException {
         List<AssetObjectPath> pathTable = asset.getPaths();
-        AssetClassType typeTree = asset.getTypeTree();
+        AssetClassType classType = asset.getClassType();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -215,11 +215,11 @@ public class AssetExtractor {
             subFieldPath.pathID = 1;
             subAsset.getPaths().add(subFieldPath);
             
-            AssetClassType subTypeTree = subAsset.getTypeTree();
-            subTypeTree.setRevision(typeTree.getRevision());
-            subTypeTree.setVersion(-2);
-            subTypeTree.setFormat(typeTree.getFormat());
-            subTypeTree.put(path.classID2, typeTree.get(path.classID2));
+            AssetClassType subClassType = subAsset.getClassType();
+            subClassType.setRevision(classType.getRevision());
+            subClassType.setVersion(-2);
+            subClassType.setFormat(classType.getFormat());
+            subClassType.getMapping().put(path.classID2, classType.getMapping().get(path.classID2));
             
             // create a byte buffer for the data area
             ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.offset, path.length);

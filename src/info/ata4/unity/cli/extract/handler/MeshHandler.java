@@ -59,7 +59,7 @@ public class MeshHandler extends AssetExtractHandler {
         this.obj = obj;
         name = obj.getValue("m_Name");
         
-        if (!getAssetFile().getTypeTree().getRevision().startsWith("4")) {
+        if (!getAssetFile().getClassType().getRevision().startsWith("4")) {
             // TODO
             throw new UnsupportedOperationException("Unity 4 format is supported only");
         }

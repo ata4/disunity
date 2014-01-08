@@ -10,8 +10,8 @@
 package info.ata4.unity.serdes.db;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetClassType;
+import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
 import info.ata4.util.io.DataInputReader;
@@ -195,37 +195,37 @@ public class StructDatabase {
     }
     
     public void fill(AssetFile asset) {
-        AssetClassType typeTree = asset.getTypeTree();
+        AssetClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (typeTree.getRevision() == null) {
+        if (classType.getRevision() == null) {
             L.warning("typeTree.revision = null");
             return;
         }
         
         for (Integer classID : classIDs) {
-            AssetFieldType ft = ftm.get(classID, typeTree.getRevision(), false);
+            AssetFieldType ft = ftm.get(classID, classType.getRevision(), false);
             if (ft != null) {
-                typeTree.put(classID, ft);
+                classType.getMapping().put(classID, ft);
             }
         }
         
         // don't include the struct when saving
-        typeTree.setStandalone(true);
+        classType.setStandalone(true);
     }
     
     public int learn(AssetFile asset) {
-        AssetClassType typeTree = asset.getTypeTree();
+        AssetClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (typeTree.isStandalone()) {
+        if (classType.isStandalone()) {
             L.info("No structure data available");
             return 0;
         }
         
         // older file formats don't contain the revision in the header, override
         // it manually here
-        if (typeTree.getRevision() == null) {
+        if (classType.getRevision() == null) {
             //typeTree.revision = "2.6.0f7";
             L.warning("typeTree.revision = null");
             return 0;
@@ -235,19 +235,19 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            AssetFieldType fieldType = typeTree.get(classID);
+            AssetFieldType fieldType = classType.getMapping().get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {
                 continue;
             }
             
-            AssetFieldType fieldTypeMapped = ftm.get(classID, typeTree.getRevision());
+            AssetFieldType fieldTypeMapped = ftm.get(classID, classType.getRevision());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                ftm.add(classID, typeTree.getRevision(), fieldTypeMapped);
+                ftm.add(classID, classType.getRevision(), fieldTypeMapped);
                 learnedNew++;
             }
 

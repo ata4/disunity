@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Deserializer for asset objects.
@@ -56,15 +57,16 @@ public class Deserializer {
         }
 
         in = new SerializedInput(new DataInputReader(bbAsset));
-
-        AssetFieldType classNode = asset.getTypeTree().get(path.classID2);
+        
+        Map<Integer, AssetFieldType> classMapping = asset.getClassType().getMapping();
+        AssetFieldType classNode = classMapping.get(path.classID2);
         
         if (classNode == null) {
             throw new DeserializationException("Class not found in type tree");
         }
         
         if (classNode.getChildren().isEmpty()) {
-            classNode = asset.getTypeTree().get(path.classID1);
+            classNode = classMapping.get(path.classID1);
         }
         
         UnityObject ac = new UnityObject(classNode.getType());

@@ -10,9 +10,9 @@
 package info.ata4.unity.cli.utils;
 
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityBuffer;
@@ -84,17 +84,17 @@ public class AssetDumper {
     }
     
     public void printStruct(AssetFile asset) {
-        AssetClassType typeTree = asset.getTypeTree();
+        AssetClassType classType = asset.getClassType();
         
-        if (typeTree.isStandalone()) {
-            L.info("No type tree available");
+        if (classType.isStandalone()) {
+            L.info("Structure data not embedded");
             return;
         }
         
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            AssetFieldType classField = typeTree.get(classID);
+            AssetFieldType classField = classType.getMapping().get(classID);
             
             // skip filtered classes
             if (cf != null && !cf.accept(classID)) {

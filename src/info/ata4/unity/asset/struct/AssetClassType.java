@@ -21,12 +21,17 @@ import java.util.Objects;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetClassType extends LinkedHashMap<Integer, AssetFieldType> implements Struct {
+public class AssetClassType implements Struct {
 
+    private Map<Integer, AssetFieldType> mapping = new LinkedHashMap<>();
     private String revision;
     private int version;
     private int format;
     private boolean standalone = false;
+    
+    public Map<Integer, AssetFieldType> getMapping() {
+        return mapping;
+    }
     
     public String getRevision() {
         return revision;
@@ -75,7 +80,7 @@ public class AssetClassType extends LinkedHashMap<Integer, AssetFieldType> imple
             AssetFieldType fn = new AssetFieldType();
             fn.read(in);
             
-            put(classID, fn);
+            mapping.put(classID, fn);
         }
         
         // TODO: validate
@@ -93,10 +98,10 @@ public class AssetClassType extends LinkedHashMap<Integer, AssetFieldType> imple
         }
         
         if (!standalone) {
-            int fields = size();
+            int fields = mapping.size();
             out.writeInt(fields);
 
-            for (Map.Entry<Integer, AssetFieldType> entry : entrySet()) {
+            for (Map.Entry<Integer, AssetFieldType> entry : mapping.entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 

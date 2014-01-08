@@ -59,7 +59,7 @@ public class AssetUtils {
         List<AssetObjectPath> paths = asset.getPaths();
         List<AssetRef> refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
-        AssetClassType fieldTree = asset.getTypeTree();
+        AssetClassType classType = asset.getClassType();
         
         ps.println("Header");
         ps.println("  File size: " + humanReadableByteCount(header.getFileSize(), true));
@@ -69,9 +69,9 @@ public class AssetUtils {
         ps.println();
         
         ps.println("Serialized data");
-        ps.println("  Revision: " + fieldTree.getRevision());
-        ps.println("  Version: " + fieldTree.getVersion());
-        ps.println("  Standalone: " + (fieldTree.isStandalone() ? "yes" : "no"));
+        ps.println("  Revision: " + classType.getRevision());
+        ps.println("  Version: " + classType.getVersion());
+        ps.println("  Standalone: " + (classType.isStandalone() ? "yes" : "no"));
         ps.println("  Objects: " + paths.size());
         ps.println();
         
