@@ -11,14 +11,14 @@ package info.ata4.unity.cli.utils;
 
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
-import java.io.File;
-import java.io.FileOutputStream;
+import info.ata4.util.io.ByteBufferUtils;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,19 +35,25 @@ public class AssetBundleUtils {
         this.ab = ab;
     }
     
-    public void extract(File dir) throws IOException {
-        FileUtils.forceMkdir(dir);
+    public void extract(Path dir) throws IOException {
+        if (!Files.exists(dir)) {
+            Files.createDirectory(dir);
+        }
 
         for (AssetBundleEntry entry : ab.getEntries()) {
             String entryName = entry.getName();
             ByteBuffer entryBuffer = entry.getByteBuffer();
-            File entryFile = new File(dir, entryName);
             
             L.log(Level.INFO, "Extracting {0}", entryName);
-
-            try (FileOutputStream os = FileUtils.openOutputStream(entryFile)) {
-                os.getChannel().write(entryBuffer);
+            
+            Path entryFile = dir.resolve(entryName);
+            Path entryDir = entryFile.getParent();
+            
+            if (!Files.exists(entryDir)) {
+                Files.createDirectories(entryDir);
             }
+            
+            ByteBufferUtils.save(entryFile, entryBuffer);
         }
     }
 

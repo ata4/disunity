@@ -26,11 +26,12 @@ import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.io.ByteBufferUtils;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -117,7 +118,7 @@ public class AssetExtractor {
         this.cf = cf;
     }
 
-    public void extract(File dir, boolean raw) throws IOException {
+    public void extract(Path dir, boolean raw) throws IOException {
         AssetObjectPathTable pathTable = asset.getObjectPaths();
         Deserializer deser = new Deserializer(asset);
 
@@ -138,20 +139,20 @@ public class AssetExtractor {
             // write just the serialized object data or parsed and extracted content?
             if (raw) {
                 String assetFileName = String.format("%06d.bin", path.pathID);
-                File classDir = new File(dir, className);
-                File assetFile = new File(classDir, assetFileName);
+                Path classDir = dir.resolve(className);
+                Path assetFile = classDir.resolve(assetFileName);
                 
-                if (!classDir.exists()) {
-                    classDir.mkdir();
+                if (!Files.exists(classDir)) {
+                    Files.createDirectory(classDir);
                 }
                 
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
-                try (FileOutputStream os = new FileOutputStream(assetFile)) {
-                    ByteBuffer bbAssets = asset.getDataBuffer();
-                    ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.offset, path.length);
-
-                    os.getChannel().write(bbAsset);
+                ByteBuffer bbAssets = asset.getDataBuffer();
+                ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.offset, path.length);
+                
+                try {
+                    ByteBufferUtils.save(assetFile, bbAsset);
                 } catch (Exception ex) {
                     L.log(Level.WARNING, "Can't write " + objectName + " to " + assetFile, ex);
                 }
@@ -174,12 +175,16 @@ public class AssetExtractor {
         }
 
         // delete directory if empty
-        if (dir.list().length == 0) {
-            dir.delete();
+        boolean empty;
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
+            empty = !ds.iterator().hasNext();
+        }
+        if (empty) {
+            Files.delete(dir);
         }
     }
 
-    public void split(File dir) throws IOException {
+    public void split(Path dir) throws IOException {
         AssetObjectPathTable pathTable = asset.getObjectPaths();
         AssetTypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
@@ -232,13 +237,13 @@ public class AssetExtractor {
             
             subAsset.setDataBuffer(bbAsset);
             
-            File subAssetDir = new File(dir, className);
-            if (!subAssetDir.exists()) {
-                subAssetDir.mkdir();
+            Path subAssetDir = dir.resolve(className);
+            if (!Files.exists(subAssetDir)) {
+                Files.createDirectory(subAssetDir);
             }
             
-            File subAssetFile = new File(subAssetDir, subAssetName + ".asset");
-            if (!subAssetFile.exists()) {
+            Path subAssetFile = subAssetDir.resolve(subAssetName + ".asset");
+            if (Files.exists(subAssetFile)) {
                 L.log(Level.INFO, "Writing {0}", subAssetFile);
                 subAsset.save(subAssetFile);
             }

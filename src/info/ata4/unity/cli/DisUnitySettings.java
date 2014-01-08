@@ -10,7 +10,7 @@
 package info.ata4.unity.cli;
 
 import info.ata4.unity.cli.classfilter.ClassFilter;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +20,11 @@ import java.util.List;
  */
 public class DisUnitySettings {
     
-    private List<File> files = new ArrayList<>();
+    private List<Path> files = new ArrayList<>();
     private ClassFilter classFilter;
     private DisUnityCommand command = DisUnityCommand.EXTRACT;
     
-    public List<File> getFiles() {
+    public List<Path> getFiles() {
         return files;
     }
     

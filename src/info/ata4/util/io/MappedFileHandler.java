@@ -9,9 +9,9 @@
  */
 package info.ata4.util.io;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 
 /**
  *
@@ -19,22 +19,22 @@ import java.nio.ByteBuffer;
  */
 public abstract class MappedFileHandler {
     
-    private File sourceFile;
+    private Path sourceFile;
     
-    public File getSourceFile() {
+    public Path getSourceFile() {
         return sourceFile;
     }
 
-    public void load(File file, boolean map) throws IOException {
+    public void load(Path file, boolean map) throws IOException {
         sourceFile = file;
-        load(map ? ByteBufferUtils.openReadOnly(file.toPath()) : ByteBufferUtils.load(file.toPath()));
+        load(map ? ByteBufferUtils.openReadOnly(file) : ByteBufferUtils.load(file));
     }
     
-    public void load(File file) throws IOException {
+    public void load(Path file) throws IOException {
         load(file, true);
     }
 
     public abstract void load(ByteBuffer bb) throws IOException;
     
-    public abstract void save(File file) throws IOException;
+    public abstract void save(Path file) throws IOException;
 }

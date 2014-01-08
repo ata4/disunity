@@ -16,13 +16,13 @@ import info.ata4.util.io.ByteBufferOutputStream;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.MappedFileHandler;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -41,9 +41,9 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     
     private static final Logger L = Logger.getLogger(AssetBundle.class.getName());
     
-    public static boolean isAssetBundle(File file) {
+    public static boolean isAssetBundle(Path file) {
         // check signature of the file
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file)) {
             DataInputReader in = new DataInputReader(fis);
             AssetBundleHeader info = new AssetBundleHeader();
             info.signature = in.readStringFixed(8);
@@ -90,7 +90,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
     }
 
     @Override
-    public void save(File file) throws IOException {
+    public void save(Path file) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
@@ -111,7 +111,7 @@ public class AssetBundle extends MappedFileHandler implements Iterable<AssetBund
         if (bbData == null) {
             if (isCompressed()) {
                 // may take a while to decompress it in-memory
-                L.log(Level.INFO, "Uncompressing {0}", getSourceFile().getName());
+                L.log(Level.INFO, "Uncompressing {0}", getSourceFile().getFileName());
                 
                 // get uncompressed data size from LZMA headers
                 bb.position(info.dataOffset + 5);

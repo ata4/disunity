@@ -21,6 +21,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,11 +74,11 @@ public class StructDatabase {
         // read database file, external or internal otherwise
         InputStream is;
         try {
-            File dbFile = new File(FILENAME);
+            Path dbFile = Paths.get(FILENAME);
             String dbPath = "/resources/" + FILENAME;
 
-            if (dbFile.exists()) {
-                is = FileUtils.openInputStream(dbFile);
+            if (Files.exists(dbFile)) {
+                is = Files.newInputStream(dbFile);
             } else {
                 is = getClass().getResourceAsStream(dbPath);
             }

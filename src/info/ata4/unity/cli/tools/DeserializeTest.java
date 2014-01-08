@@ -16,8 +16,9 @@ import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,14 +41,14 @@ public class DeserializeTest {
         
         for (String arg : args) {
             try {
-                dt.testFile(new File(arg));
+                dt.testFile(Paths.get(arg));
             } catch (IOException ex) {
                 L.log(Level.SEVERE, "Can't test " + arg, ex);
             }
         }
     }
     
-    public void testFile(File file) throws IOException {
+    public void testFile(Path file) throws IOException {
         L.log(Level.INFO, "Testing {0}", file);
         
         objTested = 0;

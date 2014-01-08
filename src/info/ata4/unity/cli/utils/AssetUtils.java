@@ -21,15 +21,16 @@ import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -93,28 +94,28 @@ public class AssetUtils {
     }
     
     public void fixRefs() throws IOException {
-        File sourceFile = asset.getSourceFile();
-        File sourceParent = sourceFile.getParentFile();
+        Path sourceFile = asset.getSourceFile();
+        Path sourceParent = sourceFile.getParent();
         String assetPath;
         
         if (sourceParent == null) {
             assetPath = "";
         } else {
-            assetPath = sourceParent.getAbsolutePath();
+            assetPath = sourceParent.toAbsolutePath().toString();
             assetPath = FilenameUtils.separatorsToUnix(assetPath) + "/";
         }
 
         // fix path for all assets with .sharedassets extension
         boolean changed = false;
         for (AssetRef ref : asset.getReferences()) {
-            File refFile = new File(ref.filePath);
-            String refExt = FilenameUtils.getExtension(refFile.getName());
-            if (refExt.endsWith("assets") && !refFile.exists()) {
+            Path refFile = Paths.get(ref.filePath);
+            String refExt = FilenameUtils.getExtension(refFile.getFileName().toString());
+            if (refExt.endsWith("assets") && !Files.exists(refFile)) {
                 String filePathOld = ref.filePath;
                 String filePathNew = assetPath + FilenameUtils.getName(ref.filePath);
-                File refFileNew = new File(filePathNew);
+                Path refFileNew = Paths.get(filePathNew);
                 
-                if (refFileNew.exists()) {
+                if (Files.exists(refFileNew)) {
                     L.log(Level.FINE, "Fixed reference: {0} -> {1}", new Object[]{filePathOld, filePathNew});
                     ref.filePath = filePathNew;
                     changed = true;
@@ -127,8 +128,9 @@ public class AssetUtils {
         if (changed) {
             // create backup first
             try {
-                File backupFile = new File(sourceFile.getPath() + ".bak");
-                FileUtils.copyFile(sourceFile, backupFile);
+                String backupFileName = sourceFile.getFileName().toString() + ".bak";
+                Path backupFile = sourceFile.resolveSibling(backupFileName);
+                Files.copy(sourceFile, backupFile);
             } catch (IOException ex) {
                 // backup is mandatory, don't risk any loss of data 
                 throw new IOException("Can't create backup copy", ex);

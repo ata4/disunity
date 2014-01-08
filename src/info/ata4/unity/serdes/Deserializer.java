@@ -14,10 +14,11 @@ import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +47,8 @@ public class Deserializer {
         
         if (debug) {
             try {
-                File dumpFile = new File(String.format("0x%x.bin", path.offset));
-                ByteBufferUtils.save(dumpFile.toPath(), bbAsset);
+                Path dumpFile = Paths.get(String.format("0x%x.bin", path.offset));
+                ByteBufferUtils.save(dumpFile, bbAsset);
                 bbAsset.rewind();
             } catch (IOException ex) {
                 ex.printStackTrace();

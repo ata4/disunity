@@ -12,10 +12,11 @@ package info.ata4.unity.cli.extract;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
-import java.io.File;
-import java.io.FileOutputStream;
+import info.ata4.util.io.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -30,10 +31,10 @@ public abstract class AssetExtractHandler {
     private static final Logger L = Logger.getLogger(AssetExtractHandler.class.getName());
 
     private AssetFile asset;
-    private File extractDir;
+    private Path extractDir;
     private String className;
     private String fileExtension = "bin";
-    private Set<File> filesWritten = new HashSet<>();
+    private Set<Path> assignedFiles = new HashSet<>();
     
     public AssetFile getAssetFile() {
         return asset;
@@ -43,15 +44,15 @@ public abstract class AssetExtractHandler {
         this.asset = asset;
     }
 
-    public File getExtractDir() {
+    public Path getExtractDir() {
         return extractDir;
     }
 
-    public void setExtractDir(File extractDir) {
+    public void setExtractDir(Path extractDir) {
         this.extractDir = extractDir;
         
         // new output directory, clear list of written files
-        filesWritten.clear();
+        assignedFiles.clear();
     }
     
     public String getFileExtension() {
@@ -73,9 +74,10 @@ public abstract class AssetExtractHandler {
     public abstract void extract(AssetObjectPath path, UnityObject obj) throws IOException;
     
     protected void writeFile(ByteBuffer bb, int id, String name) throws IOException {
-        File assetFile = getAssetFile(id, name);
-        try (FileOutputStream os = new FileOutputStream(assetFile)) {
-            os.getChannel().write(bb);
+        Path assetFile = getAssetFile(id, name);
+        
+        try {
+            ByteBufferUtils.save(assetFile, bb);
         } catch (Exception ex) {
             L.log(Level.WARNING, "Failed writing " + assetFile, ex);
         }
@@ -85,11 +87,11 @@ public abstract class AssetExtractHandler {
         writeFile(ByteBuffer.wrap(data), id, name);
     }
     
-    protected File getAssetFile(int id, String name) {
-        File classDir = new File(extractDir, className);
+    protected Path getAssetFile(int id, String name) throws IOException {
+        Path classDir = extractDir.resolve(className);
         
-        if (!classDir.exists()) {
-            classDir.mkdir();
+        if (!Files.exists(classDir)) {
+            Files.createDirectory(classDir);
         }
         
         // remove any chars that could cause troubles on various file systems
@@ -104,24 +106,24 @@ public abstract class AssetExtractHandler {
             fileName = String.format("%06d", id);
         }
         
-        File assetFile = getUniqueFile(classDir, fileName, fileExt);
+        Path assetFile = getUniqueFile(classDir, fileName, fileExt);
         
         L.log(Level.INFO, "Writing {0} {1}",
-                new Object[] {getClassName(), assetFile.getName()});
+                new Object[] {getClassName(), assetFile.getFileName()});
         
         return assetFile;
     }
     
-    private File getUniqueFile(File parent, String name, String ext) {
-        File file = new File(parent, String.format("%s.%s", name, ext));
+    private Path getUniqueFile(Path parent, String name, String ext) {
+        Path file = parent.resolve(String.format("%s.%s", name, ext));
         int fileNum = 1;
         
-        while (filesWritten.contains(file)) {
-            file = new File(parent, String.format("%s_%d.%s", name, fileNum, ext));
+        while (assignedFiles.contains(file)) {
+            file = parent.resolve(String.format("%s_%d.%s", name, fileNum, ext));
             fileNum++;
         }
         
-        filesWritten.add(file);
+        assignedFiles.add(file);
         
         return file;
     }

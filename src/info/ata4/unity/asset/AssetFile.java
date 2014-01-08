@@ -20,7 +20,6 @@ import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.MappedFileHandler;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -50,22 +49,22 @@ public class AssetFile extends MappedFileHandler {
     private AssetRefTable refTable = new AssetRefTable();
     
     @Override
-    public void load(File file, boolean map) throws IOException {
-        String fileName = file.getName();
+    public void load(Path file, boolean map) throws IOException {
+        String fileName = file.getFileName().toString();
         
         // join split asset files before loading
         if (fileName.endsWith(".split0")) {
             fileName = FilenameUtils.removeExtension(fileName);
             List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
-            Path part = file.toPath();
+            Path part = file;
             
             // collect all files with .split0 to .splitN extension
             while (Files.exists(part)) {
                 parts.add(part);
                 splitIndex++;
                 String splitName = String.format("%s.split%d", fileName, splitIndex);
-                part = new File(file.getParentFile(), splitName).toPath();
+                part = file.resolveSibling(splitName);
             }
             
             // load all parts into one byte buffer
@@ -77,9 +76,9 @@ public class AssetFile extends MappedFileHandler {
         }
         
         // load audio stream if existing
-        File audioStreamFile = new File(file.getParentFile(), fileName + ".resS");
-        if (audioStreamFile.exists()) {
-            bbAudio = ByteBufferUtils.load(audioStreamFile.toPath());
+        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
+        if (Files.exists(audioStreamFile)) {
+            bbAudio = ByteBufferUtils.load(audioStreamFile);
         }
     }
     
@@ -132,7 +131,7 @@ public class AssetFile extends MappedFileHandler {
     }
     
     @Override
-    public void save(File file) throws IOException {
+    public void save(Path file) throws IOException {
         // TODO: support older formats
         if (header.format != 9) {
             throw new AssetException("Only format 9 is supported right now");
@@ -166,7 +165,7 @@ public class AssetFile extends MappedFileHandler {
         header.fileSize = header.dataOffset + bbData.limit();
         
         // open file
-        ByteBuffer bb = ByteBufferUtils.openReadWrite(file.toPath(), 0, header.fileSize);
+        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.fileSize);
         DataOutputWriter out = new DataOutputWriter(bb);
         
         // write header

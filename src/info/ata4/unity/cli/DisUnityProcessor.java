@@ -19,12 +19,12 @@ import info.ata4.unity.cli.utils.AssetBundleUtils;
 import info.ata4.unity.cli.utils.AssetDumper;
 import info.ata4.unity.cli.utils.AssetUtils;
 import info.ata4.unity.serdes.db.StructDatabase;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -41,21 +41,21 @@ public class DisUnityProcessor implements Runnable {
         return settings;
     }
     
-    private void processAsset(File file, File outputDIr) {
+    private void processAsset(Path file, Path outputDir) {
         try {
             boolean map = settings.getCommand() != DisUnityCommand.FIXREFS;
 
             AssetFile asset = new AssetFile();
             asset.load(file, map);
 
-            processAsset(asset, file.getName(), outputDIr);
+            processAsset(asset, file.getFileName().toString(), outputDir);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't open " + file, ex);
         }
     }
     
-    private void processAsset(File file) {
-        String fileName = file.getName();
+    private void processAsset(Path file) {
+        String fileName = file.getFileName().toString();
         String assetName = FilenameUtils.removeExtension(fileName);
         
         // if the file has no extension, append a "_" to the output directory
@@ -64,11 +64,11 @@ public class DisUnityProcessor implements Runnable {
             assetName += "_";
         }
         
-        File outputDir = new File(file.getParentFile(), assetName);
+        Path outputDir = file.resolveSibling(assetName);
         processAsset(file, outputDir);
     }
     
-    private void processAsset(ByteBuffer bb, String name, File dir) {  
+    private void processAsset(ByteBuffer bb, String name, Path dir) {  
         try {
             AssetFile asset = new AssetFile();
             asset.load(bb);
@@ -79,7 +79,7 @@ public class DisUnityProcessor implements Runnable {
         }
     }
     
-    private void processAsset(AssetFile asset, String name, File outputDir) {        
+    private void processAsset(AssetFile asset, String name, Path outputDir) {        
         try {
             DisUnityCommand cmd = settings.getCommand();
             switch (cmd) {
@@ -132,7 +132,10 @@ public class DisUnityProcessor implements Runnable {
                         L.log(Level.INFO, "Extracting resources from {0}", name);
                     }
 
-                    FileUtils.forceMkdir(outputDir);
+                    if (!Files.exists(outputDir)) {
+                        Files.createDirectory(outputDir);
+                    }
+                    
                     AssetExtractor ae = new AssetExtractor(asset);
                     ae.setClassFilter(settings.getClassFilter());
 
@@ -161,7 +164,7 @@ public class DisUnityProcessor implements Runnable {
         }
     }
 
-    private void processAssetBundle(File file, File dir) {
+    private void processAssetBundle(Path file, Path dir) {
         AssetBundle ab = new AssetBundle();
         
         try {
@@ -180,12 +183,12 @@ public class DisUnityProcessor implements Runnable {
                     break;
                     
                 case LIST:
-                    L.log(Level.INFO, "Listing files in {0}", file.getName());
+                    L.log(Level.INFO, "Listing files in {0}", file.getFileName());
                     new AssetBundleUtils(ab).list(System.out);
                     break;
                     
                 case INFO:
-                    L.log(Level.INFO, "Printing information about {0}", file.getName());
+                    L.log(Level.INFO, "Printing information about {0}", file.getFileName());
                     new AssetBundleUtils(ab).printInfo(System.out);
                     
                 default:
@@ -203,7 +206,7 @@ public class DisUnityProcessor implements Runnable {
                             continue;
                         }
 
-                        String assetName = file.getName() + ":" + entry.getName();
+                        String assetName = file.getFileName() + ":" + entry.getName();
                         processAsset(entry.getByteBuffer(), assetName, dir);
                     }
             }
@@ -212,28 +215,23 @@ public class DisUnityProcessor implements Runnable {
         }
     }
     
-    private void processAssetBundle(File file) {
+    private void processAssetBundle(Path file) {
         // create target directory based on the asset bundle file name
-        String fileName = FilenameUtils.getBaseName(file.getName());
-        File dir = new File(file.getParentFile(), fileName);
+        String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
+        Path dir = file.resolveSibling(fileName);
         processAssetBundle(file, dir);
     }
     
     @Override
     public void run() {
-        for (File file : settings.getFiles()) {
-            if (!file.exists()) {
+        for (Path file : settings.getFiles()) {
+            if (!Files.exists(file)) {
                 L.log(Level.WARNING, "File {0} doesn''t exist", file);
                 continue;
             }
             
-            if (file.isDirectory()) {
-                L.log(Level.WARNING, "File {0} exists, but is a directory", file);
-                continue;
-            }
-            
-            if (!file.canRead()) {
-                L.log(Level.WARNING, "File {0} isn''t readable", file);
+            if (Files.isDirectory(file)) {
+                L.log(Level.WARNING, "File {0} is a directory", file);
                 continue;
             }
             

@@ -13,7 +13,7 @@ import info.ata4.unity.DisUnity;
 import info.ata4.unity.cli.classfilter.SimpleClassFilter;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -140,7 +140,7 @@ public class DisUnityCli {
             
             // add remaining arguments as files
             for (String leftArg : cl.getArgs()) {
-                settings.getFiles().add(new File(leftArg));
+                settings.getFiles().add(Paths.get(leftArg));
             }
         } catch (ParseException ex) {
             L.severe(ex.getMessage());

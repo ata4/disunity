@@ -21,13 +21,13 @@ import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.DataInputReader;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -68,8 +68,8 @@ public class MeshHandler extends AssetExtractHandler {
         readVertexData();
 
         setFileExtension("obj");
-        File objFile = getAssetFile(path.pathID, name);
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(objFile))) {
+        Path objFile = getAssetFile(path.pathID, name);
+        try (OutputStream os = new BufferedOutputStream(Files.newOutputStream(objFile))) {
             writeMesh(new PrintStream(os));
         }
         
