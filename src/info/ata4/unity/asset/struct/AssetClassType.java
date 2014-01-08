@@ -117,7 +117,7 @@ public class AssetClassType implements Struct {
             out.writeInt(0); // padding
         }
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -127,6 +127,9 @@ public class AssetClassType implements Struct {
             return false;
         }
         final AssetClassType other = (AssetClassType) obj;
+        if (!Objects.equals(this.mapping, other.mapping)) {
+            return false;
+        }
         if (!Objects.equals(this.revision, other.revision)) {
             return false;
         }
@@ -136,12 +139,13 @@ public class AssetClassType implements Struct {
         if (this.format != other.format) {
             return false;
         }
-        return super.equals(obj);
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = super.hashCode();
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.mapping);
         hash = 29 * hash + Objects.hashCode(this.revision);
         hash = 29 * hash + this.version;
         hash = 29 * hash + this.format;
