@@ -12,9 +12,7 @@ package info.ata4.unity.cli.utils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
-import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
@@ -59,7 +57,7 @@ public class AssetUtils {
 
     public void printInfo(PrintStream ps) {
         List<AssetObjectPath> paths = asset.getPaths();
-        AssetRefTable refTable = asset.getReferences();
+        List<AssetRef> refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
         AssetTypeTree fieldTree = asset.getTypeTree();
         

@@ -12,6 +12,7 @@ package info.ata4.unity.asset;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
+import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.AssetTypeTree;
 import info.ata4.unity.serdes.db.StructDatabase;
@@ -209,10 +210,6 @@ public class AssetFile extends MappedFileHandler {
         return objTable.getPaths();
     }
     
-    public AssetRefTable getReferences() {
-        return refTable;
-    }
-    
     public List<AssetObjectPath> getPathsByID(int cid) {
         List<AssetObjectPath> paths = new ArrayList<>();
         
@@ -223,6 +220,10 @@ public class AssetFile extends MappedFileHandler {
         }
         
         return paths;
+    }
+    
+    public List<AssetRef> getReferences() {
+        return refTable.getReferences();
     }
     
     public Set<Integer> getClassIDs() {

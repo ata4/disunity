@@ -14,14 +14,21 @@ import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
+public class AssetRefTable implements Struct, Iterable<AssetRef> {
 
+    private List<AssetRef> refs = new ArrayList<>();
     private byte unknown;
+    
+    public List<AssetRef> getReferences() {
+        return refs;
+    }
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -31,18 +38,23 @@ public class AssetRefTable extends ArrayList<AssetRef> implements Struct {
         for (int i = 0; i < entries; i++) {
             AssetRef ref = new AssetRef();
             ref.read(in);
-            add(ref);
+            refs.add(ref);
         }
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        int entries = size();
+        int entries = refs.size();
         out.writeInt(entries);
         out.writeByte(unknown); 
 
-        for (AssetRef ref : this) {
+        for (AssetRef ref : refs) {
             ref.write(out);
         }
+    }
+
+    @Override
+    public Iterator<AssetRef> iterator() {
+        return refs.iterator();
     }
 }
