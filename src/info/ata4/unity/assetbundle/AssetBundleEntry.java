@@ -60,4 +60,8 @@ public class AssetBundleEntry {
         ByteBuffer bb = bundle.getDataByteBuffer();
         return ByteBufferUtils.getSlice(bb, offset, length);
     }
+    
+    public AssetBundle getBundle() {
+        return bundle;
+    }
 }

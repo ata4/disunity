@@ -198,8 +198,10 @@ public class StructDatabase {
         AssetClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
+        fixRevision(asset, classType);
+        
         if (classType.getRevision() == null) {
-            L.warning("typeTree.revision = null");
+            L.warning("Revision = null");
             return;
         }
         
@@ -223,11 +225,10 @@ public class StructDatabase {
             return 0;
         }
         
-        // older file formats don't contain the revision in the header, override
-        // it manually here
+        fixRevision(asset, classType);
+        
         if (classType.getRevision() == null) {
-            //typeTree.revision = "2.6.0f7";
-            L.warning("typeTree.revision = null");
+            L.warning("Revision = null");
             return 0;
         }
         
@@ -274,6 +275,14 @@ public class StructDatabase {
             L.log(Level.INFO, "Adding {0} new struct(s) to database", learned);
             save();
             learned = 0;
+        }
+    }
+
+    private void fixRevision(AssetFile asset, AssetClassType classType) {
+        // older file formats don't contain the revision in the header, try to
+        // get it from the asset bundle header instead
+        if (classType.getRevision() == null && asset.getSourceBundle() != null) {
+            classType.setRevision(asset.getSourceBundle().getRevision());
         }
     }
 }

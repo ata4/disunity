@@ -15,6 +15,7 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
+import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
@@ -48,6 +49,7 @@ public class AssetFile extends MappedFileHandler {
     private AssetClassType classType = new AssetClassType();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
+    private AssetBundle sourceBundle;
     
     @Override
     public void load(Path file, boolean map) throws IOException {
@@ -180,6 +182,14 @@ public class AssetFile extends MappedFileHandler {
         
         // write data
         bb.put(bbData);
+    }
+    
+    public AssetBundle getSourceBundle() {
+        return sourceBundle;
+    }
+
+    public void setSourceBundle(AssetBundle sourceBundle) {
+        this.sourceBundle = sourceBundle;
     }
 
     public ByteBuffer getDataBuffer() {

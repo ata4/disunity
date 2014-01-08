@@ -50,7 +50,7 @@ public class DisUnityProcessor implements Runnable {
 
             processAsset(asset, file.getFileName().toString(), outputDir);
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't open " + file, ex);
+            L.log(Level.SEVERE, "Can't process " + file, ex);
         }
     }
     
@@ -68,14 +68,18 @@ public class DisUnityProcessor implements Runnable {
         processAsset(file, outputDir);
     }
     
-    private void processAsset(ByteBuffer bb, String name, Path dir) {  
+    private void processAsset(AssetBundleEntry entry, Path dir) {
+        String name = entry.getBundle().getSourceFile().getFileName() + ":" + entry.getName();
         try {
+            ByteBuffer bb = entry.getByteBuffer();
+            
             AssetFile asset = new AssetFile();
             asset.load(bb);
+            asset.setSourceBundle(entry.getBundle());
             
             processAsset(asset, name, dir);
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't load " + name, ex);
+            L.log(Level.SEVERE, "Can't process " + name, ex);
         }
     }
     
@@ -206,8 +210,7 @@ public class DisUnityProcessor implements Runnable {
                             continue;
                         }
 
-                        String assetName = file.getFileName() + ":" + entry.getName();
-                        processAsset(entry.getByteBuffer(), assetName, dir);
+                        processAsset(entry, dir);
                     }
             }
         } catch (IOException ex) {
