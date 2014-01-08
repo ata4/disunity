@@ -81,15 +81,15 @@ public class DeserializeTest {
         Deserializer deser = new Deserializer(asset);
 
         for (AssetObjectPath path : asset.getPaths()) {
-            if (path.classID1 < 0) {
+            // skip MonoBehaviours
+            if (path.isScript()) {
                 continue;
             }
 
             try {
                 deser.deserialize(path);
             } catch (Exception ex) {
-                String msg = String.format("Deserialization failed for object %d, class %d (%s)", path.pathID, path.classID2, ClassID.getNameForID(path.classID2));
-                L.log(Level.INFO, msg, ex);
+                L.log(Level.INFO, "Deserialization failed for " + path, ex);
                 objFailed++;
 
                 if (retryDebug) {

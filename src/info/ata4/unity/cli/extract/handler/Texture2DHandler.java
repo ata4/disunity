@@ -229,7 +229,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         bbTex.rewind();
         
         setFileExtension("dds");
-        writeFile(bbTex, path.pathID, tex.name);
+        writeFile(bbTex, path.getPathID(), tex.name);
     }
 
     private void extractPKM() throws IOException {
@@ -252,7 +252,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         res.rewind();
 
         setFileExtension("pkm");
-        writeFile(res, path.pathID, tex.name);
+        writeFile(res, path.getPathID(), tex.name);
     }
 
     private void extractTGA() throws IOException {
@@ -329,7 +329,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                     }
 
                     setFileExtension("tga");
-                    writeFile(bbTga, path.pathID, fileName);
+                    writeFile(bbTga, path.getPathID(), fileName);
                 } else {
                     bb.position(bb.position() + imageSize);
                 }
@@ -596,7 +596,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         bb.rewind();
 
         setFileExtension("ktx");
-        writeFile(bb, path.pathID, tex.name);
+        writeFile(bb, path.getPathID(), tex.name);
     }
     
     private class Texture2D {

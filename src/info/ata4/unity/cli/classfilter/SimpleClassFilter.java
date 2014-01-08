@@ -33,7 +33,7 @@ public class SimpleClassFilter implements ClassFilter {
 
     @Override
     public boolean accept(AssetObjectPath path) {
-        return accept(path.classID2);
+        return accept(path.getClassID());
     }
 
     @Override

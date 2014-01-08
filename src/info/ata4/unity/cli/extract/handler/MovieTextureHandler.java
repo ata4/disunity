@@ -46,6 +46,6 @@ public class MovieTextureHandler extends AssetExtractHandler {
         }
         
         setFileExtension(ext);
-        writeFile(movieBuffer, path.pathID, name);
+        writeFile(movieBuffer, path.getPathID(), name);
     }
 }

@@ -11,7 +11,6 @@ package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
@@ -134,12 +133,11 @@ public class AssetExtractor {
                 continue;
             }
             
-            String className = ClassID.getNameForID(path.classID2, true);
-            String objectName = String.format("Object #%d (ClassID: %d, Class: %s)", path.pathID, path.classID2, className);
+            String className = ClassID.getNameForID(path.getClassID(), true);
 
             // write just the serialized object data or parsed and extracted content?
             if (raw) {
-                String assetFileName = String.format("%06d.bin", path.pathID);
+                String assetFileName = String.format("%06d.bin", path.getPathID());
                 Path classDir = dir.resolve(className);
                 Path assetFile = classDir.resolve(assetFileName);
                 
@@ -150,12 +148,12 @@ public class AssetExtractor {
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
                 ByteBuffer bbAssets = asset.getDataBuffer();
-                ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.offset, path.length);
+                ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.getOffset(), path.getLength());
                 
                 try {
                     ByteBufferUtils.save(assetFile, bbAsset);
                 } catch (Exception ex) {
-                    L.log(Level.WARNING, "Can't write " + objectName + " to " + assetFile, ex);
+                    L.log(Level.WARNING, "Can't write " + path + " to " + assetFile, ex);
                 }
             } else {
                 AssetExtractHandler handler = getHandler(className);
@@ -165,11 +163,11 @@ public class AssetExtractor {
                         UnityObject obj = deser.deserialize(path);
                         handler.extract(path, obj);
                     } catch (DeserializationException ex) {
-                        L.log(Level.WARNING, "Can't deserialize " + objectName, ex);
+                        L.log(Level.WARNING, "Can't deserialize " + path, ex);
                     } catch (IOException ex) {
-                        L.log(Level.WARNING, "Can't read or write " + objectName, ex);
+                        L.log(Level.WARNING, "Can't read or write " + path, ex);
                     } catch (Exception ex) {
-                        L.log(Level.WARNING, "Can't extract " + objectName, ex);
+                        L.log(Level.WARNING, "Can't extract " + path, ex);
                     }
                 }
             }
@@ -202,27 +200,27 @@ public class AssetExtractor {
                 continue;
             }
 
-            String className = ClassID.getNameForID(path.classID2, true);
+            String className = ClassID.getNameForID(path.getClassID(), true);
             
             AssetFile subAsset = new AssetFile();
             subAsset.getHeader().setFormat(asset.getHeader().getFormat());
             
             AssetObjectPath subFieldPath = new AssetObjectPath();
-            subFieldPath.classID1 = path.classID1;
-            subFieldPath.classID2 = path.classID2;
-            subFieldPath.length = path.length;
-            subFieldPath.offset = 0;
-            subFieldPath.pathID = 1;
+            subFieldPath.setScriptID(path.getScriptID());
+            subFieldPath.setClassID(path.getClassID());
+            subFieldPath.setLength(path.getLength());
+            subFieldPath.setOffset(0);
+            subFieldPath.setPathID(1);
             subAsset.getPaths().add(subFieldPath);
             
             AssetClassType subClassType = subAsset.getClassType();
             subClassType.setRevision(classType.getRevision());
             subClassType.setVersion(-2);
             subClassType.setFormat(classType.getFormat());
-            subClassType.getMapping().put(path.classID2, classType.getMapping().get(path.classID2));
+            subClassType.getMapping().put(path.getClassID(), classType.getMapping().get(path.getClassID()));
             
             // create a byte buffer for the data area
-            ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.offset, path.length);
+            ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());
             bbAsset.order(ByteOrder.LITTLE_ENDIAN);
             
             // probe asset name

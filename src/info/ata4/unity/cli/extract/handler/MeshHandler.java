@@ -68,7 +68,7 @@ public class MeshHandler extends AssetExtractHandler {
         readVertexData();
 
         setFileExtension("obj");
-        Path objFile = getAssetFile(path.pathID, name);
+        Path objFile = getAssetFile(path.getPathID(), name);
         try (OutputStream os = new BufferedOutputStream(Files.newOutputStream(objFile))) {
             writeMesh(new PrintStream(os));
         }

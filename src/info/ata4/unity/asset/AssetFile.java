@@ -10,7 +10,6 @@
 package info.ata4.unity.asset;
 
 import info.ata4.unity.asset.struct.AssetClassType;
-import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetObjectPathTable;
@@ -28,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -212,18 +210,6 @@ public class AssetFile extends MappedFileHandler {
         return objTable.getPaths();
     }
     
-    public List<AssetObjectPath> getPathsByID(int cid) {
-        List<AssetObjectPath> paths = new ArrayList<>();
-        
-        for (AssetObjectPath path : objTable) {
-            if (path.classID1 == cid) {
-                paths.add(path);
-            }
-        }
-        
-        return paths;
-    }
-    
     public List<AssetRef> getReferences() {
         return refTable.getReferences();
     }
@@ -232,7 +218,7 @@ public class AssetFile extends MappedFileHandler {
         Set<Integer> classIDs = new TreeSet<>();
         
         for (AssetObjectPath path : objTable) {
-            classIDs.add(path.classID2);
+            classIDs.add(path.getClassID());
         }
         
         return classIDs;

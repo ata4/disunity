@@ -32,6 +32,6 @@ public class SubstanceArchiveHandler extends AssetExtractHandler {
         UnityBuffer packageData = obj.getValue("m_PackageData");
         ByteBuffer packageBuffer = packageData.getBuffer();
         
-        writeFile(packageBuffer, path.pathID, name);
+        writeFile(packageBuffer, path.getPathID(), name);
     }
 }

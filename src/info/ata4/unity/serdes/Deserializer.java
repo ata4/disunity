@@ -43,12 +43,12 @@ public class Deserializer {
         // create a byte buffer containing the object's data
         ByteBuffer bbAssets = asset.getDataBuffer();
         
-        bbAsset = ByteBufferUtils.getSlice(bbAssets, path.offset, path.length);
+        bbAsset = ByteBufferUtils.getSlice(bbAssets, path.getOffset(), path.getLength());
         bbAsset.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {
             try {
-                Path dumpFile = Paths.get(String.format("0x%x.bin", path.offset));
+                Path dumpFile = Paths.get(String.format("0x%x.bin", path.getOffset()));
                 ByteBufferUtils.save(dumpFile, bbAsset);
                 bbAsset.rewind();
             } catch (IOException ex) {
@@ -59,14 +59,14 @@ public class Deserializer {
         in = new SerializedInput(new DataInputReader(bbAsset));
         
         Map<Integer, AssetFieldType> classMapping = asset.getClassType().getMapping();
-        AssetFieldType classNode = classMapping.get(path.classID2);
+        AssetFieldType classNode = classMapping.get(path.getClassID());
         
         if (classNode == null) {
             throw new DeserializationException("Class not found in type tree");
         }
         
         if (classNode.getChildren().isEmpty()) {
-            classNode = classMapping.get(path.classID1);
+            classNode = classMapping.get(path.getClassID());
         }
         
         UnityObject ac = new UnityObject(classNode.getType());

@@ -28,6 +28,6 @@ public class TextAssetHandler extends AssetExtractHandler {
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         String script = obj.getValue("m_Script");
-        writeFile(script.getBytes("UTF8"), path.pathID, name);
+        writeFile(script.getBytes("UTF8"), path.getPathID(), name);
     }
 }

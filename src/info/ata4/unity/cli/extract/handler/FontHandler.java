@@ -30,7 +30,7 @@ public class FontHandler extends AssetExtractHandler {
         if (fontBuffer.capacity() > 0) {
             // TODO: detect OpenType fonts and use "otf" in these cases
             setFileExtension("ttf");
-            writeFile(fontBuffer, path.pathID, name);
+            writeFile(fontBuffer, path.getPathID(), name);
         }
     }
 }

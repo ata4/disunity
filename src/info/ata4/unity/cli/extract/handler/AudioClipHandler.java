@@ -89,6 +89,6 @@ public class AudioClipHandler extends AssetExtractHandler {
         }
         
         setFileExtension(ext);
-        writeFile(audioBuffer, path.pathID, name);
+        writeFile(audioBuffer, path.getPathID(), name);
     }
 }

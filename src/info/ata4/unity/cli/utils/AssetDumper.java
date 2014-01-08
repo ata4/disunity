@@ -66,7 +66,8 @@ public class AssetDumper {
 
         for (AssetObjectPath path : asset.getPaths()) {
             try {
-                if (path.classID1 < 0) {
+                // skip MonoBehaviours
+                if (path.isScript()) {
                     continue;
                 }
 
@@ -77,7 +78,7 @@ public class AssetDumper {
 
                 printObject(deser.deserialize(path));
             } catch (Exception ex) {
-                L.log(Level.SEVERE, "Deserialization failed for " + path.pathID + " (" + ClassID.getNameForID(path.classID2) + ")", ex);
+                L.log(Level.SEVERE, "Deserialization failed for " + path, ex);
                 break;
             }
         }

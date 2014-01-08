@@ -145,7 +145,7 @@ public class AssetUtils {
         Map<String, Integer> classSizes = new HashMap<>();
         
         for (AssetObjectPath path : paths) {
-            String className = ClassID.getNameForID(path.classID2, true);
+            String className = ClassID.getNameForID(path.getClassID(), true);
             
             if (!classCounts.containsKey(className)) {
                 classCounts.put(className, 0);
@@ -153,7 +153,7 @@ public class AssetUtils {
             }
             
             classCounts.put(className, classCounts.get(className) + 1);
-            classSizes.put(className, classSizes.get(className) + path.length);
+            classSizes.put(className, classSizes.get(className) + path.getLength());
         }
         
         ps.println("Classes by quantity:");
@@ -213,6 +213,10 @@ public class AssetUtils {
         ps.println();
         
         for (AssetObjectPath path : paths) {
+            if (path.isScript()) {
+                continue;
+            }
+            
             String name;
             
             try {
@@ -226,15 +230,15 @@ public class AssetUtils {
                 name = "<error>";
             }
             
-            ps.print(StringUtils.rightPad(String.valueOf(path.pathID), p1));
+            ps.print(StringUtils.rightPad(String.valueOf(path.getPathID()), p1));
             ps.print(" | ");
-            ps.print(StringUtils.rightPad(String.valueOf(path.classID2), p2));
+            ps.print(StringUtils.rightPad(String.valueOf(path.getClassID()), p2));
             ps.print(" | ");
-            ps.print(StringUtils.rightPad(ClassID.getNameForID(path.classID2, true), p3));
+            ps.print(StringUtils.rightPad(ClassID.getNameForID(path.getClassID(), true), p3));
             ps.print(" | ");
-            ps.print(StringUtils.rightPad(String.format("0x%x", path.offset), p4));
+            ps.print(StringUtils.rightPad(String.format("0x%x", path.getOffset()), p4));
             ps.print(" | ");
-            ps.print(StringUtils.leftPad(String.valueOf(path.length), p5));
+            ps.print(StringUtils.leftPad(String.valueOf(path.getLength()), p5));
             ps.print(" | ");
             ps.print(name);
             ps.println();
