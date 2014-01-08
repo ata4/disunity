@@ -64,7 +64,7 @@ public class AssetDumper {
     public void printData(AssetFile asset) {
         Deserializer deser = new Deserializer(asset);
 
-        for (AssetObjectPath path : asset.getObjectPaths()) {
+        for (AssetObjectPath path : asset.getPaths()) {
             try {
                 if (path.classID1 < 0) {
                     continue;

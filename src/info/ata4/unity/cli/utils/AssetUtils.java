@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class AssetUtils {
     }
 
     public void printInfo(PrintStream ps) {
-        AssetObjectPathTable objTable = asset.getObjectPaths();
+        List<AssetObjectPath> paths = asset.getPaths();
         AssetRefTable refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
         AssetTypeTree fieldTree = asset.getTypeTree();
@@ -73,7 +74,7 @@ public class AssetUtils {
         ps.println("  Revision: " + fieldTree.getRevision());
         ps.println("  Version: " + fieldTree.getVersion());
         ps.println("  Standalone: " + (fieldTree.isStandalone() ? "yes" : "no"));
-        ps.println("  Objects: " + objTable.size());
+        ps.println("  Objects: " + paths.size());
         ps.println();
         
         if (!refTable.isEmpty()) {
@@ -142,11 +143,11 @@ public class AssetUtils {
     }
     
     public void printStats(PrintStream ps) {
-        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        List<AssetObjectPath> paths = asset.getPaths();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();
         
-        for (AssetObjectPath path : pathTable) {
+        for (AssetObjectPath path : paths) {
             String className = ClassID.getNameForID(path.classID2, true);
             
             if (!classCounts.containsKey(className)) {
@@ -177,7 +178,7 @@ public class AssetUtils {
     }
     
     public void list(PrintStream ps) {
-        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        List<AssetObjectPath> paths = asset.getPaths();
         Deserializer deser = new Deserializer(asset);
         
         // dirty hardcoded table printer
@@ -214,7 +215,7 @@ public class AssetUtils {
         ps.print(StringUtils.repeat("-", p6));
         ps.println();
         
-        for (AssetObjectPath path : pathTable) {
+        for (AssetObjectPath path : paths) {
             String name;
             
             try {

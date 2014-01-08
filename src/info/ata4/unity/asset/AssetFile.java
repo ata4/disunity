@@ -90,9 +90,9 @@ public class AssetFile extends MappedFileHandler {
         
         in.setSwap(true);
         
-        typeTree.clear();        
-        objTable.clear();
-        refTable.clear();
+        typeTree = new AssetTypeTree();        
+        objTable = new AssetObjectPathTable();
+        refTable = new AssetRefTable();
         
         typeTree.setFormat(header.getFormat());
         
@@ -205,8 +205,8 @@ public class AssetFile extends MappedFileHandler {
         return typeTree;
     }
 
-    public AssetObjectPathTable getObjectPaths() {
-        return objTable;
+    public List<AssetObjectPath> getPaths() {
+        return objTable.getPaths();
     }
     
     public AssetRefTable getReferences() {

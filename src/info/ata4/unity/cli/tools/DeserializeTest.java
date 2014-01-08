@@ -80,7 +80,7 @@ public class DeserializeTest {
     public void testAsset(AssetFile asset) {
         Deserializer deser = new Deserializer(asset);
 
-        for (AssetObjectPath path : asset.getObjectPaths()) {
+        for (AssetObjectPath path : asset.getPaths()) {
             if (path.classID1 < 0) {
                 continue;
             }

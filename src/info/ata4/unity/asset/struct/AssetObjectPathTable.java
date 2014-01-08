@@ -14,12 +14,20 @@ import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetObjectPathTable extends ArrayList<AssetObjectPath> implements Struct {
+public class AssetObjectPathTable implements Struct, Iterable<AssetObjectPath> {
+    
+    private List<AssetObjectPath> paths = new ArrayList<>();
+    
+    public List<AssetObjectPath> getPaths() {
+        return paths;
+    }
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -28,17 +36,22 @@ public class AssetObjectPathTable extends ArrayList<AssetObjectPath> implements 
         for (int i = 0; i < entries; i++) {
             AssetObjectPath path = new AssetObjectPath();
             path.read(in);
-            add(path);
+            paths.add(path);
         }
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        int entries = size();
+        int entries = paths.size();
         out.writeInt(entries);
 
         for (AssetObjectPath path : this) {
             path.write(out);
         }
     }    
+
+    @Override
+    public Iterator<AssetObjectPath> iterator() {
+        return paths.iterator();
+    }
 }

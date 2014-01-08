@@ -33,6 +33,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -119,7 +120,7 @@ public class AssetExtractor {
     }
 
     public void extract(Path dir, boolean raw) throws IOException {
-        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        List<AssetObjectPath> paths = asset.getPaths();
         Deserializer deser = new Deserializer(asset);
 
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
@@ -127,7 +128,7 @@ public class AssetExtractor {
             extractHandler.setExtractDir(dir);
         }
         
-        for (AssetObjectPath path : pathTable) {
+        for (AssetObjectPath path : paths) {
             // skip filtered classes
             if (cf != null && !cf.accept(path)) {
                 continue;
@@ -185,7 +186,7 @@ public class AssetExtractor {
     }
 
     public void split(Path dir) throws IOException {
-        AssetObjectPathTable pathTable = asset.getObjectPaths();
+        List<AssetObjectPath> pathTable = asset.getPaths();
         AssetTypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
@@ -212,7 +213,7 @@ public class AssetExtractor {
             subFieldPath.length = path.length;
             subFieldPath.offset = 0;
             subFieldPath.pathID = 1;
-            subAsset.getObjectPaths().add(subFieldPath);
+            subAsset.getPaths().add(subFieldPath);
             
             AssetTypeTree subTypeTree = subAsset.getTypeTree();
             subTypeTree.setRevision(typeTree.getRevision());
