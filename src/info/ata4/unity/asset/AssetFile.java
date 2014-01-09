@@ -100,6 +100,7 @@ public class AssetFile extends MappedFileHandler {
         classType.setFormat(header.getFormat());
         
         switch (header.getFormat()) {
+            case 5:
             case 6:
             case 7:
             case 8:

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.apache.commons.io.EndianUtils;
 
 /**
  *
@@ -67,10 +68,15 @@ public class AssetClassType implements Struct {
 
     @Override
     public void read(DataInputReader in) throws IOException {
-        // TODO: validate
+        // revision/version for newer formats
         if (format >= 7) {
             revision = in.readStringNull(255);
             version = in.readInt();
+        }
+        
+        // older formats use big endian
+        if (format <= 5) {
+            in.setSwap(false);
         }
         
         int fields = in.readInt();
@@ -83,18 +89,23 @@ public class AssetClassType implements Struct {
             mapping.put(classID, fn);
         }
         
-        // TODO: validate
+        // padding
         if (format >= 7) {
-            in.readInt(); // padding
+            in.readInt();
         }
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        // TODO: validate
+        // revision/version for newer formats
         if (format >= 7) {
             out.writeStringNull(revision);
             out.writeInt(version);
+        }
+        
+        // older formats use big endian
+        if (format <= 5) {
+            out.setSwap(false);
         }
         
         if (!standalone) {
@@ -112,9 +123,9 @@ public class AssetClassType implements Struct {
             out.writeInt(0);
         }
         
-        // TODO: validate
+        // padding
         if (format >= 7) {
-            out.writeInt(0); // padding
+            out.writeInt(0);
         }
     }
     

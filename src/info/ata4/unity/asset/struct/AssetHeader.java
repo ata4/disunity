@@ -32,7 +32,7 @@ public class AssetHeader implements Struct {
     // 6 = 2.6
     // 7 = ???
     // 8 = 3.1 - 3.4
-    // 9 = 3.5 - 4.1
+    // 9 = 3.5 - 4.x
     private int format;
     
     // apparently the offset to the serialized data
