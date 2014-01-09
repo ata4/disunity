@@ -16,7 +16,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- *
+ * Abstract class for command actions.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class Action {
@@ -40,26 +41,54 @@ public abstract class Action {
         this.cf = cf;
     }
     
+    /**
+     * Returns true if the action can process asset files.
+     */
     public abstract boolean supportsAssets();
 
+    /**
+     * Returns true if the action can process asset bundle files.
+     */
     public abstract boolean supportsAssetBundes();
     
+    /**
+     * Returns true if the action requires an output directory to write files.
+     */
     public boolean requiresOutputDir() {
         return false;
     }
     
+    /**
+     * Returns true if the action may modify assets or asset bundles during
+     * processing.
+     */
     public boolean requiresWriting() {
         return false;
     }
     
+    /**
+     * Processes the given asset.
+     * 
+     * @param asset
+     * @throws IOException 
+     */
     public void processAsset(AssetFile asset) throws IOException {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Processes the given asset bundle.
+     * 
+     * @param bundle
+     * @throws IOException 
+     */
     public void processAssetBundle(AssetBundle bundle) throws IOException {
         throw new UnsupportedOperationException();
     }
     
+    /**
+     * Called when all availabe files have been processed.
+     */
     public void finished() {
     }
 }
