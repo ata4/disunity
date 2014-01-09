@@ -157,7 +157,6 @@ public class DisUnityProcessor implements Runnable {
                 }
 
                 // skip dummy asset from Unity3D Obfuscator
-                // TODO: random number?
                 if (name.equals("33Obf")) {
                     continue;
                 }
