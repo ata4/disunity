@@ -147,26 +147,31 @@ public class DisUnityProcessor implements Runnable {
             return;
         }
         
-        if (action.supportsAssets() && !action.requiresWriting()) {
-            for (AssetBundleEntry entry : ab) {
-                String name = entry.getName();
-
-                // skip libraries
-                if (name.endsWith(".dll")) {
-                    continue;
-                }
-
-                // skip dummy asset from Unity3D Obfuscator
-                if (name.equals("33Obf")) {
-                    continue;
-                }
-
-                processAssetInBundle(entry);
-            }
-        } else {
+        if (!action.supportsAssets()) {
+            return;
+        }
+        
+        if (action.requiresWriting()) {
             L.log(Level.WARNING,
                     "Command \"{0}\" doesn''t support assets in asset bundles, skipping {1}",
                     new Object[]{settings.getCommand(), file.getFileName()});
+            return;
+        }
+        
+        for (AssetBundleEntry entry : ab) {
+            String name = entry.getName();
+
+            // skip libraries
+            if (name.endsWith(".dll")) {
+                continue;
+            }
+
+            // skip dummy asset from Unity3D Obfuscator
+            if (name.equals("33Obf")) {
+                continue;
+            }
+
+            processAssetInBundle(entry);
         }
     }
     
