@@ -14,7 +14,6 @@ import info.ata4.unity.cli.classfilter.SimpleClassFilter;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.log.LogUtils;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
@@ -67,7 +66,7 @@ public class DisUnityCli {
         opts.addOption(optHelp);
         
         Option optCmd = new Option("c", null, true, null);
-        optCmd.setDescription("Processing command. Available commands:\n" + Arrays.asList(DisUnityCommand.values()));
+        optCmd.setDescription("Processing command. Available commands:\n" + DisUnityProcessor.getCommands());
         optCmd.setArgs(1);
         optCmd.setArgName("cmd");
         opts.addOption(optCmd);
@@ -97,15 +96,7 @@ public class DisUnityCli {
             }
             
             if (cl.hasOption(optCmd.getOpt())) {
-                String value = cl.getOptionValue(optCmd.getOpt());
-                try {
-                    DisUnityCommand cmd = DisUnityCommand.fromString(value);
-                    settings.setCommand(cmd);
-                } catch (IllegalArgumentException ex) {
-                    L.log(Level.SEVERE, "Invalid command: {0}", value);
-                    printUsage();
-                    return false;
-                }
+                settings.setCommand(cl.getOptionValue(optCmd.getOpt()));
             }
             
             if (cl.hasOption(optClassFilter.getOpt())) {

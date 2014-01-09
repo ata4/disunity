@@ -22,7 +22,7 @@ public class DisUnitySettings {
     
     private List<Path> files = new ArrayList<>();
     private ClassFilter classFilter;
-    private DisUnityCommand command = DisUnityCommand.EXTRACT;
+    private String command = "extract";
     
     public List<Path> getFiles() {
         return files;
@@ -36,11 +36,11 @@ public class DisUnitySettings {
         this.classFilter = classFilter;
     }
     
-    public DisUnityCommand getCommand() {
+    public String getCommand() {
         return command;
     }
 
-    public void setCommand(DisUnityCommand command) {
+    public void setCommand(String command) {
         this.command = command;
     }
 }

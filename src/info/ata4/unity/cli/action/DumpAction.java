@@ -1,5 +1,5 @@
 /*
- ** 2013 August 18
+ ** 2014 January 08
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.utils;
+package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetClassType;
@@ -19,7 +19,7 @@ import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityField;
 import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.util.ClassID;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -32,33 +32,44 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetDumper {
+public class DumpAction extends PrintAction {
     
-    private static final Logger L = Logger.getLogger(AssetDumper.class.getName());
+    private static final Logger L = Logger.getLogger(DumpAction.class.getName());
     private static final String INDENT_STRING = "  ";
     
-    private PrintStream ps;
-    private ClassFilter cf;
+    private boolean dumpStructs;
     private int indentLevel;
     
-    public AssetDumper(PrintStream ps) {
-        this.ps = ps;
-    }
-
-    public PrintStream getPrintStream() {
-        return ps;
-    }
-
-    public void setPrintStream(PrintStream ps) {
-        this.ps = ps;
+    public DumpAction(PrintStream ps) {
+        super(ps);
     }
     
-    public ClassFilter getClassFilter() {
-        return cf;
+    public boolean isDumpStructs() {
+        return dumpStructs;
     }
 
-    public void setClassFilter(ClassFilter cf) {
-        this.cf = cf;
+    public DumpAction setDumpStructs(boolean structs) {
+        this.dumpStructs = structs;
+        return this;
+    }
+
+    @Override
+    public boolean supportsAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsAssetBundes() {
+        return false;
+    }
+
+    @Override
+    public void processAsset(AssetFile asset) throws IOException {
+        if (dumpStructs) {
+            printStruct(asset);
+        } else {
+            printData(asset);
+        }
     }
     
     public void printData(AssetFile asset) {
@@ -72,6 +83,7 @@ public class AssetDumper {
                 }
 
                 // skip filtered classes
+                ClassFilter cf = getClassFilter();
                 if (cf != null && !cf.accept(path)) {
                     continue;
                 }
@@ -98,6 +110,7 @@ public class AssetDumper {
             AssetFieldType classField = classType.getMapping().get(classID);
             
             // skip filtered classes
+            ClassFilter cf = getClassFilter();
             if (cf != null && !cf.accept(classID)) {
                 continue;
             }

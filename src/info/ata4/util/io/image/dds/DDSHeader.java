@@ -12,7 +12,7 @@ package info.ata4.util.io.image.dds;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
-import info.ata4.util.string.StringMacroUtils;
+import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 
 /**
@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class DDSHeader implements Struct {
     
-    public static final int DDS_MAGIC = StringMacroUtils.makeID("DDS ");
+    public static final int DDS_MAGIC = StringUtils.makeID("DDS ");
     public static final int DDS_STRUCT_SIZE = 124;
     
     public static final int SIZE = DDS_STRUCT_SIZE + 4;

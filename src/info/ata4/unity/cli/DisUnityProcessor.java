@@ -12,17 +12,24 @@ package info.ata4.unity.cli;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
-import static info.ata4.unity.cli.DisUnityCommand.DUMP;
-import static info.ata4.unity.cli.DisUnityCommand.DUMP_STRUCT;
-import info.ata4.unity.cli.extract.AssetExtractor;
-import info.ata4.unity.cli.utils.AssetBundleUtils;
-import info.ata4.unity.cli.utils.AssetDumper;
-import info.ata4.unity.cli.utils.AssetUtils;
-import info.ata4.unity.serdes.db.StructDatabase;
+import info.ata4.unity.cli.action.Action;
+import info.ata4.unity.cli.action.DumpAction;
+import info.ata4.unity.cli.action.ExtractAction;
+import info.ata4.unity.cli.action.FixReferencesAction;
+import info.ata4.unity.cli.action.InfoAction;
+import info.ata4.unity.cli.action.LearnAction;
+import info.ata4.unity.cli.action.ListAction;
+import info.ata4.unity.cli.action.SplitAction;
+import info.ata4.unity.cli.action.StatsAction;
+import info.ata4.unity.cli.action.UnbundleAction;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
@@ -34,199 +41,46 @@ import org.apache.commons.io.FilenameUtils;
 public class DisUnityProcessor implements Runnable {
 
     private static final Logger L = Logger.getLogger(DisUnityProcessor.class.getName());
+    private static final Map<String, Action> COMMANDS;
+    
+    static {
+        PrintStream out = System.out;
+        Map<String, Action> commands = new HashMap<>();
+        commands.put("dump", new DumpAction(out));
+        commands.put("dump-struct", new DumpAction(out).setDumpStructs(true));
+        commands.put("extract", new ExtractAction());
+        commands.put("extract-raw", new ExtractAction().setRaw(true));
+        commands.put("fixrefs", new FixReferencesAction());
+        commands.put("info", new InfoAction(out));
+        commands.put("info-stats", new StatsAction(out));
+        commands.put("learn", new LearnAction());
+        commands.put("list", new ListAction(out));
+        commands.put("split", new SplitAction());
+        commands.put("unbundle", new UnbundleAction());
+        COMMANDS = Collections.unmodifiableMap(commands);
+    }
+    
+    public static Set<String> getCommands() {
+        return COMMANDS.keySet();
+    }
     
     private final DisUnitySettings settings = new DisUnitySettings();
+    private Action action;
     
     public DisUnitySettings getSettings() {
         return settings;
     }
     
-    private void processAsset(Path file, Path outputDir) {
-        try {
-            boolean map = settings.getCommand() != DisUnityCommand.FIXREFS;
-
-            AssetFile asset = new AssetFile();
-            asset.load(file, map);
-
-            processAsset(asset, file.getFileName().toString(), outputDir);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + file, ex);
-        }
-    }
-    
-    private void processAsset(Path file) {
-        String fileName = file.getFileName().toString();
-        String assetName = FilenameUtils.removeExtension(fileName);
-        
-        // if the file has no extension, append a "_" to the output directory
-        // name so the file system won't have a file and dir with the same name
-        if (FilenameUtils.getExtension(fileName).isEmpty()) {
-            assetName += "_";
-        }
-        
-        Path outputDir = file.resolveSibling(assetName);
-        processAsset(file, outputDir);
-    }
-    
-    private void processAsset(AssetBundleEntry entry, Path dir) {
-        String name = entry.getBundle().getSourceFile().getFileName() + ":" + entry.getName();
-        try {
-            ByteBuffer bb = entry.getByteBuffer();
-            
-            AssetFile asset = new AssetFile();
-            asset.load(bb);
-            asset.setSourceBundle(entry.getBundle());
-            
-            processAsset(asset, name, dir);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + name, ex);
-        }
-    }
-    
-    private void processAsset(AssetFile asset, String name, Path outputDir) {        
-        try {
-            DisUnityCommand cmd = settings.getCommand();
-            switch (cmd) {
-                case UNBUNDLE:
-                    L.log(Level.WARNING, "Asset files can''t be unbundled, skipping {0}", name);
-                    return;
-                    
-                case DUMP:
-                case DUMP_STRUCT:
-                    AssetDumper ad = new AssetDumper(System.out);
-                    ad.setClassFilter(settings.getClassFilter());
-                    if (cmd == DUMP) {
-                        L.log(Level.INFO, "Dumping data from {0}", name);
-                        ad.printData(asset);
-                    } else {
-                        L.log(Level.INFO, "Dumping structs from {0}", name);
-                        ad.printStruct(asset);
-                    }
-                    break;
-                
-                case LEARN:
-                    L.log(Level.INFO, "Learning structs from {0}", name);
-                    new AssetUtils(asset).learnStruct();
-                    break;
-                    
-                case INFO:
-                    L.log(Level.INFO, "Printing information for {0}", name);
-                    new AssetUtils(asset).printInfo(System.out);
-                    break;
-                    
-                case INFO_STATS:
-                    L.log(Level.INFO, "Printing class stats for {0}", name);
-                    new AssetUtils(asset).printStats(System.out);
-                    break;
-                    
-                case LIST:
-                    L.log(Level.INFO, "Listing objects in {0}", name);
-                    new AssetUtils(asset).list(System.out);
-                    break;
-     
-                case EXTRACT:
-                case EXTRACT_RAW:
-                case SPLIT:
-                    boolean split = cmd == DisUnityCommand.SPLIT;
-                    boolean raw = cmd == DisUnityCommand.EXTRACT_RAW;
-
-                    if (split) {
-                        L.log(Level.INFO, "Splitting assets from {0}", name);
-                    } else {
-                        L.log(Level.INFO, "Extracting resources from {0}", name);
-                    }
-
-                    if (!Files.exists(outputDir)) {
-                        Files.createDirectory(outputDir);
-                    }
-                    
-                    AssetExtractor ae = new AssetExtractor(asset);
-                    ae.setClassFilter(settings.getClassFilter());
-
-                    if (split) {
-                        ae.split(outputDir);
-                    } else {
-                        ae.extract(outputDir, raw);
-                    }
-
-                    break;
-                    
-                case FIXREFS:
-                    L.log(Level.INFO, "Fixing asset references for {0}", name);
-                    
-                    // we need a file for this
-                    if (asset.getSourceFile() == null) {
-                        L.warning("Can't fix references of assets in asset bundles!");
-                        break;
-                    }
-                    
-                    new AssetUtils(asset).fixRefs();
-                    break;
-            }
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + name, ex);
-        }
-    }
-
-    private void processAssetBundle(Path file, Path dir) {
-        AssetBundle ab = new AssetBundle();
-        
-        try {
-            ab.load(file);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't open " + file, ex);
-            return;
-        }
-            
-        try {
-            DisUnityCommand cmd = settings.getCommand();
-            switch (cmd) {
-                case UNBUNDLE:
-                    L.log(Level.INFO, "Extracting entries to {0}", dir);
-                    new AssetBundleUtils(ab).extract(dir);
-                    break;
-                    
-                case LIST:
-                    L.log(Level.INFO, "Listing files in {0}", file.getFileName());
-                    new AssetBundleUtils(ab).list(System.out);
-                    break;
-                    
-                case INFO:
-                    L.log(Level.INFO, "Printing information about {0}", file.getFileName());
-                    new AssetBundleUtils(ab).printInfo(System.out);
-                    
-                default:
-                    for (AssetBundleEntry entry : ab) {
-                        String name = entry.getName();
-                        
-                        // skip libraries
-                        if (name.endsWith(".dll")) {
-                            continue;
-                        }
-
-                        // skip dummy asset from Unity3D Obfuscator
-                        // TODO: random number?
-                        if (name.equals("33Obf")) {
-                            continue;
-                        }
-
-                        processAsset(entry, dir);
-                    }
-            }
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + file, ex);
-        }
-    }
-    
-    private void processAssetBundle(Path file) {
-        // create target directory based on the asset bundle file name
-        String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
-        Path dir = file.resolveSibling(fileName);
-        processAssetBundle(file, dir);
-    }
-    
     @Override
     public void run() {
+        action = COMMANDS.get(settings.getCommand());
+        if (action == null) {
+            L.log(Level.SEVERE, "Invalid command: {0}", settings.getCommand());
+            return;
+        }
+        
+        action.setClassFilter(settings.getClassFilter());
+        
         for (Path file : settings.getFiles()) {
             if (!Files.exists(file)) {
                 L.log(Level.WARNING, "File {0} doesn''t exist", file);
@@ -240,18 +94,142 @@ public class DisUnityProcessor implements Runnable {
             
             try {
                 if (AssetBundle.isAssetBundle(file)) {
-                    processAssetBundle(file);
+                    if (action.supportsAssetBundes()) {
+                        processAssetBundle(file);
+                    } else {
+                        L.log(Level.WARNING,
+                                "Command \"{0}\" doesn''t support asset bundles, skipping {1}",
+                                new Object[]{settings.getCommand(), file.getFileName()});
+                    }
                 } else {
-                    processAsset(file);
+                    if (action.supportsAssets()) {
+                        processAsset(file);
+                    } else {
+                        L.log(Level.WARNING,
+                                "Command \"{0}\" doesn''t support asset files, skipping {1}",
+                                new Object[]{settings.getCommand(), file.getFileName()});
+                    }
                 }
             } catch (Exception ex) {
                 L.log(Level.SEVERE, "Can't process " + file, ex);
             }
         }
         
-        // update database after learning
-        if (settings.getCommand() == DisUnityCommand.LEARN) {
-            StructDatabase.getInstance().update();
+        action.finished();
+    }
+    
+    private void processAssetBundle(Path file) throws IOException {
+        if (action.requiresOutputDir()) {
+            // create target directory based on the asset bundle file name
+            String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
+            Path outputDir = file.resolveSibling(fileName);
+
+            if (!Files.exists(outputDir)) {
+                Files.createDirectory(outputDir);
+            }
+            
+            action.setOutputDir(outputDir);
+        }
+        
+        AssetBundle ab = new AssetBundle();
+        
+        try {
+            ab.load(file);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't load " + file, ex);
+            return;
+        }
+        
+        try {
+            action.processAssetBundle(ab);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't process " + file, ex);
+            return;
+        }
+        
+        if (action.supportsAssets() && !action.requiresWriting()) {
+            for (AssetBundleEntry entry : ab) {
+                String name = entry.getName();
+
+                // skip libraries
+                if (name.endsWith(".dll")) {
+                    continue;
+                }
+
+                // skip dummy asset from Unity3D Obfuscator
+                // TODO: random number?
+                if (name.equals("33Obf")) {
+                    continue;
+                }
+
+                processAssetInBundle(entry);
+            }
+        } else {
+            L.log(Level.WARNING,
+                    "Command \"{0}\" doesn''t support assets in asset bundles, skipping {1}",
+                    new Object[]{settings.getCommand(), file.getFileName()});
+        }
+    }
+    
+    private void processAsset(Path file) throws IOException {
+        if (action.requiresOutputDir()) {
+            String fileName = file.getFileName().toString();
+            String assetName = FilenameUtils.removeExtension(fileName);
+
+            // if the file has no extension, append a "_" to the output directory
+            // name so the file system won't have a file and dir with the same name
+            if (FilenameUtils.getExtension(fileName).isEmpty()) {
+                assetName += "_";
+            }
+
+            Path outputDir = file.resolveSibling(assetName);
+            
+            if (!Files.exists(outputDir)) {
+                Files.createDirectory(outputDir);
+            }
+            
+            action.setOutputDir(outputDir);
+        }
+        
+        AssetFile asset = new AssetFile();
+
+        try {
+            boolean mmap = !action.requiresWriting();
+            asset.load(file, mmap);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't load " + file, ex);
+            return;
+        }
+        
+        L.log(Level.INFO, "Processing {0}", file.getFileName());
+        
+        try {
+            action.processAsset(asset);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't process " + file, ex);
+        }
+    }
+    
+    private void processAssetInBundle(AssetBundleEntry entry) {
+        String name = entry.getBundle().getSourceFile().getFileName() + ":" + entry.getName();
+        String nameFull = entry.getBundle().getSourceFile() + ":" + entry.getName();
+        AssetFile asset = new AssetFile();
+        
+        try {
+            asset.load(entry.getByteBuffer());
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't load " + nameFull, ex);
+            return;
+        }
+        
+        asset.setSourceBundle(entry.getBundle());
+        
+        L.log(Level.INFO, "Processing {0}", name);
+        
+        try {
+            action.processAsset(asset);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't process " + name, ex);
         }
     }
 }

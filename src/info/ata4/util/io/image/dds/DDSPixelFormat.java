@@ -12,7 +12,7 @@ package info.ata4.util.io.image.dds;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
 import info.ata4.util.io.Struct;
-import info.ata4.util.string.StringMacroUtils;
+import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 
 /**
@@ -29,9 +29,9 @@ public class DDSPixelFormat implements Struct {
     public static final int DDPF_RGB = 0x40;
     public static final int DDPF_RGBA = DDPF_RGB | DDPF_ALPHAPIXELS;
     
-    public static final int PF_DXT1 = StringMacroUtils.makeID("DXT1");
-    public static final int PF_DXT3 = StringMacroUtils.makeID("DXT3");
-    public static final int PF_DXT5 = StringMacroUtils.makeID("DXT5");
+    public static final int PF_DXT1 = StringUtils.makeID("DXT1");
+    public static final int PF_DXT3 = StringUtils.makeID("DXT3");
+    public static final int PF_DXT5 = StringUtils.makeID("DXT5");
     
     public int dwSize = DDSPF_STRUCT_SIZE;
     public int dwFlags;
