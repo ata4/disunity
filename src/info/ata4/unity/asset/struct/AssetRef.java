@@ -29,7 +29,7 @@ public class AssetRef implements Struct {
     // Path to the asset file. Only used if "type" is 0.
     private String filePath;
     
-    // TODO
+    // Path to the asset file? Unused in asset format >= 7.
     private String assetPath;
     
     // Reference type. Possible values are probably 0 to 3.
