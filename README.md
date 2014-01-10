@@ -1,7 +1,7 @@
 DisUnity
 =========
 
-An experimental toolset for Unity asset and asset bundle files, mostly designed for extraction.
+An experimental command-line toolset for Unity asset and asset bundle files, mostly designed for extraction.
 
 Download
 --------
@@ -27,17 +27,19 @@ Usage
 
 `learn` - Learns the structure from an Unity webplayer bundle (*.unity3d) and stores any new structs in the database file structdb.dat. Its data is required to deserialize standalone asset files, which usually don't contain any structure data.
 
-`info` - Outputs various information for asset and asset bundle files.
+`info` - Outputs various information for assets and asset bundle files.
 
 `info-stats` - Outputs class usage statistics for asset files.
 
 `unbundle` - Extracts Unity webplayer bundles (*.unity3d).
 
-`fixrefs` - Converts the relative paths for shared assets in compiled scene files to absolute paths. This allows the scenes to be opened in the Unity editor properly.
+`fixrefs` - Fixes shared asset references in extracted scene files by converting relative to absolute paths so they can be opened with the Unity editor correctly.
 
-**Note:** If the file and its dependencies are moved to a different folder, disunity needs to be run again with this command.
+**Note:** If the shared assets are moved to a different folder, the scene needs to be fixed again.
 
-`split` - Attempts to split an asset file to multiple smaller asset files, usually one for each object.
+`split` - Attempts to split an asset file into multiple smaller asset files.
+
+`list` - Lists all objects and files in a tabular form.
 
 ### Other parameters
 
