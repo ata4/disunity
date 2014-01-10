@@ -158,7 +158,7 @@ public class DisUnityProcessor implements Runnable {
             String name = entry.getName();
 
             // skip libraries
-            if (name.endsWith(".dll")) {
+            if (name.endsWith(".dll") || name.endsWith(".mdb")) {
                 continue;
             }
 
