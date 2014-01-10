@@ -6,6 +6,7 @@
 4	Transform
 5	TimeManager
 6	GlobalGameManager
+7       GameManager
 8	Behaviour
 9	GameManager
 11	AudioManager
@@ -26,9 +27,11 @@
 30	RenderManager
 31	PipelineManager
 33	MeshFilter
+35      GameManager
 41	OcclusionPortal
 43	Mesh
 45	Skybox
+46      GameManager
 47	QualitySettings
 48	Shader
 49	TextAsset
@@ -38,6 +41,7 @@
 56	Collider
 57	Joint
 59	HingeJoint
+63      GameManager
 64	MeshCollider
 65	BoxCollider
 71	AnimationManager
