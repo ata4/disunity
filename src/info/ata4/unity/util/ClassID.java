@@ -67,8 +67,21 @@ public class ClassID {
         NAME_TO_ID = Collections.unmodifiableMap(nameToID);
     }
     
+    public static Integer getIDForName(String className, boolean ignoreCase) {
+        if (ignoreCase) {
+            for (Map.Entry<String, Integer> entry : NAME_TO_ID.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(className)) {
+                    return entry.getValue();
+                }
+            }
+            return null;
+        } else {
+            return NAME_TO_ID.get(className);
+        }
+    }
+    
     public static Integer getIDForName(String className) {
-        return NAME_TO_ID.get(className);
+        return getIDForName(className, false);
     }
     
     public static String getNameForID(int classID, boolean safe) {
