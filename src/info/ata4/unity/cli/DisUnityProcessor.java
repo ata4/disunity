@@ -94,13 +94,7 @@ public class DisUnityProcessor implements Runnable {
             
             try {
                 if (AssetBundle.isAssetBundle(file)) {
-                    if (action.supportsAssetBundes()) {
-                        processAssetBundle(file);
-                    } else {
-                        L.log(Level.WARNING,
-                                "Command \"{0}\" doesn''t support asset bundles, skipping {1}",
-                                new Object[]{settings.getCommand(), file.getFileName()});
-                    }
+                    processAssetBundle(file);
                 } else {
                     if (action.supportsAssets()) {
                         processAsset(file);
@@ -140,11 +134,13 @@ public class DisUnityProcessor implements Runnable {
             return;
         }
         
-        try {
-            action.processAssetBundle(ab);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + file, ex);
-            return;
+        if (action.supportsAssetBundes()) {
+            try {
+                action.processAssetBundle(ab);
+            } catch (IOException ex) {
+                L.log(Level.SEVERE, "Can't process " + file, ex);
+                return;
+            }
         }
         
         if (!action.supportsAssets()) {
