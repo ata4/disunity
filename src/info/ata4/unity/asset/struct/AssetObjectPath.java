@@ -31,18 +31,18 @@ public class AssetObjectPath implements Struct {
     private int length;
     
     // Script ID as negative number, equal to classID if it's not a MonoBehaviour
-    private int scriptID;
+    private int classID1;
     
-    // Class ID
-    private int classID;
+    // Class ID, probably something else in asset format <=5
+    private int classID2;
 
     @Override
     public void read(DataInputReader in) throws IOException {
         pathID = in.readInt();
         offset = in.readInt();
         length = in.readInt();
-        scriptID = in.readInt();
-        classID = in.readInt();
+        classID1 = in.readInt();
+        classID2 = in.readInt();
     }
 
     @Override
@@ -50,8 +50,8 @@ public class AssetObjectPath implements Struct {
         out.writeInt(pathID);
         out.writeInt(offset);
         out.writeInt(length);
-        out.writeInt(scriptID);
-        out.writeInt(classID);
+        out.writeInt(classID1);
+        out.writeInt(classID2);
     }
 
     public int getPathID() {
@@ -79,23 +79,27 @@ public class AssetObjectPath implements Struct {
     }
     
     public boolean isScript() {
-        return scriptID < 0;
+        return classID1 < 0;
     }
 
-    public int getScriptID() {
-        return scriptID;
+    public int getClassID1() {
+        return classID1;
     }
 
-    public void setScriptID(int scriptID) {
-        this.scriptID = scriptID;
+    public void setClassID1(int classID1) {
+        this.classID1 = classID1;
+    }
+    
+    public int getClassID2() {
+        return classID2;
     }
 
+    public void setClassID2(int classID2) {
+        this.classID2 = classID2;
+    }
+    
     public int getClassID() {
-        return classID;
-    }
-
-    public void setClassID(int classID) {
-        this.classID = classID;
+        return classID1 > 0 ? classID1 : classID2;
     }
     
     @Override

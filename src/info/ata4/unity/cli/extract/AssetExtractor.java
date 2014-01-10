@@ -10,8 +10,8 @@
 package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetClassType;
+import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
@@ -27,7 +27,6 @@ import info.ata4.unity.util.ClassID;
 import info.ata4.util.io.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Extractor for asset files.
@@ -47,35 +45,31 @@ public class AssetExtractor {
     
     private static final Logger L = Logger.getLogger(AssetExtractor.class.getName());
     
-    public static String getAssetName(ByteBuffer bb) {
+    /**
+     * Tries to get the name of an object by deserializing it and looking for
+     * the field "m_Name". If it exists, return its value.
+     * 
+     * @param asset asset file
+     * @param path object path
+     * @return Name string of the object or null if it doesn't have a name or if
+     *         the deserialization failed.
+     */
+    public static String getObjectName(AssetFile asset, AssetObjectPath path) {
+        Deserializer deser = new Deserializer(asset);
+        String name = null;
+        
         try {
-            // make sure we have enough bytes to read a string at all
-            if (bb.capacity() < 5) {
-                L.log(Level.FINEST, "Not enough data for an asset name");
-                return null;
-            }
-            
-            int len = bb.getInt();
-            if (len > 1024) {
-                L.log(Level.FINEST, "Asset name too long: {0}", len);
-                return null;
-            }
-            
-            byte[] raw = new byte[len];
-            bb.get(raw);
-            
-            String assetName = new String(raw).trim();
-            
-            // ignore bad strings
-            if (assetName.isEmpty() || !StringUtils.isAsciiPrintable(assetName)) {
-                L.log(Level.FINEST, "Invalid/empty asset name");
-                return null;
-            }
-            
-            return assetName;
-        } catch (Exception ex) {
-            return null;
+            UnityObject obj = deser.deserialize(path);
+            name = obj.getValue("m_Name");
+        } catch (OutOfMemoryError ex) {
+            // Deserializer choked on an array size and clogged the heap, try
+            // to clean up this mess
+            deser = null;
+            System.gc();
+        } catch (Throwable ex) {
         }
+        
+        return name;
     }
     
     private final AssetFile asset;
@@ -147,8 +141,7 @@ public class AssetExtractor {
                 
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
-                ByteBuffer bbAssets = asset.getDataBuffer();
-                ByteBuffer bbAsset = ByteBufferUtils.getSlice(bbAssets, path.getOffset(), path.getLength());
+                ByteBuffer bbAsset = asset.getPathBuffer(path);
                 
                 try {
                     ByteBufferUtils.save(assetFile, bbAsset);
@@ -206,8 +199,8 @@ public class AssetExtractor {
             subAsset.getHeader().setFormat(asset.getHeader().getFormat());
             
             AssetObjectPath subFieldPath = new AssetObjectPath();
-            subFieldPath.setScriptID(path.getScriptID());
-            subFieldPath.setClassID(path.getClassID());
+            subFieldPath.setClassID1(path.getClassID1());
+            subFieldPath.setClassID2(path.getClassID2());
             subFieldPath.setLength(path.getLength());
             subFieldPath.setOffset(0);
             subFieldPath.setPathID(1);
@@ -218,22 +211,9 @@ public class AssetExtractor {
             subClassType.setVersion(-2);
             subClassType.setFormat(classType.getFormat());
             subClassType.getMapping().put(path.getClassID(), classType.getMapping().get(path.getClassID()));
-            
+
             // create a byte buffer for the data area
             ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());
-            bbAsset.order(ByteOrder.LITTLE_ENDIAN);
-            
-            // probe asset name
-            String subAssetName = getAssetName(bbAsset);
-            bbAsset.rewind();
-            
-            if (subAssetName == null) {
-                continue;
-            } else {
-                // remove any chars that could cause troubles on various file systems
-                subAssetName = subAssetName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
-            }
-            
             subAsset.setDataBuffer(bbAsset);
             
             Path subAssetDir = dir.resolve(className);
@@ -241,7 +221,18 @@ public class AssetExtractor {
                 Files.createDirectory(subAssetDir);
             }
             
-            Path subAssetFile = subAssetDir.resolve(subAssetName + ".asset");
+            // probe asset name
+            String subAssetName = getObjectName(asset, path);
+            if (subAssetName != null) {
+                // remove any chars that could cause troubles on various file systems
+                subAssetName = subAssetName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+            } else {
+                // probably can't exist in a standalone file anyway
+                continue;
+            }
+            subAssetName += ".asset";
+            
+            Path subAssetFile = subAssetDir.resolve(subAssetName);
             if (Files.exists(subAssetFile)) {
                 L.log(Level.INFO, "Writing {0}", subAssetFile);
                 subAsset.save(subAssetFile);

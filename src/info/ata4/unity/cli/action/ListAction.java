@@ -13,8 +13,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
-import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
 import java.util.List;
@@ -43,8 +42,7 @@ public class ListAction extends PrintAction {
     @Override
     public void processAsset(AssetFile asset) {
         List<AssetObjectPath> paths = asset.getPaths();
-        Deserializer deser = new Deserializer(asset);
-        
+
         // dirty hardcoded table printer
         int p1 = 12;
         int p2 = 4;
@@ -84,17 +82,10 @@ public class ListAction extends PrintAction {
                 continue;
             }
             
-            String name;
+            String name = AssetExtractor.getObjectName(asset, path);
             
-            try {
-                UnityObject obj = deser.deserialize(path);
-                name = obj.getValue("m_Name");
-                if (name == null) {
-                    name = "";
-                }
-            } catch (Exception ex) {
-                // safety not guaranteed
-                name = "<error>";
+            if (name == null) {
+                name = "";
             }
             
             ps.print(StringUtils.rightPad(String.valueOf(path.getPathID()), p1));

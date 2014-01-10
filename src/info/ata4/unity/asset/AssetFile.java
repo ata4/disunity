@@ -93,7 +93,7 @@ public class AssetFile extends MappedFileHandler {
         
         in.setSwap(true);
         
-        classType = new AssetClassType();        
+        classType = new AssetClassType();
         objTable = new AssetObjectPathTable();
         refTable = new AssetRefTable();
         
@@ -233,5 +233,9 @@ public class AssetFile extends MappedFileHandler {
         }
         
         return classIDs;
+    }
+    
+    public ByteBuffer getPathBuffer(AssetObjectPath path) {
+        return ByteBufferUtils.getSlice(getDataBuffer(), path.getOffset(), path.getLength());
     }
 }
