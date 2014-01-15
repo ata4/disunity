@@ -195,8 +195,11 @@ public class DisUnityProcessor implements Runnable {
 
         try {
             // use memory mapping if the files aren't modified
-            boolean mmap = !action.requiresWriting();
-            asset.load(file, mmap);
+            if (action.requiresWriting()) {
+                asset.load(file);
+            } else {
+                asset.open(file);
+            }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't load " + file, ex);
             return;

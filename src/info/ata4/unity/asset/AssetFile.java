@@ -20,7 +20,7 @@ import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
 import info.ata4.util.io.DataOutputWriter;
-import info.ata4.util.io.MappedFileHandler;
+import info.ata4.util.io.file.FileHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -39,7 +39,7 @@ import org.apache.commons.io.FilenameUtils;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFile extends MappedFileHandler {
+public class AssetFile extends FileHandler {
     
     private static final Logger L = Logger.getLogger(AssetFile.class.getName());
 
@@ -52,7 +52,17 @@ public class AssetFile extends MappedFileHandler {
     private AssetBundle sourceBundle;
     
     @Override
-    public void load(Path file, boolean map) throws IOException {
+    public void open(Path file) throws IOException {
+        // split asset files can't be opened conveniently using memory mapping
+        if (file.getFileName().endsWith(".split0")) {
+            load(file);
+        } else {
+            super.open(file);
+        }
+    }
+    
+    @Override
+    public void load(Path file) throws IOException {
         String fileName = file.getFileName().toString();
         
         // join split asset files before loading
@@ -75,7 +85,7 @@ public class AssetFile extends MappedFileHandler {
             
             load(bb);
         } else {
-            super.load(file, map);
+            super.load(file);
         }
         
         // load audio stream if existing

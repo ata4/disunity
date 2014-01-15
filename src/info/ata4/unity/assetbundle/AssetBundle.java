@@ -15,7 +15,7 @@ import info.ata4.util.io.ByteBufferInputStream;
 import info.ata4.util.io.ByteBufferOutputStream;
 import info.ata4.util.io.ByteBufferUtils;
 import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.MappedFileHandler;
+import info.ata4.util.io.file.FileHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,7 +37,7 @@ import org.apache.commons.io.IOUtils;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundle extends MappedFileHandler implements Iterable<AssetBundleEntry> {
+public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntry> {
     
     private static final Logger L = Logger.getLogger(AssetBundle.class.getName());
     
