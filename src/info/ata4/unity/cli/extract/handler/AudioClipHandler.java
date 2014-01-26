@@ -60,13 +60,20 @@ public class AudioClipHandler extends AssetExtractHandler {
         // load audio buffer from external buffer if stream is set to 2
         int stream = obj.getValue("m_Stream");
         if (stream == 2) {
-            L.log(Level.FINE, "{0} uses external audio buffer", name);
+            L.log(Level.FINE, "Audio clip {0} uses external audio data", name);
             
             int offset = audioBuffer.getInt();
             int size = audioBuffer.capacity();
             audioBuffer.rewind();
             
             ByteBuffer audioBufferAux = getAssetFile().getAudioBuffer();
+            
+            // make sure the .resS is loaded
+            if (audioBufferAux == null) {
+                L.log(Level.WARNING, "Audio clip {0} uses an external .resS file that doesn't exist!");
+                return;
+            }
+            
             audioBuffer.put(ByteBufferUtils.getSlice(audioBufferAux, offset, size));
             audioBuffer.rewind();
         }
