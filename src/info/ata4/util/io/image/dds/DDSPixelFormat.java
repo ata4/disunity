@@ -9,9 +9,9 @@
  */
 package info.ata4.util.io.image.dds;
 
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
-import info.ata4.util.io.Struct;
+import info.ata4.io.DataInputReader;
+import info.ata4.io.DataOutputWriter;
+import info.ata4.io.Struct;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 

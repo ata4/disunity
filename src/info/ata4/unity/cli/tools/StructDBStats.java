@@ -9,12 +9,12 @@
  */
 package info.ata4.unity.cli.tools;
 
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
-import info.ata4.util.log.LogUtils;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

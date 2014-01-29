@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.cli.extract.handler.struct;
 
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
+import info.ata4.io.DataInputReader;
+import info.ata4.io.DataOutputWriter;
 import java.io.IOException;
 
 /**

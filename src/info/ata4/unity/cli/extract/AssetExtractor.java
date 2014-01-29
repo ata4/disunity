@@ -24,7 +24,7 @@ import info.ata4.unity.serdes.DeserializationException;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
-import info.ata4.util.io.ByteBufferUtils;
+import info.ata4.io.util.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.DirectoryStream;

@@ -9,6 +9,10 @@
  */
 package info.ata4.unity.asset;
 
+import info.ata4.io.DataInputReader;
+import info.ata4.io.DataOutputWriter;
+import info.ata4.io.file.FileHandler;
+import info.ata4.io.util.ByteBufferUtils;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
@@ -17,10 +21,6 @@ import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
-import info.ata4.util.io.ByteBufferUtils;
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
-import info.ata4.util.io.file.FileHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;

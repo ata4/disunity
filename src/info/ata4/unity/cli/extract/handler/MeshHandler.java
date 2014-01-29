@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.extract.handler;
 
+import info.ata4.io.DataInputReader;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
@@ -19,7 +20,6 @@ import info.ata4.unity.cli.extract.handler.struct.Vector4f;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.util.io.DataInputReader;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

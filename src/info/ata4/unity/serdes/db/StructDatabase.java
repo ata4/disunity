@@ -9,13 +9,13 @@
  */
 package info.ata4.unity.serdes.db;
 
+import info.ata4.io.DataInputReader;
+import info.ata4.io.DataOutputWriter;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.Pair;
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;

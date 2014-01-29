@@ -9,10 +9,10 @@
  */
 package info.ata4.unity.asset.struct;
 
+import info.ata4.io.DataInputReader;
+import info.ata4.io.DataOutputWriter;
+import info.ata4.io.Struct;
 import info.ata4.unity.util.ClassID;
-import info.ata4.util.io.DataInputReader;
-import info.ata4.util.io.DataOutputWriter;
-import info.ata4.util.io.Struct;
 import java.io.IOException;
 
 /**

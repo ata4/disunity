@@ -9,11 +9,11 @@
  */
 package info.ata4.unity.serdes;
 
+import info.ata4.io.DataInputReader;
+import info.ata4.io.util.ByteBufferUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.util.io.ByteBufferUtils;
-import info.ata4.util.io.DataInputReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
