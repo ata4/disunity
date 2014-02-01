@@ -23,14 +23,17 @@ import java.util.Objects;
  */
 public class AssetClassType implements Struct {
 
-    private Map<Integer, AssetFieldType> mapping = new LinkedHashMap<>();
+    private Map<Integer, AssetFieldType> typeTree = new LinkedHashMap<>();
     private String revision;
     private int version;
     private int format;
-    private boolean standalone = false;
+
+    public Map<Integer, AssetFieldType> getTypeTree() {
+        return typeTree;
+    }
     
-    public Map<Integer, AssetFieldType> getMapping() {
-        return mapping;
+    public boolean hasTypeTree() {
+        return !typeTree.isEmpty();
     }
     
     public String getRevision() {
@@ -56,14 +59,6 @@ public class AssetClassType implements Struct {
     public void setFormat(int format) {
         this.format = format;
     }
-    
-    public boolean isStandalone() {
-        return standalone;
-    }
-
-    public void setStandalone(boolean standalone) {
-        this.standalone = standalone;
-    }
 
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -85,7 +80,7 @@ public class AssetClassType implements Struct {
             AssetFieldType fn = new AssetFieldType();
             fn.read(in);
             
-            mapping.put(classID, fn);
+            typeTree.put(classID, fn);
         }
         
         // padding
@@ -107,11 +102,11 @@ public class AssetClassType implements Struct {
             out.setSwap(false);
         }
         
-        if (!standalone) {
-            int fields = mapping.size();
+        if (hasTypeTree()) {
+            int fields = typeTree.size();
             out.writeInt(fields);
 
-            for (Map.Entry<Integer, AssetFieldType> entry : mapping.entrySet()) {
+            for (Map.Entry<Integer, AssetFieldType> entry : typeTree.entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 
@@ -137,7 +132,7 @@ public class AssetClassType implements Struct {
             return false;
         }
         final AssetClassType other = (AssetClassType) obj;
-        if (!Objects.equals(this.mapping, other.mapping)) {
+        if (!Objects.equals(this.typeTree, other.typeTree)) {
             return false;
         }
         if (!Objects.equals(this.revision, other.revision)) {
@@ -155,7 +150,7 @@ public class AssetClassType implements Struct {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.mapping);
+        hash = 29 * hash + Objects.hashCode(this.typeTree);
         hash = 29 * hash + Objects.hashCode(this.revision);
         hash = 29 * hash + this.version;
         hash = 29 * hash + this.format;

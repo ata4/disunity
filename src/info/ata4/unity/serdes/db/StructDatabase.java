@@ -208,20 +208,17 @@ public class StructDatabase {
         for (Integer classID : classIDs) {
             AssetFieldType ft = ftm.get(classID, classType.getRevision(), false);
             if (ft != null) {
-                classType.getMapping().put(classID, ft);
+                classType.getTypeTree().put(classID, ft);
             }
         }
-        
-        // don't include the struct when saving
-        classType.setStandalone(true);
     }
     
     public int learn(AssetFile asset) {
         AssetClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (classType.isStandalone()) {
-            L.info("No structure data available");
+        if (classType.hasTypeTree()) {
+            L.info("No type tree available");
             return 0;
         }
         
@@ -236,7 +233,7 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            AssetFieldType fieldType = classType.getMapping().get(classID);
+            AssetFieldType fieldType = classType.getTypeTree().get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {

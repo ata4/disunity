@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Deserializer for asset objects.
+ * Deserializer for Unity objects.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
@@ -58,7 +58,7 @@ public class Deserializer {
 
         in = new SerializedInput(new DataInputReader(bbAsset));
         
-        Map<Integer, AssetFieldType> classMapping = asset.getClassType().getMapping();
+        Map<Integer, AssetFieldType> classMapping = asset.getClassType().getTypeTree();
         AssetFieldType classNode = classMapping.get(path.getClassID());
         
         if (classNode == null) {

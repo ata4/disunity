@@ -138,7 +138,7 @@ public class AssetFile extends FileHandler {
         }
         
         // try to get struct from database if the embedded one is empty
-        if (classType.getMapping().isEmpty()) {
+        if (classType.getTypeTree().isEmpty()) {
             L.info("Standalone asset file detected, using structure from database");
             StructDatabase.getInstance().fill(this);
         }

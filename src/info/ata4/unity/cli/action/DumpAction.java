@@ -99,15 +99,15 @@ public class DumpAction extends PrintAction {
     public void printStruct(AssetFile asset) {
         AssetClassType classType = asset.getClassType();
         
-        if (classType.isStandalone()) {
-            L.info("Structure data not embedded");
+        if (classType.hasTypeTree()) {
+            L.info("No type tree available");
             return;
         }
         
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            AssetFieldType classField = classType.getMapping().get(classID);
+            AssetFieldType classField = classType.getTypeTree().get(classID);
             
             // skip filtered classes
             ClassFilter cf = getClassFilter();

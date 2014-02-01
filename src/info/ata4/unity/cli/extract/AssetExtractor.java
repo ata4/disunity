@@ -210,7 +210,7 @@ public class AssetExtractor {
             subClassType.setRevision(classType.getRevision());
             subClassType.setVersion(-2);
             subClassType.setFormat(classType.getFormat());
-            subClassType.getMapping().put(path.getClassID(), classType.getMapping().get(path.getClassID()));
+            subClassType.getTypeTree().put(path.getClassID(), classType.getTypeTree().get(path.getClassID()));
 
             // create a byte buffer for the data area
             ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());
