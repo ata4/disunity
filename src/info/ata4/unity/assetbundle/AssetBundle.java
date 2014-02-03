@@ -46,7 +46,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         try (InputStream fis = Files.newInputStream(file)) {
             DataInputReader in = new DataInputReader(fis);
             AssetBundleHeader info = new AssetBundleHeader();
-            info.signature = in.readStringFixed(8);
+            info.setSignature(in.readStringFixed(8));
             return info.hasValidSignature();
         } catch (IOException ex) {
             return false;
@@ -55,7 +55,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     
     private ByteBuffer bb;
     private ByteBuffer bbData;
-    private AssetBundleHeader info;
+    private AssetBundleHeader header;
     private List<AssetBundleEntry> entries;
     
     @Override
@@ -64,14 +64,14 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         
         DataInputReader in = new DataInputReader(bb);
 
-        info = new AssetBundleHeader();
-        info.read(in);
+        header = new AssetBundleHeader();
+        header.read(in);
         
-        if (!info.hasValidSignature()) {
+        if (!header.hasValidSignature()) {
             throw new AssetException("Invalid signature");
         }
 
-        bb.position(info.dataOffset);
+        bb.position(header.getDataOffset());
 
         try (InputStream is = getDataInputStream()) {
             in = new DataInputReader(is);
@@ -96,11 +96,11 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     
     public InputStream getDataInputStream() throws IOException {
         ByteBuffer bbd = bb.duplicate();
-        bbd.position(info.dataOffset);
+        bbd.position(header.getDataOffset());
         
         InputStream is = new ByteBufferInputStream(bbd);
         
-        if (isCompressed()) {
+        if (header.isCompressed()) {
             is = new LzmaInputStream(is);
         }
         
@@ -109,12 +109,12 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     
     public ByteBuffer getDataByteBuffer() throws IOException {
         if (bbData == null) {
-            if (isCompressed()) {
+            if (header.isCompressed()) {
                 // may take a while to decompress it in-memory
                 L.log(Level.INFO, "Uncompressing {0}", getSourceFile().getFileName());
                 
                 // get uncompressed data size from LZMA headers
-                bb.position(info.dataOffset + 5);
+                bb.position(header.getDataOffset() + 5);
                 bb.order(ByteOrder.LITTLE_ENDIAN);
                 
                 long lzmaSize = bb.getLong();
@@ -131,7 +131,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
                 
                 bbData = ByteBuffer.allocateDirect((int) lzmaSize);
                 
-                bb.position(info.dataOffset);
+                bb.position(header.getDataOffset());
                 
                 // decompress data
                 InputStream is = new LzmaInputStream(new ByteBufferInputStream(bb));
@@ -141,27 +141,15 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
                 
                 bbData.rewind();
             } else {
-                bbData = ByteBufferUtils.getSlice(bb, info.dataOffset);
+                bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
             }
         }
 
         return bbData.duplicate();
     }
     
-    public boolean isCompressed() {
-        return info.isCompressed();
-    }
-    
-    public byte getFileVersion() {
-        return info.fileVersion;
-    }
-
-    public String getVersion() {
-        return info.version;
-    }
-
-    public String getRevision() {
-        return info.revision;
+    public AssetBundleHeader getHeader() {
+        return header;
     }
 
     public List<AssetBundleEntry> getEntries() {

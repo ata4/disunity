@@ -15,6 +15,7 @@ import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -79,10 +80,11 @@ public class InfoAction extends PrintAction {
 
     @Override
     public void processAssetBundle(AssetBundle bundle) throws IOException {
-        ps.println("File version: " + bundle.getFileVersion());
-        ps.println("Version: " + bundle.getVersion());
-        ps.println("Revision: " + bundle.getRevision());
-        ps.println("Compressed: " + (bundle.isCompressed() ? "yes" : "no"));
+        AssetBundleHeader header = bundle.getHeader();
+        ps.println("Format: " + header.getFormat());
+        ps.println("Player version: " + header.getPlayerVersion());
+        ps.println("Engine version: " + header.getEngineVersion());
+        ps.println("Compressed: " + (header.isCompressed() ? "yes" : "no"));
         ps.println("Entries: " + bundle.getEntries().size());
         ps.println();
     }

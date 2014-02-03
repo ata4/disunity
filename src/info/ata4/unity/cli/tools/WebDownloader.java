@@ -173,10 +173,10 @@ public class WebDownloader {
         ab.load(tmpFile);
         
         // create version sub-directory
-        String revision = ab.getRevision();
-        String versionDirName = revision.substring(0, 3);
+        String version = ab.getHeader().getEngineVersion().toString();
+        String versionDirName = version.substring(0, 3);
         
-        L.log(Level.INFO, "Revision: {0}", revision);
+        L.log(Level.INFO, "Revision: {0}", version);
         
         Path versionDir = baseDir.resolve(versionDirName);
         if (!Files.exists(versionDir)) {
