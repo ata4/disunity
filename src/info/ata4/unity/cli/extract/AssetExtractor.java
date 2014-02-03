@@ -207,7 +207,7 @@ public class AssetExtractor {
             subAsset.getPaths().add(subFieldPath);
             
             AssetClassType subClassType = subAsset.getClassType();
-            subClassType.setRevision(classType.getRevision());
+            subClassType.setEngineVersion(classType.getEngineVersion());
             subClassType.setVersion(-2);
             subClassType.setFormat(classType.getFormat());
             subClassType.getTypeTree().put(path.getClassID(), classType.getTypeTree().get(path.getClassID()));

@@ -56,7 +56,7 @@ public class InfoAction extends PrintAction {
         ps.println();
         
         ps.println("Serialized data");
-        ps.println("  Revision: " + classType.getRevision());
+        ps.println("  Revision: " + classType.getEngineVersion());
         ps.println("  Version: " + classType.getVersion());
         ps.println("  Type tree: " + (classType.hasTypeTree() ? "yes" : "no"));
         ps.println("  Objects: " + paths.size());

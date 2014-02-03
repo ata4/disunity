@@ -43,13 +43,14 @@ public class AssetFile extends FileHandler {
     
     private static final Logger L = Logger.getLogger(AssetFile.class.getName());
 
-    private ByteBuffer bbData;
-    private ByteBuffer bbAudio;
     private AssetHeader header = new AssetHeader();
     private AssetClassType classType = new AssetClassType();
     private AssetObjectPathTable objTable = new AssetObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
     private AssetBundle sourceBundle;
+    
+    private ByteBuffer bbData;
+    private ByteBuffer bbAudio;
     
     @Override
     public void open(Path file) throws IOException {

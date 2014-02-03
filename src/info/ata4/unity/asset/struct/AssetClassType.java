@@ -12,6 +12,7 @@ package info.ata4.unity.asset.struct;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
+import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,9 +25,9 @@ import java.util.Objects;
 public class AssetClassType implements Struct {
 
     private Map<Integer, AssetFieldType> typeTree = new LinkedHashMap<>();
-    private String revision;
-    private int version;
-    private int format;
+    private UnityVersion engineVersion;
+    private int treeVersion;
+    private int treeFormat;
 
     public Map<Integer, AssetFieldType> getTypeTree() {
         return typeTree;
@@ -36,40 +37,40 @@ public class AssetClassType implements Struct {
         return !typeTree.isEmpty();
     }
     
-    public String getRevision() {
-        return revision;
+    public UnityVersion getEngineVersion() {
+        return engineVersion;
     }
 
-    public void setRevision(String revision) {
-        this.revision = revision;
+    public void setEngineVersion(UnityVersion engineVersion) {
+        this.engineVersion = engineVersion;
     }
 
     public int getVersion() {
-        return version;
+        return treeVersion;
     }
 
     public void setVersion(int version) {
-        this.version = version;
+        this.treeVersion = version;
     }
     
     public int getFormat() {
-        return format;
+        return treeFormat;
     }
 
     public void setFormat(int format) {
-        this.format = format;
+        this.treeFormat = format;
     }
 
     @Override
     public void read(DataInputReader in) throws IOException {
         // revision/version for newer formats
-        if (format >= 7) {
-            revision = in.readStringNull(255);
-            version = in.readInt();
+        if (treeFormat >= 7) {
+            engineVersion = new UnityVersion(in.readStringNull(255));
+            treeVersion = in.readInt();
         }
         
         // older formats use big endian
-        if (format <= 5) {
+        if (treeFormat <= 5) {
             in.setSwap(false);
         }
         
@@ -84,7 +85,7 @@ public class AssetClassType implements Struct {
         }
         
         // padding
-        if (format >= 7) {
+        if (treeFormat >= 7) {
             in.readInt();
         }
     }
@@ -92,13 +93,13 @@ public class AssetClassType implements Struct {
     @Override
     public void write(DataOutputWriter out) throws IOException {
         // revision/version for newer formats
-        if (format >= 7) {
-            out.writeStringNull(revision);
-            out.writeInt(version);
+        if (treeFormat >= 7) {
+            out.writeStringNull(engineVersion.toString());
+            out.writeInt(treeVersion);
         }
         
         // older formats use big endian
-        if (format <= 5) {
+        if (treeFormat <= 5) {
             out.setSwap(false);
         }
         
@@ -118,7 +119,7 @@ public class AssetClassType implements Struct {
         }
         
         // padding
-        if (format >= 7) {
+        if (treeFormat >= 7) {
             out.writeInt(0);
         }
     }
@@ -135,13 +136,13 @@ public class AssetClassType implements Struct {
         if (!Objects.equals(this.typeTree, other.typeTree)) {
             return false;
         }
-        if (!Objects.equals(this.revision, other.revision)) {
+        if (!Objects.equals(this.engineVersion, other.engineVersion)) {
             return false;
         }
-        if (this.version != other.version) {
+        if (this.treeVersion != other.treeVersion) {
             return false;
         }
-        if (this.format != other.format) {
+        if (this.treeFormat != other.treeFormat) {
             return false;
         }
         return true;
@@ -151,9 +152,9 @@ public class AssetClassType implements Struct {
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + Objects.hashCode(this.typeTree);
-        hash = 29 * hash + Objects.hashCode(this.revision);
-        hash = 29 * hash + this.version;
-        hash = 29 * hash + this.format;
+        hash = 29 * hash + Objects.hashCode(this.engineVersion);
+        hash = 29 * hash + this.treeVersion;
+        hash = 29 * hash + this.treeFormat;
         return hash;
     }
 }

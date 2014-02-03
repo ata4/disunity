@@ -15,6 +15,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.util.ClassID;
+import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.collection.Pair;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -95,9 +96,9 @@ public class StructDatabase {
             DataInputReader in = new DataInputReader(bis);
 
             // read header
-            int version = in.readInt();
+            int dbVersion = in.readInt();
 
-            if (version != VERSION) {
+            if (dbVersion != VERSION) {
                 throw new RuntimeException("Wrong database version");
             }
 
@@ -111,12 +112,12 @@ public class StructDatabase {
                 fieldNodes.add(fieldNode);
             }
 
-            // read revision string table
-            int revisionSize = in.readInt();
-            List<String> revisions = new ArrayList<>(revisionSize);
+            // read version string table
+            int versionSize = in.readInt();
+            List<UnityVersion> versions = new ArrayList<>(versionSize);
 
-            for (int i = 0; i < revisionSize; i++) {
-                revisions.add(in.readStringNull());
+            for (int i = 0; i < versionSize; i++) {
+                versions.add(new UnityVersion(in.readStringNull()));
             }
 
             // read mapping data
@@ -126,10 +127,11 @@ public class StructDatabase {
                 int index = in.readInt();
                 int classID = in.readInt();
                 int revisionIndex = in.readInt();
-                String revision = revisions.get(revisionIndex);
+                
+                UnityVersion version = versions.get(revisionIndex);
                 AssetFieldType fieldNode = fieldNodes.get(index);
 
-                ftm.add(classID, revision, fieldNode);
+                ftm.add(classID, version, fieldNode);
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't read struct database", ex);
@@ -159,35 +161,35 @@ public class StructDatabase {
                 fieldNode.write(out);
             }
 
-            // write revision string table
-            Set<String> revisions = new HashSet<>();
-            Map<String, Integer> revisionMap = new HashMap<>();
+            // write version string table
+            Set<UnityVersion> versions = new HashSet<>();
+            Map<UnityVersion, Integer> versionMap = new HashMap<>();
 
-            for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
-                revisions.add(entry.getKey().getRight());
+            for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
+                versions.add(entry.getKey().getRight());
             }
 
-            out.writeInt(revisions.size());
+            out.writeInt(versions.size());
 
             index = 0;
-            for (String revision : revisions) {
-                revisionMap.put(revision, index++);
-                out.writeStringNull(revision);
+            for (UnityVersion version : versions) {
+                versionMap.put(version, index++);
+                out.writeStringNull(version.toString());
             }
 
             // write mapping data
             out.writeInt(ftm.entrySet().size());
 
-            for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
-                Pair<Integer, String> fieldNodeKey = entry.getKey();
+                Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
 
                 int classID = fieldNodeKey.getLeft();
-                String revision = fieldNodeKey.getRight();
+                UnityVersion version = fieldNodeKey.getRight();
 
                 out.writeInt(index);
                 out.writeInt(classID);
-                out.writeInt(revisionMap.get(revision));
+                out.writeInt(versionMap.get(version));
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't write struct database", ex);
@@ -200,13 +202,13 @@ public class StructDatabase {
         
         fixRevision(asset, classType);
         
-        if (classType.getRevision() == null) {
+        if (classType.getEngineVersion() == null) {
             L.warning("Revision = null");
             return;
         }
         
         for (Integer classID : classIDs) {
-            AssetFieldType ft = ftm.get(classID, classType.getRevision(), false);
+            AssetFieldType ft = ftm.get(classID, classType.getEngineVersion(), false);
             if (ft != null) {
                 classType.getTypeTree().put(classID, ft);
             }
@@ -224,7 +226,7 @@ public class StructDatabase {
         
         fixRevision(asset, classType);
         
-        if (classType.getRevision() == null) {
+        if (classType.getEngineVersion() == null) {
             L.warning("Revision = null");
             return 0;
         }
@@ -240,12 +242,12 @@ public class StructDatabase {
                 continue;
             }
             
-            AssetFieldType fieldTypeMapped = ftm.get(classID, classType.getRevision());
+            AssetFieldType fieldTypeMapped = ftm.get(classID, classType.getEngineVersion());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                ftm.add(classID, classType.getRevision(), fieldTypeMapped);
+                ftm.add(classID, classType.getEngineVersion(), fieldTypeMapped);
                 learnedNew++;
             }
 
@@ -278,8 +280,8 @@ public class StructDatabase {
     private void fixRevision(AssetFile asset, AssetClassType classType) {
         // older file formats don't contain the revision in the header, try to
         // get it from the asset bundle header instead
-        if (classType.getRevision() == null && asset.getSourceBundle() != null) {
-            classType.setRevision(asset.getSourceBundle().getHeader().getEngineVersion().toString());
+        if (classType.getEngineVersion() == null && asset.getSourceBundle() != null) {
+            classType.setEngineVersion(asset.getSourceBundle().getHeader().getEngineVersion());
         }
     }
 }

@@ -20,6 +20,7 @@ import info.ata4.unity.cli.extract.handler.struct.Vector4f;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,8 +60,9 @@ public class MeshHandler extends AssetExtractHandler {
         this.obj = obj;
         name = obj.getValue("m_Name");
         
-        if (!getAssetFile().getClassType().getRevision().startsWith("4")) {
-            // TODO
+        // TODO: support older mesh formats
+        UnityVersion version = getAssetFile().getClassType().getEngineVersion();
+        if (version.getMajor() != 4) {
             throw new UnsupportedOperationException("Unity 4 format is supported only");
         }
         

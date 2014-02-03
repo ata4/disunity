@@ -14,6 +14,7 @@ import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
+import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.collection.Pair;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,17 +38,17 @@ public class StructDBStats {
         
         FieldTypeMap ftm = StructDatabase.getInstance().getFieldTypeMap();
         Set<AssetFieldType> fieldNodes = new HashSet<>();
-        Set<String> revs = new TreeSet<>();
+        Set<UnityVersion> versions = new TreeSet<>();
         Set<Integer> classIDs = new TreeSet<>();
 
-        for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : ftm.entrySet()) {
-            revs.add(entry.getKey().getRight());
+        for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
+            versions.add(entry.getKey().getRight());
             classIDs.add(entry.getKey().getLeft());
             fieldNodes.add(entry.getValue());
         }
         
         L.log(Level.INFO, "Class IDs: {0}", classIDs.size());
-        L.log(Level.INFO, "Revisions: {0}", revs.size());
+        L.log(Level.INFO, "Versions: {0}", versions.size());
         L.log(Level.INFO, "Fields: {0}", fieldNodes.size());
         
         System.out.println();
@@ -63,7 +64,7 @@ public class StructDBStats {
         System.out.print(StringUtils.repeat("-----|", classIDs.size()));
         System.out.println();
         
-        for (String rev : revs) {
+        for (UnityVersion rev : versions) {
             System.out.print(rev);
             System.out.print(" |");
             

@@ -9,17 +9,19 @@
  */
 package info.ata4.unity.util;
 
+import java.util.Objects;
+
 /**
  * Unity engine version string container.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityVersion {
+public class UnityVersion implements Comparable<UnityVersion> {
     
     private byte major;
     private byte minor;
     private byte patch;
-    private String revision;
+    private String build;
     private String raw;
     
     public UnityVersion(String version) {
@@ -27,7 +29,7 @@ public class UnityVersion {
             major = partFromString(version.substring(0, 1));
             minor = partFromString(version.substring(2, 3));
             patch = partFromString(version.substring(4, 5));
-            revision = version.substring(5);
+            build = version.substring(5);
         } catch (NumberFormatException | IndexOutOfBoundsException ex) {
             // invalid format, save raw string
             raw = version;
@@ -78,12 +80,12 @@ public class UnityVersion {
         this.patch = patch;
     }
 
-    public String getRevision() {
-        return revision;
+    public String getBuild() {
+        return build;
     }
 
-    public void setRevision(String revision) {
-        this.revision = revision;
+    public void setBuild(String build) {
+        this.build = build;
     }
     
     @Override
@@ -92,7 +94,82 @@ public class UnityVersion {
             return raw;
         } else {
             return String.format("%s.%s.%s%s", partToString(major),
-                    partToString(minor), partToString(patch), revision);
+                    partToString(minor), partToString(patch), build);
         }
     }
+    
+    @Override
+    public int hashCode() {
+        if (raw != null) {
+            return raw.hashCode();
+        } else {
+            int hash = 5;
+            hash = 97 * hash + this.major;
+            hash = 97 * hash + this.minor;
+            hash = 97 * hash + this.patch;
+            hash = 97 * hash + Objects.hashCode(this.build);
+            return hash;
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UnityVersion other = (UnityVersion) obj;
+        if (raw != null) {
+            if (!Objects.equals(this.raw, other.raw)) {
+                return false;
+            }
+        } else {
+            if (this.major != other.major) {
+                return false;
+            }
+            if (this.minor != other.minor) {
+                return false;
+            }
+            if (this.patch != other.patch) {
+                return false;
+            }
+            if (!Objects.equals(this.build, other.build)) {
+                return false;
+            }
+            if (!Objects.equals(this.raw, other.raw)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(UnityVersion that) {
+        if (!this.isValid() && !that.isValid()) {
+            return this.raw.compareTo(that.raw);
+        }
+
+        if (this.major < that.major) {
+            return 1;
+        } else if (this.major > that.major) {
+            return -1;
+        } else {
+            if (this.minor < that.minor) {
+                return 1;
+            } else if (this.minor > that.minor) {
+                return -1;
+            } else {
+                if (this.patch < that.patch) {
+                    return 1;
+                } else if (this.patch > that.patch) {
+                    return -1;
+                } else {
+                    return this.build.compareTo(that.build);
+                }
+            }
+        }
+    }
+
 }

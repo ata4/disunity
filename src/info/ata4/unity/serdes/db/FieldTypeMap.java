@@ -10,6 +10,7 @@
 package info.ata4.unity.serdes.db;
 
 import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.collection.Pair;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,65 +21,60 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeMap extends HashMap<Pair<Integer, String>, AssetFieldType> {
+public class FieldTypeMap extends HashMap<Pair<Integer, UnityVersion>, AssetFieldType> {
     
     private static final Logger L = Logger.getLogger(FieldTypeMap.class.getName());
 
-    public AssetFieldType get(int classID, String revision) {
+    public AssetFieldType get(int classID, UnityVersion revision) {
         return get(classID, revision, true);
     }
 
-    public AssetFieldType get(int classID, String revision, boolean strict) {
-        AssetFieldType fieldNode = get(new Pair<>(classID, revision));
+    public AssetFieldType get(int classID, UnityVersion version, boolean strict) {
+        AssetFieldType fieldNode = get(new Pair<>(classID, version));
 
         // if set to strict, only return exact matches or null
         if (fieldNode != null || strict) {
             return fieldNode;
         }
 
-        // try a similar revision and ignore the patch number
-        String revision2 = revision.substring(0, 3);
-        String revision3 = revision.substring(0, 1);
-
         AssetFieldType fieldNodeB = null;
-        String revisionB = null;
+        UnityVersion versionB = null;
 
         AssetFieldType fieldNodeC = null;
-        String revisionC = null;
+        UnityVersion versionC = null;
 
-
-        for (Map.Entry<Pair<Integer, String>, AssetFieldType> entry : entrySet()) {
-            Pair<Integer, String> fieldNodeKey = entry.getKey();
+        for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : entrySet()) {
+            Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
             if (fieldNodeKey.getLeft() == classID) {
                 AssetFieldType fieldNodeEntry = entry.getValue();
-                String revisionEntry = fieldNodeKey.getRight();
+                UnityVersion revisionEntry = fieldNodeKey.getRight();
 
-                // if major and minor version matches, it will probably work
-                if (fieldNodeKey.getRight().startsWith(revision2)) {
-                    return fieldNodeEntry;
-                }
-
-                // suboptimal choice
-                if (fieldNodeKey.getRight().startsWith(revision3)) {
-                    fieldNodeB = fieldNodeEntry;
-                    revisionB = revisionEntry;
+                if (revisionEntry.getMajor() == version.getMajor()) {
+                    if (revisionEntry.getMinor() == version.getMinor()) {
+                        // if major and minor versions match, it will probably work
+                        return fieldNodeEntry;
+                    } else {
+                        // suboptimal choice
+                        fieldNodeB = fieldNodeEntry;
+                        versionB = revisionEntry;
+                    }
                 }
 
                 // worst choice
                 fieldNodeC = fieldNodeEntry;
-                revisionC = revisionEntry;
+                versionC = revisionEntry;
             }
         }
 
         // return less perfect match
         if (fieldNodeB != null) {
-            L.log(Level.WARNING, "Unprecise match for ClassID {0} (expected: {1}, available: {2})", new Object[]{classID, revision, revisionB});
+            L.log(Level.WARNING, "Unprecise match for ClassID {0} (required: {1}, available: {2})", new Object[]{classID, version, versionB});
             return fieldNodeB;
         }
 
         // return field node from any revision as the very last resort
         if (fieldNodeC != null) {
-            L.log(Level.WARNING, "Bad match for ClassID {0} (expected: {1}, available: {2})", new Object[]{classID, revision, revisionC});
+            L.log(Level.WARNING, "Bad match for ClassID {0} (required: {1}, available: {2})", new Object[]{classID, version, versionC});
             return fieldNodeC;
         }
 
@@ -86,7 +82,7 @@ public class FieldTypeMap extends HashMap<Pair<Integer, String>, AssetFieldType>
         return null;
     }
 
-    public void add(int classID, String revision, AssetFieldType fieldNode) {
+    public void add(int classID, UnityVersion revision, AssetFieldType fieldNode) {
         put(new Pair<>(classID, revision), fieldNode);
     }
 }
