@@ -14,6 +14,8 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -41,7 +43,7 @@ public class AssetBundleHeader implements Struct {
     // engine version string
     private UnityVersion versionEngine;
     
-    // size of the whole file, most of the time
+    // equals file size most of the time, not sure what this is for
     private int fileSize;
     
     // offset to the bundle data or size of the bundle header
@@ -52,6 +54,16 @@ public class AssetBundleHeader implements Struct {
     
     // number of asset files?
     private int assets2;
+    
+    // mapping between compressed and uncompressed offsets, one per asset.
+    // seems to be redundant, maybe used for partial decompression?
+    public Map<Integer, Integer> offsetMap;
+    
+    // always equal to file size?
+    private int fileSize2;
+    
+    // typically ranges between 0 and 255
+    private int unknown;
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -71,6 +83,21 @@ public class AssetBundleHeader implements Struct {
         assets2 = in.readInt();
         
         assert assets1 == assets2 || assets1 == 1;
+        
+        offsetMap = new LinkedHashMap<>();
+        for (int i = 0; i < assets2; i++) {
+            offsetMap.put(in.readInt(), in.readInt());
+        }
+        
+        if (versionEngine.greaterThan(new UnityVersion("2.6.0"))) {
+            fileSize2 = in.readInt();
+        }
+        
+        if (versionEngine.greaterThan(new UnityVersion("3.5.0"))) {
+            unknown = in.readInt();
+        }
+        
+        in.readByte();
     }
 
     @Override
@@ -116,14 +143,6 @@ public class AssetBundleHeader implements Struct {
 
     public void setEngineVersion(UnityVersion revision) {
         this.versionEngine = revision;
-    }
-
-    public int getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
     }
 
     public int getDataOffset() {

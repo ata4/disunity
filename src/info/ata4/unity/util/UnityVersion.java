@@ -172,4 +172,11 @@ public class UnityVersion implements Comparable<UnityVersion> {
         }
     }
 
+    public boolean lesserThan(UnityVersion that) {
+        return this.compareTo(that) == 1;
+    }
+    
+    public boolean greaterThan(UnityVersion that) {
+        return this.compareTo(that) == -1;
+    }
 }
