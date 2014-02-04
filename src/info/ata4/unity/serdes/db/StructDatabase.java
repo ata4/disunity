@@ -219,7 +219,7 @@ public class StructDatabase {
         AssetClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (classType.hasTypeTree()) {
+        if (!classType.hasTypeTree()) {
             L.info("No type tree available");
             return 0;
         }

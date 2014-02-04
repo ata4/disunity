@@ -99,7 +99,7 @@ public class DumpAction extends PrintAction {
     public void printStruct(AssetFile asset) {
         AssetClassType classType = asset.getClassType();
         
-        if (classType.hasTypeTree()) {
+        if (!classType.hasTypeTree()) {
             L.info("No type tree available");
             return;
         }
