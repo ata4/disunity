@@ -148,7 +148,7 @@ public class MeshHandler extends AssetExtractHandler {
  
         long vertexCount = vertexDataObj.getValue("m_VertexCount");
         
-        DataInputReader in = new DataInputReader(vertexBuffer);
+        DataInputReader in = DataInputReader.newReader(vertexBuffer);
         
         for (Object stream : streams.getList()) {
             UnityObject streamObj = (UnityObject) stream;
@@ -297,8 +297,8 @@ public class MeshHandler extends AssetExtractHandler {
         ps.printf("usemtl %s_%d\n", name, subMeshIndex);
 
         try {
-            DataInputReader in = new DataInputReader(indexBuffer);
-            indexBuffer.position((int) firstByte);
+            DataInputReader in = DataInputReader.newReader(indexBuffer);
+            in.position((int) firstByte);
 
             for (int i = 0; i < indexCount / 3; i++) {
                 int i1 = in.readUnsignedShort() + 1;

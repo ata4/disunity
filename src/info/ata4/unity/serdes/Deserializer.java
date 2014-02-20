@@ -56,7 +56,7 @@ public class Deserializer {
             }
         }
 
-        in = new SerializedInput(new DataInputReader(bbAsset));
+        in = new SerializedInput(DataInputReader.newReader(bbAsset));
         
         Map<Integer, AssetFieldType> classMapping = asset.getClassType().getTypeTree();
         AssetFieldType classNode = classMapping.get(path.getClassID());

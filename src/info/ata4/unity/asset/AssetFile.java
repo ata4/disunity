@@ -98,7 +98,7 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
-        DataInputReader in = new DataInputReader(bb);
+        DataInputReader in = DataInputReader.newReader(bb);
         
         header.read(in);
         
@@ -154,7 +154,7 @@ public class AssetFile extends FileHandler {
         
         // build struct info
         ByteArrayOutputStream bosStruct = new ByteArrayOutputStream();
-        DataOutputWriter outStruct = new DataOutputWriter(bosStruct);
+        DataOutputWriter outStruct = DataOutputWriter.newWriter(bosStruct);
         outStruct.setSwap(true);
         
         classType.setFormat(header.getFormat());
@@ -181,7 +181,7 @@ public class AssetFile extends FileHandler {
         
         // open file
         ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.getFileSize());
-        DataOutputWriter out = new DataOutputWriter(bb);
+        DataOutputWriter out = DataOutputWriter.newWriter(bb);
         
         // write header
         header.write(out);

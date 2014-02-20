@@ -93,7 +93,7 @@ public class StructDatabase {
         }
 
         try (BufferedInputStream bis = new BufferedInputStream(is)) {
-            DataInputReader in = new DataInputReader(bis);
+            DataInputReader in = DataInputReader.newReader(bis);
 
             // read header
             int dbVersion = in.readInt();
@@ -144,7 +144,7 @@ public class StructDatabase {
         // write database file
         File dbFile = new File(FILENAME);
         try (BufferedOutputStream bos = new BufferedOutputStream(FileUtils.openOutputStream(dbFile))) {
-            DataOutputWriter out = new DataOutputWriter(bos);
+            DataOutputWriter out = DataOutputWriter.newWriter(bos);
             
             // write header
             out.writeInt(VERSION);

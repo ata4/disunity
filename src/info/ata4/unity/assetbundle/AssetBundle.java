@@ -43,8 +43,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     
     public static boolean isAssetBundle(Path file) {
         // check signature of the file
-        try (InputStream fis = Files.newInputStream(file)) {
-            DataInputReader in = new DataInputReader(fis);
+        try (DataInputReader in = DataInputReader.newReader(file)) {
             AssetBundleHeader info = new AssetBundleHeader();
             info.setSignature(in.readStringFixed(8));
             return info.hasValidSignature();
@@ -62,7 +61,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     public void load(ByteBuffer bb) throws IOException {
         this.bb = bb;
         
-        DataInputReader in = new DataInputReader(bb);
+        DataInputReader in = DataInputReader.newReader(bb);
 
         header = new AssetBundleHeader();
         header.read(in);
@@ -74,7 +73,7 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         bb.position(header.getDataOffset());
 
         try (InputStream is = getDataInputStream()) {
-            in = new DataInputReader(is);
+            in = DataInputReader.newReader(is);
 
             int files = in.readInt();
             entries = new ArrayList<>(files);

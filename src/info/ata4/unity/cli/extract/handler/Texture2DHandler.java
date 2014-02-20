@@ -220,7 +220,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
-        DataOutputWriter out = new DataOutputWriter(bbTex);
+        DataOutputWriter out = DataOutputWriter.newWriter(bbTex);
         header.write(out);
         
         // write data
@@ -305,7 +305,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                     bbTga.order(ByteOrder.LITTLE_ENDIAN);
 
                     // write TGA header
-                    DataOutputWriter out = new DataOutputWriter(bbTga);
+                    DataOutputWriter out = DataOutputWriter.newWriter(bbTga);
                     header.write(out);
 
                     // write image data
@@ -570,7 +570,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         ByteBuffer bb = ByteBuffer.allocateDirect(imageSizeTotal);
         
         // write header
-        header.write(new DataOutputWriter(bb));
+        header.write(DataOutputWriter.newWriter(bb));
         
         int mipMapWidth = header.pixelWidth;
         int mipMapHeight = header.pixelHeight;
