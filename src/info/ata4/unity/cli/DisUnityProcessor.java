@@ -24,8 +24,11 @@ import info.ata4.unity.cli.action.StatsAction;
 import info.ata4.unity.cli.action.UnbundleAction;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +41,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class DisUnityProcessor implements Runnable {
+public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
 
     private static final Logger L = Logger.getLogger(DisUnityProcessor.class.getName());
     private static final Map<String, Action> COMMANDS;
@@ -88,24 +91,27 @@ public class DisUnityProcessor implements Runnable {
             }
             
             if (Files.isDirectory(file)) {
-                L.log(Level.WARNING, "File {0} is a directory", file);
-                continue;
-            }
-            
-            try {
-                if (AssetBundle.isAssetBundle(file)) {
-                    processAssetBundle(file);
-                } else {
-                    if (action.supportsAssets()) {
-                        processAsset(file);
-                    } else {
-                        L.log(Level.WARNING,
-                                "Command \"{0}\" doesn''t support asset files, skipping {1}",
-                                new Object[]{settings.getCommand(), file.getFileName()});
-                    }
+                try {
+                    Files.walkFileTree(file, this);
+                } catch (Exception ex) {
+                    L.log(Level.SEVERE, "Can't search directory " + file, ex);
                 }
-            } catch (Exception ex) {
-                L.log(Level.SEVERE, "Can't process " + file, ex);
+            } else {
+                try {
+                    if (AssetBundle.isAssetBundle(file)) {
+                        processAssetBundle(file);
+                    } else {
+                        if (action.supportsAssets()) {
+                            processAsset(file);
+                        } else {
+                            L.log(Level.WARNING,
+                                    "Command \"{0}\" doesn''t support asset files, skipping {1}",
+                                    new Object[]{settings.getCommand(), file.getFileName()});
+                        }
+                    }
+                } catch (Exception ex) {
+                    L.log(Level.SEVERE, "Can't process " + file, ex);
+                }
             }
         }
         
@@ -235,5 +241,29 @@ public class DisUnityProcessor implements Runnable {
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't process " + name, ex);
         }
+    }
+
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        if (AssetBundle.isAssetBundle(file)) {
+            processAssetBundle(file);
+        }
+        return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        L.log(Level.SEVERE, "Can't process " + file, exc);
+        return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        return FileVisitResult.CONTINUE;
     }
 }
