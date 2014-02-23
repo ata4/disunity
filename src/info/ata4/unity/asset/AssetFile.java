@@ -55,7 +55,8 @@ public class AssetFile extends FileHandler {
     @Override
     public void open(Path file) throws IOException {
         // split asset files can't be opened conveniently using memory mapping
-        if (file.getFileName().endsWith(".split0")) {
+        String fileName = file.getFileName().toString();  
+        if (fileName.endsWith(".split0")) {
             load(file);
         } else {
             super.open(file);
