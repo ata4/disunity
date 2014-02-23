@@ -51,13 +51,23 @@ public class Texture2DHandler extends AssetExtractHandler {
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
         this.path = path;
 
-        // create Texture2D from serialized object
-        tex = new Texture2D();
-        
         try {
-            tex.read(obj);
+            // create Texture2D from serialized object
+            tex = new Texture2D(obj);
         } catch (RuntimeException ex) {
-            L.log(Level.WARNING, "Texture2D {0}: {1}", new Object[]{tex.name, ex.getMessage()});
+            L.log(Level.WARNING, "Texture2D " + tex.name + ": Deserialization error", ex);
+            return;
+        }
+        
+        if (tex.textureFormat == null) {
+            L.log(Level.WARNING, "Texture2D {0}: Unknown texture format {1}",
+                    new Object[] {tex.name, tex.textureFormatOrd});
+            return;
+        }
+
+        // some textures (font textures?) don't have any image data, not sure why...
+        if (tex.imageBuffer.capacity() == 0) {
+            L.log(Level.WARNING, "Texture2D {0}: Empty image buffer", tex.name);
             return;
         }
         
@@ -605,6 +615,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         int width;
         int height;
         int completeImageSize;
+        int textureFormatOrd;
         TextureFormat textureFormat;
         boolean mipMap;
         boolean isReadable;
@@ -615,18 +626,15 @@ public class Texture2DHandler extends AssetExtractHandler {
         int colorSpace;
         ByteBuffer imageBuffer;
         
-        void read(UnityObject obj) {
+        Texture2D(UnityObject obj) {
             name = obj.getValue("m_Name");
             width = obj.getValue("m_Width");
             height = obj.getValue("m_Height");
             completeImageSize = obj.getValue("m_CompleteImageSize");
             
-            int textureFormatOrd = obj.getValue("m_TextureFormat");
+            textureFormatOrd = obj.getValue("m_TextureFormat");
             textureFormat = TextureFormat.fromOrdinal(textureFormatOrd);
-            if (textureFormat == null) {
-                throw new RuntimeException("Unknown texture format " + textureFormatOrd);
-            }
-            
+
             mipMap = obj.getValue("m_MipMap");
             isReadable = obj.getValue("m_IsReadable");
             readAllowed = obj.getValue("m_ReadAllowed");
@@ -638,11 +646,6 @@ public class Texture2DHandler extends AssetExtractHandler {
             UnityBuffer imageData = obj.getValue("image data");
             imageBuffer = imageData.getBuffer();
             imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            
-            // some textures (font textures?) don't have any image data, not sure why...
-            if (imageBuffer.capacity() == 0) {
-                throw new RuntimeException("Empty image buffer");
-            }
         }
     }
 }
