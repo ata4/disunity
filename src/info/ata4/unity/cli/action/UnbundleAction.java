@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.cli.action;
 
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
-import info.ata4.io.util.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;

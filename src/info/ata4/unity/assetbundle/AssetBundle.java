@@ -9,11 +9,11 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.ByteBufferInputStream;
-import info.ata4.io.ByteBufferOutputStream;
 import info.ata4.io.DataInputReader;
+import info.ata4.io.buffer.ByteBufferInputStream;
+import info.ata4.io.buffer.ByteBufferOutputStream;
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.util.ByteBufferUtils;
 import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import java.io.IOException;
@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
