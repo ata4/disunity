@@ -10,7 +10,7 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.io.DataInputReader;
-import info.ata4.io.util.ByteBufferUtils;
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.asset.struct.AssetObjectPath;
