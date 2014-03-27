@@ -12,7 +12,7 @@ package info.ata4.unity.asset;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.util.ByteBufferUtils;
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;

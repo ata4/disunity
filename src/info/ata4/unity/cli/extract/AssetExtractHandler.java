@@ -12,7 +12,7 @@ package info.ata4.unity.cli.extract;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.io.util.ByteBufferUtils;
+import info.ata4.io.buffer.ByteBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
