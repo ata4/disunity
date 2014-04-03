@@ -33,7 +33,7 @@ public class AssetBundleHeader implements Struct {
     // 3 in Unity 3.5 and 4
     // 2 in Unity 2.6 to 3.4
     // 1 in Unity 1 to 2.5
-    private byte format;
+    private int format;
     
     // player version string
     // 2.x.x for Unity 2
@@ -67,13 +67,8 @@ public class AssetBundleHeader implements Struct {
     
     @Override
     public void read(DataInputReader in) throws IOException {
-        signature = in.readStringFixed(8);
-        
-        // padding bytes presumably
-        int dummy = in.readInt();
-        assert dummy == 0;
-        
-        format = in.readByte();
+        signature = in.readStringNull();
+        format = in.readInt();
         versionPlayer = new UnityVersion(in.readStringNull(255));
         versionEngine = new UnityVersion(in.readStringNull(255));
         fileSize = in.readInt();
@@ -121,7 +116,7 @@ public class AssetBundleHeader implements Struct {
         this.signature = signature;
     }
 
-    public byte getFormat() {
+    public int getFormat() {
         return format;
     }
 
