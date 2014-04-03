@@ -14,6 +14,10 @@ import info.ata4.unity.DisUnity;
 import info.ata4.unity.cli.classfilter.SimpleClassFilter;
 import info.ata4.unity.util.ClassID;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
@@ -33,9 +37,6 @@ public class DisUnityCli {
     
     private static final Logger L = Logger.getLogger(DisUnityCli.class.getName());
     
-    private final DisUnityProcessor disunity;
-    private Options opts;
-    
     /**
      * @param args the command line arguments
      */
@@ -46,8 +47,7 @@ public class DisUnityCli {
         
         try {
             DisUnityProcessor disunity = new DisUnityProcessor();
-            DisUnityCli cli = new DisUnityCli(disunity);
-            if (cli.configure(args)) {
+            if (configure(disunity.getSettings(), args)) {
                 disunity.run();
             }
         } catch (Throwable t) {
@@ -55,22 +55,9 @@ public class DisUnityCli {
         }
     }
 
-    public DisUnityCli(DisUnityProcessor disunity) {
-        this.disunity = disunity;
-    }
+    public static boolean configure(DisUnitySettings settings, String[] args) {
+        Options opts = new Options();
 
-    public boolean configure(String[] args) {
-        opts = new Options();
-        
-        Option optHelp = new Option("h", "help", false, "Print this help.");
-        opts.addOption(optHelp);
-        
-        Option optCmd = new Option("c", null, true, null);
-        optCmd.setDescription("Processing command. Available commands:\n" + DisUnityProcessor.getCommands());
-        optCmd.setArgs(1);
-        optCmd.setArgName("cmd");
-        opts.addOption(optCmd);
-        
         Option optClassFilter = new Option("f", null);
         optClassFilter.setDescription("Only process objects that use these classes. Expects a string with class names, separated by commas.");
         optClassFilter.setArgs(1);
@@ -81,23 +68,13 @@ public class DisUnityCli {
         opts.addOption(optVerbose);
 
         try {
-            if (args.length == 0) {
-                printUsage();
+            if (args.length < 2) {
+                printUsage(opts);
                 return false;
             }
             
             CommandLineParser parser = new PosixParser();
             CommandLine cl = parser.parse(opts, args);
-            DisUnitySettings settings = disunity.getSettings();
-            
-            if (cl.hasOption(optHelp.getOpt())) {
-                printUsage();
-                return false;
-            }
-            
-            if (cl.hasOption(optCmd.getOpt())) {
-                settings.setCommand(cl.getOptionValue(optCmd.getOpt()));
-            }
             
             if (cl.hasOption(optClassFilter.getOpt())) {
                 String value = cl.getOptionValue(optClassFilter.getOpt());
@@ -129,8 +106,13 @@ public class DisUnityCli {
                 LogUtils.configure(Level.ALL);
             }
             
+            Deque<String> leftArgs = new ArrayDeque(cl.getArgList());
+            
+            // first argument is the command
+            settings.setCommand(leftArgs.pop());
+            
             // add remaining arguments as files
-            for (String leftArg : cl.getArgs()) {
+            for (String leftArg : leftArgs) {
                 settings.getFiles().add(Paths.get(leftArg));
             }
         } catch (ParseException ex) {
@@ -144,9 +126,15 @@ public class DisUnityCli {
     /**
      * Prints application usage.
      */
-    private void printUsage() {
+    private static void printUsage(Options opts) {
         HelpFormatter clHelp = new HelpFormatter();
         clHelp.setWidth(100);
-        clHelp.printHelp("disunity <options> [file]...", opts);
+        clHelp.printHelp("disunity <options> [command] [file]...", opts);
+        System.out.println();
+        System.out.println("Available commands:");
+        Set<String> cmds = new TreeSet<>(DisUnityProcessor.getCommands());
+        for (String cmd : cmds) {
+            System.out.println(" " + cmd);
+        }
     }
 }
