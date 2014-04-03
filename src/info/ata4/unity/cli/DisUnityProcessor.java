@@ -134,7 +134,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         AssetBundle ab = new AssetBundle();
         
         try {
-            ab.load(file);
+            ab.open(file);
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't load " + file, ex);
             return;
