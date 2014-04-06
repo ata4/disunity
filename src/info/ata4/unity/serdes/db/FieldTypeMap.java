@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.serdes.db;
 
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.collection.Pair;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class FieldTypeMap extends HashMap<Pair<Integer, UnityVersion>, AssetFieldType> {
     
-    private static final Logger L = Logger.getLogger(FieldTypeMap.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     public AssetFieldType get(int classID, UnityVersion revision) {
         return get(classID, revision, true);

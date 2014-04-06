@@ -11,8 +11,9 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
-import info.ata4.io.file.FileHandler;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.io.file.FileHandler;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetObjectPath;
@@ -41,7 +42,7 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class AssetFile extends FileHandler {
     
-    private static final Logger L = Logger.getLogger(AssetFile.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     private AssetHeader header = new AssetHeader();
     private AssetClassType classType = new AssetClassType();

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class UnbundleAction extends Action {
     
-    private static final Logger L = Logger.getLogger(UnbundleAction.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     @Override
     public boolean supportsAssets() {

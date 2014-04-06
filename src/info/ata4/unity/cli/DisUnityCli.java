@@ -35,7 +35,7 @@ import org.apache.commons.cli.PosixParser;
  */
 public class DisUnityCli {
     
-    private static final Logger L = Logger.getLogger(DisUnityCli.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     /**
      * @param args the command line arguments

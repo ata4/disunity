@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.util;
 
+import info.ata4.log.LogUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -26,7 +27,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class ClassID {
     
-    private static final Logger L = Logger.getLogger(ClassID.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     private static final String CLASSID_PATH = "/resources/classid.txt";
     private static final String CHARSET = "ASCII";
     

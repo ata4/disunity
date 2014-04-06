@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli;
 
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
@@ -43,7 +44,7 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
 
-    private static final Logger L = Logger.getLogger(DisUnityProcessor.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     private static final Map<String, Action> COMMANDS;
     
     static {

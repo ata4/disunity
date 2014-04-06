@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class MovieTextureHandler extends AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(MovieTextureHandler.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {

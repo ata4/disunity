@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.action;
 
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetFieldType;
@@ -34,7 +35,7 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class DumpAction extends PrintAction {
     
-    private static final Logger L = Logger.getLogger(DumpAction.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     private static final String INDENT_STRING = "  ";
     
     private boolean dumpStructs;

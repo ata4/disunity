@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class MeshHandler extends AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(MeshHandler.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     private ByteBuffer indexBuffer;
     private ByteBuffer vertexBuffer;

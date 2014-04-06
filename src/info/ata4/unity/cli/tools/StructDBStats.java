@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class StructDBStats {
     
-    private static final Logger L = Logger.getLogger(StructDBStats.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     public static void main(String[] args) {
         LogUtils.configure();

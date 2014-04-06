@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class LearnAction extends Action {
 
-    private static final Logger L = Logger.getLogger(LearnAction.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     @Override
     public boolean supportsAssets() {

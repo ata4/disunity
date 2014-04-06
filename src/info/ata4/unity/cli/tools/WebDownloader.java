@@ -46,7 +46,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class WebDownloader {
     
-    private static final Logger L = Logger.getLogger(WebDownloader.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     private static final Pattern UNITY3D_FILE_PATTERN = Pattern.compile("\"([^\"]+.unity3d)\"");
     private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0";
 

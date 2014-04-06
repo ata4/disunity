@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.action;
 
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetRef;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class FixReferencesAction extends Action {
     
-    private static final Logger L = Logger.getLogger(FixReferencesAction.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     @Override
     public boolean supportsAssets() {

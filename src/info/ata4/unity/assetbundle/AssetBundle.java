@@ -14,6 +14,7 @@ import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import java.io.IOException;
@@ -38,7 +39,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntry> {
     
-    private static final Logger L = Logger.getLogger(AssetBundle.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     public static boolean isAssetBundle(Path file) {
         // check signature of the file

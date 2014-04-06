@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class DeserializeTest {
     
-    private static final Logger L = Logger.getLogger(DeserializeTest.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     private int objTested;
     private int objFailed;

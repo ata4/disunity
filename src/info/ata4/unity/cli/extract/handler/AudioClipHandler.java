@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class AudioClipHandler extends AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(AudioClipHandler.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     private static final Map<AudioType, String> AUDIO_EXT;
     

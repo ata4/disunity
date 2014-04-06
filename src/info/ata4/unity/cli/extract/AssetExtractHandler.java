@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract;
 
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.serdes.UnityObject;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  */
 public abstract class AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(AssetExtractHandler.class.getName());
+    private static final Logger L = LogUtils.getLogger();
 
     private AssetFile asset;
     private Path extractDir;

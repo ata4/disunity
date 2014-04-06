@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  */
 public class AssetExtractor {
     
-    private static final Logger L = Logger.getLogger(AssetExtractor.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     /**
      * Tries to get the name of an object by deserializing it and looking for

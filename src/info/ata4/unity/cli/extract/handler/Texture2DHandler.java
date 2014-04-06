@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class Texture2DHandler extends AssetExtractHandler {
     
-    private static final Logger L = Logger.getLogger(Texture2DHandler.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     
     private AssetObjectPath path;
     private Texture2D tex;

@@ -41,7 +41,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class StructDatabase {
     
-    private static final Logger L = Logger.getLogger(StructDatabase.class.getName());
+    private static final Logger L = LogUtils.getLogger();
     private static final int VERSION = 1;
     private static final String FILENAME = "structdb.dat";
     
