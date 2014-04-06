@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.io.DataInputReader;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;

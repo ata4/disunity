@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract;
 
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetObjectPath;

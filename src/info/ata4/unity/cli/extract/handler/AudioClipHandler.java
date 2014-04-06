@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.AudioType;
