@@ -50,7 +50,7 @@ public class AssetBundleHeader implements Struct {
     private int dataOffset;
     
     // equal to assets2 or 1
-    private int assets1;
+    private int assets;
     
     // number of asset files?
     private int assets2;
@@ -62,8 +62,8 @@ public class AssetBundleHeader implements Struct {
     // always equal to file size?
     private int fileSize2;
     
-    // typically ranges between 0 and 255
-    private int unknown;
+    // offset of the first asset file within the data area?
+    private int firstOffset;
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -74,10 +74,10 @@ public class AssetBundleHeader implements Struct {
         fileSize = in.readInt();
         dataOffset = in.readInt();
         
-        assets1 = in.readInt();
+        assets = in.readInt();
         assets2 = in.readInt();
         
-        assert assets1 == assets2 || assets1 == 1;
+        assert assets == assets2 || assets == 1;
         
         offsetMap = new LinkedHashMap<>();
         for (int i = 0; i < assets2; i++) {
@@ -89,7 +89,7 @@ public class AssetBundleHeader implements Struct {
         }
         
         if (versionEngine.greaterThan(new UnityVersion("3.5.0"))) {
-            unknown = in.readInt();
+            firstOffset = in.readInt();
         }
         
         in.readByte();
@@ -149,11 +149,11 @@ public class AssetBundleHeader implements Struct {
     }
 
     public int getAssetCount1() {
-        return assets1;
+        return assets;
     }
 
     public void setAssetCount1(int assets1) {
-        this.assets1 = assets1;
+        this.assets = assets1;
     }
 
     public int getAssetCount2() {
