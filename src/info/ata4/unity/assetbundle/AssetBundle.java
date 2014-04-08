@@ -11,15 +11,14 @@ package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
-import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
+import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
@@ -27,10 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.contrapunctus.lzma.LzmaInputStream;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Reader for Unity asset bundles.
@@ -45,27 +42,27 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         // check signature of the file
         try (DataInputReader in = DataInputReader.newReader(file)) {
             AssetBundleHeader info = new AssetBundleHeader();
-            info.setSignature(in.readStringFixed(8));
+            info.setSignature(in.readStringNull());
             return info.hasValidSignature();
         } catch (IOException ex) {
             return false;
         }
     }
     
-    private ByteBuffer bb;
+    private ByteBuffer bbFile;
     private ByteBuffer bbData;
     private AssetBundleHeader header;
     private List<AssetBundleEntry> entries;
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
-        this.bb = bb;
+        this.bbFile = bb;
         
         DataInputReader in = DataInputReader.newReader(bb);
 
         header = new AssetBundleHeader();
         header.read(in);
-        
+
         if (!header.hasValidSignature()) {
             throw new AssetException("Invalid signature");
         }
@@ -94,53 +91,25 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
     }
     
     public InputStream getDataInputStream() throws IOException {
-        ByteBuffer bbd = bb.duplicate();
-        bbd.position(header.getDataOffset());
+        ByteBuffer bb = bbFile.duplicate();
+        bb.position(header.getDataOffset());
         
-        InputStream is = new ByteBufferInputStream(bbd);
+        InputStream is = new ByteBufferInputStream(bb);
         
         if (header.isCompressed()) {
-            is = new LzmaInputStream(is);
+            return new LzmaInputStream(is);
+        } else {
+            return is;
         }
-        
-        return is;
     }
     
     public ByteBuffer getDataByteBuffer() throws IOException {
         if (bbData == null) {
             if (header.isCompressed()) {
-                // may take a while to decompress it in-memory
-                L.log(Level.INFO, "Uncompressing {0}", getSourceFile().getFileName());
-                
-                // get uncompressed data size from LZMA headers
-                bb.position(header.getDataOffset() + 5);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-                
-                long lzmaSize = bb.getLong();
-                if (lzmaSize < 0) {
-                    throw new IOException("Invalid LZMA size");
-                }
-                
-                // in theory, entries can be larger than 2GB and break memory
-                // mapping using one single buffer, although that would be a bit
-                // ridiculous for typical Unity web games
-                if (lzmaSize > Integer.MAX_VALUE) {
-                    throw new IOException("Entry is too large for direct decompression");
-                }
-                
-                bbData = ByteBuffer.allocateDirect((int) lzmaSize);
-                
-                bb.position(header.getDataOffset());
-                
-                // decompress data
-                InputStream is = new LzmaInputStream(new ByteBufferInputStream(bb));
-                OutputStream os = new ByteBufferOutputStream(bbData);
-                
-                IOUtils.copy(is, os);
-                
-                bbData.rewind();
+                bbFile.order(ByteOrder.LITTLE_ENDIAN);
+                bbData = LzmaBufferUtils.decode(bbFile);
             } else {
-                bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
+                bbData = ByteBufferUtils.getSlice(bbFile, header.getDataOffset());
             }
         }
 
