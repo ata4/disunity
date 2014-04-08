@@ -12,7 +12,6 @@ package info.ata4.unity.cli;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.cli.action.Action;
 import info.ata4.unity.cli.action.DumpAction;
 import info.ata4.unity.cli.action.ExtractAction;
@@ -22,9 +21,11 @@ import info.ata4.unity.cli.action.LearnAction;
 import info.ata4.unity.cli.action.ListAction;
 import info.ata4.unity.cli.action.SplitAction;
 import info.ata4.unity.cli.action.StatsAction;
-import info.ata4.unity.cli.action.UnbundleAction;
+import info.ata4.unity.cli.action.BundleExtractAction;
+import info.ata4.unity.cli.action.BundleListAction;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -60,7 +61,8 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         commands.put("learn", new LearnAction());
         commands.put("list", new ListAction(out));
         commands.put("split", new SplitAction());
-        commands.put("unbundle", new UnbundleAction());
+        commands.put("bundle-extract", new BundleExtractAction());
+        commands.put("bundle-list", new BundleListAction(out));
         COMMANDS = Collections.unmodifiableMap(commands);
     }
     
@@ -161,8 +163,8 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             return;
         }
         
-        for (AssetBundleEntry entry : ab) {
-            String name = entry.getName();
+        for (Map.Entry<String, ByteBuffer> entry : ab.getEntries().entrySet()) {
+            String name = entry.getKey();
 
             // skip libraries
             if (name.endsWith(".dll") || name.endsWith(".mdb")) {
@@ -173,8 +175,10 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             if (name.equals("33Obf")) {
                 continue;
             }
+            
+            ByteBuffer bb = entry.getValue();
 
-            processAssetInBundle(entry);
+            processAssetInBundle(ab, name, bb);
         }
     }
     
@@ -221,26 +225,26 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         }
     }
     
-    private void processAssetInBundle(AssetBundleEntry entry) {
-        String name = entry.getBundle().getSourceFile().getFileName() + ":" + entry.getName();
-        String nameFull = entry.getBundle().getSourceFile() + ":" + entry.getName();
+    private void processAssetInBundle(AssetBundle ab, String name, ByteBuffer bb) {
+        String filePath = ab.getSourceFile() + ":" + name;
+        String fileName = ab.getSourceFile().getFileName() + ":" + name;
         AssetFile asset = new AssetFile();
         
         try {
-            asset.load(entry.getByteBuffer());
+            asset.load(bb);
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't load " + nameFull, ex);
+            L.log(Level.SEVERE, "Can't load " + filePath, ex);
             return;
         }
         
-        asset.setSourceBundle(entry.getBundle());
+        asset.setSourceBundle(ab);
         
-        L.log(Level.INFO, "Processing {0}", name);
+        L.log(Level.INFO, "Processing {0}", fileName);
         
         try {
             action.processAsset(asset);
         } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + name, ex);
+            L.log(Level.SEVERE, "Can't process " + filePath, ex);
         }
     }
 

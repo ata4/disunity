@@ -12,11 +12,11 @@ package info.ata4.unity.cli.action;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.assetbundle.AssetBundleEntry;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnbundleAction extends Action {
+public class BundleExtractAction extends Action {
     
     private static final Logger L = LogUtils.getLogger();
 
@@ -45,9 +45,9 @@ public class UnbundleAction extends Action {
 
     @Override
     public void processAssetBundle(AssetBundle bundle) throws IOException {
-        for (AssetBundleEntry entry : bundle.getEntries()) {
-            String entryName = entry.getName();
-            ByteBuffer entryBuffer = entry.getByteBuffer();
+        for (Map.Entry<String, ByteBuffer> entry : bundle.getEntries().entrySet()) {
+            String entryName = entry.getKey();
+            ByteBuffer entryBuffer = entry.getValue();
             
             L.log(Level.INFO, "Extracting {0}", entryName);
             

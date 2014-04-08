@@ -13,11 +13,12 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.serdes.Deserializer;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,9 +58,9 @@ public class DeserializeTest {
             AssetBundle ab = new AssetBundle();
             ab.load(file);
             
-            for (AssetBundleEntry entry : ab.getEntries()) {
+            for (Map.Entry<String, ByteBuffer> entry : ab.getEntries().entrySet()) {
                 AssetFile asset = new AssetFile();
-                asset.load(entry.getByteBuffer());
+                asset.load(entry.getValue());
                 testAsset(asset);
             }
         } else {

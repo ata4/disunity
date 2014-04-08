@@ -10,31 +10,27 @@
 package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataInputReader;
-import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.AssetException;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
+import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.contrapunctus.lzma.LzmaInputStream;
 
 /**
  * Reader for Unity asset bundles.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntry> {
+public class AssetBundle extends FileHandler {
     
     private static final Logger L = LogUtils.getLogger();
     
@@ -49,39 +45,44 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         }
     }
     
-    private ByteBuffer bbFile;
-    private ByteBuffer bbData;
-    private AssetBundleHeader header;
-    private List<AssetBundleEntry> entries;
+    private AssetBundleHeader header = new AssetBundleHeader();
+    private Map<String, ByteBuffer> entries = new LinkedHashMap<>();
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
-        this.bbFile = bb;
-        
         DataInputReader in = DataInputReader.newReader(bb);
 
-        header = new AssetBundleHeader();
         header.read(in);
 
+        // check signature
         if (!header.hasValidSignature()) {
-            throw new AssetException("Invalid signature");
+            throw new AssetBundleException("Invalid signature");
         }
 
         bb.position(header.getDataOffset());
+        
+        ByteBuffer bbData;
+        
+        // uncompress bundle if required
+        if (isCompressed()) {
+            L.log(Level.INFO, "Uncompressing {0}, this may take a while", getSourceFile().getFileName());
+            bb.order(ByteOrder.LITTLE_ENDIAN);
+            bbData = LzmaBufferUtils.decode(bb);
+            bbData.order(ByteOrder.BIG_ENDIAN);
+        } else {
+            bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
+        }
 
-        try (InputStream is = getDataInputStream()) {
-            in = DataInputReader.newReader(is);
+        in = DataInputReader.newReader(bbData);
 
-            int files = in.readInt();
-            entries = new ArrayList<>(files);
-
-            for (int i = 0; i < files; i++) {
-                AssetBundleEntry entry = new AssetBundleEntry(this);
-                entry.setName(in.readStringNull(255));
-                entry.setOffset(in.readInt());
-                entry.setLength(in.readInt());
-                entries.add(entry);
-            }
+        // add stored entries
+        int files = in.readInt();
+        for (int i = 0; i < files; i++) {
+            String name = in.readStringNull();
+            int offset = in.readInt();
+            int length = in.readInt();
+            ByteBuffer bbEntry = ByteBufferUtils.getSlice(bbData, offset, length);
+            entries.put(name, bbEntry);
         }
     }
 
@@ -90,42 +91,39 @@ public class AssetBundle extends FileHandler implements Iterable<AssetBundleEntr
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public InputStream getDataInputStream() throws IOException {
-        ByteBuffer bb = bbFile.duplicate();
-        bb.position(header.getDataOffset());
-        
-        InputStream is = new ByteBufferInputStream(bb);
-        
-        if (header.isCompressed()) {
-            return new LzmaInputStream(is);
-        } else {
-            return is;
-        }
+    public Map<String, ByteBuffer> getEntries() {
+        return entries;
+    }
+
+    public int getFormat() {
+        return header.getFormat();
     }
     
-    public ByteBuffer getDataByteBuffer() throws IOException {
-        if (bbData == null) {
-            if (header.isCompressed()) {
-                bbFile.order(ByteOrder.LITTLE_ENDIAN);
-                bbData = LzmaBufferUtils.decode(bbFile);
-            } else {
-                bbData = ByteBufferUtils.getSlice(bbFile, header.getDataOffset());
-            }
-        }
+    public void setFormat(byte format) {
+        header.setFormat(format);
+    }
 
-        return bbData.duplicate();
+    public UnityVersion getPlayerVersion() {
+        return header.getPlayerVersion();
     }
     
-    public AssetBundleHeader getHeader() {
-        return header;
+    public void setPlayerVersion(UnityVersion version) {
+        header.setPlayerVersion(version);
     }
 
-    public List<AssetBundleEntry> getEntries() {
-        return Collections.unmodifiableList(entries);
+    public UnityVersion getEngineVersion() {
+        return header.getEngineVersion();
+    }
+    
+    public void setEngineVersion(UnityVersion revision) {
+        header.setEngineVersion(revision);
     }
 
-    @Override
-    public Iterator<AssetBundleEntry> iterator() {
-        return getEntries().iterator();
+    public boolean isCompressed() {
+        return header.getSignature().equals(AssetBundleHeader.SIGNATURE_WEB);
+    }
+    
+    public void setCompressed(boolean compressed) {
+        header.setSignature(compressed ? AssetBundleHeader.SIGNATURE_WEB : AssetBundleHeader.SIGNATURE_RAW);
     }
 }

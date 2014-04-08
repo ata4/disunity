@@ -282,7 +282,7 @@ public class StructDatabase {
         // older file formats don't contain the revision in the header, try to
         // get it from the asset bundle header instead
         if (classType.getEngineVersion() == null && asset.getSourceBundle() != null) {
-            classType.setEngineVersion(asset.getSourceBundle().getHeader().getEngineVersion());
+            classType.setEngineVersion(asset.getSourceBundle().getEngineVersion());
         }
     }
 }

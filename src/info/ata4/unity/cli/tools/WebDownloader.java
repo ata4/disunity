@@ -173,7 +173,7 @@ public class WebDownloader {
         ab.load(tmpFile);
         
         // create version sub-directory
-        String version = ab.getHeader().getEngineVersion().toString();
+        String version = ab.getEngineVersion().toString();
         String versionDirName = version.substring(0, 3);
         
         L.log(Level.INFO, "Revision: {0}", version);

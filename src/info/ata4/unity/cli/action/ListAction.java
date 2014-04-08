@@ -11,8 +11,6 @@ package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
@@ -36,7 +34,7 @@ public class ListAction extends PrintAction {
 
     @Override
     public boolean supportsAssetBundes() {
-        return true;
+        return false;
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ListAction extends PrintAction {
         ps.print(" | ");
         ps.print(StringUtils.rightPad("Offset", p4));
         ps.print(" | ");
-        ps.print(StringUtils.leftPad("Length", p5));
+        ps.print(StringUtils.leftPad("Size", p5));
         ps.print(" | ");
         ps.print(StringUtils.rightPad("Object name", p6));
         ps.println();
@@ -99,36 +97,6 @@ public class ListAction extends PrintAction {
             ps.print(StringUtils.leftPad(String.valueOf(path.getLength()), p5));
             ps.print(" | ");
             ps.print(name);
-            ps.println();
-        }
-    }
-
-    @Override
-    public void processAssetBundle(AssetBundle bundle) {
-        int p1 = 64;
-        int p2 = 10;
-        int p3 = 10;
-        
-        ps.print(StringUtils.rightPad("Path", p1));
-        ps.print(" | ");
-        ps.print(StringUtils.rightPad("Offset", p2));
-        ps.print(" | ");
-        ps.print(StringUtils.leftPad("Length", p3));
-        ps.println();
-        
-        ps.print(StringUtils.repeat("-", p1));
-        ps.print(" | ");
-        ps.print(StringUtils.repeat("-", p2));
-        ps.print(" | ");
-        ps.print(StringUtils.repeat("-", p3));
-        ps.println();
-        
-        for (AssetBundleEntry entry : bundle) {
-            ps.print(StringUtils.rightPad(entry.getName(), p1));
-            ps.print(" | ");
-            ps.print(StringUtils.rightPad(String.format("0x%x", entry.getOffset()), p2));
-            ps.print(" | ");
-            ps.print(StringUtils.leftPad(String.valueOf(entry.getSize()), p3));
             ps.println();
         }
     }
