@@ -47,11 +47,15 @@ public class LzmaBufferUtils {
         ByteBuffer bbu = ByteBuffer.allocateDirect((int) lzmaSize);
         
         LzmaDecoder dec = new LzmaDecoder();
-        dec.setDecoderProperties(lzmaProps);
+        if (!dec.setDecoderProperties(lzmaProps)) {
+            throw new IOException("Invalid LZMA props");
+        }
         
         InputStream is = new ByteBufferInputStream(bbc);
         OutputStream os = new ByteBufferOutputStream(bbu);
-        dec.code(is, os, lzmaSize);
+        if (!dec.code(is, os, lzmaSize)) {
+            throw new IOException("LZMA decoding error");
+        }
         
         bbu.flip();
         bbu.order(bb.order());
@@ -66,8 +70,12 @@ public class LzmaBufferUtils {
         bbc.order(ByteOrder.LITTLE_ENDIAN);
         
         LzmaEncoder enc = new LzmaEncoder();
-        enc.setLcLpPb(lc, lp, pb);
-        enc.setDictionarySize(dictSize);
+        if (!enc.setLcLpPb(lc, lp, pb)) {
+            throw new IOException("Invalid LZMA props");
+        }
+        if (!enc.setDictionarySize(dictSize)) {
+            throw new IOException("Invalid dictionary size");
+        }
         enc.setEndMarkerMode(true);
         
         bbc.put(enc.getCoderProperties());
