@@ -18,7 +18,6 @@ import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,6 +46,7 @@ public class AssetBundle extends FileHandler {
     
     private AssetBundleHeader header = new AssetBundleHeader();
     private Map<String, ByteBuffer> entries = new LinkedHashMap<>();
+    private boolean compressed = false;
     
     @Override
     public void load(ByteBuffer bb) throws IOException {
@@ -58,23 +58,19 @@ public class AssetBundle extends FileHandler {
         if (!header.hasValidSignature()) {
             throw new AssetBundleException("Invalid signature");
         }
+        
+        compressed = header.getSignature().equals(AssetBundleHeader.SIGNATURE_WEB);
 
-        bb.position(header.getDataOffset());
+        ByteBuffer bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
         
-        ByteBuffer bbData;
-        
-        // uncompress bundle if required
+        // uncompress bundle data if required
         if (isCompressed()) {
             L.log(Level.INFO, "Uncompressing {0}, this may take a while", getSourceFile().getFileName());
-            bb.order(ByteOrder.LITTLE_ENDIAN);
-            bbData = LzmaBufferUtils.decode(bb);
-            bbData.order(ByteOrder.BIG_ENDIAN);
-        } else {
-            bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
+            bbData = LzmaBufferUtils.decode(bbData);
         }
 
         in = DataInputReader.newReader(bbData);
-
+        
         // add stored entries
         int files = in.readInt();
         for (int i = 0; i < files; i++) {
@@ -120,10 +116,10 @@ public class AssetBundle extends FileHandler {
     }
 
     public boolean isCompressed() {
-        return header.getSignature().equals(AssetBundleHeader.SIGNATURE_WEB);
+        return compressed;
     }
     
     public void setCompressed(boolean compressed) {
-        header.setSignature(compressed ? AssetBundleHeader.SIGNATURE_WEB : AssetBundleHeader.SIGNATURE_RAW);
+        this.compressed = compressed;
     }
 }
