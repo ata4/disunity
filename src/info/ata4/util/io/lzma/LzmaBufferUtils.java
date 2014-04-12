@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 
@@ -29,10 +30,13 @@ public class LzmaBufferUtils {
     }
     
     public static ByteBuffer decode(ByteBuffer bb) throws IOException {
-        byte[] lzmaProps = new byte[5];
-        bb.get(lzmaProps);
+        ByteBuffer bbc = bb.duplicate();
+        bbc.order(ByteOrder.LITTLE_ENDIAN);
         
-        long lzmaSize = bb.getLong();
+        byte[] lzmaProps = new byte[5];
+        bbc.get(lzmaProps);
+        
+        long lzmaSize = bbc.getLong();
 
         if (lzmaSize < 0) {
             throw new IOException("Invalid LZMA size");
@@ -41,23 +45,25 @@ public class LzmaBufferUtils {
         }
         
         ByteBuffer bbu = ByteBuffer.allocateDirect((int) lzmaSize);
-        bbu.order(bb.order());
         
         LzmaDecoder dec = new LzmaDecoder();
         dec.setDecoderProperties(lzmaProps);
         
-        InputStream is = new ByteBufferInputStream(bb);
+        InputStream is = new ByteBufferInputStream(bbc);
         OutputStream os = new ByteBufferOutputStream(bbu);
         dec.code(is, os, lzmaSize);
         
         bbu.flip();
+        bbu.order(bb.order());
         
         return bbu;
     }
     
     public static ByteBuffer encode(ByteBuffer bb, int lc, int lp, int pb, int dictSize) throws IOException {
-        ByteBuffer bbc = ByteBuffer.allocateDirect(bb.limit() + 13);
-        bbc.order(bb.order());
+        ByteBuffer bbu = bb.duplicate();
+ 
+        ByteBuffer bbc = ByteBuffer.allocateDirect(bbu.limit() + 13);
+        bbc.order(ByteOrder.LITTLE_ENDIAN);
         
         LzmaEncoder enc = new LzmaEncoder();
         enc.setLcLpPb(lc, lp, pb);
@@ -65,13 +71,14 @@ public class LzmaBufferUtils {
         enc.setEndMarkerMode(true);
         
         bbc.put(enc.getCoderProperties());
-        bbc.putLong(bb.limit());
+        bbc.putLong(bbu.limit());
         
-        InputStream is = new ByteBufferInputStream(bb);
+        InputStream is = new ByteBufferInputStream(bbu);
         OutputStream os = new ByteBufferOutputStream(bbc);
         enc.code(is, os);
         
         bbc.flip();
+        bbc.order(bb.order());
         
         return bbc;
     }
