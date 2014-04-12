@@ -12,6 +12,7 @@ package info.ata4.unity.assetbundle;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
+import info.ata4.io.util.ObjectToString;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import info.ata4.unity.util.UnityVersion;
@@ -59,8 +60,10 @@ public class AssetBundle extends FileHandler {
             throw new AssetBundleException("Invalid signature");
         }
         
+        // check compression flag in the signature
         compressed = header.getSignature().equals(AssetBundleHeader.SIGNATURE_WEB);
 
+        // get buffer slice for bundle data
         ByteBuffer bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
         
         // uncompress bundle data if required
@@ -69,9 +72,8 @@ public class AssetBundle extends FileHandler {
             bbData = LzmaBufferUtils.decode(bbData);
         }
 
+        // read bundle entries
         in = DataInputReader.newReader(bbData);
-        
-        // add stored entries
         int files = in.readInt();
         for (int i = 0; i < files; i++) {
             String name = in.readStringNull();
