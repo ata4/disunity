@@ -43,27 +43,25 @@ public class AssetBundleHeader implements Struct {
     // engine version string
     private UnityVersion versionEngine;
     
-    // equals file size most of the time, not sure what this is for
-    private int fileSize;
+    // equal to file size, except for some rare cases
+    private int fileSize1;
     
     // offset to the bundle data or size of the bundle header
     private int dataOffset;
     
-    // equal to assets2 or 1
-    private int assets;
-    
-    // number of asset files?
-    private int assets2;
+    // equal to 1 or number of levelX + mainData assets
+    private int unknown1;
     
     // mapping between compressed and uncompressed offsets, one per asset.
     // seems to be redundant, maybe used for partial decompression?
-    public Map<Integer, Integer> offsetMap;
+    private Map<Integer, Integer> offsetMap = new LinkedHashMap<>();
     
-    // always equal to file size?
+    // equal to file size, sometimes equal to uncompressed data size without the header
     private int fileSize2;
     
-    // offset of the first asset file within the data area?
-    private int firstOffset;
+    // offset to the first asset file within the data area? equals compressed
+    // file size if fileSize2 contains the uncompressed data size
+    private int unknown3;
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -71,25 +69,25 @@ public class AssetBundleHeader implements Struct {
         format = in.readInt();
         versionPlayer = new UnityVersion(in.readStringNull(255));
         versionEngine = new UnityVersion(in.readStringNull(255));
-        fileSize = in.readInt();
+        fileSize1 = in.readInt();
         dataOffset = in.readInt();
         
-        assets = in.readInt();
-        assets2 = in.readInt();
+        unknown1 = in.readInt();
+        int assets = in.readInt();
         
-        assert assets == assets2 || assets == 1;
+        assert unknown1 == assets || unknown1 == 1;
         
-        offsetMap = new LinkedHashMap<>();
-        for (int i = 0; i < assets2; i++) {
+        for (int i = 0; i < assets; i++) {
             offsetMap.put(in.readInt(), in.readInt());
         }
         
-        if (versionEngine.greaterThan(new UnityVersion("2.6.0"))) {
+        if (format >= 2) {
             fileSize2 = in.readInt();
+            assert fileSize1 <= fileSize2;
         }
         
-        if (versionEngine.greaterThan(new UnityVersion("3.5.0"))) {
-            firstOffset = in.readInt();
+        if (format >= 3) {
+            unknown3 = in.readInt();
         }
         
         in.readByte();
@@ -97,7 +95,30 @@ public class AssetBundleHeader implements Struct {
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        out.writeStringNull(signature);
+        out.writeInt(format);
+        out.writeStringNull(versionPlayer.toString());
+        out.writeStringNull(versionEngine.toString());
+        out.writeInt(fileSize1);
+        out.writeInt(dataOffset);
+        
+        out.writeInt(unknown1);
+        out.writeInt(offsetMap.entrySet().size());
+        
+        for (Map.Entry<Integer, Integer> offset : offsetMap.entrySet()) {
+            out.writeInt(offset.getKey());
+            out.writeInt(offset.getValue());
+        }
+        
+        if (format >= 2) {
+            out.writeInt(fileSize2);
+        }
+        
+        if (format >= 3) {
+            out.writeInt(unknown3);
+        }
+        
+        out.writeByte(0);
     }
     
     public boolean hasValidSignature() {
@@ -142,21 +163,5 @@ public class AssetBundleHeader implements Struct {
 
     public void setDataOffset(int dataOffset) {
         this.dataOffset = dataOffset;
-    }
-
-    public int getAssetCount1() {
-        return assets;
-    }
-
-    public void setAssetCount1(int assets1) {
-        this.assets = assets1;
-    }
-
-    public int getAssetCount2() {
-        return assets2;
-    }
-
-    public void setAssetCount2(int assets2) {
-        this.assets2 = assets2;
     }
 }
