@@ -13,9 +13,10 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
+import info.ata4.util.collection.Pair;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -54,14 +55,14 @@ public class AssetBundleHeader implements Struct {
     
     // mapping between compressed and uncompressed offsets, one per asset.
     // seems to be redundant, maybe used for partial decompression?
-    private Map<Integer, Integer> offsetMap = new LinkedHashMap<>();
+    private List<Pair<Integer, Integer>> offsetMap = new ArrayList<>();
     
     // equal to file size, sometimes equal to uncompressed data size without the header
     private int fileSize2;
     
     // offset to the first asset file within the data area? equals compressed
     // file size if fileSize2 contains the uncompressed data size
-    private int unknown3;
+    private int unknown2;
     
     @Override
     public void read(DataInputReader in) throws IOException {
@@ -78,7 +79,7 @@ public class AssetBundleHeader implements Struct {
         assert unknown1 == assets || unknown1 == 1;
         
         for (int i = 0; i < assets; i++) {
-            offsetMap.put(in.readInt(), in.readInt());
+            offsetMap.add(new Pair(in.readInt(), in.readInt()));
         }
         
         if (format >= 2) {
@@ -87,7 +88,7 @@ public class AssetBundleHeader implements Struct {
         }
         
         if (format >= 3) {
-            unknown3 = in.readInt();
+            unknown2 = in.readInt();
         }
         
         in.readByte();
@@ -103,11 +104,11 @@ public class AssetBundleHeader implements Struct {
         out.writeInt(dataOffset);
         
         out.writeInt(unknown1);
-        out.writeInt(offsetMap.entrySet().size());
+        out.writeInt(offsetMap.size());
         
-        for (Map.Entry<Integer, Integer> offset : offsetMap.entrySet()) {
-            out.writeInt(offset.getKey());
-            out.writeInt(offset.getValue());
+        for (Pair<Integer, Integer> offset : offsetMap) {
+            out.writeInt(offset.getLeft());
+            out.writeInt(offset.getRight());
         }
         
         if (format >= 2) {
@@ -115,7 +116,7 @@ public class AssetBundleHeader implements Struct {
         }
         
         if (format >= 3) {
-            out.writeInt(unknown3);
+            out.writeInt(unknown2);
         }
         
         out.writeByte(0);
