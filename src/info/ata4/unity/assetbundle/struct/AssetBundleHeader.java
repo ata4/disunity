@@ -13,10 +13,9 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.collection.Pair;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -28,7 +27,7 @@ public class AssetBundleHeader implements Struct {
     public static final String SIGNATURE_RAW = "UnityRaw";
     
     // UnityWeb or UnityRaw
-    private String signature = SIGNATURE_WEB;
+    private String signature;
     
     // file version
     // 3 in Unity 3.5 and 4
@@ -44,80 +43,61 @@ public class AssetBundleHeader implements Struct {
     // engine version string
     private UnityVersion versionEngine;
     
-    // always equal to file size?
-    private int fileSize1;
+    // equals file size most of the time, not sure what this is for
+    private int fileSize;
     
-    // offset to the bundle data
+    // offset to the bundle data or size of the bundle header
     private int dataOffset;
     
-    // either 1 or number of chunks
-    private int unknown1;
+    // equal to assets2 or 1
+    private int assets;
     
-    // list of chunk sizes, paired as compressed and uncompressed
-    private List<Pair<Integer, Integer>> chunkSizes = new ArrayList<>();
+    // number of asset files?
+    private int assets2;
+    
+    // mapping between compressed and uncompressed offsets, one per asset.
+    // seems to be redundant, maybe used for partial decompression?
+    public Map<Integer, Integer> offsetMap;
     
     // always equal to file size?
     private int fileSize2;
     
     // offset of the first asset file within the data area?
-    private int unknown2;
+    private int firstOffset;
     
     @Override
     public void read(DataInputReader in) throws IOException {
         signature = in.readStringNull();
         format = in.readInt();
-        versionPlayer = new UnityVersion(in.readStringNull());
-        versionEngine = new UnityVersion(in.readStringNull());
-        fileSize1 = in.readInt();
+        versionPlayer = new UnityVersion(in.readStringNull(255));
+        versionEngine = new UnityVersion(in.readStringNull(255));
+        fileSize = in.readInt();
         dataOffset = in.readInt();
         
-        unknown1 = in.readInt();
-        int chunks = in.readInt();
+        assets = in.readInt();
+        assets2 = in.readInt();
         
-        assert unknown1 == chunks || unknown1 == 1;
+        assert assets == assets2 || assets == 1;
         
-        for (int i = 0; i < chunks; i++) {
-            chunkSizes.add(new Pair(in.readInt(), in.readInt()));
+        offsetMap = new LinkedHashMap<>();
+        for (int i = 0; i < assets2; i++) {
+            offsetMap.put(in.readInt(), in.readInt());
         }
         
-        if (format >= 2) {
+        if (versionEngine.greaterThan(new UnityVersion("2.6.0"))) {
             fileSize2 = in.readInt();
         }
         
-        if (format >= 3) {
-            unknown2 = in.readInt();
+        if (versionEngine.greaterThan(new UnityVersion("3.5.0"))) {
+            firstOffset = in.readInt();
         }
         
-        byte b = in.readByte();
-        assert b == 0;
+        in.readByte();
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        out.writeStringNull(signature);
-        out.writeInt(format);
-        out.writeStringNull(versionPlayer.toString());
-        out.writeStringNull(versionEngine.toString());
-        out.writeInt(fileSize1);
-        out.writeInt(dataOffset);
-        
-        out.writeInt(unknown1);
-        out.writeInt(chunkSizes.size());
-        
-        for (Pair<Integer, Integer> chunk : chunkSizes) {
-            out.writeInt(chunk.getLeft());
-            out.writeInt(chunk.getRight());
-        }
-        
-        if (format >= 2) {
-            out.writeInt(fileSize2);
-        }
-        
-        if (format >= 3) {
-            out.writeInt(unknown2);
-        }
-        
-        out.writeByte(0);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     public boolean hasValidSignature() {
@@ -162,5 +142,21 @@ public class AssetBundleHeader implements Struct {
 
     public void setDataOffset(int dataOffset) {
         this.dataOffset = dataOffset;
+    }
+
+    public int getAssetCount1() {
+        return assets;
+    }
+
+    public void setAssetCount1(int assets1) {
+        this.assets = assets1;
+    }
+
+    public int getAssetCount2() {
+        return assets2;
+    }
+
+    public void setAssetCount2(int assets2) {
+        this.assets2 = assets2;
     }
 }
