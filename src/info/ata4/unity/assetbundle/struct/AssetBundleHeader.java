@@ -53,8 +53,7 @@ public class AssetBundleHeader implements Struct {
     // equal to 1 or number of levelX + mainData assets
     private int unknown1;
     
-    // mapping between compressed and uncompressed offsets, one per asset.
-    // seems to be redundant, maybe used for partial decompression?
+    // list of compressed and uncompressed offsets
     private List<Pair<Integer, Integer>> offsetMap = new ArrayList<>();
     
     // equal to file size, sometimes equal to uncompressed data size without the header
@@ -68,8 +67,8 @@ public class AssetBundleHeader implements Struct {
     public void read(DataInputReader in) throws IOException {
         signature = in.readStringNull();
         format = in.readInt();
-        versionPlayer = new UnityVersion(in.readStringNull(255));
-        versionEngine = new UnityVersion(in.readStringNull(255));
+        versionPlayer = new UnityVersion(in.readStringNull());
+        versionEngine = new UnityVersion(in.readStringNull());
         fileSize1 = in.readInt();
         dataOffset = in.readInt();
         
@@ -164,5 +163,41 @@ public class AssetBundleHeader implements Struct {
 
     public void setDataOffset(int dataOffset) {
         this.dataOffset = dataOffset;
+    }
+    
+    public List<Pair<Integer, Integer>> getOffsetMap() {
+        return offsetMap;
+    }
+
+    public int getUnknown1() {
+        return unknown1;
+    }
+
+    public void setUnknown1(int unknown1) {
+        this.unknown1 = unknown1;
+    }
+    
+    public int getUnknown2() {
+        return unknown2;
+    }
+
+    public void setUnknown2(int unknown2) {
+        this.unknown2 = unknown2;
+    }
+
+    public int getFileSize1() {
+        return fileSize1;
+    }
+
+    public void setFileSize1(int fileSize1) {
+        this.fileSize1 = fileSize1;
+    }
+
+    public int getFileSize2() {
+        return fileSize2;
+    }
+
+    public void setFileSize2(int fileSize2) {
+        this.fileSize2 = fileSize2;
     }
 }
