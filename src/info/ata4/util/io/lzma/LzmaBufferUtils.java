@@ -11,11 +11,17 @@ package info.ata4.util.io.lzma;
 
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.io.buffer.ByteBufferOutputStream;
+import info.ata4.log.LogUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 
@@ -26,6 +32,8 @@ import lzma.LzmaEncoder;
  */
 public class LzmaBufferUtils {
     
+    private static final Logger L = LogUtils.getLogger();
+
     private LzmaBufferUtils() {
     }
     
@@ -51,10 +59,17 @@ public class LzmaBufferUtils {
             throw new IOException("Invalid LZMA props");
         }
         
-        InputStream is = new ByteBufferInputStream(bbc);
-        OutputStream os = new ByteBufferOutputStream(bbu);
-        if (!dec.code(is, os, lzmaSize)) {
-            throw new IOException("LZMA decoding error");
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(new ByteBufferProgress(bbc), 2, 2, TimeUnit.SECONDS);
+        
+        try {
+            InputStream is = new ByteBufferInputStream(bbc);
+            OutputStream os = new ByteBufferOutputStream(bbu);
+            if (!dec.code(is, os, lzmaSize)) {
+                throw new IOException("LZMA decoding error");
+            }
+        } finally {    
+            executor.shutdown();
         }
         
         bbu.flip();
@@ -81,9 +96,16 @@ public class LzmaBufferUtils {
         bbc.put(enc.getCoderProperties());
         bbc.putLong(bbu.limit());
         
-        InputStream is = new ByteBufferInputStream(bbu);
-        OutputStream os = new ByteBufferOutputStream(bbc);
-        enc.code(is, os);
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(new ByteBufferProgress(bbu), 2, 2, TimeUnit.SECONDS);
+        
+        try {
+            InputStream is = new ByteBufferInputStream(bbu);
+            OutputStream os = new ByteBufferOutputStream(bbc);
+            enc.code(is, os);
+        } finally {
+            executor.shutdown();
+        }
         
         bbc.flip();
         bbc.order(bb.order());
@@ -93,5 +115,21 @@ public class LzmaBufferUtils {
     
     public static ByteBuffer encode(ByteBuffer bb) throws IOException {
         return encode(bb, 3, 0, 2, 1 << 19);
+    }
+    
+    private static class ByteBufferProgress implements Runnable {
+        
+        private ByteBuffer bb;
+        
+        ByteBufferProgress(ByteBuffer bb) {
+            this.bb = bb;
+        }
+        
+        @Override
+        public void run() {
+            double progress = Math.round(bb.position() / (double) bb.limit() * 100);
+            L.log(Level.INFO, "{0}%", progress);
+        }
+        
     }
 }
