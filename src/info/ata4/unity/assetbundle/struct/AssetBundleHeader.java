@@ -121,6 +121,28 @@ public class AssetBundleHeader implements Struct {
         out.writeByte(0);
     }
     
+    public int getSize() {
+        int size = 0;
+        size += signature.length() + 1;
+        size += 4;
+        size += versionPlayer.toString().length() + 1;
+        size += versionEngine.toString().length() + 1;
+        size += 16;
+        size += offsetMap.size() * 8;
+        
+        if (format >= 2) {
+            size += 4;
+        }
+        
+        if (format >= 3) {
+            size += 4;
+        }
+        
+        size++;
+        
+        return size;
+    }
+    
     public boolean hasValidSignature() {
         return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
     }
