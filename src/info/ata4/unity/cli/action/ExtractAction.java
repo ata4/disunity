@@ -49,6 +49,7 @@ public class ExtractAction extends Action {
     public void processAsset(AssetFile asset) throws IOException {
         AssetExtractor ae = new AssetExtractor(asset);
         ae.setClassFilter(getClassFilter());
-        ae.extract(getOutputDir(), isRaw());
+        ae.setOutputDir(getOutputDir());
+        ae.extract(isRaw());
     }
 }

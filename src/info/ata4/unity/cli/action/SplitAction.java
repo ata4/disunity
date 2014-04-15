@@ -38,6 +38,7 @@ public class SplitAction extends Action {
     public void processAsset(AssetFile asset) throws IOException {
         AssetExtractor ae = new AssetExtractor(asset);
         ae.setClassFilter(getClassFilter());
-        ae.split(getOutputDir());
+        ae.setOutputDir(getOutputDir());
+        ae.split();
     }
 }

@@ -51,8 +51,8 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     static {
         PrintStream out = System.out;
         Map<String, Action> commands = new HashMap<>();
-        commands.put("dump", new DumpAction(out));
-        commands.put("dump-struct", new DumpAction(out).setDumpStructs(true));
+        commands.put("dump", new DumpAction());
+        commands.put("dump-struct", new DumpAction().setDumpStructs(true));
         commands.put("extract", new ExtractAction());
         commands.put("extract-raw", new ExtractAction().setRaw(true));
         commands.put("fixrefs", new FixReferencesAction());
@@ -122,16 +122,15 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     }
     
     private void processAssetBundle(Path file) throws IOException {
+        Path outputDir = null;
         if (action.requiresOutputDir()) {
             // create target directory based on the asset bundle file name
             String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
-            Path outputDir = file.resolveSibling(fileName);
+            outputDir = file.resolveSibling(fileName);
 
             if (!Files.exists(outputDir)) {
                 Files.createDirectory(outputDir);
             }
-            
-            action.setOutputDir(outputDir);
         }
         
         AssetBundle ab = new AssetBundle();
@@ -177,6 +176,11 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             }
             
             ByteBuffer bb = entry.getValue();
+            
+            // reset output dir so it can be resolved in processAssetInBundle
+            if (outputDir != null) {
+                action.setOutputDir(outputDir);
+            }
 
             processAssetInBundle(ab, name, bb);
         }
@@ -225,7 +229,19 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         }
     }
     
-    private void processAssetInBundle(AssetBundle ab, String name, ByteBuffer bb) {
+    private void processAssetInBundle(AssetBundle ab, String name, ByteBuffer bb) throws IOException {
+        // use sub directory based on the asset name
+        if (action.requiresOutputDir()) {
+            String assetName = FilenameUtils.removeExtension(name);
+            Path outputDir = action.getOutputDir().resolve(assetName);
+            
+            if (!Files.exists(outputDir)) {
+                Files.createDirectories(outputDir);
+            }
+            
+            action.setOutputDir(outputDir);
+        }
+        
         String filePath = ab.getSourceFile() + ":" + name;
         String fileName = ab.getSourceFile().getFileName() + ":" + name;
         AssetFile asset = new AssetFile();

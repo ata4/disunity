@@ -75,6 +75,7 @@ public class AssetExtractor {
     
     private final AssetFile asset;
     private ClassFilter cf;
+    private Path outputDir;
     
     private Map<String, AssetExtractHandler> extractHandlerMap = new HashMap<>();
     
@@ -105,6 +106,14 @@ public class AssetExtractor {
         extractHandlerMap.clear();
     }
     
+    public Path getOutputDir() {
+        return outputDir;
+    }
+
+    public void setOutputDir(Path outputDir) {
+        this.outputDir = outputDir;
+    }
+    
     public ClassFilter getClassFilter() {
         return cf;
     }
@@ -113,13 +122,13 @@ public class AssetExtractor {
         this.cf = cf;
     }
 
-    public void extract(Path dir, boolean raw) throws IOException {
+    public void extract(boolean raw) throws IOException {
         List<AssetObjectPath> paths = asset.getPaths();
         Deserializer deser = new Deserializer(asset);
 
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
             extractHandler.setAssetFile(asset);
-            extractHandler.setExtractDir(dir);
+            extractHandler.setExtractDir(outputDir);
         }
         
         for (AssetObjectPath path : paths) {
@@ -133,12 +142,12 @@ public class AssetExtractor {
             // write just the serialized object data or parsed and extracted content?
             if (raw) {
                 String assetFileName = String.format("%06d.bin", path.getPathID());
-                Path classDir = dir.resolve(className);
-                Path assetFile = classDir.resolve(assetFileName);
-                
+                Path classDir = outputDir.resolve(className);
                 if (!Files.exists(classDir)) {
                     Files.createDirectory(classDir);
                 }
+                
+                Path assetFile = classDir.resolve(assetFileName);
                 
                 L.log(Level.INFO, "Writing {0} {1}", new Object[] {className, assetFileName});
                 
@@ -169,15 +178,15 @@ public class AssetExtractor {
 
         // delete directory if empty
         boolean empty;
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(outputDir)) {
             empty = !ds.iterator().hasNext();
         }
         if (empty) {
-            Files.delete(dir);
+            Files.delete(outputDir);
         }
     }
 
-    public void split(Path dir) throws IOException {
+    public void split() throws IOException {
         List<AssetObjectPath> pathTable = asset.getPaths();
         AssetClassType classType = asset.getClassType();
         ByteBuffer bb = asset.getDataBuffer();
@@ -217,7 +226,7 @@ public class AssetExtractor {
             ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());
             subAsset.setDataBuffer(bbAsset);
             
-            Path subAssetDir = dir.resolve(className);
+            Path subAssetDir = outputDir.resolve(className);
             if (!Files.exists(subAssetDir)) {
                 Files.createDirectory(subAssetDir);
             }
