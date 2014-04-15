@@ -92,7 +92,7 @@ public abstract class AssetExtractHandler {
         Path classDir = extractDir.resolve(className);
         
         if (!Files.exists(classDir)) {
-            Files.createDirectory(classDir);
+            Files.createDirectories(classDir);
         }
         
         // remove any chars that could cause troubles on various file systems
