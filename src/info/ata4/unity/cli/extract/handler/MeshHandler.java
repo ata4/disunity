@@ -63,7 +63,7 @@ public class MeshHandler extends AssetExtractHandler {
         
         // TODO: support older mesh formats
         UnityVersion version = getAssetFile().getClassType().getEngineVersion();
-        if (version.getMajor() != 4) {
+        if (version == null || version.getMajor() != 4) {
             throw new UnsupportedOperationException("Unity 4 format is supported only");
         }
         
