@@ -56,7 +56,7 @@ public class Texture2DHandler extends AssetExtractHandler {
             // create Texture2D from serialized object
             tex = new Texture2D(obj);
         } catch (RuntimeException ex) {
-            L.log(Level.WARNING, "Texture2D " + tex.name + ": Deserialization error", ex);
+            L.log(Level.WARNING, "Deserialization error", ex);
             return;
         }
         
@@ -255,8 +255,8 @@ public class Texture2DHandler extends AssetExtractHandler {
 
         res.putShort((short) texWidth);
         res.putShort((short) texHeight);
-        res.putShort((short) tex.width);
-        res.putShort((short) tex.height);
+        res.putShort(tex.width.shortValue());
+        res.putShort(tex.height.shortValue());
 
         res.put(tex.imageBuffer);
 
@@ -613,18 +613,18 @@ public class Texture2DHandler extends AssetExtractHandler {
     private class Texture2D {
         
         String name;
-        int width;
-        int height;
-        int completeImageSize;
-        int textureFormatOrd;
+        Integer width;
+        Integer height;
+        Integer completeImageSize;
+        Integer textureFormatOrd;
         TextureFormat textureFormat;
-        boolean mipMap;
-        boolean isReadable;
-        boolean readAllowed;
-        int imageCount;
-        int textureDimension;
-        int lightmapFormat;
-        int colorSpace;
+        Boolean mipMap;
+        Boolean isReadable;
+        Boolean readAllowed;
+        Integer imageCount;
+        Integer textureDimension;
+        Integer lightmapFormat;
+        Integer colorSpace;
         ByteBuffer imageBuffer;
         
         Texture2D(UnityObject obj) {
