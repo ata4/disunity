@@ -11,7 +11,7 @@ package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.cli.classfilter.ClassFilter;
+import info.ata4.unity.cli.DisUnitySettings;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -23,7 +23,7 @@ import java.nio.file.Path;
 public abstract class Action {
     
     private Path outputDir;
-    private ClassFilter cf;
+    private DisUnitySettings settings;
     
     public Path getOutputDir() {
         return outputDir;
@@ -33,12 +33,12 @@ public abstract class Action {
         this.outputDir = outputDir;
     }
     
-    public ClassFilter getClassFilter() {
-        return cf;
+    public DisUnitySettings getSettings() {
+        return settings;
     }
 
-    public void setClassFilter(ClassFilter cf) {
-        this.cf = cf;
+    public void setSettings(DisUnitySettings settings) {
+        this.settings = settings;
     }
     
     /**

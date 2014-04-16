@@ -108,7 +108,9 @@ public class AssetDumper {
                     dumpObject(new PrintWriter(writer), obj);
                 }
             } else {
-                dumpObject(new PrintWriter(System.out), obj);
+                PrintWriter pw = new PrintWriter(System.out);
+                dumpObject(pw, obj);
+                pw.flush();
             }
         }
     }
@@ -143,7 +145,9 @@ public class AssetDumper {
                     dumpType(new PrintWriter(writer), classField);
                 }
             } else {
-                dumpType(new PrintWriter(System.out), classField);
+                PrintWriter pw = new PrintWriter(System.out);
+                dumpType(pw, classField);
+                pw.flush();
             }
         }
     }

@@ -19,7 +19,8 @@ import java.io.IOException;
  */
 public class DumpAction extends Action {
     
-    private boolean dumpStructs;
+    private boolean dumpStructs = false;
+    private boolean dumpToFiles = true;
     
     public boolean isDumpStructs() {
         return dumpStructs;
@@ -27,6 +28,15 @@ public class DumpAction extends Action {
 
     public DumpAction setDumpStructs(boolean structs) {
         this.dumpStructs = structs;
+        return this;
+    }
+    
+    public boolean isDumpToFiles() {
+        return dumpToFiles;
+    }
+
+    public DumpAction setDumpToFiles(boolean dumpToFiles) {
+        this.dumpToFiles = dumpToFiles;
         return this;
     }
 
@@ -42,19 +52,20 @@ public class DumpAction extends Action {
     
     @Override
     public boolean requiresOutputDir() {
-        return true;
+        return dumpToFiles;
     }
 
     @Override
     public void processAsset(AssetFile asset) throws IOException {
         AssetDumper dmp = new AssetDumper(asset);
-        dmp.setClassFilter(getClassFilter());
-        dmp.setOutputDir(getOutputDir());
+        dmp.setClassFilter(getSettings().getClassFilter());
+        if (dumpToFiles) {
+            dmp.setOutputDir(getOutputDir());
+        }
         if (dumpStructs) {
             dmp.dumpStruct();
         } else {
             dmp.dumpData();
         }
     }
-
 }

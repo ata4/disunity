@@ -13,6 +13,8 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.cli.action.Action;
+import info.ata4.unity.cli.action.BundleExtractAction;
+import info.ata4.unity.cli.action.BundleListAction;
 import info.ata4.unity.cli.action.DumpAction;
 import info.ata4.unity.cli.action.ExtractAction;
 import info.ata4.unity.cli.action.FixReferencesAction;
@@ -21,8 +23,6 @@ import info.ata4.unity.cli.action.LearnAction;
 import info.ata4.unity.cli.action.ListAction;
 import info.ata4.unity.cli.action.SplitAction;
 import info.ata4.unity.cli.action.StatsAction;
-import info.ata4.unity.cli.action.BundleExtractAction;
-import info.ata4.unity.cli.action.BundleListAction;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -51,10 +51,10 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     static {
         PrintStream out = System.out;
         Map<String, Action> commands = new HashMap<>();
-        commands.put("dump", new DumpAction());
-        commands.put("dump-struct", new DumpAction().setDumpStructs(true));
         commands.put("extract", new ExtractAction());
         commands.put("extract-raw", new ExtractAction().setRaw(true));
+        commands.put("extract-txt", new DumpAction());
+        commands.put("extract-struct", new DumpAction().setDumpStructs(true));
         commands.put("fixrefs", new FixReferencesAction());
         commands.put("info", new InfoAction(out));
         commands.put("info-stats", new StatsAction(out));
@@ -79,27 +79,33 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     
     @Override
     public void run() {
+        // parse command name
         action = COMMANDS.get(settings.getCommand());
         if (action == null) {
             L.log(Level.SEVERE, "Invalid command: {0}", settings.getCommand());
             return;
         }
         
-        action.setClassFilter(settings.getClassFilter());
+        // set settings for action
+        action.setSettings(settings);
         
+        // process submitted files
         for (Path file : settings.getFiles()) {
+            // skip non-existent files
             if (!Files.exists(file)) {
                 L.log(Level.WARNING, "File {0} doesn''t exist", file);
                 continue;
             }
             
             if (Files.isDirectory(file)) {
+                // search directory recursively for asset and asset bundle files
                 try {
                     Files.walkFileTree(file, this);
                 } catch (Exception ex) {
                     L.log(Level.SEVERE, "Can't search directory " + file, ex);
                 }
             } else {
+                // process file as asset or asset bundle
                 try {
                     if (AssetBundle.isAssetBundle(file)) {
                         processAssetBundle(file);
@@ -118,10 +124,13 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             }
         }
         
+        // signal end of processing
         action.finished();
     }
     
     private void processAssetBundle(Path file) throws IOException {
+        L.log(Level.INFO, "Processing {0}", file.getFileName());
+        
         Path outputDir = null;
         if (action.requiresOutputDir()) {
             // create target directory based on the asset bundle file name
@@ -135,35 +144,32 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             action.setOutputDir(outputDir);
         }
         
+        // load asset bundle
         AssetBundle ab = new AssetBundle();
-        
-        try {
+        if (action.requiresWriting()) {
+            ab.load(file);
+        } else {
             ab.open(file);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't load " + file, ex);
-            return;
         }
         
+        // process asset bundle
         if (action.supportsAssetBundes()) {
-            try {
-                action.processAssetBundle(ab);
-            } catch (IOException ex) {
-                L.log(Level.SEVERE, "Can't process " + file, ex);
-                return;
-            }
+            action.processAssetBundle(ab);
         }
         
+        // skip processing of asset files if not supported
         if (!action.supportsAssets()) {
             return;
         }
         
         if (action.requiresWriting()) {
             L.log(Level.WARNING,
-                    "Command \"{0}\" doesn''t support assets in asset bundles, skipping {1}",
+                    "Command \"{0}\" can't edit assets in asset bundles, skipping {1}",
                     new Object[]{settings.getCommand(), file.getFileName()});
             return;
         }
         
+        // process bundle entries
         for (Map.Entry<String, ByteBuffer> entry : ab.getEntries().entrySet()) {
             String name = entry.getKey();
 
@@ -183,12 +189,18 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             if (outputDir != null) {
                 action.setOutputDir(outputDir);
             }
-
-            processAssetInBundle(ab, name, bb);
+            
+            try {
+                processAssetInBundle(ab, name, bb);
+            } catch (IOException ex) {
+                L.log(Level.SEVERE, "Can't process " + file + ":" + name, ex);
+            }
         }
     }
     
     private void processAsset(Path file) throws IOException {
+        L.log(Level.INFO, "Processing {0}", file.getFileName());
+        
         if (action.requiresOutputDir()) {
             String fileName = file.getFileName().toString();
             String assetName = FilenameUtils.removeExtension(fileName);
@@ -210,28 +222,19 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         
         AssetFile asset = new AssetFile();
 
-        try {
-            // use memory mapping if the files aren't modified
-            if (action.requiresWriting()) {
-                asset.load(file);
-            } else {
-                asset.open(file);
-            }
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't load " + file, ex);
-            return;
+        // use memory mapping if the files aren't modified
+        if (action.requiresWriting()) {
+            asset.load(file);
+        } else {
+            asset.open(file);
         }
-        
-        L.log(Level.INFO, "Processing {0}", file.getFileName());
-        
-        try {
-            action.processAsset(asset);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + file, ex);
-        }
+
+        action.processAsset(asset);
     }
     
     private void processAssetInBundle(AssetBundle ab, String name, ByteBuffer bb) throws IOException {
+        L.log(Level.INFO, "Processing {0}:{1}", new Object[] {ab.getSourceFile().getFileName(), name});
+        
         // use sub directory based on the asset name
         if (action.requiresOutputDir()) {
             String assetName = FilenameUtils.removeExtension(name);
@@ -244,26 +247,11 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             action.setOutputDir(outputDir);
         }
         
-        String filePath = ab.getSourceFile() + ":" + name;
-        String fileName = ab.getSourceFile().getFileName() + ":" + name;
         AssetFile asset = new AssetFile();
-        
-        try {
-            asset.load(bb);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't load " + filePath, ex);
-            return;
-        }
-        
+        asset.load(bb);
         asset.setSourceBundle(ab);
-        
-        L.log(Level.INFO, "Processing {0}", fileName);
-        
-        try {
-            action.processAsset(asset);
-        } catch (IOException ex) {
-            L.log(Level.SEVERE, "Can't process " + filePath, ex);
-        }
+
+        action.processAsset(asset);
     }
 
     @Override
