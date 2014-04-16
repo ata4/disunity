@@ -131,6 +131,8 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             if (!Files.exists(outputDir)) {
                 Files.createDirectory(outputDir);
             }
+            
+            action.setOutputDir(outputDir);
         }
         
         AssetBundle ab = new AssetBundle();
