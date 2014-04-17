@@ -16,7 +16,7 @@ package info.ata4.unity;
  */
 public class DisUnity {
 
-    private static final String VERSION = "0.2.2";
+    private static final String VERSION = "0.3.0";
     
     public static String getVersion() {
         return VERSION;
