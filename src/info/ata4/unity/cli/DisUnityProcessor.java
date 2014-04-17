@@ -51,6 +51,8 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     static {
         PrintStream out = System.out;
         Map<String, Action> commands = new HashMap<>();
+        commands.put("dump", new DumpAction().setDumpToFiles(false));
+        commands.put("dump-struct", new DumpAction().setDumpToFiles(false).setDumpStructs(true));
         commands.put("extract", new ExtractAction());
         commands.put("extract-raw", new ExtractAction().setRaw(true));
         commands.put("extract-txt", new DumpAction());
