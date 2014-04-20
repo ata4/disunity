@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
@@ -39,20 +40,16 @@ public class FixReferencesAction extends Action {
     }
 
     @Override
-    public boolean requiresWriting() {
-        return true;
-    }
-
-    @Override
     public void processAsset(AssetFile asset) throws IOException {
-        Path sourceFile = asset.getSourceFile();
-        Path sourceParent = sourceFile.getParent();
+        Path assetFile = asset.getSourceFile();
+        Path assetDir = assetFile.getParent();
+        String assetFileName = assetFile.getFileName().toString();
         String assetPath;
         
-        if (sourceParent == null) {
+        if (assetDir == null) {
             assetPath = "";
         } else {
-            assetPath = sourceParent.toAbsolutePath().toString();
+            assetPath = assetDir.toAbsolutePath().toString();
             assetPath = FilenameUtils.separatorsToUnix(assetPath) + "/";
         }
 
@@ -76,21 +73,17 @@ public class FixReferencesAction extends Action {
             }
         }
 
-        if (changed) {
-            // create backup first
-            try {
-                String backupFileName = sourceFile.getFileName().toString() + ".bak";
-                Path backupFile = sourceFile.resolveSibling(backupFileName);
-                Files.copy(sourceFile, backupFile);
-            } catch (IOException ex) {
-                // backup is mandatory, don't risk any loss of data 
-                throw new IOException("Can't create backup copy", ex);
-            }
-            
-            asset.save(sourceFile);
-        } else {
+        if (!changed) {
             L.fine("No references changed, skipping saving");
+            return;
         }
+        
+        // create backup by renaming the original file
+        Path assetFileBackup = assetFile.resolveSibling(assetFileName + ".bak");
+        Files.move(assetFile, assetFileBackup, StandardCopyOption.REPLACE_EXISTING);
+
+        // save asset
+        asset.save(assetFile);
     }
     
 }
