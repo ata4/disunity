@@ -15,6 +15,7 @@ import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.cli.action.Action;
 import info.ata4.unity.cli.action.BundleExtractAction;
 import info.ata4.unity.cli.action.BundleListAction;
+import info.ata4.unity.cli.action.BundleInjectAction;
 import info.ata4.unity.cli.action.DumpAction;
 import info.ata4.unity.cli.action.ExtractAction;
 import info.ata4.unity.cli.action.FixReferencesAction;
@@ -64,6 +65,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         commands.put("list", new ListAction(out));
         commands.put("split", new SplitAction());
         commands.put("bundle-extract", new BundleExtractAction());
+        commands.put("bundle-inject", new BundleInjectAction());
         commands.put("bundle-list", new BundleListAction(out));
         COMMANDS = Collections.unmodifiableMap(commands);
     }
