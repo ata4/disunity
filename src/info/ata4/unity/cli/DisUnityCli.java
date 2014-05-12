@@ -9,6 +9,8 @@
  */
 package info.ata4.unity.cli;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.cli.classfilter.SimpleClassFilter;
@@ -16,24 +18,17 @@ import info.ata4.unity.util.ClassID;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 /**
  * DisUnity command line interface.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class DisUnityCli {
+public class DisUnityCli implements Runnable {
     
     private static final Logger L = LogUtils.getLogger();
     
@@ -43,98 +38,107 @@ public class DisUnityCli {
     public static void main(String[] args) {
         LogUtils.configure();
         
-        L.log(Level.INFO, "DisUnity v{0}", DisUnity.getVersion());
+        L.log(Level.INFO, DisUnity.getSignature());
         
         try {
-            DisUnityProcessor disunity = new DisUnityProcessor();
-            if (configure(disunity.getSettings(), args)) {
-                disunity.run();
+            DisUnityCli cli = new DisUnityCli();
+            
+            JCommander cmd = new JCommander();
+            cmd.setProgramName(DisUnity.getProgramName());
+            cmd.addObject(cli);
+            cmd.parse(args);
+            
+            if (cli.canRun()) {
+                cli.run();
+            } else {
+                cmd.usage();
             }
         } catch (Throwable t) {
             L.log(Level.SEVERE, "Fatal error", t);
         }
     }
+    
+    @Parameter(
+        names = { "-v", "--verbose" },
+        description = "Show more verbose log output."
+    )
+    private boolean verbose;
+    
+    @Parameter(
+        names = { "-f", "--include" },
+        description = "Only process objects that use these classes. Expects a string with class names or IDs, separated by commas."
+    )
+    private String classListInclude;
+    
+    @Parameter(
+        names = { "-x", "--exclude" },
+        description = "Exclude objects from processing that use these classes. Expects a string with class names or IDs, separated by commas."
+    )
+    private String classListExclude;
+    
+    @Parameter(
+        description = "<command> <files>"
+    )
+    private List<String> remaining;
+    
+    public boolean canRun() {
+        return remaining != null && remaining.size() >= 2;
+    }
 
-    public static boolean configure(DisUnitySettings settings, String[] args) {
-        Options opts = new Options();
-
-        Option optClassFilter = new Option("f", null);
-        optClassFilter.setDescription("Only process objects that use these classes. Expects a string with class names, separated by commas.");
-        optClassFilter.setArgs(1);
-        optClassFilter.setArgName("classes");
-        opts.addOption(optClassFilter);
+    @Override
+    public void run() {
+        // convert unnamed argument list to deque
+        Deque<String> args = new ArrayDeque<>(remaining);
         
-        Option optVerbose = new Option("v", "verbose", false, "Show more verbose log output.");
-        opts.addOption(optVerbose);
-
-        try {
-            if (args.length < 2) {
-                printUsage(opts);
-                return false;
-            }
-            
-            CommandLineParser parser = new PosixParser();
-            CommandLine cl = parser.parse(opts, args);
-            
-            if (cl.hasOption(optClassFilter.getOpt())) {
-                String value = cl.getOptionValue(optClassFilter.getOpt());
-                String[] valueSplit = value.split(",");
-                
-                SimpleClassFilter classFilter = new SimpleClassFilter();
-
-                for (String className : valueSplit) {
-                    Integer classID;
-                    
-                    try {
-                        classID = Integer.parseInt(className);
-                    } catch (NumberFormatException e) {
-                        classID = ClassID.getIDForName(className, true);
-                    }
-                    
-                    if (classID == null) {
-                        L.log(Level.WARNING, "Invalid class name or ID for filter: {0}", className);
-                        continue;
-                    }
-                    
-                    classFilter.getAcceptedIDs().add(classID);
-                }
-                
-                settings.setClassFilter(classFilter);
-            }
-            
-            if (cl.hasOption(optVerbose.getOpt())) {
-                LogUtils.configure(Level.ALL);
-            }
-            
-            Deque<String> leftArgs = new ArrayDeque(cl.getArgList());
-            
-            // first argument is the command
-            settings.setCommand(leftArgs.pop());
-            
-            // add remaining arguments as files
-            for (String leftArg : leftArgs) {
-                settings.getFiles().add(Paths.get(leftArg));
-            }
-        } catch (ParseException ex) {
-            L.severe(ex.getMessage());
-            return false;
+        DisUnitySettings settings = new DisUnitySettings();
+        
+        // set command
+        settings.setCommand(args.pollFirst());
+        
+        // add files
+        for (String path : args) {
+            settings.getFiles().add(Paths.get(path));
         }
         
-        return true;
+        // set class filter lists
+        if (classListInclude != null || classListExclude != null) {
+            SimpleClassFilter classFilter = new SimpleClassFilter();
+            parseClassList(classFilter.getAcceptedIDs(), classListInclude);
+            parseClassList(classFilter.getAcceptedIDs(), classListExclude);
+            settings.setClassFilter(classFilter);
+        }
+        
+        // increase logging level if requested
+        if (verbose) {
+            LogUtils.configure(Level.ALL);
+        }
+        
+        // run processor
+        DisUnityProcessor processor = new DisUnityProcessor(settings);
+        processor.run();
     }
     
-    /**
-     * Prints application usage.
-     */
-    private static void printUsage(Options opts) {
-        HelpFormatter clHelp = new HelpFormatter();
-        clHelp.setWidth(100);
-        clHelp.printHelp("disunity <options> [command] [file]...", opts);
-        System.out.println();
-        System.out.println("Available commands:");
-        Set<String> cmds = new TreeSet<>(DisUnityProcessor.getCommands());
-        for (String cmd : cmds) {
-            System.out.println(" " + cmd);
+    private void parseClassList(Set<Integer> classIDList, String classListString) {
+        if (classListString == null || classListString.isEmpty()) {
+            return;
+        }
+        
+        String[] values = classListString.split(",");
+        for (String className : values) {
+            Integer classID;
+
+            try {
+                classID = Integer.parseInt(className);
+            } catch (NumberFormatException e) {
+                classID = ClassID.getIDForName(className, true);
+            }
+
+            if (classID == null) {
+                L.log(Level.WARNING, "Invalid class name or ID for filter: {0}", className);
+                continue;
+            }
+
+            classIDList.add(classID);
         }
     }
 }

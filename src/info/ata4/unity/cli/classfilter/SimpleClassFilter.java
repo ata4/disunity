@@ -20,8 +20,8 @@ import java.util.Set;
  */
 public class SimpleClassFilter implements ClassFilter {
     
-    private Set<Integer> acceptedIDs = new HashSet<>();
-    private Set<Integer> rejectedIDs = new HashSet<>();
+    private final Set<Integer> acceptedIDs = new HashSet<>();
+    private final Set<Integer> rejectedIDs = new HashSet<>();
     
     public Set<Integer> getAcceptedIDs() {
         return acceptedIDs;

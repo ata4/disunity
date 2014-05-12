@@ -87,10 +87,12 @@ public class WebDownloader {
         List<Path> bundles = downloader.getDownloadedFiles();
         boolean learn = true;
         if (learn && !bundles.isEmpty()) {
-            DisUnityProcessor processor = new DisUnityProcessor();
-            DisUnitySettings settings = processor.getSettings();
+            DisUnitySettings settings = new DisUnitySettings();
+            
             settings.setCommand("learn");
             settings.getFiles().addAll(bundles);
+            
+            DisUnityProcessor processor = new DisUnityProcessor(settings);
             processor.run();
         }
     }

@@ -74,11 +74,11 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         return COMMANDS.keySet();
     }
     
-    private final DisUnitySettings settings = new DisUnitySettings();
+    private final DisUnitySettings settings;
     private Action action;
-    
-    public DisUnitySettings getSettings() {
-        return settings;
+
+    public DisUnityProcessor(DisUnitySettings settings) {
+        this.settings = settings;
     }
     
     @Override

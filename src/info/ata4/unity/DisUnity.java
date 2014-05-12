@@ -16,10 +16,20 @@ package info.ata4.unity;
  */
 public class DisUnity {
 
-    private static final String VERSION = "0.3.0";
+    public static String getName() {
+        return "DisUnity";
+    }
+    
+    public static String getProgramName() {
+        return "disunity";
+    }
     
     public static String getVersion() {
-        return VERSION;
+        return "0.3.0";
+    }
+    
+    public static String getSignature() {
+        return String.format("%s v%s", getName(), getVersion());
     }
 
     private DisUnity() {
