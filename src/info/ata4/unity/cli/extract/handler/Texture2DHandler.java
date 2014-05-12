@@ -346,8 +346,12 @@ public class Texture2DHandler extends AssetExtractHandler {
                 }
 
                 // prepare for the next mip map
-                header.imageWidth /= 2;
-                header.imageHeight /= 2;
+                if (header.imageWidth > 1) {
+                    header.imageWidth /= 2;
+                }
+                if (header.imageHeight > 1) {
+                    header.imageHeight /= 2;
+                }
             }
         }
 
