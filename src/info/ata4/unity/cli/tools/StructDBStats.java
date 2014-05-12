@@ -15,7 +15,6 @@ import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.collection.Pair;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +22,8 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Utility program to print structure database stats.
@@ -70,7 +71,7 @@ public class StructDBStats {
             
             for (Integer classID : classIDs) {
                 System.out.print("  ");
-                if (ftm.containsKey(new Pair(classID, rev))) {
+                if (ftm.containsKey(new ImmutablePair(classID, rev))) {
                     System.out.print("x");
                 } else {
                     System.out.print(" ");

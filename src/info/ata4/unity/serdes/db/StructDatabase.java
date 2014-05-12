@@ -17,7 +17,6 @@ import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetFieldType;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.collection.Pair;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,6 +34,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *

@@ -16,7 +16,6 @@ import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.collection.Pair;
 import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -27,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Reader for Unity asset bundles.
@@ -172,7 +173,7 @@ public class AssetBundle extends FileHandler {
         // file. The exact calculation of these values is not yet known, so use
         // the maximum size for each entry for now to avoid crashes.
         for (int i = 0; i < assets; i++) {
-            offsetMap.add(new Pair<>(dataSizeC, dataSizeU));
+            offsetMap.add(new ImmutablePair<>(dataSizeC, dataSizeU));
         }
         
         // write file

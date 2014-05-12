@@ -13,10 +13,11 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.collection.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -78,7 +79,7 @@ public class AssetBundleHeader implements Struct {
         assert unknown1 == assets || unknown1 == 1;
         
         for (int i = 0; i < assets; i++) {
-            offsetMap.add(new Pair(in.readInt(), in.readInt()));
+            offsetMap.add(new ImmutablePair(in.readInt(), in.readInt()));
         }
         
         if (format >= 2) {
