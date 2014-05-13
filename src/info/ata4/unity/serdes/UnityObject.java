@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class UnityObject extends UnityNamedType {
     
-    private Map<String, UnityField> fields = new LinkedHashMap<>();
+    private final Map<String, UnityField> fields = new LinkedHashMap<>();
     
     public UnityObject(String type) {
         super(type);

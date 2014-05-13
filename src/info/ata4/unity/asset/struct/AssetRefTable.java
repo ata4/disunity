@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class AssetRefTable implements Struct, Iterable<AssetRef> {
 
-    private List<AssetRef> refs = new ArrayList<>();
+    private final List<AssetRef> refs = new ArrayList<>();
     private byte unknown;
     
     public List<AssetRef> getReferences() {

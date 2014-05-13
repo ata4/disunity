@@ -11,8 +11,8 @@ package info.ata4.unity.cli.tools;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.cli.DisUnityProcessor;
 import info.ata4.unity.cli.DisUnityOptions;
+import info.ata4.unity.cli.DisUnityProcessor;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +48,7 @@ public class WebDownloader {
     
     private static final Logger L = LogUtils.getLogger();
     private static final Pattern UNITY3D_FILE_PATTERN = Pattern.compile("\"([^\"]+.unity3d)\"");
-    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0";
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0";
 
     /**
      * @param args the command line arguments
@@ -98,7 +98,7 @@ public class WebDownloader {
     }
     
     private Path baseDir = Paths.get(".");
-    private List<Path> bundles = new ArrayList<>();
+    private final List<Path> bundles = new ArrayList<>();
     
     public void setBaseDirectory(Path baseDir) {
         this.baseDir = baseDir;

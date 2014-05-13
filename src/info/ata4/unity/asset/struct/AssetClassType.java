@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 public class AssetClassType implements Struct {
 
-    private Map<Integer, AssetFieldType> typeTree = new LinkedHashMap<>();
+    private final Map<Integer, AssetFieldType> typeTree = new LinkedHashMap<>();
     private UnityVersion engineVersion;
     private int treeVersion;
     private int treeFormat;

@@ -14,8 +14,8 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.cli.action.Action;
 import info.ata4.unity.cli.action.BundleExtractAction;
-import info.ata4.unity.cli.action.BundleListAction;
 import info.ata4.unity.cli.action.BundleInjectAction;
+import info.ata4.unity.cli.action.BundleListAction;
 import info.ata4.unity.cli.action.DumpAction;
 import info.ata4.unity.cli.action.ExtractAction;
 import info.ata4.unity.cli.action.FixReferencesAction;
@@ -41,7 +41,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 /**
- *
+ * DisUnity file processor.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class DisUnityProcessor implements Runnable, FileVisitor<Path> {

@@ -49,12 +49,12 @@ public class MeshHandler extends AssetExtractHandler {
     private String name;
     private boolean debug;
 
-    private List<Vector3f> vertices = new ArrayList<>();
-    private List<Vector3f> normals = new ArrayList<>();
-    private List<Color32> colors = new ArrayList<>();
-    private List<Vector2f> uv1 = new ArrayList<>();
-    private List<Vector2f> uv2 = new ArrayList<>();
-    private List<Vector4f> tangents = new ArrayList<>();
+    private final List<Vector3f> vertices = new ArrayList<>();
+    private final List<Vector3f> normals = new ArrayList<>();
+    private final List<Color32> colors = new ArrayList<>();
+    private final List<Vector2f> uv1 = new ArrayList<>();
+    private final List<Vector2f> uv2 = new ArrayList<>();
+    private final List<Vector4f> tangents = new ArrayList<>();
 
     @Override
     public void extract(AssetObjectPath path, UnityObject obj) throws IOException {

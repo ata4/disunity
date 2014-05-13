@@ -35,7 +35,7 @@ public abstract class AssetExtractHandler {
     private Path extractDir;
     private String className;
     private String fileExtension = "bin";
-    private Set<Path> assignedFiles = new HashSet<>();
+    private final Set<Path> assignedFiles = new HashSet<>();
     
     public AssetFile getAssetFile() {
         return asset;

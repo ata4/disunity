@@ -74,10 +74,9 @@ public class AssetExtractor {
     }
     
     private final AssetFile asset;
+    private final Map<String, AssetExtractHandler> extractHandlerMap = new HashMap<>();
     private ClassFilter cf;
     private Path outputDir;
-    
-    private Map<String, AssetExtractHandler> extractHandlerMap = new HashMap<>();
     
     public AssetExtractor(AssetFile asset) {
         this.asset = asset;

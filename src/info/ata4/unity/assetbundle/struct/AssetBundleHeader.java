@@ -20,7 +20,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- *
+ * Header structure for Unity asset bundles.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetBundleHeader implements Struct {

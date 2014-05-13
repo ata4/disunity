@@ -119,7 +119,7 @@ public class LzmaBufferUtils {
     
     private static class ByteBufferProgress implements Runnable {
         
-        private ByteBuffer bb;
+        private final ByteBuffer bb;
         
         ByteBufferProgress(ByteBuffer bb) {
             this.bb = bb;

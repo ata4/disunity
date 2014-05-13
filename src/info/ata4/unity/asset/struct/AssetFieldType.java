@@ -27,7 +27,7 @@ public class AssetFieldType implements Struct, Iterable<AssetFieldType> {
     public static final int FLAG_FORCE_ALIGN = 0x4000;
     
     // child fields
-    private List<AssetFieldType> children = new ArrayList<>();
+    private final List<AssetFieldType> children = new ArrayList<>();
 
     // field type string
     private String type;

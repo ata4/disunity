@@ -59,8 +59,8 @@ public class AssetBundle extends FileHandler {
         }
     }
     
-    private AssetBundleHeader header = new AssetBundleHeader();
-    private Map<String, ByteBuffer> entries = new LinkedHashMap<>();
+    private final AssetBundleHeader header = new AssetBundleHeader();
+    private final Map<String, ByteBuffer> entries = new LinkedHashMap<>();
     private boolean compressed = false;
     
     @Override

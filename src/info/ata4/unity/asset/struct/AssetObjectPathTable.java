@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class AssetObjectPathTable implements Struct, Iterable<AssetObjectPath> {
     
-    private List<AssetObjectPath> paths = new ArrayList<>();
+    private final List<AssetObjectPath> paths = new ArrayList<>();
     
     public List<AssetObjectPath> getPaths() {
         return paths;
