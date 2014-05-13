@@ -49,10 +49,10 @@ public class DisUnityCli implements Runnable {
             cmd.addObject(cli);
             cmd.parse(args);
             
-            if (cli.canRun()) {
-                cli.run();
-            } else {
+            if (cli.showUsage()) {
                 cmd.usage();
+            } else {
+                cli.run();
             }
         } catch (Throwable t) {
             L.log(Level.SEVERE, "Fatal error", t);
@@ -82,8 +82,8 @@ public class DisUnityCli implements Runnable {
     )
     private List<String> remaining;
     
-    public boolean canRun() {
-        return remaining != null && remaining.size() >= 2;
+    public boolean showUsage() {
+        return remaining == null || remaining.size() < 2;
     }
 
     @Override
