@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * DisUnity command line interface.
@@ -119,11 +120,11 @@ public class DisUnityCli implements Runnable {
     }
     
     private void parseClassList(Set<Integer> classIDList, String classListString) {
-        if (classListString == null || classListString.isEmpty()) {
+        if (StringUtils.isEmpty(classListString)) {
             return;
         }
         
-        String[] values = classListString.split(",");
+        String[] values = StringUtils.split(classListString, ",");
         for (String className : values) {
             Integer classID;
 
