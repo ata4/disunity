@@ -12,7 +12,7 @@ package info.ata4.unity.cli.tools;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.cli.DisUnityProcessor;
-import info.ata4.unity.cli.DisUnitySettings;
+import info.ata4.unity.cli.DisUnityOptions;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,12 +87,12 @@ public class WebDownloader {
         List<Path> bundles = downloader.getDownloadedFiles();
         boolean learn = true;
         if (learn && !bundles.isEmpty()) {
-            DisUnitySettings settings = new DisUnitySettings();
+            DisUnityOptions opts = new DisUnityOptions();
             
-            settings.setCommand("learn");
-            settings.getFiles().addAll(bundles);
+            opts.setCommand("learn");
+            opts.getFiles().addAll(bundles);
             
-            DisUnityProcessor processor = new DisUnityProcessor(settings);
+            DisUnityProcessor processor = new DisUnityProcessor(opts);
             processor.run();
         }
     }

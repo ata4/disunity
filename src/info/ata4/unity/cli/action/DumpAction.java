@@ -58,7 +58,7 @@ public class DumpAction extends Action {
     @Override
     public void processAsset(AssetFile asset) throws IOException {
         AssetDumper dmp = new AssetDumper(asset);
-        dmp.setClassFilter(getSettings().getClassFilter());
+        dmp.setClassFilter(getOptions().getClassFilter());
         if (dumpToFiles) {
             dmp.setOutputDir(getOutputDir());
         }

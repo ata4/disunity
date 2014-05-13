@@ -11,7 +11,7 @@ package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundle;
-import info.ata4.unity.cli.DisUnitySettings;
+import info.ata4.unity.cli.DisUnityOptions;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -23,7 +23,7 @@ import java.nio.file.Path;
 public abstract class Action {
     
     private Path outputDir;
-    private DisUnitySettings settings;
+    private DisUnityOptions opts;
     
     public Path getOutputDir() {
         return outputDir;
@@ -33,12 +33,12 @@ public abstract class Action {
         this.outputDir = outputDir;
     }
     
-    public DisUnitySettings getSettings() {
-        return settings;
+    public DisUnityOptions getOptions() {
+        return opts;
     }
 
-    public void setSettings(DisUnitySettings settings) {
-        this.settings = settings;
+    public void setOptions(DisUnityOptions opts) {
+        this.opts = opts;
     }
     
     /**

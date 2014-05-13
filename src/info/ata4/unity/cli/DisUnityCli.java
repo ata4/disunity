@@ -91,14 +91,14 @@ public class DisUnityCli implements Runnable {
         // convert unnamed argument list to deque
         Deque<String> args = new ArrayDeque<>(remaining);
         
-        DisUnitySettings settings = new DisUnitySettings();
+        DisUnityOptions ops = new DisUnityOptions();
         
         // set command
-        settings.setCommand(args.pollFirst());
+        ops.setCommand(args.pollFirst());
         
         // add files
         for (String path : args) {
-            settings.getFiles().add(Paths.get(path));
+            ops.getFiles().add(Paths.get(path));
         }
         
         // set class filter lists
@@ -106,7 +106,7 @@ public class DisUnityCli implements Runnable {
             SimpleClassFilter classFilter = new SimpleClassFilter();
             parseClassList(classFilter.getAcceptedIDs(), classListInclude);
             parseClassList(classFilter.getAcceptedIDs(), classListExclude);
-            settings.setClassFilter(classFilter);
+            ops.setClassFilter(classFilter);
         }
         
         // increase logging level if requested
@@ -115,7 +115,7 @@ public class DisUnityCli implements Runnable {
         }
         
         // run processor
-        DisUnityProcessor processor = new DisUnityProcessor(settings);
+        DisUnityProcessor processor = new DisUnityProcessor(ops);
         processor.run();
     }
     
