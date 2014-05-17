@@ -7,41 +7,47 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.handler.struct;
+package info.ata4.unity.struct;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
+import info.ata4.io.Struct;
 import java.io.IOException;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Vector4f extends Vector3f {
+public class Vector2f implements Struct {
     
-    public Vector4f(boolean half) {
-        super(half);
+    protected final boolean half;
+    
+    public Vector2f(boolean half) {
+        this.half = half;
     }
     
-    public float w;
+    public float x;
+    public float y;
 
     @Override
     public void read(DataInputReader in) throws IOException {
-        super.read(in);
         if (half) {
-            w = in.readHalf();
+            x = in.readHalf();
+            y = in.readHalf();
         } else {
-            w = in.readFloat();
+            x = in.readFloat();
+            y = in.readFloat();
         }
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        super.write(out);
         if (half) {
-            out.writeHalf(w);
+            out.writeHalf(x);
+            out.writeHalf(y);
         } else {
-            out.writeFloat(w);
+            out.writeFloat(x);
+            out.writeFloat(y);
         }
     }
 }

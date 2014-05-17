@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.handler.struct;
+package info.ata4.unity.struct;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
@@ -17,21 +17,21 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Vector3f extends Vector2f {
-
-    public Vector3f(boolean half) {
+public class Vector4f extends Vector3f {
+    
+    public Vector4f(boolean half) {
         super(half);
     }
     
-    public float z;
+    public float w;
 
     @Override
     public void read(DataInputReader in) throws IOException {
         super.read(in);
         if (half) {
-            z = in.readHalf();
+            w = in.readHalf();
         } else {
-            z = in.readFloat();
+            w = in.readFloat();
         }
     }
 
@@ -39,9 +39,9 @@ public class Vector3f extends Vector2f {
     public void write(DataOutputWriter out) throws IOException {
         super.write(out);
         if (half) {
-            out.writeHalf(z);
+            out.writeHalf(w);
         } else {
-            out.writeFloat(z);
+            out.writeFloat(w);
         }
     }
 }
