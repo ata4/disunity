@@ -11,7 +11,7 @@ package info.ata4.unity.cli.tools;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.Deserializer;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class DeserializeTest {
     public void testAsset(AssetFile asset) {
         Deserializer deser = new Deserializer(asset);
 
-        for (AssetObjectPath path : asset.getPaths()) {
+        for (ObjectPath path : asset.getPaths()) {
             // skip MonoBehaviours
             if (path.isScript()) {
                 continue;

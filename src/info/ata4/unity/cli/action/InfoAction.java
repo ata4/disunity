@@ -10,9 +10,9 @@
 package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetClassType;
+import info.ata4.unity.asset.struct.ClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.util.string.StringUtils;
@@ -42,10 +42,10 @@ public class InfoAction extends PrintAction {
 
     @Override
     public void processAsset(AssetFile asset) throws IOException {
-        List<AssetObjectPath> paths = asset.getPaths();
+        List<ObjectPath> paths = asset.getPaths();
         List<AssetRef> refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
-        AssetClassType classType = asset.getClassType();
+        ClassType classType = asset.getClassType();
         
         ps.println("Header");
         ps.println("  File size: " + StringUtils.humanReadableByteCount(header.getFileSize(), true));

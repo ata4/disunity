@@ -13,8 +13,8 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetClassType;
-import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.ClassType;
+import info.ata4.unity.asset.struct.FieldType;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
@@ -105,10 +105,10 @@ public class StructDatabase {
 
             // read field node table
             int fieldNodeSize = in.readInt();
-            List<AssetFieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
+            List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
 
             for (int i = 0; i < fieldNodeSize; i++) {
-                AssetFieldType fieldNode = new AssetFieldType();
+                FieldType fieldNode = new FieldType();
                 fieldNode.read(in);
                 fieldNodes.add(fieldNode);
             }
@@ -130,7 +130,7 @@ public class StructDatabase {
                 int revisionIndex = in.readInt();
                 
                 UnityVersion version = versions.get(revisionIndex);
-                AssetFieldType fieldNode = fieldNodes.get(index);
+                FieldType fieldNode = fieldNodes.get(index);
 
                 ftm.add(classID, version, fieldNode);
             }
@@ -151,13 +151,13 @@ public class StructDatabase {
             out.writeInt(VERSION);
 
             // write field node table
-            Set<AssetFieldType> fieldNodes = new HashSet<>(ftm.values());
-            Map<AssetFieldType, Integer> fieldNodeMap = new HashMap<>();
+            Set<FieldType> fieldNodes = new HashSet<>(ftm.values());
+            Map<FieldType, Integer> fieldNodeMap = new HashMap<>();
 
             out.writeInt(fieldNodes.size());
 
             int index = 0;
-            for (AssetFieldType fieldNode : fieldNodes) {
+            for (FieldType fieldNode : fieldNodes) {
                 fieldNodeMap.put(fieldNode, index++);
                 fieldNode.write(out);
             }
@@ -166,7 +166,7 @@ public class StructDatabase {
             Set<UnityVersion> versions = new HashSet<>();
             Map<UnityVersion, Integer> versionMap = new HashMap<>();
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : ftm.entrySet()) {
                 versions.add(entry.getKey().getRight());
             }
 
@@ -181,7 +181,7 @@ public class StructDatabase {
             // write mapping data
             out.writeInt(ftm.entrySet().size());
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : ftm.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
                 Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
 
@@ -198,7 +198,7 @@ public class StructDatabase {
     }
     
     public void fill(AssetFile asset) {
-        AssetClassType classType = asset.getClassType();
+        ClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
         fixRevision(asset, classType);
@@ -209,7 +209,7 @@ public class StructDatabase {
         }
         
         for (Integer classID : classIDs) {
-            AssetFieldType ft = ftm.get(classID, classType.getEngineVersion(), false);
+            FieldType ft = ftm.get(classID, classType.getEngineVersion(), false);
             if (ft != null) {
                 classType.getTypeTree().put(classID, ft);
             }
@@ -217,7 +217,7 @@ public class StructDatabase {
     }
     
     public int learn(AssetFile asset) {
-        AssetClassType classType = asset.getClassType();
+        ClassType classType = asset.getClassType();
         Set<Integer> classIDs = asset.getClassIDs();
         
         if (!classType.hasTypeTree()) {
@@ -236,14 +236,14 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            AssetFieldType fieldType = classType.getTypeTree().get(classID);
+            FieldType fieldType = classType.getTypeTree().get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {
                 continue;
             }
             
-            AssetFieldType fieldTypeMapped = ftm.get(classID, classType.getEngineVersion());
+            FieldType fieldTypeMapped = ftm.get(classID, classType.getEngineVersion());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
@@ -278,7 +278,7 @@ public class StructDatabase {
         }
     }
 
-    private void fixRevision(AssetFile asset, AssetClassType classType) {
+    private void fixRevision(AssetFile asset, ClassType classType) {
         // older file formats don't contain the revision in the header, try to
         // get it from the asset bundle header instead
         if (classType.getEngineVersion() == null && asset.getSourceBundle() != null) {

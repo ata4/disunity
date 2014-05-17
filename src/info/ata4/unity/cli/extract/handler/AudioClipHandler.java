@@ -11,7 +11,7 @@ package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.AudioType;
 import info.ata4.unity.serdes.UnityBuffer;
@@ -51,7 +51,7 @@ public class AudioClipHandler extends AssetExtractHandler {
     }
 
     @Override
-    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         
         UnityBuffer audioData = obj.getValue("m_AudioData");

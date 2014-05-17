@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.tools;
 
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.FieldType;
 import info.ata4.unity.serdes.db.FieldTypeMap;
 import info.ata4.unity.serdes.db.StructDatabase;
 import info.ata4.unity.util.ClassID;
@@ -38,11 +38,11 @@ public class StructDBStats {
         LogUtils.configure();
         
         FieldTypeMap ftm = StructDatabase.getInstance().getFieldTypeMap();
-        Set<AssetFieldType> fieldNodes = new HashSet<>();
+        Set<FieldType> fieldNodes = new HashSet<>();
         Set<UnityVersion> versions = new TreeSet<>();
         Set<Integer> classIDs = new TreeSet<>();
 
-        for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : ftm.entrySet()) {
+        for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : ftm.entrySet()) {
             versions.add(entry.getKey().getRight());
             classIDs.add(entry.getKey().getLeft());
             fieldNodes.add(entry.getValue());

@@ -22,14 +22,14 @@ import java.util.Objects;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetClassType implements Struct {
+public class ClassType implements Struct {
 
-    private final Map<Integer, AssetFieldType> typeTree = new LinkedHashMap<>();
+    private final Map<Integer, FieldType> typeTree = new LinkedHashMap<>();
     private UnityVersion engineVersion;
     private int treeVersion;
     private int treeFormat;
 
-    public Map<Integer, AssetFieldType> getTypeTree() {
+    public Map<Integer, FieldType> getTypeTree() {
         return typeTree;
     }
     
@@ -78,7 +78,7 @@ public class AssetClassType implements Struct {
         for (int i = 0; i < fields; i++) {
             int classID = in.readInt();
 
-            AssetFieldType fn = new AssetFieldType();
+            FieldType fn = new FieldType();
             fn.read(in);
             
             typeTree.put(classID, fn);
@@ -107,11 +107,11 @@ public class AssetClassType implements Struct {
             int fields = typeTree.size();
             out.writeInt(fields);
 
-            for (Map.Entry<Integer, AssetFieldType> entry : typeTree.entrySet()) {
+            for (Map.Entry<Integer, FieldType> entry : typeTree.entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 
-                AssetFieldType fn = entry.getValue();
+                FieldType fn = entry.getValue();
                 fn.write(out);
             }
         } else {
@@ -132,7 +132,7 @@ public class AssetClassType implements Struct {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AssetClassType other = (AssetClassType) obj;
+        final ClassType other = (ClassType) obj;
         if (!Objects.equals(this.typeTree, other.typeTree)) {
             return false;
         }

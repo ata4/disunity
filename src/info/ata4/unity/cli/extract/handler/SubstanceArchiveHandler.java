@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.extract.handler;
 
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
@@ -27,7 +27,7 @@ public class SubstanceArchiveHandler extends AssetExtractHandler {
     }
 
     @Override
-    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         UnityBuffer packageData = obj.getValue("m_PackageData");
         ByteBuffer packageBuffer = packageData.getBuffer();

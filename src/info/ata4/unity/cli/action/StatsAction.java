@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.util.ClassID;
 import info.ata4.util.collection.MapUtils;
 import info.ata4.util.string.StringUtils;
@@ -42,11 +42,11 @@ public class StatsAction extends PrintAction {
 
     @Override
     public void processAsset(AssetFile asset) throws IOException {
-        List<AssetObjectPath> paths = asset.getPaths();
+        List<ObjectPath> paths = asset.getPaths();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();
         
-        for (AssetObjectPath path : paths) {
+        for (ObjectPath path : paths) {
             String className = ClassID.getNameForID(path.getClassID(), true);
             
             if (!classCounts.containsKey(className)) {

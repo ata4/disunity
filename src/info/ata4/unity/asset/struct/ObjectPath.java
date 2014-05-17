@@ -19,7 +19,7 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetObjectPath implements Struct {
+public class ObjectPath implements Struct {
     
     // Path ID, normally in sequence to the file position
     private int pathID;

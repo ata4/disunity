@@ -12,7 +12,7 @@ package info.ata4.unity.cli.extract.handler;
 import info.ata4.io.DataInputReader;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityList;
@@ -57,7 +57,7 @@ public class MeshHandler extends AssetExtractHandler {
     private final List<Vector4f> tangents = new ArrayList<>();
 
     @Override
-    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
         this.obj = obj;
         name = obj.getValue("m_Name");
         

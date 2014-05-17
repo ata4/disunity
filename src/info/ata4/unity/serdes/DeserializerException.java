@@ -13,20 +13,20 @@ package info.ata4.unity.serdes;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class DeserializationException extends Exception {
+public class DeserializerException extends Exception {
 
-    public DeserializationException() {
+    public DeserializerException() {
     }
 
-    public DeserializationException(String msg) {
+    public DeserializerException(String msg) {
         super(msg);
     }
 
-    public DeserializationException(Throwable cause) {
+    public DeserializerException(Throwable cause) {
         super(cause);
     }
 
-    public DeserializationException(String message, Throwable cause) {
+    public DeserializerException(String message, Throwable cause) {
         super(message, cause);
     }
 }

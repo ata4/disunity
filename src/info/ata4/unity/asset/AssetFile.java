@@ -14,12 +14,12 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
-import info.ata4.unity.asset.struct.AssetObjectPath;
-import info.ata4.unity.asset.struct.AssetObjectPathTable;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
+import info.ata4.unity.asset.struct.ClassType;
+import info.ata4.unity.asset.struct.ObjectPath;
+import info.ata4.unity.asset.struct.ObjectPathTable;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
 import java.io.ByteArrayOutputStream;
@@ -45,8 +45,8 @@ public class AssetFile extends FileHandler {
     private static final Logger L = LogUtils.getLogger();
 
     private AssetHeader header = new AssetHeader();
-    private AssetClassType classType = new AssetClassType();
-    private AssetObjectPathTable objTable = new AssetObjectPathTable();
+    private ClassType classType = new ClassType();
+    private ObjectPathTable objTable = new ObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
     private AssetBundle sourceBundle;
     
@@ -106,8 +106,8 @@ public class AssetFile extends FileHandler {
         
         in.setSwap(true);
         
-        classType = new AssetClassType();
-        objTable = new AssetObjectPathTable();
+        classType = new ClassType();
+        objTable = new ObjectPathTable();
         refTable = new AssetRefTable();
         
         classType.setFormat(header.getFormat());
@@ -226,11 +226,11 @@ public class AssetFile extends FileHandler {
         return header;
     }
 
-    public AssetClassType getClassType() {
+    public ClassType getClassType() {
         return classType;
     }
 
-    public List<AssetObjectPath> getPaths() {
+    public List<ObjectPath> getPaths() {
         return objTable.getPaths();
     }
     
@@ -241,14 +241,14 @@ public class AssetFile extends FileHandler {
     public Set<Integer> getClassIDs() {
         Set<Integer> classIDs = new TreeSet<>();
         
-        for (AssetObjectPath path : objTable) {
+        for (ObjectPath path : objTable.getPaths()) {
             classIDs.add(path.getClassID());
         }
         
         return classIDs;
     }
     
-    public ByteBuffer getPathBuffer(AssetObjectPath path) {
+    public ByteBuffer getPathBuffer(ObjectPath path) {
         return ByteBufferUtils.getSlice(getDataBuffer(), path.getOffset(), path.getLength());
     }
 }

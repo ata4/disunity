@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.classfilter;
 
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 
 /**
  * Inteface for Unity class filters.
@@ -18,7 +18,7 @@ import info.ata4.unity.asset.struct.AssetObjectPath;
  */
 public interface ClassFilter {
     
-    public boolean accept(AssetObjectPath path);
+    public boolean accept(ObjectPath path);
     public boolean accept(int classID);
     
 }

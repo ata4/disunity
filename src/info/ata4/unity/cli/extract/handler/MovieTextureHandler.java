@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
@@ -28,7 +28,7 @@ public class MovieTextureHandler extends AssetExtractHandler {
     private static final Logger L = LogUtils.getLogger();
 
     @Override
-    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         UnityBuffer movieData = obj.getValue("m_MovieData");
         ByteBuffer movieBuffer = movieData.getBuffer();

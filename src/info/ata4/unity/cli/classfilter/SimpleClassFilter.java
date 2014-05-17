@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.classfilter;
 
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class SimpleClassFilter implements ClassFilter {
     }
 
     @Override
-    public boolean accept(AssetObjectPath path) {
+    public boolean accept(ObjectPath path) {
         return accept(path.getClassID());
     }
 

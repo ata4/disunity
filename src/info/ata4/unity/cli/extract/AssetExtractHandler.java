@@ -12,7 +12,7 @@ package info.ata4.unity.cli.extract;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -72,7 +72,7 @@ public abstract class AssetExtractHandler {
         this.className = className;
     }
 
-    public abstract void extract(AssetObjectPath path, UnityObject obj) throws IOException;
+    public abstract void extract(ObjectPath path, UnityObject obj) throws IOException;
     
     protected void writeFile(ByteBuffer bb, int id, String name) throws IOException {
         Path assetFile = getAssetFile(id, name);

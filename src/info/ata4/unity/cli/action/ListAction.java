@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.util.ClassID;
 import java.io.PrintStream;
@@ -39,7 +39,7 @@ public class ListAction extends PrintAction {
 
     @Override
     public void processAsset(AssetFile asset) {
-        List<AssetObjectPath> paths = asset.getPaths();
+        List<ObjectPath> paths = asset.getPaths();
 
         // dirty hardcoded table printer
         int p1 = 12;
@@ -75,7 +75,7 @@ public class ListAction extends PrintAction {
         ps.print(StringUtils.repeat("-", p6));
         ps.println();
         
-        for (AssetObjectPath path : paths) {
+        for (ObjectPath path : paths) {
             if (path.isScript()) {
                 continue;
             }

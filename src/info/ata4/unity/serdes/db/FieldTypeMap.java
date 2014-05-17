@@ -10,7 +10,7 @@
 package info.ata4.unity.serdes.db;
 
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetFieldType;
+import info.ata4.unity.asset.struct.FieldType;
 import info.ata4.unity.util.UnityVersion;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,32 +23,32 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeMap extends HashMap<Pair<Integer, UnityVersion>, AssetFieldType> {
+public class FieldTypeMap extends HashMap<Pair<Integer, UnityVersion>, FieldType> {
     
     private static final Logger L = LogUtils.getLogger();
 
-    public AssetFieldType get(int classID, UnityVersion revision) {
+    public FieldType get(int classID, UnityVersion revision) {
         return get(classID, revision, true);
     }
 
-    public AssetFieldType get(int classID, UnityVersion version, boolean strict) {
-        AssetFieldType fieldNode = get(new ImmutablePair<>(classID, version));
+    public FieldType get(int classID, UnityVersion version, boolean strict) {
+        FieldType fieldNode = get(new ImmutablePair<>(classID, version));
 
         // if set to strict, only return exact matches or null
         if (fieldNode != null || strict) {
             return fieldNode;
         }
 
-        AssetFieldType fieldNodeB = null;
+        FieldType fieldNodeB = null;
         UnityVersion versionB = null;
 
-        AssetFieldType fieldNodeC = null;
+        FieldType fieldNodeC = null;
         UnityVersion versionC = null;
 
-        for (Map.Entry<Pair<Integer, UnityVersion>, AssetFieldType> entry : entrySet()) {
+        for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : entrySet()) {
             Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
             if (fieldNodeKey.getLeft() == classID) {
-                AssetFieldType fieldNodeEntry = entry.getValue();
+                FieldType fieldNodeEntry = entry.getValue();
                 UnityVersion revisionEntry = fieldNodeKey.getRight();
 
                 if (revisionEntry.getMajor() == version.getMajor()) {
@@ -84,7 +84,7 @@ public class FieldTypeMap extends HashMap<Pair<Integer, UnityVersion>, AssetFiel
         return null;
     }
 
-    public void add(int classID, UnityVersion revision, AssetFieldType fieldNode) {
+    public void add(int classID, UnityVersion revision, FieldType fieldNode) {
         put(new ImmutablePair<>(classID, revision), fieldNode);
     }
 }

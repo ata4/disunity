@@ -11,9 +11,9 @@ package info.ata4.unity.cli.dump;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetClassType;
-import info.ata4.unity.asset.struct.AssetFieldType;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ClassType;
+import info.ata4.unity.asset.struct.FieldType;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityBuffer;
@@ -72,7 +72,7 @@ public class AssetDumper {
     public void dumpData() throws IOException {
         Deserializer deser = new Deserializer(asset);
 
-        for (AssetObjectPath path : asset.getPaths()) {
+        for (ObjectPath path : asset.getPaths()) {
             // skip MonoBehaviours
             if (path.isScript()) {
                 continue;
@@ -116,7 +116,7 @@ public class AssetDumper {
     }
     
     public void dumpStruct() throws IOException {
-        AssetClassType classType = asset.getClassType();
+        ClassType classType = asset.getClassType();
         
         if (!classType.hasTypeTree()) {
             L.info("No type tree available");
@@ -126,7 +126,7 @@ public class AssetDumper {
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            AssetFieldType classField = classType.getTypeTree().get(classID);
+            FieldType classField = classType.getTypeTree().get(classID);
             
             // skip filtered classes
             if (cf != null && !cf.accept(classID)) {
@@ -218,7 +218,7 @@ public class AssetDumper {
         }
     }
 
-    private void dumpType(PrintWriter pw, AssetFieldType field) {
+    private void dumpType(PrintWriter pw, FieldType field) {
         String name = field.getName();
         String type = field.getType();
         
@@ -235,7 +235,7 @@ public class AssetDumper {
         
         indentLevel++;
         
-        for (AssetFieldType subField : field) {
+        for (FieldType subField : field.getChildren()) {
             dumpType(pw, subField);
         }
         

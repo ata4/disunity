@@ -12,7 +12,7 @@ package info.ata4.unity.cli.extract.handler;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.*;
@@ -36,7 +36,7 @@ public class Texture2DHandler extends AssetExtractHandler {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private AssetObjectPath path;
+    private ObjectPath path;
     private Texture2D tex;
     private boolean tgaSaveMipMaps = true;
     
@@ -49,7 +49,7 @@ public class Texture2DHandler extends AssetExtractHandler {
     }
     
     @Override
-    public void extract(AssetObjectPath path, UnityObject obj) throws IOException {
+    public void extract(ObjectPath path, UnityObject obj) throws IOException {
         this.path = path;
 
         try {

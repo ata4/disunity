@@ -12,8 +12,8 @@ package info.ata4.unity.cli.extract;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.AssetClassType;
-import info.ata4.unity.asset.struct.AssetObjectPath;
+import info.ata4.unity.asset.struct.ClassType;
+import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
@@ -22,7 +22,7 @@ import info.ata4.unity.cli.extract.handler.MovieTextureHandler;
 import info.ata4.unity.cli.extract.handler.SubstanceArchiveHandler;
 import info.ata4.unity.cli.extract.handler.TextAssetHandler;
 import info.ata4.unity.cli.extract.handler.Texture2DHandler;
-import info.ata4.unity.serdes.DeserializationException;
+import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
@@ -55,7 +55,7 @@ public class AssetExtractor {
      * @return Name string of the object or null if it doesn't have a name or if
      *         the deserialization failed.
      */
-    public static String getObjectName(AssetFile asset, AssetObjectPath path) {
+    public static String getObjectName(AssetFile asset, ObjectPath path) {
         Deserializer deser = new Deserializer(asset);
         String name = null;
         
@@ -122,7 +122,7 @@ public class AssetExtractor {
     }
 
     public void extract(boolean raw) throws IOException {
-        List<AssetObjectPath> paths = asset.getPaths();
+        List<ObjectPath> paths = asset.getPaths();
         Deserializer deser = new Deserializer(asset);
 
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
@@ -130,7 +130,7 @@ public class AssetExtractor {
             extractHandler.setExtractDir(outputDir);
         }
         
-        for (AssetObjectPath path : paths) {
+        for (ObjectPath path : paths) {
             // skip filtered classes
             if (cf != null && !cf.accept(path)) {
                 continue;
@@ -164,7 +164,7 @@ public class AssetExtractor {
                     try {
                         UnityObject obj = deser.deserialize(path);
                         handler.extract(path, obj);
-                    } catch (DeserializationException ex) {
+                    } catch (DeserializerException ex) {
                         L.log(Level.WARNING, "Can't deserialize " + path, ex);
                     } catch (IOException ex) {
                         L.log(Level.WARNING, "Can't read or write " + path, ex);
@@ -186,8 +186,8 @@ public class AssetExtractor {
     }
 
     public void split() throws IOException {
-        List<AssetObjectPath> pathTable = asset.getPaths();
-        AssetClassType classType = asset.getClassType();
+        List<ObjectPath> pathTable = asset.getPaths();
+        ClassType classType = asset.getClassType();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -196,7 +196,7 @@ public class AssetExtractor {
             return;
         }
         
-        for (AssetObjectPath path : pathTable) {
+        for (ObjectPath path : pathTable) {
             // skip filtered classes
             if (cf != null && !cf.accept(path)) {
                 continue;
@@ -207,7 +207,7 @@ public class AssetExtractor {
             AssetFile subAsset = new AssetFile();
             subAsset.getHeader().setFormat(asset.getHeader().getFormat());
             
-            AssetObjectPath subFieldPath = new AssetObjectPath();
+            ObjectPath subFieldPath = new ObjectPath();
             subFieldPath.setClassID1(path.getClassID1());
             subFieldPath.setClassID2(path.getClassID2());
             subFieldPath.setLength(path.getLength());
@@ -215,7 +215,7 @@ public class AssetExtractor {
             subFieldPath.setPathID(1);
             subAsset.getPaths().add(subFieldPath);
             
-            AssetClassType subClassType = subAsset.getClassType();
+            ClassType subClassType = subAsset.getClassType();
             subClassType.setEngineVersion(classType.getEngineVersion());
             subClassType.setVersion(-2);
             subClassType.setFormat(classType.getFormat());
