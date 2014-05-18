@@ -11,9 +11,9 @@ package info.ata4.unity.cli.dump;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.ClassType;
-import info.ata4.unity.asset.struct.FieldType;
 import info.ata4.unity.asset.struct.ObjectPath;
+import info.ata4.unity.asset.struct.TypeField;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityBuffer;
@@ -116,9 +116,9 @@ public class AssetDumper {
     }
     
     public void dumpStruct() throws IOException {
-        ClassType classType = asset.getClassType();
+        TypeTree typeTree = asset.getTypeTree();
         
-        if (!classType.hasTypeTree()) {
+        if (!typeTree.getFields().isEmpty()) {
             L.info("No type tree available");
             return;
         }
@@ -126,7 +126,7 @@ public class AssetDumper {
         Set<Integer> classIDs = asset.getClassIDs();
         
         for (Integer classID : classIDs) {
-            FieldType classField = classType.getTypeTree().get(classID);
+            TypeField classField = typeTree.getFields().get(classID);
             
             // skip filtered classes
             if (cf != null && !cf.accept(classID)) {
@@ -218,7 +218,7 @@ public class AssetDumper {
         }
     }
 
-    private void dumpType(PrintWriter pw, FieldType field) {
+    private void dumpType(PrintWriter pw, TypeField field) {
         String name = field.getName();
         String type = field.getType();
         
@@ -235,7 +235,7 @@ public class AssetDumper {
         
         indentLevel++;
         
-        for (FieldType subField : field.getChildren()) {
+        for (TypeField subField : field.getChildren()) {
             dumpType(pw, subField);
         }
         

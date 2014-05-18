@@ -13,8 +13,8 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.ClassType;
-import info.ata4.unity.asset.struct.FieldType;
+import info.ata4.unity.asset.struct.TypeField;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
@@ -105,10 +105,10 @@ public class StructDatabase {
 
             // read field node table
             int fieldNodeSize = in.readInt();
-            List<FieldType> fieldNodes = new ArrayList<>(fieldNodeSize);
+            List<TypeField> fieldNodes = new ArrayList<>(fieldNodeSize);
 
             for (int i = 0; i < fieldNodeSize; i++) {
-                FieldType fieldNode = new FieldType();
+                TypeField fieldNode = new TypeField();
                 fieldNode.read(in);
                 fieldNodes.add(fieldNode);
             }
@@ -130,7 +130,7 @@ public class StructDatabase {
                 int revisionIndex = in.readInt();
                 
                 UnityVersion version = versions.get(revisionIndex);
-                FieldType fieldNode = fieldNodes.get(index);
+                TypeField fieldNode = fieldNodes.get(index);
 
                 ftm.add(classID, version, fieldNode);
             }
@@ -151,13 +151,13 @@ public class StructDatabase {
             out.writeInt(VERSION);
 
             // write field node table
-            Set<FieldType> fieldNodes = new HashSet<>(ftm.values());
-            Map<FieldType, Integer> fieldNodeMap = new HashMap<>();
+            Set<TypeField> fieldNodes = new HashSet<>(ftm.values());
+            Map<TypeField, Integer> fieldNodeMap = new HashMap<>();
 
             out.writeInt(fieldNodes.size());
 
             int index = 0;
-            for (FieldType fieldNode : fieldNodes) {
+            for (TypeField fieldNode : fieldNodes) {
                 fieldNodeMap.put(fieldNode, index++);
                 fieldNode.write(out);
             }
@@ -166,7 +166,7 @@ public class StructDatabase {
             Set<UnityVersion> versions = new HashSet<>();
             Map<UnityVersion, Integer> versionMap = new HashMap<>();
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, TypeField> entry : ftm.entrySet()) {
                 versions.add(entry.getKey().getRight());
             }
 
@@ -181,7 +181,7 @@ public class StructDatabase {
             // write mapping data
             out.writeInt(ftm.entrySet().size());
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, FieldType> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, TypeField> entry : ftm.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
                 Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
 
@@ -198,36 +198,36 @@ public class StructDatabase {
     }
     
     public void fill(AssetFile asset) {
-        ClassType classType = asset.getClassType();
+        TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        fixRevision(asset, classType);
+        fixRevision(asset, typeTree);
         
-        if (classType.getEngineVersion() == null) {
+        if (typeTree.getEngineVersion() == null) {
             L.warning("Revision = null");
             return;
         }
         
         for (Integer classID : classIDs) {
-            FieldType ft = ftm.get(classID, classType.getEngineVersion(), false);
+            TypeField ft = ftm.get(classID, typeTree.getEngineVersion(), false);
             if (ft != null) {
-                classType.getTypeTree().put(classID, ft);
+                typeTree.getFields().put(classID, ft);
             }
         }
     }
     
     public int learn(AssetFile asset) {
-        ClassType classType = asset.getClassType();
+        TypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-        if (!classType.hasTypeTree()) {
+        if (typeTree.getFields().isEmpty()) {
             L.info("No type tree available");
             return 0;
         }
         
-        fixRevision(asset, classType);
+        fixRevision(asset, typeTree);
         
-        if (classType.getEngineVersion() == null) {
+        if (typeTree.getEngineVersion() == null) {
             L.warning("Revision = null");
             return 0;
         }
@@ -236,19 +236,19 @@ public class StructDatabase {
         
         // merge the TypeTree map with the database field map
         for (Integer classID : classIDs) {
-            FieldType fieldType = classType.getTypeTree().get(classID);
+            TypeField fieldType = typeTree.getFields().get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {
                 continue;
             }
             
-            FieldType fieldTypeMapped = ftm.get(classID, classType.getEngineVersion());
+            TypeField fieldTypeMapped = ftm.get(classID, typeTree.getEngineVersion());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                ftm.add(classID, classType.getEngineVersion(), fieldTypeMapped);
+                ftm.add(classID, typeTree.getEngineVersion(), fieldTypeMapped);
                 learnedNew++;
             }
 
@@ -278,11 +278,11 @@ public class StructDatabase {
         }
     }
 
-    private void fixRevision(AssetFile asset, ClassType classType) {
+    private void fixRevision(AssetFile asset, TypeTree typeTree) {
         // older file formats don't contain the revision in the header, try to
         // get it from the asset bundle header instead
-        if (classType.getEngineVersion() == null && asset.getSourceBundle() != null) {
-            classType.setEngineVersion(asset.getSourceBundle().getEngineVersion());
+        if (typeTree.getEngineVersion() == null && asset.getSourceBundle() != null) {
+            typeTree.setEngineVersion(asset.getSourceBundle().getEngineVersion());
         }
     }
 }

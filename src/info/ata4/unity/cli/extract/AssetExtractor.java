@@ -12,8 +12,8 @@ package info.ata4.unity.cli.extract;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.ClassType;
 import info.ata4.unity.asset.struct.ObjectPath;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.cli.extract.handler.AudioClipHandler;
 import info.ata4.unity.cli.extract.handler.FontHandler;
@@ -22,8 +22,8 @@ import info.ata4.unity.cli.extract.handler.MovieTextureHandler;
 import info.ata4.unity.cli.extract.handler.SubstanceArchiveHandler;
 import info.ata4.unity.cli.extract.handler.TextAssetHandler;
 import info.ata4.unity.cli.extract.handler.Texture2DHandler;
-import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.Deserializer;
+import info.ata4.unity.serdes.DeserializerException;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
@@ -187,7 +187,7 @@ public class AssetExtractor {
 
     public void split() throws IOException {
         List<ObjectPath> pathTable = asset.getPaths();
-        ClassType classType = asset.getClassType();
+        TypeTree typeTree = asset.getTypeTree();
         ByteBuffer bb = asset.getDataBuffer();
         
         // assets with just one object can't be split any further
@@ -215,11 +215,11 @@ public class AssetExtractor {
             subFieldPath.setPathID(1);
             subAsset.getPaths().add(subFieldPath);
             
-            ClassType subClassType = subAsset.getClassType();
-            subClassType.setEngineVersion(classType.getEngineVersion());
-            subClassType.setVersion(-2);
-            subClassType.setFormat(classType.getFormat());
-            subClassType.getTypeTree().put(path.getClassID(), classType.getTypeTree().get(path.getClassID()));
+            TypeTree subTypeTree = subAsset.getTypeTree();
+            subTypeTree.setEngineVersion(typeTree.getEngineVersion());
+            subTypeTree.setVersion(-2);
+            subTypeTree.setFormat(typeTree.getFormat());
+            subTypeTree.getFields().put(path.getClassID(), typeTree.getFields().get(path.getClassID()));
 
             // create a byte buffer for the data area
             ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());

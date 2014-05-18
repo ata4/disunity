@@ -10,15 +10,16 @@
 package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.struct.ClassType;
 import info.ata4.unity.asset.struct.AssetHeader;
-import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.AssetRef;
+import info.ata4.unity.asset.struct.ObjectPath;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+import org.apache.commons.lang3.BooleanUtils;
 
 /**
  *
@@ -45,7 +46,7 @@ public class InfoAction extends PrintAction {
         List<ObjectPath> paths = asset.getPaths();
         List<AssetRef> refTable = asset.getReferences();
         AssetHeader header = asset.getHeader();
-        ClassType classType = asset.getClassType();
+        TypeTree typeTree = asset.getTypeTree();
         
         ps.println("Header");
         ps.println("  File size: " + StringUtils.humanReadableByteCount(header.getFileSize(), true));
@@ -55,9 +56,9 @@ public class InfoAction extends PrintAction {
         ps.println();
         
         ps.println("Serialized data");
-        ps.println("  Revision: " + classType.getEngineVersion());
-        ps.println("  Version: " + classType.getVersion());
-        ps.println("  Type tree: " + (classType.hasTypeTree() ? "yes" : "no"));
+        ps.println("  Revision: " + typeTree.getEngineVersion());
+        ps.println("  Version: " + typeTree.getVersion());
+        ps.println("  Type tree: " + BooleanUtils.toStringYesNo(!typeTree.getFields().isEmpty()));
         ps.println("  Objects: " + paths.size());
         ps.println();
         
@@ -82,7 +83,7 @@ public class InfoAction extends PrintAction {
         ps.println("Format: " + bundle.getFormat());
         ps.println("Player version: " + bundle.getPlayerVersion());
         ps.println("Engine version: " + bundle.getEngineVersion());
-        ps.println("Compressed: " + (bundle.isCompressed() ? "yes" : "no"));
+        ps.println("Compressed: " + BooleanUtils.toStringYesNo(bundle.isCompressed()));
         ps.println("Entries: " + bundle.getEntries().size());
         ps.println();
     }

@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * Class that contains the runtime type of a single field.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldType implements Struct {
+public class TypeField implements Struct {
     
     public static final int FLAG_FORCE_ALIGN = 0x4000;
     
     // child fields
-    private final List<FieldType> children = new ArrayList<>();
+    private final List<TypeField> children = new ArrayList<>();
 
     // field type string
     private String type;
@@ -69,7 +70,7 @@ public class FieldType implements Struct {
         }
     }
     
-    public List<FieldType> getChildren() {
+    public List<TypeField> getChildren() {
         return children;
     }
 
@@ -146,7 +147,7 @@ public class FieldType implements Struct {
 
         int numChildren = in.readInt();
         for (int i = 0; i < numChildren; i++) {
-            FieldType fn = new FieldType();
+            TypeField fn = new TypeField();
             fn.read(in);
             children.add(fn);
         }
@@ -163,7 +164,7 @@ public class FieldType implements Struct {
         out.writeInt(flags2);
         
         out.writeInt(children.size());
-        for (FieldType subField : children) {
+        for (TypeField subField : children) {
             subField.write(out);
         }
     }
@@ -176,7 +177,7 @@ public class FieldType implements Struct {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FieldType other = (FieldType) obj;
+        final TypeField other = (TypeField) obj;
         if (!Objects.equals(this.children, other.children)) {
             return false;
         }

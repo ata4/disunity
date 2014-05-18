@@ -19,22 +19,19 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- *
+ * Class that holds the runtime type information of an asset file.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ClassType implements Struct {
+public class TypeTree implements Struct {
 
-    private final Map<Integer, FieldType> typeTree = new LinkedHashMap<>();
+    private final Map<Integer, TypeField> classes = new LinkedHashMap<>();
     private UnityVersion engineVersion;
     private int treeVersion;
     private int treeFormat;
 
-    public Map<Integer, FieldType> getTypeTree() {
-        return typeTree;
-    }
-    
-    public boolean hasTypeTree() {
-        return !typeTree.isEmpty();
+    public Map<Integer, TypeField> getFields() {
+        return classes;
     }
     
     public UnityVersion getEngineVersion() {
@@ -78,10 +75,10 @@ public class ClassType implements Struct {
         for (int i = 0; i < fields; i++) {
             int classID = in.readInt();
 
-            FieldType fn = new FieldType();
+            TypeField fn = new TypeField();
             fn.read(in);
             
-            typeTree.put(classID, fn);
+            classes.put(classID, fn);
         }
         
         // padding
@@ -103,15 +100,15 @@ public class ClassType implements Struct {
             out.setSwap(false);
         }
         
-        if (hasTypeTree()) {
-            int fields = typeTree.size();
+        if (classes.isEmpty()) {
+            int fields = classes.size();
             out.writeInt(fields);
 
-            for (Map.Entry<Integer, FieldType> entry : typeTree.entrySet()) {
+            for (Map.Entry<Integer, TypeField> entry : classes.entrySet()) {
                 int classID = entry.getKey();
                 out.writeInt(classID);
                 
-                FieldType fn = entry.getValue();
+                TypeField fn = entry.getValue();
                 fn.write(out);
             }
         } else {
@@ -132,8 +129,8 @@ public class ClassType implements Struct {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ClassType other = (ClassType) obj;
-        if (!Objects.equals(this.typeTree, other.typeTree)) {
+        final TypeTree other = (TypeTree) obj;
+        if (!Objects.equals(this.classes, other.classes)) {
             return false;
         }
         if (!Objects.equals(this.engineVersion, other.engineVersion)) {
@@ -151,7 +148,7 @@ public class ClassType implements Struct {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.typeTree);
+        hash = 29 * hash + Objects.hashCode(this.classes);
         hash = 29 * hash + Objects.hashCode(this.engineVersion);
         hash = 29 * hash + this.treeVersion;
         hash = 29 * hash + this.treeFormat;

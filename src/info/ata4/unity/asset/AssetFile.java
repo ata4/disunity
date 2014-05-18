@@ -17,7 +17,7 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
-import info.ata4.unity.asset.struct.ClassType;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.ObjectPathTable;
 import info.ata4.unity.assetbundle.AssetBundle;
@@ -45,7 +45,7 @@ public class AssetFile extends FileHandler {
     private static final Logger L = LogUtils.getLogger();
 
     private AssetHeader header = new AssetHeader();
-    private ClassType classType = new ClassType();
+    private TypeTree typeTree = new TypeTree();
     private ObjectPathTable objTable = new ObjectPathTable();
     private AssetRefTable refTable = new AssetRefTable();
     private AssetBundle sourceBundle;
@@ -106,11 +106,11 @@ public class AssetFile extends FileHandler {
         
         in.setSwap(true);
         
-        classType = new ClassType();
+        typeTree = new TypeTree();
         objTable = new ObjectPathTable();
         refTable = new AssetRefTable();
         
-        classType.setFormat(header.getFormat());
+        typeTree.setFormat(header.getFormat());
         
         switch (header.getFormat()) {
             case 5:
@@ -122,14 +122,14 @@ public class AssetFile extends FileHandler {
                 bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
                 bb.position(treeOffset);
 
-                classType.read(in);
+                typeTree.read(in);
                 objTable.read(in);
                 refTable.read(in);
                 break;
                 
             case 9:
                 // first struct, then data
-                classType.read(in);
+                typeTree.read(in);
                 objTable.read(in);
                 refTable.read(in);
                 
@@ -141,7 +141,7 @@ public class AssetFile extends FileHandler {
         }
         
         // try to get struct from database if the embedded one is empty
-        if (classType.getTypeTree().isEmpty()) {
+        if (typeTree.getFields().isEmpty()) {
             L.info("Standalone asset file detected, using structure from database");
             StructDatabase.getInstance().fill(this);
         }
@@ -159,8 +159,8 @@ public class AssetFile extends FileHandler {
         DataOutputWriter outStruct = DataOutputWriter.newWriter(bosStruct);
         outStruct.setSwap(true);
         
-        classType.setFormat(header.getFormat());
-        classType.write(outStruct);
+        typeTree.setFormat(header.getFormat());
+        typeTree.write(outStruct);
         objTable.write(outStruct);
         refTable.write(outStruct);
         
@@ -226,8 +226,8 @@ public class AssetFile extends FileHandler {
         return header;
     }
 
-    public ClassType getClassType() {
-        return classType;
+    public TypeTree getTypeTree() {
+        return typeTree;
     }
 
     public List<ObjectPath> getPaths() {
