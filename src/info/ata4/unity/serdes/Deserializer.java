@@ -39,11 +39,18 @@ public class Deserializer {
         this.asset = asset;
     }
     
-    public UnityObject deserialize(ObjectPath path) throws DeserializerException {
-        // create a byte buffer containing the object's data
-        ByteBuffer bbAssets = asset.getDataBuffer();
+    public List<UnityObject> deserialize() throws DeserializerException {
+        List<UnityObject> objList = new ArrayList<>();
         
-        bbAsset = ByteBufferUtils.getSlice(bbAssets, path.getOffset(), path.getLength());
+        for (ObjectPath path : asset.getPaths()) {
+            objList.add(deserialize(path));
+        }
+        
+        return objList;
+    }
+    
+    public UnityObject deserialize(ObjectPath path) throws DeserializerException {
+        bbAsset = asset.getPathBuffer(path);
         bbAsset.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {

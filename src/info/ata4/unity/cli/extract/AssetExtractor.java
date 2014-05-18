@@ -188,8 +188,7 @@ public class AssetExtractor {
     public void split() throws IOException {
         List<ObjectPath> pathTable = asset.getPaths();
         TypeTree typeTree = asset.getTypeTree();
-        ByteBuffer bb = asset.getDataBuffer();
-        
+
         // assets with just one object can't be split any further
         if (pathTable.size() == 1) {
             L.warning("Asset doesn't contain sub-assets!");
@@ -221,9 +220,7 @@ public class AssetExtractor {
             subTypeTree.setFormat(typeTree.getFormat());
             subTypeTree.getFields().put(path.getClassID(), typeTree.getFields().get(path.getClassID()));
 
-            // create a byte buffer for the data area
-            ByteBuffer bbAsset = ByteBufferUtils.getSlice(bb, path.getOffset(), path.getLength());
-            subAsset.setDataBuffer(bbAsset);
+            subAsset.setDataBuffer(asset.getPathBuffer(path));
             
             Path subAssetDir = outputDir.resolve(className);
             if (!Files.exists(subAssetDir)) {
