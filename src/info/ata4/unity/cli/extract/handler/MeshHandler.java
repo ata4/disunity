@@ -21,8 +21,8 @@ import info.ata4.unity.struct.Vector3f;
 import info.ata4.unity.struct.Vector4f;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -38,133 +38,75 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class MeshHandler extends AssetExtractHandler {
-    
+
     private static final Logger L = LogUtils.getLogger();
     
-    private ByteBuffer indexBuffer;
-    private ByteBuffer vertexBuffer;
-    private UnityObject obj;
-    private String name;
-    private boolean debug;
-
-    private final List<Vector3f> vertices = new ArrayList<>();
-    private final List<Vector3f> normals = new ArrayList<>();
-    private final List<Color32> colors = new ArrayList<>();
-    private final List<Vector2f> uv1 = new ArrayList<>();
-    private final List<Vector2f> uv2 = new ArrayList<>();
-    private final List<Vector4f> tangents = new ArrayList<>();
-
+    private Mesh mesh;
+    
+    private List<Vector3f> vertices;
+    private List<Vector3f> normals;
+    private List<Color32> colors;
+    private List<Vector2f> uv1;
+    private List<Vector2f> uv2;
+    private List<Vector4f> tangents;
+    
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
-        this.obj = obj;
-        name = obj.getValue("m_Name");
-        
         // TODO: support older mesh formats
         UnityVersion version = getAssetFile().getTypeTree().getEngineVersion();
         if (version == null || version.getMajor() != 4) {
             throw new UnsupportedOperationException("Unity 4 format is supported only");
         }
-        
-        readIndexData();
-        readVertexData();
 
-        setFileExtension("obj");
-        Path objFile = getAssetFile(path.getPathID(), name);
-        try (OutputStream os = new BufferedOutputStream(Files.newOutputStream(objFile))) {
-            writeMesh(new PrintStream(os));
-        }
+        mesh = new Mesh(obj);
         
-        clear();
-    }
-    
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-    
-    private void readIndexData() throws IOException {
-        // get index buffer
-        indexBuffer = obj.getValue("m_IndexBuffer");
-        indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        
-        if (debug) {
-            setFileExtension("bin");
-            writeFile(indexBuffer, 0, name + "_IndexBuffer");
-            indexBuffer.rewind();
-        }
-
-        L.log(Level.FINE, "Index buffer size: {0}", indexBuffer.capacity());
-    }
-    
-    private void readVertexData() throws IOException {
-        int meshCompression = obj.getValue("m_MeshCompression");
-        if (meshCompression != 0) {
-            // TODO
+        // TODO: support mesh compression
+        if (mesh.meshCompression != 0) {
             throw new UnsupportedOperationException("Compressed meshes aren't supported yet");
         }
         
-        // get vertex buffer
-        UnityObject vertexDataObj = obj.getValue("m_VertexData");
-        vertexBuffer = vertexDataObj.getValue("m_DataSize");
-        vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        readVertexData();
         
-        if (debug) {
-            setFileExtension("bin");
-            writeFile(vertexBuffer, 0, name + "_DataSize");
-            vertexBuffer.rewind();
+        setFileExtension("obj");
+        Path objFile = getAssetFile(path.getPathID(), mesh.name);
+        try (ObjWriter objWriter = new ObjWriter(objFile)) {
+            writeMesh(objWriter);
         }
+    }
+    
+    private void readVertexData() throws IOException {
+        // init lists
+        vertices = new ArrayList<>();
+        normals = new ArrayList<>();
+        colors = new ArrayList<>();
+        uv1 = new ArrayList<>();
+        uv2 = new ArrayList<>();
+        tangents = new ArrayList<>();
+        
+        // get vertex buffer
+        ByteBuffer vertexBuffer = mesh.vertexData.dataSize;
+        vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
         L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
         
-        List channelList = vertexDataObj.getValue("m_Channels");
-        List<ChannelInfo> channels = new ArrayList<>();
-        
-        // Known channels:
-        // 0 - Empty
-        // 1 - Coordinates (Vector3f)
-        // 2 - Normals (Vector3f)
-        // 3 - Colors (Color32)
-        // 4 - UV layer 1 (Vector2f)
-        // 5 - UV layer 2 (Vector2f)
-        // 6 - Tangents (Vector4f)
-        for (Object channel : channelList) {
-            UnityObject channelObj = (UnityObject) channel;
-            channels.add(new ChannelInfo(channelObj));
-        }
-        
-        // StreamInfo data
-        //   UInt32 channelMask  - Channel type mask (see above)
-        //   UInt32 offset       - Vertex buffer offset
-        //   UInt8 stride        - Total bytes per vertex chunk
-        //   UInt8 dividerOp     - ???
-        //   UInt16 frequency    - ???
-        List streamList = vertexDataObj.getValue("m_Streams");
- 
-        long vertexCount = vertexDataObj.getValue("m_VertexCount");
-        
         DataInputReader in = DataInputReader.newReader(vertexBuffer);
         
-        for (Object stream : streamList) {
-            UnityObject streamObj = (UnityObject) stream;
-            
-            long channelMask = streamObj.getValue("channelMask");
-            long offset = streamObj.getValue("offset");
-            
+        List<StreamInfo> streams = mesh.vertexData.streams;
+        List<ChannelInfo> channels = mesh.vertexData.channels;
+        
+        for (StreamInfo stream : streams) {
             // skip empty channels
-            if (channelMask == 0) {
+            if (stream.channelMask == 0) {
                 continue;
             }
             
-            vertexBuffer.position((int) offset);
+            vertexBuffer.position(stream.offset.intValue());
             
             // read vertex data from each vertex and channel
-            for (int i = 0; i < vertexCount; i++) {
+            for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
                 for (int j = 0; j < channels.size(); j++) {
                     // skip unselected channels
-                    if ((channelMask & 1 << j) == 0) {
+                    if ((stream.channelMask & 1 << j) == 0) {
                         continue;
                     }
                     
@@ -215,30 +157,18 @@ public class MeshHandler extends AssetExtractHandler {
         }
     }
     
-    private void clear() {
-        vertices.clear();
-        normals.clear();
-        colors.clear();
-        uv1.clear();
-        uv2.clear();
-        tangents.clear();
-        
-        vertexBuffer = null;
-        indexBuffer = null;
-    }
-
-    private void writeMesh(PrintStream ps) {
-        ps.println("# Created by DisUnity v" + DisUnity.getVersion());
+    private void writeMesh(ObjWriter obj) {
+        obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
         
         if (!vertices.isEmpty()) {
             for (Vector3f v : vertices) {
-                ps.println("v " + v.x + " " + v.y + " " + v.z);
+                obj.writeVertex(v);
             }
         }
         
         if (!normals.isEmpty()) {
             for (Vector3f vn : normals) {
-                ps.println("vn " + vn.x + " " + vn.y + " " + vn.z);
+                obj.writeNormal(vn);
             }
         }
         
@@ -254,81 +184,261 @@ public class MeshHandler extends AssetExtractHandler {
         
         if (uv != null) {
             for (Vector2f vt : uv) {
-                ps.println("vt " + vt.x + " " + vt.y);
+                obj.writeUV(vt);
             }
         }
         
-        ps.println();
-        ps.println("o " + name);
-        ps.println("s 1");
+        obj.writeLine();
+        obj.writeObject(mesh.name);
+        obj.writeSmooth(1);
         
-        long totalVerts = 0;
-        long totalIndices = 0;
-        
-        List subMeshesList = obj.getValue("m_SubMeshes");
-        int subMeshIndex = 0;
-
-        for (Object subMesh : subMeshesList) {
-            UnityObject subMeshObj = (UnityObject) subMesh;
-
-            long vertexCount = subMeshObj.getValue("vertexCount");
-            totalVerts += vertexCount;
-
-            long indexCount = subMeshObj.getValue("indexCount");
-            totalIndices += indexCount;
-
-            writeSubMesh(ps, subMeshObj, subMeshIndex);
-            
-            subMeshIndex++;
-        }
-
-        L.log(Level.FINE, "Submeshes: {0}", subMeshesList.size());
-        L.log(Level.FINE, "Total indices: {0}", totalIndices);
-        L.log(Level.FINE, "Total vertices: {0}", totalVerts);
-    }
-    
-    private void writeSubMesh(PrintStream ps, UnityObject subMeshObj, int subMeshIndex) {
-        long firstByte = subMeshObj.getValue("firstByte");
-        long indexCount = subMeshObj.getValue("indexCount");
-        
-        ps.printf("usemtl %s_%d\n", name, subMeshIndex);
-
         try {
-            DataInputReader in = DataInputReader.newReader(indexBuffer);
-            in.position((int) firstByte);
+            mesh.indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            DataInputReader in = DataInputReader.newReader(mesh.indexBuffer);
+            for (int i = 0; i < mesh.subMeshes.size(); i++) {
+                SubMesh subMesh = mesh.subMeshes.get(i);
+                in.position(subMesh.firstByte);
+                
+                String material = String.format("%s_%d", mesh.name, i);
+                obj.writeUsemtl(material);
 
-            for (int i = 0; i < indexCount / 3; i++) {
-                int i1 = in.readUnsignedShort() + 1;
-                int i2 = in.readUnsignedShort() + 1;
-                int i3 = in.readUnsignedShort() + 1;
-                ps.printf("f %d/%d/%d", i1, i1, i1);
-                ps.printf(" %d/%d/%d", i2, i2, i2);
-                ps.printf(" %d/%d/%d\n", i3, i3, i3);
+                for (int j = (int) (subMesh.indexCount / 3); j > 0; j--) {
+                    int i1 = in.readUnsignedShort() + 1;
+                    int i2 = in.readUnsignedShort() + 1;
+                    int i3 = in.readUnsignedShort() + 1;
+                    obj.writeFace(i1, i2, i3);
+                }
+                
+                obj.writeLine();
             }
-            
-            ps.println();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             L.log(Level.SEVERE, "Index buffer reading error", ex);
         }
     }
     
+    private class ObjWriter implements Closeable {
+        
+        final PrintStream ps;
+
+        ObjWriter(Path file) throws IOException {
+            ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(file)));
+        }
+        
+        void writeLine() {
+            ps.println();
+        }
+        
+        void writeComment(String comment) {
+            ps.print("# ");
+            ps.println(comment);
+        }
+        
+        void writeObject(String name) {
+            ps.print("o ");
+            ps.println(name);
+        }
+        
+        void writeSmooth(int smooth) {
+            ps.print("s ");
+            ps.println(smooth);
+        }
+        
+        void writeUsemtl(String material) {
+            ps.print("usemtl ");
+            ps.println(material);
+        }
+        
+        void writeFace(int i1, int i2, int i3) {
+            ps.printf("f %d/%d/%d", i1, i1, i1);
+            ps.printf(" %d/%d/%d", i2, i2, i2);
+            ps.printf(" %d/%d/%d\n", i3, i3, i3);
+        }
+        
+        void writeVector(String prefix, Vector2f v) {
+            ps.print(prefix);
+            ps.print(" ");
+            ps.print(v.x);
+            ps.print(" ");
+            ps.print(v.y);
+            ps.println();
+        }
+        
+        void writeVector(String prefix, Vector3f v) {
+            ps.print(prefix);
+            ps.print(" ");
+            ps.print(v.x);
+            ps.print(" ");
+            ps.print(v.y);
+            ps.print(" ");
+            ps.print(v.z);
+            ps.println();
+        }
+
+        void writeVertex(Vector3f v) {
+            writeVector("v", v);
+        }
+
+        void writeNormal(Vector3f vn) {
+            writeVector("vn", vn);
+        }
+
+        void writeUV(Vector2f vt) {
+            writeVector("vt", vt);
+        }
+
+        @Override
+        public void close() throws IOException {
+            ps.close();
+        }
+    }
+
+    // Mesh
+    //   string m_Name
+    //   vector m_SubMeshes
+    //   BlendShapeData m_Shapes
+    //   vector m_BindPose
+    //   vector m_BoneNameHashes
+    //   unsigned int m_RootBoneNameHash
+    //   UInt8 m_MeshCompression
+    //   UInt8 m_StreamCompression
+    //   bool m_IsReadable
+    //   bool m_KeepVertices
+    //   bool m_KeepIndices
+    //   vector m_IndexBuffer
+    //   vector m_Skin
+    //   VertexData m_VertexData
+    //   CompressedMesh m_CompressedMesh
+    //   AABB m_LocalAABB
+    //   int m_MeshUsageFlags
+    private class Mesh {
+
+        final String name;
+        final ByteBuffer indexBuffer;
+        final Integer meshCompression;
+        final VertexData vertexData;
+        final List<SubMesh> subMeshes;
+
+        Mesh(UnityObject obj) {
+            name = obj.getValue("m_Name");
+            indexBuffer = obj.getValue("m_IndexBuffer");
+            meshCompression = obj.getValue("m_MeshCompression");
+
+            UnityObject vertexDataObject = obj.getValue("m_VertexData");
+            vertexData = new VertexData(vertexDataObject);
+
+            List<UnityObject> subMeshObjects = obj.getValue("m_SubMeshes");
+            subMeshes = new ArrayList<>();
+            for (UnityObject subMeshObject : subMeshObjects) {
+                subMeshes.add(new SubMesh(subMeshObject));
+            }
+        }
+    }
+
+    // SubMesh
+    //   unsigned int firstByte
+    //   unsigned int indexCount
+    //   int topology
+    //   unsigned int firstVertex
+    //   unsigned int vertexCount
+    //   AABB localAABB
+    private class SubMesh {
+
+        final Long firstByte;
+        final Long indexCount;
+        final Integer topology;
+        final Long firstVertex;
+        final Long vertexCount;
+
+        SubMesh(UnityObject obj) {
+            firstByte = obj.getValue("firstByte");
+            indexCount = obj.getValue("indexCount");
+            topology = obj.getValue("topology");
+            firstVertex = obj.getValue("firstVertex");
+            vertexCount = obj.getValue("vertexCount");
+        }
+    }
+
+    // VertexData
+    //   unsigned int m_CurrentChannels
+    //   unsigned int m_VertexCount
+    //   vector m_Channels
+    //   vector m_Streams
+    //   TypelessData m_DataSize
+    private class VertexData {
+
+        final Long currentChannels;
+        final Long vertexCount;
+        final List<ChannelInfo> channels;
+        final List<StreamInfo> streams;
+        final ByteBuffer dataSize;
+
+        VertexData(UnityObject obj) {
+            currentChannels = obj.getValue("m_CurrentChannels");
+            vertexCount = obj.getValue("m_VertexCount");
+            
+            List<UnityObject> channelObjects = obj.getValue("m_Channels");
+            channels = new ArrayList<>();
+            for (UnityObject channelObject : channelObjects) {
+                channels.add(new ChannelInfo(channelObject));
+            }
+            
+            List<UnityObject> streamObjects = obj.getValue("m_Streams");
+            streams = new ArrayList<>();
+            for (UnityObject streamObject : streamObjects) {
+                streams.add(new StreamInfo(streamObject));
+            }
+            
+            dataSize = obj.getValue("m_DataSize");
+        }
+    }
+
+    // ChannelInfo
+    //   UInt8 stream
+    //   UInt8 offset
+    //   UInt8 format
+    //   UInt8 dimension
     private class ChannelInfo {
+
+        // Index into m_Streams
+        final Integer stream;
         
-        int stream;
-        int offset;
-        int format;
-        int dimension;
+        // Vertex chunk offset
+        final Integer offset;
         
+        // 0 = full precision, 1 = half precision
+        final Integer format;
+        
+        // Number of fields?
+        final Integer dimension;
+
         ChannelInfo(UnityObject obj) {
-            // ChannelInfo data
-            //   UInt8 stream    - Index into m_Streams
-            //   UInt8 offset    - Vertex chunk offset
-            //   UInt8 format    - 0 = full precision, 1 = half precision
-            //   UInt8 dimension - Number of fields?
             stream = obj.getValue("stream");
             offset = obj.getValue("offset");
             format = obj.getValue("format");
             dimension = obj.getValue("dimension");
+        }
+    }
+
+    // StreamInfo data
+    //   unsigned int channelMask
+    //   unsigned int offset
+    //   UInt8 stride
+    //   UInt8 dividerOp
+    //   UInt16 frequency
+    private class StreamInfo {
+
+        final Long channelMask;
+        final Long offset;
+        final Integer stride;
+        final Integer dividerOp;
+        final Integer frequency;
+
+        StreamInfo(UnityObject obj) {
+            channelMask = obj.getValue("channelMask");
+            offset = obj.getValue("offset");
+            stride = obj.getValue("stride");
+            dividerOp = obj.getValue("dividerOp");
+            frequency = obj.getValue("frequency");
         }
     }
 }
