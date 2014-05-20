@@ -123,14 +123,21 @@ public class Deserializer {
         // check for complex objects with children
         if (!type.getChildren().isEmpty()) {
             switch (type.getType()) {
+                // convert char arrays to string objects
+                case "string":
+                    return readString(type);
+                
+                // wrap collections in UnityValues
+                case "map":
+                case "vector":
+                case "staticvector":
+                case "set":
+                    return readCollection(type);
+                    
                 // arrays need a special treatment
                 case "Array":
                 case "TypelessData":
                     return readArray(type);
-                
-                // convert char arrays to string objects
-                case "string":
-                    return readString(type);
                     
                 default:
                     return readObject(type);
@@ -230,12 +237,18 @@ public class Deserializer {
         return value;
     }
     
+    private UnityValue readCollection(TypeField type) throws IOException {
+        // get Array field of the collection object
+        return readArray(type.getChildren().get(0));
+    }
+    
     private String readString(TypeField type) throws IOException {
-        UnityValue strArray = readArray(type.getChildren().get(0));
+        UnityValue array = readCollection(type);
         
         // strings use "char" arrays, so it should be wrapped in a ByteBuffer
-        ByteBuffer strBuf = (ByteBuffer) strArray.get();
-        return new String(strBuf.array(), "UTF-8");
+        ByteBuffer buf = (ByteBuffer) array.get();
+        
+        return new String(buf.array(), "UTF-8");
     }
     
     public boolean isDebug() {
