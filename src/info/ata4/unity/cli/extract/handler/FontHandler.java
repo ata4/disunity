@@ -11,7 +11,6 @@ package info.ata4.unity.cli.extract.handler;
 
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
-import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,8 +24,7 @@ public class FontHandler extends AssetExtractHandler {
     @Override
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        UnityBuffer fontData = obj.getValue("m_FontData");
-        ByteBuffer fontBuffer = fontData.getBuffer();
+        ByteBuffer fontBuffer = obj.getValue("m_FontData");
         if (fontBuffer.capacity() > 0) {
             // TODO: detect OpenType fonts and use "otf" in these cases
             setFileExtension("ttf");

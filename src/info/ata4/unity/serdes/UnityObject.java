@@ -1,5 +1,5 @@
 /*
- ** 2013 July 24
+ ** 2014 May 19
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,58 +9,63 @@
  */
 package info.ata4.unity.serdes;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Unity object that can carry fields.
+ * Unity object that can contain one or more named fields.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityObject extends UnityNamedType {
+public class UnityObject implements UnityTag<Map<String, UnityTag>> {
     
-    private final Map<String, UnityField> fields = new LinkedHashMap<>();
-    
-    public UnityObject(String type) {
-        super(type);
-    }
-    
-    public Collection<UnityField> getFields() {
-        return fields.values();
-    }
-    
-    public UnityField getField(String name) {
-        return fields.get(name);
-    }
-    
-    public UnityField addField(UnityField field) {
-        return fields.put(field.getName(), field);
-    }
-    
-    public UnityField removeField(UnityField field) {
-        return fields.remove(field.getName());
-    }
-    
-    public void removeAllFields() {
-        fields.clear();
+    private String name;
+    private String type;
+    private Map<String, UnityTag> fields = new LinkedHashMap<>();
+
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    @Override
+    public Map<String, UnityTag> get() {
+        return fields;
+    }
+
+    @Override
+    public void set(Map<String, UnityTag> value) {
+        this.fields = value;
+    }
+    
     public <T> T getValue(String name) {
-        UnityField f = getField(name);
+        UnityTag f = fields.get(name);
 
         if (f == null) {
             return null;
         } else {
-            return (T) f.getValue();
+            return (T) f.get();
         }
     }
     
     public <T> void setValue(String name, T value) {
-        UnityField f = getField(name);
+        UnityTag f = fields.get(name);
         
         if (f != null) {
-            f.setValue(value);
+            f.set(value);
         }
     }
 }

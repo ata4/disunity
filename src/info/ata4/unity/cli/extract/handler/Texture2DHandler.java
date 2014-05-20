@@ -16,7 +16,6 @@ import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.TextureFormat;
 import static info.ata4.unity.enums.TextureFormat.*;
-import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.image.dds.DDSHeader;
 import info.ata4.util.io.image.dds.DDSPixelFormat;
@@ -648,8 +647,7 @@ public class Texture2DHandler extends AssetExtractHandler {
             lightmapFormat = obj.getValue("m_LightmapFormat");
             colorSpace = obj.getValue("m_ColorSpace");
             
-            UnityBuffer imageData = obj.getValue("image data");
-            imageBuffer = imageData.getBuffer();
+            imageBuffer = obj.getValue("image data");
             imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
         }
     }

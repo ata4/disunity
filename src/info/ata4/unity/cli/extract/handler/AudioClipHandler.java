@@ -14,7 +14,6 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.enums.AudioType;
-import info.ata4.unity.serdes.UnityBuffer;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -54,8 +53,7 @@ public class AudioClipHandler extends AssetExtractHandler {
     public void extract(ObjectPath path, UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         
-        UnityBuffer audioData = obj.getValue("m_AudioData");
-        ByteBuffer audioBuffer = audioData.getBuffer();
+        ByteBuffer audioBuffer = obj.getValue("m_AudioData");
         audioBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         // load audio buffer from external buffer if stream is set to 2

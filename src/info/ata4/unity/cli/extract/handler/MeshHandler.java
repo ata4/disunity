@@ -14,8 +14,6 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
-import info.ata4.unity.serdes.UnityBuffer;
-import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.Color32;
 import info.ata4.unity.struct.Vector2f;
@@ -89,8 +87,7 @@ public class MeshHandler extends AssetExtractHandler {
     
     private void readIndexData() throws IOException {
         // get index buffer
-        UnityBuffer indexBufferObj = obj.getValue("m_IndexBuffer");
-        indexBuffer = indexBufferObj.getBuffer();
+        indexBuffer = obj.getValue("m_IndexBuffer");
         indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {
@@ -111,8 +108,7 @@ public class MeshHandler extends AssetExtractHandler {
         
         // get vertex buffer
         UnityObject vertexDataObj = obj.getValue("m_VertexData");
-        UnityBuffer dataSizeObj = vertexDataObj.getValue("m_DataSize");
-        vertexBuffer = dataSizeObj.getBuffer();
+        vertexBuffer = vertexDataObj.getValue("m_DataSize");
         vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         if (debug) {
@@ -123,7 +119,7 @@ public class MeshHandler extends AssetExtractHandler {
 
         L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
         
-        UnityList channelsObj = vertexDataObj.getValue("m_Channels");
+        List channelList = vertexDataObj.getValue("m_Channels");
         List<ChannelInfo> channels = new ArrayList<>();
         
         // Known channels:
@@ -134,7 +130,7 @@ public class MeshHandler extends AssetExtractHandler {
         // 4 - UV layer 1 (Vector2f)
         // 5 - UV layer 2 (Vector2f)
         // 6 - Tangents (Vector4f)
-        for (Object channel : channelsObj.getList()) {
+        for (Object channel : channelList) {
             UnityObject channelObj = (UnityObject) channel;
             channels.add(new ChannelInfo(channelObj));
         }
@@ -145,13 +141,13 @@ public class MeshHandler extends AssetExtractHandler {
         //   UInt8 stride        - Total bytes per vertex chunk
         //   UInt8 dividerOp     - ???
         //   UInt16 frequency    - ???
-        UnityList streams = vertexDataObj.getValue("m_Streams");
+        List streamList = vertexDataObj.getValue("m_Streams");
  
         long vertexCount = vertexDataObj.getValue("m_VertexCount");
         
         DataInputReader in = DataInputReader.newReader(vertexBuffer);
         
-        for (Object stream : streams.getList()) {
+        for (Object stream : streamList) {
             UnityObject streamObj = (UnityObject) stream;
             
             long channelMask = streamObj.getValue("channelMask");
@@ -269,10 +265,10 @@ public class MeshHandler extends AssetExtractHandler {
         long totalVerts = 0;
         long totalIndices = 0;
         
-        UnityList subMeshesObj = obj.getValue("m_SubMeshes");
+        List subMeshesList = obj.getValue("m_SubMeshes");
         int subMeshIndex = 0;
 
-        for (Object subMesh : subMeshesObj.getList()) {
+        for (Object subMesh : subMeshesList) {
             UnityObject subMeshObj = (UnityObject) subMesh;
 
             long vertexCount = subMeshObj.getValue("vertexCount");
@@ -286,7 +282,7 @@ public class MeshHandler extends AssetExtractHandler {
             subMeshIndex++;
         }
 
-        L.log(Level.FINE, "Submeshes: {0}", subMeshesObj.getList().size());
+        L.log(Level.FINE, "Submeshes: {0}", subMeshesList.size());
         L.log(Level.FINE, "Total indices: {0}", totalIndices);
         L.log(Level.FINE, "Total vertices: {0}", totalVerts);
     }

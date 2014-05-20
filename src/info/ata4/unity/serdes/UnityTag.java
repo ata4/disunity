@@ -1,5 +1,5 @@
 /*
- ** 2013 August 25
+ ** 2014 May 19
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -10,23 +10,17 @@
 package info.ata4.unity.serdes;
 
 /**
- * Unity object with an associated name and immutable type string.
+ * Wrapper to tag objects with a Unity type string.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class UnityNamedType extends UnityType {
+public interface UnityTag<T> {
     
-    private String name;
-    
-    public UnityNamedType(String type) {
-        super(type);
-    }
+    public T get();
 
-    public String getName() {
-        return name;
-    }
+    public void set(T value);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getType();
+
+    public void setType(String type);
 }

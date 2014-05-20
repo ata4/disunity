@@ -16,10 +16,8 @@ import info.ata4.unity.asset.struct.TypeField;
 import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import info.ata4.unity.serdes.Deserializer;
-import info.ata4.unity.serdes.UnityBuffer;
-import info.ata4.unity.serdes.UnityField;
-import info.ata4.unity.serdes.UnityList;
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.serdes.UnityTag;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,6 +27,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +47,7 @@ public class AssetDumper {
     private ClassFilter cf;
     private Path outputDir;
     private int indentLevel;
+    private PrintWriter pw;
     
     public AssetDumper(AssetFile asset) {
         this.asset = asset;
@@ -84,6 +84,7 @@ public class AssetDumper {
             }
 
             UnityObject obj;
+            
             try {
                 obj = deser.deserialize(path);
             } catch (Exception ex) {
@@ -105,20 +106,113 @@ public class AssetDumper {
                 L.log(Level.FINE, "Writing {0}", fileName);
                 
                 try (Writer writer = Files.newBufferedWriter(dumpFile, CHARSET)) {
-                    dumpObject(new PrintWriter(writer), obj);
+                    pw = new PrintWriter(writer);
+                    dumpObject(obj);
                 }
             } else {
-                PrintWriter pw = new PrintWriter(System.out);
-                dumpObject(pw, obj);
+                pw = new PrintWriter(System.out);
+                dumpObject(obj);
                 pw.flush();
             }
         }
     }
     
+    public void dumpObject(UnityObject obj) {
+        pw.print(obj.getType());
+        
+        if (!obj.getName().equals("Base")) {
+            pw.print(" ");
+            pw.println(obj.getName());
+        } else {
+            pw.println();
+        }
+        
+        indentLevel++;       
+        for (Map.Entry<String, UnityTag> field : obj.get().entrySet()) {
+            indent();
+            dumpField(field.getKey(), field.getValue());
+        }
+        indentLevel--;
+    }
+    
+    public void dumpField(String name, UnityTag value) {
+        if (!(value.get() instanceof UnityObject)) {
+            pw.printf("%s %s = ", value.getType(), name);
+        }
+        dumpValue(value.get());
+    }
+    
+    private void dumpValue(Object value) {
+        if (value instanceof UnityObject) {
+            UnityObject obj = (UnityObject) value;
+            dumpObject(obj);
+        } else if (value instanceof UnityTag) {
+            UnityTag val = (UnityTag) value;
+            Object valObj = val.get();
+            
+            if (valObj instanceof List) {
+                dumpList(val, valObj);
+            } else {
+                dumpValue(valObj);
+            }
+        } else if (value instanceof ByteBuffer) {
+            ByteBuffer bb = (ByteBuffer) value;
+            pw.printf("byte[%d]\n", bb.capacity());
+            dumpBytes(bb);
+        } else if (value instanceof String) {
+            pw.printf("\"%s\"\n", value);
+        } else {
+            pw.printf("%s\n", value);
+        }
+    }
+
+    private void dumpBytes(ByteBuffer bb) {
+        byte[] block = new byte[256];
+        byte[] blockPrint;
+        
+        ByteBuffer bb2 = bb.duplicate();
+        bb2.rewind();
+        
+        indentLevel++;
+        
+        while (bb2.hasRemaining()) {
+            int len = Math.min(bb2.remaining(), block.length);
+            bb2.get(block, 0, len);
+
+            // copy block to smaller array if it's not completely filled,
+            // since printHexBinary doesn't have a length parameter
+            if (len != block.length) {
+                blockPrint = new byte[len];
+                System.arraycopy(block, 0, blockPrint, 0, len);
+            } else {
+                blockPrint = block;
+            }
+            
+            indent();
+            pw.println(DatatypeConverter.printHexBinary(blockPrint));
+        }
+        
+        indentLevel--;
+    }
+    
+    private void dumpList(UnityTag value, Object obj) {
+        List list = (List) obj;
+        pw.printf("%s[%d]\n", value.getType(), list.size());
+
+        indentLevel++;
+        
+        for (Object valueInner : list) {
+            indent();
+            dumpValue(valueInner);
+        }
+        
+        indentLevel--;
+    }
+    
     public void dumpStruct() throws IOException {
         TypeTree typeTree = asset.getTypeTree();
         
-        if (!typeTree.getFields().isEmpty()) {
+        if (typeTree.getFields().isEmpty()) {
             L.info("No type tree available");
             return;
         }
@@ -142,87 +236,22 @@ public class AssetDumper {
                 String fileName = String.format("%s.txt", className);
                 Path file = outputDir.resolve(fileName);
                 try (Writer writer = Files.newBufferedWriter(file, CHARSET)) {
-                    dumpType(new PrintWriter(writer), classField);
+                    pw = new PrintWriter(writer);
+                    dumpType(classField);
                 }
             } else {
-                PrintWriter pw = new PrintWriter(System.out);
-                dumpType(pw, classField);
+                pw = new PrintWriter(System.out);
+                dumpType(classField);
                 pw.flush();
             }
         }
     }
     
-    public void dumpObject(PrintWriter pw, UnityObject obj) {
-        pw.print(obj.getType());
-        
-        if (!obj.getName().equals("Base")) {
-            pw.print(" ");
-            pw.println(obj.getName());
-        } else {
-            pw.println();
-        }
-        
-        indentLevel++;
-        
-        for (UnityField field : obj.getFields()) {
-            indent(pw);
-            
-            Object value = field.getValue();
-            if (value instanceof UnityObject) {
-                dumpObject(pw, (UnityObject) value);
-            } else {
-                dumpField(pw, field);
-            }
-        }
-        
-        indentLevel--;
-    }
-    
-    public void dumpField(PrintWriter pw, UnityField field) {
-        String name = field.getName();
-        String type = field.getType();
-        Object value = field.getValue();
-        
-        if (name.contains(" ")) {
-            pw.printf("%s \"%s\" = ", type, name, value);
-        } else {
-            pw.printf("%s %s = ", type, name, value);
-        }
-        
-        indentLevel++;
-        
-        dumpValue(pw, value);
-        
-        indentLevel--;
-    }
-    
-    private void dumpValue(PrintWriter pw, Object value) {
-        if (value instanceof UnityObject) {
-            dumpObject(pw, (UnityObject) value);
-        } else if (value instanceof UnityList) {
-            UnityList array = (UnityList) value;
-            List<Object> list = array.getList();
-            pw.printf("%s[%d]\n", array.getType(), list.size());
-            for (Object value2 : list) {
-                indent(pw);
-                dumpValue(pw, value2);
-            }
-        } else if (value instanceof UnityBuffer) {
-            ByteBuffer bb = ((UnityBuffer) value).getBuffer();
-            pw.printf("byte[%d]\n", bb.capacity());
-            dumpBytes(pw, bb);
-        } else if (value instanceof String) {
-            pw.printf("\"%s\"\n", value);
-        } else {
-            pw.println(value);
-        }
-    }
-
-    private void dumpType(PrintWriter pw, TypeField field) {
+    private void dumpType(TypeField field) {
         String name = field.getName();
         String type = field.getType();
         
-        indent(pw);
+        indent();
         
         pw.print(type);
         
@@ -236,25 +265,13 @@ public class AssetDumper {
         indentLevel++;
         
         for (TypeField subField : field.getChildren()) {
-            dumpType(pw, subField);
+            dumpType(subField);
         }
         
         indentLevel--;
     }
-
-    private void dumpBytes(PrintWriter pw, ByteBuffer bb) {
-        byte[] block = new byte[256];
-        ByteBuffer bb2 = bb.duplicate();
-        bb2.rewind();
-        while (bb2.hasRemaining()) {
-            int len = Math.min(bb2.remaining(), block.length);
-            bb2.get(block, 0, len);
-            indent(pw);
-            pw.println(DatatypeConverter.printHexBinary(block));
-        }
-    }
     
-    private void indent(PrintWriter pw) {
+    private void indent() {
         for (int i = 0; i < indentLevel; i++) {
             pw.print(INDENT_STRING);
         }
