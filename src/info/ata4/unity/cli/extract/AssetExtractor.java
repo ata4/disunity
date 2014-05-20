@@ -236,7 +236,7 @@ public class AssetExtractor {
             subAssetName += ".asset";
             
             Path subAssetFile = subAssetDir.resolve(subAssetName);
-            if (Files.exists(subAssetFile)) {
+            if (!Files.exists(subAssetFile)) {
                 L.log(Level.INFO, "Writing {0}", subAssetFile);
                 subAsset.save(subAssetFile);
             }
