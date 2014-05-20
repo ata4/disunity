@@ -200,8 +200,8 @@ public class Deserializer {
         TypeField typeSize = subTypes.get(0);
         TypeField typeData = subTypes.get(1);
         
-        // check name and type of the two array fields
-        if (!typeSize.getName().equals("size") || !typeSize.getType().equals("int")) {
+        // check name of the two array fields
+        if (!typeSize.getName().equals("size")) {
             throw new IOException("Unexpected array size field: " + typeSize);
         }
         
