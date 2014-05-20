@@ -230,16 +230,12 @@ public class Deserializer {
         return value;
     }
     
-    private UnityValue<String> readString(TypeField type) throws IOException {
+    private String readString(TypeField type) throws IOException {
         UnityValue strArray = readArray(type.getChildren().get(0));
         
         // strings use "char" arrays, so it should be wrapped in a ByteBuffer
         ByteBuffer strBuf = (ByteBuffer) strArray.get();
-        String str = new String(strBuf.array(), "UTF-8");
-
-        UnityValue<String> strObj = new UnityValue<>();
-        strObj.set(str);
-        return strObj;
+        return new String(strBuf.array(), "UTF-8");
     }
     
     public boolean isDebug() {
