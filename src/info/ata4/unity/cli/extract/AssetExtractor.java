@@ -126,7 +126,7 @@ public class AssetExtractor {
 
         for (AssetExtractHandler extractHandler : extractHandlerMap.values()) {
             extractHandler.setAssetFile(asset);
-            extractHandler.setExtractDir(outputDir);
+            extractHandler.setOutputDir(outputDir);
         }
         
         for (ObjectPath path : paths) {
@@ -160,12 +160,19 @@ public class AssetExtractor {
                 AssetExtractHandler handler = getHandler(className);
                 
                 if (handler != null) {
+                    UnityObject obj;
+                    
                     try {
-                        UnityObject obj = deser.deserialize(path);
-                        handler.extract(path, obj);
+                        obj = deser.deserialize(path);
                     } catch (IOException ex) {
                         L.log(Level.WARNING, "Can't deserialize " + path, ex);
-                    } catch (Exception ex) {
+                        continue;
+                    }
+                    
+                    try {
+                        handler.setObjectPath(path);
+                        handler.extract(obj);
+                    } catch (IOException ex) {
                         L.log(Level.WARNING, "Can't extract " + path, ex);
                     }
                 }

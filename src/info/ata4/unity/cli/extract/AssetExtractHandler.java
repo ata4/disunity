@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -32,10 +33,12 @@ public abstract class AssetExtractHandler {
     private static final Logger L = LogUtils.getLogger();
 
     private AssetFile asset;
-    private Path extractDir;
+    private ObjectPath path;
     private String className;
-    private String fileExtension = "bin";
-    private final Set<Path> assignedFiles = new HashSet<>();
+    private Path outDir;
+    private String outFileName;
+    private String outFileExt;
+    private final Set<Path> uniqueFiles = new HashSet<>();
     
     public AssetFile getAssetFile() {
         return asset;
@@ -45,66 +48,87 @@ public abstract class AssetExtractHandler {
         this.asset = asset;
     }
 
-    public Path getExtractDir() {
-        return extractDir;
+    public Path getOutputDir() {
+        return outDir;
     }
 
-    public void setExtractDir(Path extractDir) {
-        this.extractDir = extractDir;
+    public void setOutputDir(Path outDir) {
+        this.outDir = outDir;
         
         // new output directory, clear list of written files
-        assignedFiles.clear();
+        uniqueFiles.clear();
     }
     
-    public String getFileExtension() {
-        return fileExtension;
+    public String getOutputFileExtension() {
+        return outFileExt;
     }
     
-    public void setFileExtension(String fileExtension) {
-        this.fileExtension = fileExtension;
+    public void setOutputFileExtension(String outFileExt) {
+        this.outFileExt = outFileExt;
+    }
+    
+    public String getOutputFileName() {
+        return outFileName;
+    }
+
+    public void setOutputFileName(String outFileName) {
+        // remove any chars that could cause troubles on various file systems
+        if (StringUtils.isBlank(outFileName)) {
+            outFileName = outFileName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+        }
+        this.outFileName = outFileName;
+    }
+    
+    public ObjectPath getObjectPath() {
+        return path;
+    }
+
+    public void setObjectPath(ObjectPath path) {
+        this.path = path;
     }
 
     public String getClassName() {
         return className;
     }
-
+    
     public void setClassName(String className) {
         this.className = className;
     }
 
-    public abstract void extract(ObjectPath path, UnityObject obj) throws IOException;
+    public abstract void extract(UnityObject obj) throws IOException;
     
-    protected void writeFile(ByteBuffer bb, int id, String name) throws IOException {
-        Path assetFile = getAssetFile(id, name);
+    protected void writeData(ByteBuffer bb) throws IOException {
+        Path outFile = getOutputFile();
         
         try {
-            ByteBufferUtils.save(assetFile, bb);
-        } catch (Exception ex) {
-            L.log(Level.WARNING, "Failed writing " + assetFile, ex);
+            ByteBufferUtils.save(outFile, bb);
+        } catch (IOException ex) {
+            L.log(Level.WARNING, "Failed writing " + outFile, ex);
         }
     }
     
-    protected void writeFile(byte[] data, int id, String name) throws IOException {
-        writeFile(ByteBuffer.wrap(data), id, name);
+    protected void writeData(byte[] data) throws IOException {
+        writeData(ByteBuffer.wrap(data));
     }
     
-    protected Path getAssetFile(int id, String name) throws IOException {
-        Path classDir = extractDir.resolve(className);
+    protected Path getOutputFile() throws IOException {
+        Path classDir = getOutputDir().resolve(getClassName());
         
         if (!Files.exists(classDir)) {
             Files.createDirectories(classDir);
         }
         
-        // remove any chars that could cause troubles on various file systems
-        if (name != null && !name.isEmpty()) {
-            name = name.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+        String fileName = getOutputFileName();
+        String fileExt = getOutputFileExtension();
+        
+        // use path ID if no file name is set
+        if (StringUtils.isBlank(fileName)) {
+            fileName = String.format("%06d", getObjectPath().getPathID());
         }
         
-        String fileName = name;
-        String fileExt = getFileExtension();
-        
-        if (fileName == null || fileName.isEmpty()) {
-            fileName = String.format("%06d", id);
+        // use "bin" if no file extension is set
+        if (StringUtils.isBlank(fileExt)) {
+            fileExt = "bin";
         }
         
         Path assetFile = getUniqueFile(classDir, fileName, fileExt);
@@ -119,12 +143,12 @@ public abstract class AssetExtractHandler {
         Path file = parent.resolve(String.format("%s.%s", name, ext));
         int fileNum = 1;
         
-        while (assignedFiles.contains(file)) {
+        while (uniqueFiles.contains(file)) {
             file = parent.resolve(String.format("%s_%d.%s", name, fileNum, ext));
             fileNum++;
         }
         
-        assignedFiles.add(file);
+        uniqueFiles.add(file);
         
         return file;
     }

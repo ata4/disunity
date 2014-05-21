@@ -48,7 +48,7 @@ public class Texture2DHandler extends AssetExtractHandler {
     }
     
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(UnityObject obj) throws IOException {
         this.path = path;
 
         try {
@@ -238,8 +238,9 @@ public class Texture2DHandler extends AssetExtractHandler {
         
         bbTex.rewind();
         
-        setFileExtension("dds");
-        writeFile(bbTex, path.getPathID(), tex.name);
+        setOutputFileName(tex.name);
+        setOutputFileExtension("dds");
+        writeData(bbTex);
     }
 
     private void extractPKM() throws IOException {
@@ -261,8 +262,9 @@ public class Texture2DHandler extends AssetExtractHandler {
 
         res.rewind();
 
-        setFileExtension("pkm");
-        writeFile(res, path.getPathID(), tex.name);
+        setOutputFileName(tex.name);
+        setOutputFileExtension("pkm");
+        writeData(res);
     }
 
     private void extractTGA() throws IOException {
@@ -338,8 +340,9 @@ public class Texture2DHandler extends AssetExtractHandler {
                         fileName += "_mip_" + j;
                     }
 
-                    setFileExtension("tga");
-                    writeFile(bbTga, path.getPathID(), fileName);
+                    setOutputFileName(fileName);
+                    setOutputFileExtension("tga");
+                    writeData(bbTga);
                 } else {
                     bb.position(bb.position() + imageSize);
                 }
@@ -609,8 +612,9 @@ public class Texture2DHandler extends AssetExtractHandler {
         // write file
         bb.rewind();
 
-        setFileExtension("ktx");
-        writeFile(bb, path.getPathID(), tex.name);
+        setOutputFileName(tex.name);
+        setOutputFileExtension("ktx");
+        writeData(bb);
     }
     
     private class Texture2D {

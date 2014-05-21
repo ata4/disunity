@@ -50,7 +50,7 @@ public class AudioClipHandler extends AssetExtractHandler {
     }
 
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         
         ByteBuffer audioBuffer = obj.getValue("m_AudioData");
@@ -94,7 +94,8 @@ public class AudioClipHandler extends AssetExtractHandler {
             return;
         }
         
-        setFileExtension(ext);
-        writeFile(audioBuffer, path.getPathID(), name);
+        setOutputFileName(name);
+        setOutputFileExtension(ext);
+        writeData(audioBuffer);
     }
 }

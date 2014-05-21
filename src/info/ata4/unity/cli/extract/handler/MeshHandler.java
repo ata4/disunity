@@ -13,7 +13,6 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.Color32;
@@ -56,7 +55,7 @@ public class MeshHandler extends AssetExtractHandler {
     private Deque<Integer> triangles;
     
     @Override
-    public void extract(ObjectPath path, UnityObject obj) throws IOException {
+    public void extract(UnityObject obj) throws IOException {
         // TODO: support older mesh formats
         UnityVersion version = getAssetFile().getTypeTree().getEngineVersion();
         if (version == null || version.getMajor() != 4) {
@@ -67,8 +66,10 @@ public class MeshHandler extends AssetExtractHandler {
         
         readVertexData();
         
-        setFileExtension("obj");
-        Path objFile = getAssetFile(path.getPathID(), mesh.name);
+        setOutputFileName(mesh.name);
+        setOutputFileExtension("obj");
+        
+        Path objFile = getOutputFile();
         try (ObjWriter objWriter = new ObjWriter(objFile)) {
             writeMesh(objWriter);
         }
