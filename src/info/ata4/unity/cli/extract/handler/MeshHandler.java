@@ -315,11 +315,15 @@ public class MeshHandler extends AssetExtractHandler {
         obj.writeObject(mesh.name);
         obj.writeSmooth(1);
         
-        for (int i = 0; i < mesh.subMeshes.size(); i++) {
+        final int subMeshes = mesh.subMeshes.size();
+        for (int i = 0; i < subMeshes; i++) {
             SubMesh subMesh = mesh.subMeshes.get(i);
 
-            String material = String.format("%s_%d", mesh.name, i);
-            obj.writeUsemtl(material);
+            if (subMeshes == 1) {
+                obj.writeUsemtl(mesh.name);
+            } else {
+                obj.writeUsemtl(String.format("%s_%d", mesh.name, i));
+            }
 
             for (int j = 0; j < subMesh.indexCount / 3; j++) {
                 int i1 = triangles.pop() + 1;
