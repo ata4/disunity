@@ -19,16 +19,12 @@ import java.io.IOException;
  */
 public class Vector4f extends Vector3f {
     
-    public Vector4f(boolean half) {
-        super(half);
-    }
-    
     public float w;
 
     @Override
     public void read(DataInputReader in) throws IOException {
         super.read(in);
-        if (half) {
+        if (isHalf()) {
             w = in.readHalf();
         } else {
             w = in.readFloat();
@@ -38,7 +34,7 @@ public class Vector4f extends Vector3f {
     @Override
     public void write(DataOutputWriter out) throws IOException {
         super.write(out);
-        if (half) {
+        if (isHalf()) {
             out.writeHalf(w);
         } else {
             out.writeFloat(w);

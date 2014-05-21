@@ -20,14 +20,18 @@ import java.io.IOException;
  */
 public class Vector2f implements Struct {
     
-    protected final boolean half;
-    
-    public Vector2f(boolean half) {
-        this.half = half;
-    }
+    private boolean half;
     
     public float x;
     public float y;
+    
+    public boolean isHalf() {
+        return half;
+    }
+
+    public void setHalf(boolean half) {
+        this.half = half;
+    }
 
     @Override
     public void read(DataInputReader in) throws IOException {
