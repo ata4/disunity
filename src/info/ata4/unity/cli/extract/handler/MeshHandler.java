@@ -295,23 +295,25 @@ public class MeshHandler extends AssetExtractHandler {
         Path objFile = getOutputFile();
         
         try (PrintStream ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(objFile)))) {
-            Deque<Integer> trisDeque = new ArrayDeque<>(triangles);
-            
             ObjWriter obj = new ObjWriter(ps);
             obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
 
+            // write vertex array
             if (!vertices.isEmpty()) {
                 for (Vector3f v : vertices) {
                     obj.writeVertex(v);
                 }
             }
 
+            // write normal array
             if (!normals.isEmpty()) {
                 for (Vector3f vn : normals) {
                     obj.writeNormal(vn);
                 }
             }
 
+            // OBJ doesn't support more than one UV layer, so select the first
+            // non-empty list
             List<Vector2f> uv;
 
             if (!uv1.isEmpty()) {
@@ -328,6 +330,7 @@ public class MeshHandler extends AssetExtractHandler {
                 }
             }
 
+            // write sub-meshes as materials
             obj.writeLine();
             obj.writeObject(mesh.name);
             obj.writeSmooth(1);
@@ -341,19 +344,20 @@ public class MeshHandler extends AssetExtractHandler {
                 } else {
                     obj.writeUsemtl(String.format("%s_%d", mesh.name, i));
                 }
+                
+                final int numFaces = subMesh.indexCount.intValue() / 3;
+                final int ofsFaces = subMesh.firstByte.intValue() / 3;
 
-                for (int j = 0; j < subMesh.indexCount / 3; j++) {
-                    int i1 = trisDeque.pop() + 1;
-                    int i2 = trisDeque.pop() + 1;
-                    int i3 = trisDeque.pop() + 1;
-                    obj.writeFace(i1, i2, i3);
+                for (int j = ofsFaces; j < ofsFaces + numFaces; j++) {
+                    int i1 = triangles.get(j * 3);
+                    int i2 = triangles.get(j * 3 + 1);
+                    int i3 = triangles.get(j * 3 + 2);
+                    
+                    // Note: OBJ indices start from 1
+                    obj.writeFace(i1 + 1, i2 + 1, i3 + 1);
                 }
 
                 obj.writeLine();
-            }
-
-            if (!trisDeque.isEmpty()) {
-                L.log(Level.WARNING, "{0} unprocessed triangles", trisDeque.size());
             }
         }
     }
