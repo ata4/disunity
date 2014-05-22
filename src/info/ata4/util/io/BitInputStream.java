@@ -1,5 +1,5 @@
 /*
- ** 2014 Mai 20
+ ** 2014 May 20
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -32,9 +32,10 @@ public class BitInputStream extends InputStream {
     }
 
     public void setBitLength(int bits) {
-        if (bits > 32) {
+        if (bits < 1 || bits > 32) {
             throw new IllegalArgumentException();
         }
+        
         this.bits = bits;
     }
 

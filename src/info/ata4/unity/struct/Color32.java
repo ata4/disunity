@@ -1,5 +1,5 @@
 /*
- ** 2013 Dezember 08
+ ** 2013 December 08
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -24,6 +24,22 @@ public class Color32 implements Struct {
     public int g;
     public int b;
     public int a;
+    
+    public void fromInt(int value) {
+        r =  value & 0xff;
+        g = (value >>> 8) & 0xff;
+        b = (value >>> 16) & 0xff;
+        a = (value >>> 24) & 0xff;
+    }
+    
+    public int toInt() {
+        int value = 0;
+        value +=  r & 0xff;
+        value += (g & 0xff) << 8;
+        value += (b & 0xff) << 16;
+        value += (a & 0xff) << 24;
+        return value;
+    }
 
     @Override
     public void read(DataInputReader in) throws IOException {
