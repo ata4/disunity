@@ -32,6 +32,9 @@ public class BitInputStream extends InputStream {
     }
 
     public void setBitLength(int bits) {
+        if (bits > 32) {
+            throw new IllegalArgumentException();
+        }
         this.bits = bits;
     }
 
@@ -47,7 +50,11 @@ public class BitInputStream extends InputStream {
             bitCount += 8;
         }
 
-        int code = bitBuffer & (1 << bits) - 1;
+        int code = bitBuffer;   
+        if (bitCount != 32) {
+             code &= (1 << bits) - 1;
+        }
+        
         bitBuffer >>= bits;
         bitCount -= bits;
         return code;
