@@ -22,7 +22,6 @@ import info.ata4.unity.struct.Vector4f;
 import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.io.BitInputStream;
 import java.io.BufferedOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -52,7 +51,7 @@ public class MeshHandler extends AssetExtractHandler {
     private List<Vector2f> uv1;
     private List<Vector2f> uv2;
     private List<Vector4f> tangents;
-    private Deque<Integer> triangles;
+    private List<Integer> triangles;
     
     @Override
     public void extract(UnityObject obj) throws IOException {
@@ -65,14 +64,7 @@ public class MeshHandler extends AssetExtractHandler {
         mesh = new Mesh(obj);
         
         readVertexData();
-        
-        setOutputFileName(mesh.name);
-        setOutputFileExtension("obj");
-        
-        Path objFile = getOutputFile();
-        try (ObjWriter objWriter = new ObjWriter(objFile)) {
-            writeMesh(objWriter);
-        }
+        writeObjMesh();
     }
     
     private void readVertexData() throws IOException {
@@ -83,7 +75,7 @@ public class MeshHandler extends AssetExtractHandler {
         uv1 = new ArrayList<>();
         uv2 = new ArrayList<>();
         tangents = new ArrayList<>();
-        triangles = new ArrayDeque<>();
+        triangles = new ArrayList<>();
         
         if (mesh.meshCompression == 0) {
             // get vertex buffer
@@ -205,12 +197,19 @@ public class MeshHandler extends AssetExtractHandler {
             for (int i = 0; i < uvFloats.length / 2; i++) {
                 Vector2f vt = new Vector2f();
                 vt.x = uvFloats[i * 2];
-                vt.y = uvFloats[i * 2];
+                vt.y = uvFloats[i * 2 + 1];
                 if (i < vertexFloats.length / 3) {
                     uv1.add(vt);
                 } else {
                     uv2.add(vt);
                 }
+            }
+            
+            int[] colorInts = readPackedBits(cmesh.colors);
+            for (int i = 0; i < colorInts.length; i++) {
+                Color32 c = new Color32();
+                c.fromInt(colorInts[i]);
+                colors.add(c);
             }
             
             int[] triangleInts = readPackedBits(cmesh.triangles);
@@ -221,6 +220,10 @@ public class MeshHandler extends AssetExtractHandler {
     }
     
     private int[] readPackedBits(PackedBitVector pbv) throws IOException {
+        if (pbv.numItems == 0 || pbv.bitSize == 0) {
+            return new int[] {};
+        }
+        
         BitInputStream bis = new BitInputStream(new ByteBufferInputStream(pbv.data));
         bis.setBitLength(pbv.bitSize);
         
@@ -235,6 +238,10 @@ public class MeshHandler extends AssetExtractHandler {
     
     private float[] readPackedFloats(PackedBitVector pbv) throws IOException {
         int[] items = readPackedBits(pbv);
+        if (items.length == 0) {
+            return new float[] {};
+        }
+        
         float[] floats = new float[items.length];
         
         int maxValue = (1 << pbv.bitSize) - 1;
@@ -281,72 +288,82 @@ public class MeshHandler extends AssetExtractHandler {
         return floats;
     }
     
-    private void writeMesh(ObjWriter obj) {
-        obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
+    private void writeObjMesh() throws IOException {
+        setOutputFileName(mesh.name);
+        setOutputFileExtension("obj");
         
-        if (!vertices.isEmpty()) {
-            for (Vector3f v : vertices) {
-                obj.writeVertex(v);
-            }
-        }
+        Path objFile = getOutputFile();
         
-        if (!normals.isEmpty()) {
-            for (Vector3f vn : normals) {
-                obj.writeNormal(vn);
-            }
-        }
-        
-        List<Vector2f> uv;
-        
-        if (!uv1.isEmpty()) {
-            uv = uv1;
-        } else if (!uv2.isEmpty()) {
-            uv = uv2;
-        } else {
-            uv = null;
-        }
-        
-        if (uv != null) {
-            for (Vector2f vt : uv) {
-                obj.writeUV(vt);
-            }
-        }
-        
-        obj.writeLine();
-        obj.writeObject(mesh.name);
-        obj.writeSmooth(1);
-        
-        final int subMeshes = mesh.subMeshes.size();
-        for (int i = 0; i < subMeshes; i++) {
-            SubMesh subMesh = mesh.subMeshes.get(i);
-
-            if (subMeshes == 1) {
-                obj.writeUsemtl(mesh.name);
-            } else {
-                obj.writeUsemtl(String.format("%s_%d", mesh.name, i));
-            }
-
-            for (int j = 0; j < subMesh.indexCount / 3; j++) {
-                int i1 = triangles.pop() + 1;
-                int i2 = triangles.pop() + 1;
-                int i3 = triangles.pop() + 1;
-                obj.writeFace(i1, i2, i3);
-            }
+        try (PrintStream ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(objFile)))) {
+            Deque<Integer> trisDeque = new ArrayDeque<>(triangles);
             
+            ObjWriter obj = new ObjWriter(ps);
+            obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
+
+            if (!vertices.isEmpty()) {
+                for (Vector3f v : vertices) {
+                    obj.writeVertex(v);
+                }
+            }
+
+            if (!normals.isEmpty()) {
+                for (Vector3f vn : normals) {
+                    obj.writeNormal(vn);
+                }
+            }
+
+            List<Vector2f> uv;
+
+            if (!uv1.isEmpty()) {
+                uv = uv1;
+            } else if (!uv2.isEmpty()) {
+                uv = uv2;
+            } else {
+                uv = null;
+            }
+
+            if (uv != null) {
+                for (Vector2f vt : uv) {
+                    obj.writeUV(vt);
+                }
+            }
+
             obj.writeLine();
-        }
-        
-        if (!triangles.isEmpty()) {
-            L.log(Level.WARNING, "{0} unprocessed triangles", triangles.size());
+            obj.writeObject(mesh.name);
+            obj.writeSmooth(1);
+
+            final int subMeshes = mesh.subMeshes.size();
+            for (int i = 0; i < subMeshes; i++) {
+                SubMesh subMesh = mesh.subMeshes.get(i);
+
+                if (subMeshes == 1) {
+                    obj.writeUsemtl(mesh.name);
+                } else {
+                    obj.writeUsemtl(String.format("%s_%d", mesh.name, i));
+                }
+
+                for (int j = 0; j < subMesh.indexCount / 3; j++) {
+                    int i1 = trisDeque.pop() + 1;
+                    int i2 = trisDeque.pop() + 1;
+                    int i3 = trisDeque.pop() + 1;
+                    obj.writeFace(i1, i2, i3);
+                }
+
+                obj.writeLine();
+            }
+
+            if (!trisDeque.isEmpty()) {
+                L.log(Level.WARNING, "{0} unprocessed triangles", trisDeque.size());
+            }
         }
     }
     
-    private class ObjWriter implements Closeable {
+    private class ObjWriter {
         
         final PrintStream ps;
 
-        ObjWriter(Path file) throws IOException {
-            ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(file)));
+        ObjWriter(PrintStream ps) {
+            this.ps = ps;
         }
         
         void writeLine() {
@@ -410,10 +427,172 @@ public class MeshHandler extends AssetExtractHandler {
         void writeUV(Vector2f vt) {
             writeVector("vt", vt);
         }
+    }
+    
+    private void writePlyMesh() throws IOException {
+        setOutputFileExtension("ply");
+        
+        // PLY can't have more than one mesh per file, so write one file per
+        // sub-mesh
+        final int subMeshes = mesh.subMeshes.size();
+        for (int i = 0; i < subMeshes; i++) {
+            SubMesh subMesh = mesh.subMeshes.get(i);
 
-        @Override
-        public void close() throws IOException {
-            ps.close();
+            if (subMeshes == 1) {
+                setOutputFileName(mesh.name);
+            } else {
+                setOutputFileName(String.format("%s_%d", mesh.name, i));
+            }
+            
+            Path plyFile = getOutputFile();
+            try (PrintStream ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(plyFile)))) {
+                final int numVertices = subMesh.vertexCount.intValue();
+                final int ofsVertices = subMesh.firstVertex.intValue();
+                final int numFaces = subMesh.indexCount.intValue() / 3;
+                final int ofsFaces = subMesh.firstByte.intValue() / 3;
+
+                // write header
+                PlyWriter ply = new PlyWriter(ps);
+                ply.writeHeaderStart();
+                ply.writeComment("Created by DisUnity v" + DisUnity.getVersion());
+                ply.writeVertexHeader(numVertices, !normals.isEmpty(), !uv1.isEmpty(),
+                        !uv2.isEmpty(), !colors.isEmpty());
+                ply.writeFaceHeader(numFaces);
+                ply.writeHeaderEnd();
+
+                // write vertices
+                for (int j = ofsVertices; j < ofsVertices + numVertices; j++) {
+                    Vector3f v = vertices.get(j);
+                    Vector3f vn = normals.isEmpty() ? null : normals.get(j);
+                    Vector2f vt1 = uv1.isEmpty() ? null : uv1.get(j);
+                    Vector2f vt2 = uv2.isEmpty() ? null : uv2.get(j);
+                    Color32 c = colors.isEmpty() ? null : colors.get(j);
+                    ply.writeVertex(v, vn, vt1, vt2, c);
+                }
+
+                // write faces
+                for (int j = ofsFaces; j < ofsFaces + numFaces; j++) {
+                    int i1 = triangles.get(j * 3);
+                    int i2 = triangles.get(j * 3 + 1);
+                    int i3 = triangles.get(j * 3 + 2);
+                    ply.writeFace(i1, i2, i3);
+                }
+            }
+        }
+    }
+    
+    private class PlyWriter {
+        
+        final PrintStream ps;
+
+        PlyWriter(PrintStream ps) {
+            this.ps = ps;
+        }
+        
+        void writeLine() {
+            ps.println();
+        }
+        
+        void writeHeaderStart() {
+            ps.println("ply");
+            ps.println("format ascii 1.0");
+        }
+        
+        void writeComment(String comment) {
+            ps.print("comment ");
+            ps.println(comment);
+        }
+        
+        void writeVertexHeader(int elements, boolean normals, boolean uv1, boolean uv2, boolean colors) {
+            ps.print("element vertex ");
+            ps.println(elements);
+            ps.println("property float x");
+            ps.println("property float y");
+            ps.println("property float z");
+            
+            if (normals) {
+                ps.println("property float nx");
+                ps.println("property float ny");
+                ps.println("property float nz");
+            }
+            
+            if (uv1) {
+                ps.println("property float s");
+                ps.println("property float t");
+            }
+            
+            if (uv2) {
+                ps.println("property float s2");
+                ps.println("property float t2");
+            }
+            
+            if (colors) {
+                ps.println("property uchar red");
+                ps.println("property uchar green");
+                ps.println("property uchar blue");
+            }
+        }
+        
+        void writeFaceHeader(int elements) {
+            ps.print("element face ");
+            ps.println(elements);
+            ps.println("property list uchar int vertex_indices");
+        }
+        
+        void writeHeaderEnd() {
+            ps.println("end_header");
+        }
+        
+        void writeVector(Vector2f v) {
+            ps.print(v.x);
+            ps.print(" ");
+            ps.print(v.y);
+        }
+        
+        void writeVector(Vector3f v) {
+            ps.print(v.x);
+            ps.print(" ");
+            ps.print(v.y);
+            ps.print(" ");
+            ps.print(v.z);
+        }
+        
+        void writeColor(Color32 c) {
+            ps.print(c.r);
+            ps.print(" ");
+            ps.print(c.g);
+            ps.print(" ");
+            ps.print(c.b);
+        }
+        
+        void writeVertex(Vector3f v, Vector3f vn, Vector2f vt1, Vector2f vt2, Color32 c) {
+            writeVector(v);
+            if (vn != null) {
+                ps.print(" ");
+                writeVector(vn);
+            }
+            if (vt1 != null) {
+                ps.print(" ");
+                writeVector(vt1);
+            }
+            if (vt2 != null) {
+                ps.print(" ");
+                writeVector(vt2);
+            }
+            if (c != null) {
+                ps.print(" ");
+                writeColor(c);
+            }
+            writeLine();
+        }
+        
+        void writeFace(int i1, int i2, int i3) {
+            ps.print("3 ");
+            ps.print(i1);
+            ps.print(" ");
+            ps.print(i2);
+            ps.print(" ");
+            ps.println(i3);
         }
     }
 
