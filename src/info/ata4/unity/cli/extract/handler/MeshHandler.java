@@ -28,9 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +42,7 @@ public class MeshHandler extends AssetExtractHandler {
     private static final Logger L = LogUtils.getLogger();
     
     private Mesh mesh;
+    private MeshFormat format = MeshFormat.OBJ;
     
     private List<Vector3f> vertices;
     private List<Vector3f> normals;
@@ -64,7 +63,24 @@ public class MeshHandler extends AssetExtractHandler {
         mesh = new Mesh(obj);
         
         readVertexData();
-        writeObjMesh();
+        
+        switch (format) {
+            case PLY:
+                writePlyMesh();
+                break;
+                
+            case OBJ:
+                writeObjMesh();
+                break;
+        }
+    }
+    
+    public MeshFormat getFormat() {
+        return format;
+    }
+
+    public void setFormat(MeshFormat format) {
+        this.format = format;
     }
     
     private void readVertexData() throws IOException {
@@ -220,10 +236,12 @@ public class MeshHandler extends AssetExtractHandler {
     }
     
     private int[] readPackedBits(PackedBitVector pbv) throws IOException {
+        // don't waste time on empty vectors
         if (pbv.numItems == 0 || pbv.bitSize == 0) {
-            return new int[] {};
+            return new int[]{};
         }
         
+        // the values are packed with a variable bit length
         BitInputStream bis = new BitInputStream(new ByteBufferInputStream(pbv.data));
         bis.setBitLength(pbv.bitSize);
         
@@ -237,11 +255,14 @@ public class MeshHandler extends AssetExtractHandler {
     }
     
     private float[] readPackedFloats(PackedBitVector pbv) throws IOException {
-        int[] items = readPackedBits(pbv);
-        if (items.length == 0) {
-            return new float[] {};
+        // don't waste time on empty vectors
+        if (pbv.numItems == 0 || pbv.bitSize == 0) {
+            return new float[]{};
         }
         
+        // expand integers to floats using the range and offset floats in the
+        // packed bit vector
+        int[] items = readPackedBits(pbv);
         float[] floats = new float[items.length];
         
         int maxValue = (1 << pbv.bitSize) - 1;
@@ -256,8 +277,13 @@ public class MeshHandler extends AssetExtractHandler {
     }
     
     private float[] readPackedNormals(PackedBitVector pbv, PackedBitVector pbvSigns) throws IOException {
-        int[] items = readPackedBits(pbv);
-        int[] signs = readPackedBits(pbvSigns);
+        int[] items = readPackedBits(pbv); // 2 elements per vertex
+        int[] signs = readPackedBits(pbvSigns); // one element per vertex
+        
+        // don't waste time on empty vectors
+        if (items.length == 0 || signs.length == 0) {
+            return new float[]{};
+        }
         
         // convert signage 0 to -1
         for (int i = 0; i < signs.length; i++) {
@@ -266,7 +292,7 @@ public class MeshHandler extends AssetExtractHandler {
             }
         }
         
-        float[] floats = new float[signs.length * 3];
+        float[] floats = new float[signs.length * 3]; // 3 elements per vertex
         
         int maxValue = (1 << pbv.bitSize) - 1;
         float range = pbv.range / maxValue;
@@ -276,8 +302,8 @@ public class MeshHandler extends AssetExtractHandler {
             float x = items[i * 2] * range + start;
             float y = items[i * 2 + 1] * range + start;
             
-            // get z using x^2 + y^2 + z^2 = 1, since a normal vector can be
-            // represented as a dot on the surface of a sphere
+            // reconstruct z using x^2 + y^2 + z^2 = 1, since a normal vector
+            // can be represented as a dot on the surface of a sphere
             float z = (float) ((1 - Math.pow(x, 2) - Math.pow(y, 2)) * signs[i]);
             
             floats[i * 3] = x;
@@ -294,7 +320,7 @@ public class MeshHandler extends AssetExtractHandler {
         
         Path objFile = getOutputFile();
         
-        try (PrintStream ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(objFile)))) {
+        try (PrintStream ps = getPrintStream(objFile)) {
             ObjWriter obj = new ObjWriter(ps);
             obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
 
@@ -360,6 +386,10 @@ public class MeshHandler extends AssetExtractHandler {
                 obj.writeLine();
             }
         }
+    }
+
+    private PrintStream getPrintStream(Path file) throws IOException {
+        return new PrintStream(new BufferedOutputStream(Files.newOutputStream(file)));
     }
     
     private class ObjWriter {
@@ -442,6 +472,7 @@ public class MeshHandler extends AssetExtractHandler {
         for (int i = 0; i < subMeshes; i++) {
             SubMesh subMesh = mesh.subMeshes.get(i);
 
+            // use prefix if there's more than one submesh
             if (subMeshes == 1) {
                 setOutputFileName(mesh.name);
             } else {
@@ -449,7 +480,7 @@ public class MeshHandler extends AssetExtractHandler {
             }
             
             Path plyFile = getOutputFile();
-            try (PrintStream ps = new PrintStream(new BufferedOutputStream(Files.newOutputStream(plyFile)))) {
+            try (PrintStream ps = getPrintStream(plyFile)) {
                 final int numVertices = subMesh.vertexCount.intValue();
                 final int ofsVertices = subMesh.firstVertex.intValue();
                 final int numFaces = subMesh.indexCount.intValue() / 3;
@@ -813,5 +844,9 @@ public class MeshHandler extends AssetExtractHandler {
             data = obj.getValue("m_Data");
             bitSize = obj.getValue("m_BitSize");
         }
+    }
+    
+    public static enum MeshFormat {
+        OBJ, PLY;
     }
 }
