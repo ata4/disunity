@@ -69,7 +69,7 @@ public class AudioClipHandler extends AssetExtractHandler {
             
             // make sure the .resS is loaded
             if (audioBufferAux == null) {
-                L.log(Level.WARNING, "Audio clip {0} uses an external .resS file that doesn't exist!");
+                L.log(Level.WARNING, "Audio clip {0} uses an external .resS file that doesn't exist!", name);
                 return;
             }
             
