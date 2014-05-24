@@ -372,8 +372,8 @@ public class MeshHandler extends AssetExtractHandler {
                 }
                 
                 final int numFaces = subMesh.indexCount.intValue() / 3;
-                final int ofsFaces = subMesh.firstByte.intValue() / 3;
-
+                final int ofsFaces = subMesh.firstByte.intValue() / 6;
+                
                 for (int j = ofsFaces; j < ofsFaces + numFaces; j++) {
                     int i1 = triangles.get(j * 3);
                     int i2 = triangles.get(j * 3 + 1);
@@ -484,7 +484,7 @@ public class MeshHandler extends AssetExtractHandler {
                 final int numVertices = subMesh.vertexCount.intValue();
                 final int ofsVertices = subMesh.firstVertex.intValue();
                 final int numFaces = subMesh.indexCount.intValue() / 3;
-                final int ofsFaces = subMesh.firstByte.intValue() / 3;
+                final int ofsFaces = subMesh.firstByte.intValue() / 6;
 
                 // write header
                 PlyWriter ply = new PlyWriter(ps);
