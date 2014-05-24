@@ -17,9 +17,9 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
-import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.ObjectPathTable;
+import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
 import java.io.ByteArrayOutputStream;
@@ -55,18 +55,26 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void open(Path file) throws IOException {
-        // split asset files can't be opened conveniently using memory mapping
-        String fileName = file.getFileName().toString();  
-        if (fileName.endsWith(".split0")) {
-            load(file);
-        } else {
-            super.open(file);
-        }
+        load(file, true);
     }
     
     @Override
     public void load(Path file) throws IOException {
+        load(file, false);
+    }
+    
+    private void load(Path file, boolean map) throws IOException {
+        setSourceFile(file);
+        
         String fileName = file.getFileName().toString();
+
+        // load audio stream if existing
+        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
+        if (Files.exists(audioStreamFile)) {
+            bbAudio = ByteBufferUtils.openReadOnly(audioStreamFile);
+        }
+        
+        ByteBuffer bb;
         
         // join split asset files before loading
         if (fileName.endsWith(".split0")) {
@@ -84,18 +92,14 @@ public class AssetFile extends FileHandler {
             }
             
             // load all parts into one byte buffer
-            ByteBuffer bb = ByteBufferUtils.load(parts);
-            
-            load(bb);
+            bb = ByteBufferUtils.load(parts);
+        } else if (map) {
+            bb = ByteBufferUtils.openReadOnly(file);
         } else {
-            super.load(file);
+            bb = ByteBufferUtils.load(file);
         }
         
-        // load audio stream if existing
-        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
-        if (Files.exists(audioStreamFile)) {
-            bbAudio = ByteBufferUtils.load(audioStreamFile);
-        }
+        load(bb);
     }
     
     @Override
