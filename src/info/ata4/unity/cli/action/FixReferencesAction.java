@@ -58,7 +58,7 @@ public class FixReferencesAction extends Action {
         for (AssetRef ref : asset.getReferences()) {
             Path refFile = Paths.get(ref.getFilePath());
             String refExt = FilenameUtils.getExtension(refFile.getFileName().toString());
-            if (refExt.endsWith("assets") && !Files.exists(refFile)) {
+            if (refExt.endsWith("assets") && Files.notExists(refFile)) {
                 String filePathOld = ref.getFilePath();
                 String filePathNew = assetPath + FilenameUtils.getName(ref.getFilePath());
                 Path refFileNew = Paths.get(filePathNew);

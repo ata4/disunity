@@ -48,7 +48,7 @@ public class BundleInjectAction extends Action {
         Path bundleDir = bundleFile.resolveSibling(bundleName);
         
         // there's no point in injection if the files haven't been extracted yet
-        if (!Files.exists(bundleDir)) {
+        if (Files.notExists(bundleDir)) {
             L.log(Level.WARNING, "Bundle directory {0} doesn''t exist!", bundleDir);
             return;
         }

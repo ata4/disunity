@@ -141,7 +141,7 @@ public class AssetExtractor {
             if (raw) {
                 String assetFileName = String.format("%06d.bin", path.getPathID());
                 Path classDir = outputDir.resolve(className);
-                if (!Files.exists(classDir)) {
+                if (Files.notExists(classDir)) {
                     Files.createDirectory(classDir);
                 }
                 
@@ -227,7 +227,7 @@ public class AssetExtractor {
             subAsset.setDataBuffer(asset.getPathBuffer(path));
             
             Path subAssetDir = outputDir.resolve(className);
-            if (!Files.exists(subAssetDir)) {
+            if (Files.notExists(subAssetDir)) {
                 Files.createDirectory(subAssetDir);
             }
             
@@ -243,7 +243,7 @@ public class AssetExtractor {
             subAssetName += ".asset";
             
             Path subAssetFile = subAssetDir.resolve(subAssetName);
-            if (!Files.exists(subAssetFile)) {
+            if (Files.notExists(subAssetFile)) {
                 L.log(Level.INFO, "Writing {0}", subAssetFile);
                 subAsset.save(subAssetFile);
             }

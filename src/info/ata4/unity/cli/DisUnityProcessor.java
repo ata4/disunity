@@ -97,7 +97,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         // process submitted files
         for (Path file : opts.getFiles()) {
             // skip non-existent files
-            if (!Files.exists(file)) {
+            if (Files.notExists(file)) {
                 L.log(Level.WARNING, "File {0} doesn''t exist", file);
                 continue;
             }
@@ -142,7 +142,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
             outputDir = file.resolveSibling(fileName);
 
-            if (!Files.exists(outputDir)) {
+            if (Files.notExists(outputDir)) {
                 Files.createDirectory(outputDir);
             }
             
@@ -218,7 +218,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
 
             Path outputDir = file.resolveSibling(assetName);
             
-            if (!Files.exists(outputDir)) {
+            if (Files.notExists(outputDir)) {
                 Files.createDirectory(outputDir);
             }
             
@@ -245,7 +245,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             String assetName = FilenameUtils.removeExtension(name);
             Path outputDir = action.getOutputDir().resolve(assetName);
             
-            if (!Files.exists(outputDir)) {
+            if (Files.notExists(outputDir)) {
                 Files.createDirectories(outputDir);
             }
             

@@ -96,7 +96,7 @@ public class AssetDumper {
                 String className = ClassID.getNameForID(path.getClassID(), true);
                 
                 Path classDir = outputDir.resolve(className);
-                if (!Files.exists(classDir)) {
+                if (Files.notExists(classDir)) {
                     Files.createDirectory(classDir);
                 }
                 

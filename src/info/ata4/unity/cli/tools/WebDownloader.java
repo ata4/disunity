@@ -159,7 +159,7 @@ public class WebDownloader {
     private void downloadBundle(URL indexUrl, URL unityUrl) throws IOException {
         // create temp dir
         Path tmpDir = baseDir.resolve("tmp");
-        if (!Files.exists(tmpDir)) {
+        if (Files.notExists(tmpDir)) {
             Files.createDirectory(tmpDir);
         }
         
@@ -181,7 +181,7 @@ public class WebDownloader {
         L.log(Level.INFO, "Revision: {0}", version);
         
         Path versionDir = baseDir.resolve(versionDirName);
-        if (!Files.exists(versionDir)) {
+        if (Files.notExists(versionDir)) {
             Files.createDirectory(versionDir);
         }
         
@@ -189,7 +189,7 @@ public class WebDownloader {
         String subDirName = unityUrl.getHost();
         
         Path subDir = versionDir.resolve(subDirName);
-        if (!Files.exists(subDir)) {
+        if (Files.notExists(subDir)) {
             Files.createDirectory(subDir);
         }
         

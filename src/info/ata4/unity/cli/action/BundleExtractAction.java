@@ -54,7 +54,7 @@ public class BundleExtractAction extends Action {
             Path entryFile = getOutputDir().resolve(entryName);
             Path entryDir = entryFile.getParent();
             
-            if (!Files.exists(entryDir)) {
+            if (Files.notExists(entryDir)) {
                 Files.createDirectories(entryDir);
             }
             

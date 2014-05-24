@@ -114,7 +114,7 @@ public abstract class AssetExtractHandler {
     protected Path getOutputFile() throws IOException {
         Path classDir = getOutputDir().resolve(getClassName());
         
-        if (!Files.exists(classDir)) {
+        if (Files.notExists(classDir)) {
             Files.createDirectories(classDir);
         }
         
