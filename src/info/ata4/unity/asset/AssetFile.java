@@ -77,18 +77,20 @@ public class AssetFile extends FileHandler {
         ByteBuffer bb;
         
         // join split asset files before loading
-        if (fileName.endsWith(".split0")) {
+        if (FilenameUtils.getExtension(fileName).contains("split")) {
             fileName = FilenameUtils.removeExtension(fileName);
             List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
-            Path part = file;
-            
+
             // collect all files with .split0 to .splitN extension
-            while (Files.exists(part)) {
-                parts.add(part);
-                splitIndex++;
+            while (true) {
                 String splitName = String.format("%s.split%d", fileName, splitIndex);
-                part = file.resolveSibling(splitName);
+                Path part = file.resolveSibling(splitName);
+                if (Files.notExists(part)) {
+                    break;
+                }
+                splitIndex++;
+                parts.add(part);
             }
             
             // load all parts into one byte buffer
