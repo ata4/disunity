@@ -60,7 +60,7 @@ public class LzmaBufferUtils {
         }
         
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(new ByteBufferProgress(bbc), 2, 2, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(new ByteBufferProgress(bbc), 2, 1, TimeUnit.SECONDS);
         
         try {
             InputStream is = new ByteBufferInputStream(bbc);
