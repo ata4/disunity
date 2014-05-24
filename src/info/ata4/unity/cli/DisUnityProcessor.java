@@ -209,6 +209,11 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         if (action.requiresOutputDir()) {
             String fileName = file.getFileName().toString();
             String assetName = FilenameUtils.removeExtension(fileName);
+            
+            // remove extension twice if it's a .assets.splitN file
+            if (FilenameUtils.getExtension(fileName).startsWith("split")) {
+                assetName = FilenameUtils.removeExtension(assetName);
+            }
 
             // if the file has no extension, append a "_" to the output directory
             // name so the file system won't have a file and dir with the same name

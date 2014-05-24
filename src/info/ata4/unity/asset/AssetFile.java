@@ -77,7 +77,7 @@ public class AssetFile extends FileHandler {
         ByteBuffer bb;
         
         // join split asset files before loading
-        if (FilenameUtils.getExtension(fileName).contains("split")) {
+        if (FilenameUtils.getExtension(fileName).startsWith("split")) {
             fileName = FilenameUtils.removeExtension(fileName);
             List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
