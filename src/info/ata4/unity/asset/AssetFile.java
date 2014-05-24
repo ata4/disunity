@@ -67,12 +67,6 @@ public class AssetFile extends FileHandler {
         setSourceFile(file);
         
         String fileName = file.getFileName().toString();
-
-        // load audio stream if existing
-        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
-        if (Files.exists(audioStreamFile)) {
-            bbAudio = ByteBufferUtils.openReadOnly(audioStreamFile);
-        }
         
         ByteBuffer bb;
         
@@ -99,6 +93,12 @@ public class AssetFile extends FileHandler {
             bb = ByteBufferUtils.openReadOnly(file);
         } else {
             bb = ByteBufferUtils.load(file);
+        }
+        
+        // load audio stream if existing
+        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
+        if (Files.exists(audioStreamFile)) {
+            bbAudio = ByteBufferUtils.openReadOnly(audioStreamFile);
         }
         
         load(bb);
