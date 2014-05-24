@@ -125,6 +125,13 @@ public class MeshHandler extends AssetExtractHandler {
                             ChannelInfo channel = channels.get(j);
                             boolean half = channel.format == 1;
 
+                            // Known channels:
+                            // 0 - Coordinates (Vector3f)
+                            // 1 - Normals (Vector3f)
+                            // 2 - Colors (Color32)
+                            // 3 - UV layer 1 (Vector2f)
+                            // 4 - UV layer 2 (Vector2f)
+                            // 5 - Tangents (Vector4f)
                             switch (j) {
                                 case 0:
                                     Vector3f v = new Vector3f();
@@ -371,7 +378,10 @@ public class MeshHandler extends AssetExtractHandler {
                     obj.writeUsemtl(String.format("%s_%d", mesh.name, i));
                 }
                 
+                // 3 indices per face
                 final int numFaces = subMesh.indexCount.intValue() / 3;
+                
+                // 3 indices per face, 2 bytes per index
                 final int ofsFaces = subMesh.firstByte.intValue() / 6;
                 
                 for (int j = ofsFaces; j < ofsFaces + numFaces; j++) {
@@ -483,7 +493,11 @@ public class MeshHandler extends AssetExtractHandler {
             try (PrintStream ps = getPrintStream(plyFile)) {
                 final int numVertices = subMesh.vertexCount.intValue();
                 final int ofsVertices = subMesh.firstVertex.intValue();
+                
+                // 3 indices per face
                 final int numFaces = subMesh.indexCount.intValue() / 3;
+                
+                // 3 indices per face, 2 bytes per index
                 final int ofsFaces = subMesh.firstByte.intValue() / 6;
 
                 // write header
