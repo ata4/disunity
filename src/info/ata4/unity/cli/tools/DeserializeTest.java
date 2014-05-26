@@ -59,6 +59,13 @@ public class DeserializeTest {
             ab.load(file);
             
             for (Map.Entry<String, ByteBuffer> entry : ab.getEntries().entrySet()) {
+                String name = entry.getKey();
+                
+                // skip libraries
+                if (name.endsWith(".dll") || name.endsWith(".mdb")) {
+                    continue;
+                }
+                
                 AssetFile asset = new AssetFile();
                 asset.load(entry.getValue());
                 testAsset(asset);
