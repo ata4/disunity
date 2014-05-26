@@ -7,13 +7,12 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.handler;
+package info.ata4.unity.cli.extract;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.struct.Color32;
 import info.ata4.unity.struct.Vector2f;
@@ -431,7 +430,7 @@ public class MeshHandler extends AssetExtractHandler {
             i2++;
             i3++;
             
-            if (vt && ! vn) {
+            if (vt && !vn) {
                 ps.printf("f %d/%d %d/%d %d/%d\n", i1, i1, i2, i2, i3, i3);
             } else if (!vt && vn) {
                 ps.printf("f %d//%d %d//%d %d//%d\n", i1, i1, i2, i2, i3, i3);

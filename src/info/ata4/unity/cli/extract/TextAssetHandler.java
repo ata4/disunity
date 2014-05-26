@@ -7,9 +7,8 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.handler;
+package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 
