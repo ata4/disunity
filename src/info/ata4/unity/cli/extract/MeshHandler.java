@@ -328,7 +328,7 @@ public class MeshHandler extends AssetExtractHandler {
         
         try (PrintStream ps = getPrintStream(objFile)) {
             ObjWriter obj = new ObjWriter(ps);
-            obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
+            obj.writeComment("Created by " + DisUnity.getSignature());
 
             // write vertex array
             for (Vector3f v : vertices) {
@@ -504,7 +504,7 @@ public class MeshHandler extends AssetExtractHandler {
                 // write header
                 PlyWriter ply = new PlyWriter(ps);
                 ply.writeHeaderStart();
-                ply.writeComment("Created by DisUnity v" + DisUnity.getVersion());
+                ply.writeComment("Created by " + DisUnity.getSignature());
                 ply.writeVertexHeader(numVertices, !normals.isEmpty(), !uv1.isEmpty(),
                         !uv2.isEmpty(), !colors.isEmpty());
                 ply.writeFaceHeader(numFaces);
