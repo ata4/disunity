@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class MeshHandler extends AssetExtractHandler {
-
+    
     private static final Logger L = LogUtils.getLogger();
     
     private Mesh mesh;
@@ -332,35 +332,27 @@ public class MeshHandler extends AssetExtractHandler {
             obj.writeComment("Created by DisUnity v" + DisUnity.getVersion());
 
             // write vertex array
-            if (!vertices.isEmpty()) {
-                for (Vector3f v : vertices) {
-                    obj.writeVertex(v);
-                }
+            for (Vector3f v : vertices) {
+                obj.writeVertex(v);
             }
 
             // write normal array
-            if (!normals.isEmpty()) {
-                for (Vector3f vn : normals) {
-                    obj.writeNormal(vn);
-                }
+            for (Vector3f vn : normals) {
+                obj.writeNormal(vn);
             }
 
             // OBJ doesn't support more than one UV layer, so select the first
             // non-empty list
-            List<Vector2f> uv;
+            List<Vector2f> uv = new ArrayList<>();
 
             if (!uv1.isEmpty()) {
                 uv = uv1;
             } else if (!uv2.isEmpty()) {
                 uv = uv2;
-            } else {
-                uv = null;
             }
 
-            if (uv != null) {
-                for (Vector2f vt : uv) {
-                    obj.writeUV(vt);
-                }
+            for (Vector2f vt : uv) {
+                obj.writeUV(vt);
             }
 
             // write sub-meshes as materials
@@ -371,7 +363,7 @@ public class MeshHandler extends AssetExtractHandler {
             final int subMeshes = mesh.subMeshes.size();
             for (int i = 0; i < subMeshes; i++) {
                 SubMesh subMesh = mesh.subMeshes.get(i);
-
+                
                 if (subMeshes == 1) {
                     obj.writeUsemtl(mesh.name);
                 } else {
@@ -389,8 +381,7 @@ public class MeshHandler extends AssetExtractHandler {
                     int i2 = triangles.get(j * 3 + 1);
                     int i3 = triangles.get(j * 3 + 2);
                     
-                    // Note: OBJ indices start from 1
-                    obj.writeFace(i1 + 1, i2 + 1, i3 + 1);
+                    obj.writeFace(i1, i2, i3, !uv.isEmpty(), !normals.isEmpty());
                 }
 
                 obj.writeLine();
@@ -401,7 +392,7 @@ public class MeshHandler extends AssetExtractHandler {
     private PrintStream getPrintStream(Path file) throws IOException {
         return new PrintStream(new BufferedOutputStream(Files.newOutputStream(file)));
     }
-    
+
     private class ObjWriter {
         
         final PrintStream ps;
@@ -434,10 +425,21 @@ public class MeshHandler extends AssetExtractHandler {
             ps.println(material);
         }
         
-        void writeFace(int i1, int i2, int i3) {
-            ps.printf("f %d/%d/%d", i1, i1, i1);
-            ps.printf(" %d/%d/%d", i2, i2, i2);
-            ps.printf(" %d/%d/%d\n", i3, i3, i3);
+        void writeFace(int i1, int i2, int i3, boolean vt, boolean vn) {
+            // OBJ indices start from 1
+            i1++;
+            i2++;
+            i3++;
+            
+            if (vt && ! vn) {
+                ps.printf("f %d/%d %d/%d %d/%d\n", i1, i1, i2, i2, i3, i3);
+            } else if (!vt && vn) {
+                ps.printf("f %d//%d %d//%d %d//%d\n", i1, i1, i2, i2, i3, i3);
+            } else if (vt && vn) {
+                ps.printf("f %d/%d/%d %d/%d/%d %d/%d/%d\n", i1, i1, i1, i2, i2, i2, i3, i3, i3);
+            } else {
+                ps.printf("f %d %d %d\n", i1, i2, i3);
+            }
         }
         
         void writeVector(String prefix, Vector2f v) {
