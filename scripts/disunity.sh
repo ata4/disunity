@@ -1,3 +1,3 @@
 #!/bin/sh
 BASEDIR=$(dirname "$0")
-java -jar "$BASEDIR/disunity.jar" $*
+java -jar "$BASEDIR/disunity.jar" "$@"
