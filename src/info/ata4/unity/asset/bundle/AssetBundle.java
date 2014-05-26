@@ -7,14 +7,14 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.assetbundle;
+package info.ata4.unity.asset.bundle;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.assetbundle.struct.AssetBundleHeader;
+import info.ata4.unity.asset.bundle.struct.AssetBundleHeader;
 import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;

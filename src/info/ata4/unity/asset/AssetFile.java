@@ -20,7 +20,7 @@ import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.ObjectPathTable;
 import info.ata4.unity.asset.struct.TypeTree;
-import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

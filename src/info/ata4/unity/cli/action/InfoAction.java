@@ -14,7 +14,7 @@ import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.TypeTree;
-import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.PrintStream;

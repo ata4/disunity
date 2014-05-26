@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.action;
 
-import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;

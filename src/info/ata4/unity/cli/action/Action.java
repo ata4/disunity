@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.action;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.cli.DisUnityOptions;
 import java.io.IOException;
 import java.nio.file.Path;

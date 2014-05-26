@@ -10,7 +10,7 @@
 package info.ata4.unity.cli.tools;
 
 import info.ata4.log.LogUtils;
-import info.ata4.unity.assetbundle.AssetBundle;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.cli.DisUnityOptions;
 import info.ata4.unity.cli.DisUnityProcessor;
 import info.ata4.util.string.StringUtils;

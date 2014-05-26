@@ -11,8 +11,8 @@ package info.ata4.unity.cli.tools;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.asset.struct.ObjectPath;
-import info.ata4.unity.assetbundle.AssetBundle;
 import info.ata4.unity.serdes.Deserializer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
