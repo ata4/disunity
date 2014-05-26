@@ -10,7 +10,7 @@
 package info.ata4.unity;
 
 /**
- * DisUnity main processing class.
+ * DisUnity program metadata.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
