@@ -34,16 +34,17 @@ public class AudioClipHandler extends AssetExtractHandler {
     
     static {
         Map<AudioType, String> extMap = new EnumMap<>(AudioType.class);
-        extMap.put(AudioType.OGGVORBIS, "ogg");
-        extMap.put(AudioType.WAV, "wav");
-        extMap.put(AudioType.GCADPCM, "adp");
-        extMap.put(AudioType.MPEG, "mp3");
+        extMap.put(AudioType.ACC, "acc");
         extMap.put(AudioType.AIFF, "aif");
+        extMap.put(AudioType.AUDIOQUEUE, "caf");
+        extMap.put(AudioType.GCADPCM, "adp");
+        extMap.put(AudioType.MOD, "mod");
+        extMap.put(AudioType.MPEG, "mp3");
+        extMap.put(AudioType.OGGVORBIS, "ogg");
+        extMap.put(AudioType.S3M, "s3m");
+        extMap.put(AudioType.WAV, "wav");
         extMap.put(AudioType.XM, "xm");
         extMap.put(AudioType.XMA, "xma");
-        extMap.put(AudioType.S3M, "s3m");
-        extMap.put(AudioType.MOD, "mod");
-        extMap.put(AudioType.AUDIOQUEUE, "caf");
         AUDIO_EXT = Collections.unmodifiableMap(extMap);
     }
 
@@ -76,18 +77,18 @@ public class AudioClipHandler extends AssetExtractHandler {
             audio.audioBuffer.rewind();
         }
         
+        String ext = "bin";
+        
         if (audio.type == null) {
             L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",
                     new Object[]{audio.name, audio.type});
-            return;
-        }
-        
-        String ext = AUDIO_EXT.get(audio.type);
-        
-        if (ext == null) {
-            L.log(Level.WARNING, "Audio clip {0} uses unsupported audio type {1}",
-                    new Object[]{audio.name, audio.type});
-            return;
+        } else {
+            if (AUDIO_EXT.containsKey(audio.type)) {
+                ext = AUDIO_EXT.get(audio.type);
+            } else {
+                L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",
+                        new Object[]{audio.name, audio.type});
+            }
         }
         
         setOutputFileName(audio.name);
