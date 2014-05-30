@@ -34,7 +34,7 @@ public class AudioClipHandler extends AssetExtractHandler {
     
     static {
         Map<AudioType, String> extMap = new EnumMap<>(AudioType.class);
-        extMap.put(AudioType.ACC, "acc");
+        extMap.put(AudioType.ACC, "aif");
         extMap.put(AudioType.AIFF, "aif");
         extMap.put(AudioType.AUDIOQUEUE, "caf");
         extMap.put(AudioType.GCADPCM, "adp");
