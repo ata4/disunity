@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.extract;
 
+import info.ata4.io.BitInputStream;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.log.LogUtils;
@@ -19,7 +20,6 @@ import info.ata4.unity.struct.Vector2f;
 import info.ata4.unity.struct.Vector3f;
 import info.ata4.unity.struct.Vector4f;
 import info.ata4.unity.util.UnityVersion;
-import info.ata4.util.io.BitInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
