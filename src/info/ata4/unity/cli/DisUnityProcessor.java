@@ -271,9 +271,14 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        if (AssetBundle.isAssetBundle(file)) {
-            processAssetBundle(file);
+        try {
+            if (AssetBundle.isAssetBundle(file)) {
+                processAssetBundle(file);
+            }
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't process " + file, ex);
         }
+        
         return FileVisitResult.CONTINUE;
     }
 
