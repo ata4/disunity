@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.io.BitInputStream;
+import info.ata4.io.streams.BitInputStream;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.log.LogUtils;
