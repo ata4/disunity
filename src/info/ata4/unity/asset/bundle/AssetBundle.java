@@ -66,8 +66,7 @@ public class AssetBundle extends FileHandler {
     @Override
     public void load(ByteBuffer bb) throws IOException {
         DataInputReader in = DataInputReader.newReader(bb);
-
-        header.read(in);
+        in.readStruct(header);
         
         // check signature
         if (!header.hasValidSignature()) {
@@ -179,7 +178,7 @@ public class AssetBundle extends FileHandler {
         // write file
         ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, bundleSize);
         DataOutputWriter out2 = DataOutputWriter.newWriter(bb);
-        header.write(out2);
+        out2.writeStruct(header);
         out2.writeBuffer(bbData);
     }
     

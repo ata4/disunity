@@ -14,13 +14,13 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.AssetRefTable;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.ObjectPathTable;
 import info.ata4.unity.asset.struct.TypeTree;
-import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.serdes.db.StructDatabase;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -107,9 +107,7 @@ public class AssetFile extends FileHandler {
     @Override
     public void load(ByteBuffer bb) throws IOException {
         DataInputReader in = DataInputReader.newReader(bb);
-        
-        header.read(in);
-        
+        in.readStruct(header);
         in.setSwap(true);
         
         typeTree = new TypeTree();
@@ -128,16 +126,16 @@ public class AssetFile extends FileHandler {
                 bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
                 bb.position(treeOffset);
 
-                typeTree.read(in);
-                objTable.read(in);
-                refTable.read(in);
+                in.readStruct(typeTree);
+                in.readStruct(objTable);
+                in.readStruct(refTable);
                 break;
                 
             case 9:
                 // first struct, then data
-                typeTree.read(in);
-                objTable.read(in);
-                refTable.read(in);
+                in.readStruct(typeTree);
+                in.readStruct(objTable);
+                in.readStruct(refTable);
                 
                 bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
                 break;
