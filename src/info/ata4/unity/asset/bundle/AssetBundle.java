@@ -177,7 +177,7 @@ public class AssetBundle extends FileHandler {
         // configure header
         int headerSize = header.getSize();
         int bundleSize = headerSize + dataSizeC;
-        header.setSignature(compressed ? AssetBundleHeader.SIGNATURE_WEB : AssetBundleHeader.SIGNATURE_RAW);
+        header.setCompressed(isCompressed());
         header.setDataOffset(headerSize);
         header.setFileSize1(bundleSize);
         header.setFileSize2(bundleSize);

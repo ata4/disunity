@@ -149,6 +149,10 @@ public class AssetBundleHeader implements Struct {
         return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
     }
     
+    public boolean setCompressed(boolean compressed) {
+        return signature.equals(compressed ? SIGNATURE_WEB : SIGNATURE_RAW);
+    }
+    
     public boolean isCompressed() {
         return signature.equals(SIGNATURE_WEB);
     }
