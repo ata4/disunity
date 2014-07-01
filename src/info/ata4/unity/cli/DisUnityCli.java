@@ -105,7 +105,7 @@ public class DisUnityCli implements Runnable {
         if (classListInclude != null || classListExclude != null) {
             SimpleClassFilter classFilter = new SimpleClassFilter();
             parseClassList(classFilter.getAcceptedIDs(), classListInclude);
-            parseClassList(classFilter.getAcceptedIDs(), classListExclude);
+            parseClassList(classFilter.getRejectedIDs(), classListExclude);
             ops.setClassFilter(classFilter);
         }
         
