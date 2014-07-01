@@ -114,7 +114,9 @@ public abstract class AssetCommand extends FileCommand {
         AssetBundle ab = new AssetBundle();
         ab.open(file);
 
+        setOutputDir(file.resolveSibling(outputDirName));
         processAssetBundle(ab);
+        setOutputDir(null);
         
         if (processAssets && processBundledAssets) {
             // process bundle entries
