@@ -196,9 +196,9 @@ public class AssetBundle extends FileHandler {
         
         // create bundle buffer
         ByteBuffer bb = ByteBuffer.allocateDirect(bundleSize);
-        DataOutputWriter out2 = DataOutputWriter.newWriter(bb);
-        out2.writeStruct(header);
-        out2.writeBuffer(bbData);
+        out = DataOutputWriter.newWriter(bb);
+        out.writeStruct(header);
+        out.writeBuffer(bbData);
         bb.flip();
         
         // encode bundle buffer
@@ -208,6 +208,7 @@ public class AssetBundle extends FileHandler {
         }
         
         // write buffer to file
+        bb.rewind();
         ByteBufferUtils.save(file, bb);
     }
     
