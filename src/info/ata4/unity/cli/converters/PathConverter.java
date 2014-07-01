@@ -1,5 +1,5 @@
 /*
- ** 2014 January 09
+ ** 2014 Juni 28
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,19 +7,21 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.cmd;
+package info.ata4.unity.cli.converters;
 
-import java.io.PrintStream;
+import com.beust.jcommander.IStringConverter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class CommandPrint extends Command {
-    
-    protected final PrintStream ps;
-    
-    public CommandPrint(PrintStream ps) {
-        this.ps = ps;
+public class PathConverter implements IStringConverter<Path> {
+
+    @Override
+    public Path convert(String value) {
+        return Paths.get(value);
     }
+    
 }

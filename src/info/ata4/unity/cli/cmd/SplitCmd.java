@@ -17,21 +17,10 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class SplitCmd extends Command {
-
-    @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
+public class SplitCmd extends AssetCommand {
     
-    @Override
-    public boolean requiresOutputDir() {
-        return true;
+    public SplitCmd() {
+        setProcessBundles(false);
     }
     
     @Override

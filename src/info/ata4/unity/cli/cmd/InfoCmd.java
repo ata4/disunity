@@ -10,11 +10,11 @@
 package info.ata4.unity.cli.cmd;
 
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.asset.struct.AssetHeader;
 import info.ata4.unity.asset.struct.AssetRef;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.TypeTree;
-import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.util.string.StringUtils;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -25,20 +25,12 @@ import org.apache.commons.lang3.BooleanUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class InfoCmd extends CommandPrint {
+public class InfoCmd extends AssetCommand {
+    
+    private final PrintStream ps;
     
     public InfoCmd(PrintStream ps) {
-        super(ps);
-    }
-
-    @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return true;
+        this.ps = ps;
     }
 
     @Override

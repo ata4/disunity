@@ -10,19 +10,23 @@
 package info.ata4.unity.cli;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.cli.classfilter.SimpleClassFilter;
-import info.ata4.unity.util.ClassID;
-import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Set;
+import info.ata4.unity.cli.cmd.BundleExtractCmd;
+import info.ata4.unity.cli.cmd.BundleInjectCmd;
+import info.ata4.unity.cli.cmd.BundleListCmd;
+import info.ata4.unity.cli.cmd.Command;
+import info.ata4.unity.cli.cmd.DumpCmd;
+import info.ata4.unity.cli.cmd.ExtractCmd;
+import info.ata4.unity.cli.cmd.InfoCmd;
+import info.ata4.unity.cli.cmd.LearnCmd;
+import info.ata4.unity.cli.cmd.ListCmd;
+import info.ata4.unity.cli.cmd.SplitCmd;
+import info.ata4.unity.cli.cmd.StatsCmd;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * DisUnity command line interface.
@@ -33,113 +37,79 @@ public class DisUnityCli implements Runnable {
     
     private static final Logger L = LogUtils.getLogger();
     
+    private final DisUnityOptions opts = new DisUnityOptions();
+    private final JCommander jc = new JCommander();
+    
+    public DisUnityCli() {
+        jc.setProgramName(DisUnity.getProgramName());
+        jc.addObject(opts);
+
+        PrintStream out = System.out;
+        
+        // asset commands
+        jc.addCommand("dump", new DumpCmd().setDumpToFiles(false));
+        jc.addCommand("dump-struct", new DumpCmd().setDumpToFiles(false).setDumpStructs(true));
+        jc.addCommand("extract", new ExtractCmd());
+        jc.addCommand("extract-raw", new ExtractCmd().setRaw(true));
+        jc.addCommand("extract-txt", new DumpCmd());
+        jc.addCommand("extract-struct", new DumpCmd().setDumpStructs(true));
+        jc.addCommand("info", new InfoCmd(out));
+        jc.addCommand("info-stats", new StatsCmd(out));
+        jc.addCommand("learn", new LearnCmd());
+        jc.addCommand("list", new ListCmd(out));
+        jc.addCommand("split", new SplitCmd());
+        
+        // bundle commands
+        jc.addCommand("bundle-extract", new BundleExtractCmd());
+        jc.addCommand("bundle-inject", new BundleInjectCmd());
+        jc.addCommand("bundle-list", new BundleListCmd(out));
+    }
+    
+    public void parse(String[] args) {
+        L.info(DisUnity.getSignature());
+        
+        jc.parse(args);
+        
+        // display usage
+        if (opts.isHelp()) {
+            jc.usage();
+        }
+        
+        // increase logging level if requested
+        if (opts.isVerbose()) {
+            LogUtils.configure(Level.ALL);
+        }
+    }
+
+    @Override
+    public void run() {
+        String cmdName = jc.getParsedCommand();
+        if (cmdName == null) {
+            return;
+        }
+        
+        JCommander jcc = jc.getCommands().get(cmdName);
+        
+        Command cmd = (Command) jcc.getObjects().get(0);
+        cmd.setOptions(opts);
+        cmd.run();
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         LogUtils.configure();
         
-        L.log(Level.INFO, DisUnity.getSignature());
+        DisUnityCli cli = new DisUnityCli();
         
         try {
-            DisUnityCli cli = new DisUnityCli();
-            
-            JCommander cmd = new JCommander();
-            cmd.setProgramName(DisUnity.getProgramName());
-            cmd.addObject(cli);
-            cmd.parse(args);
-            
-            if (cli.showUsage()) {
-                cmd.usage();
-            } else {
-                cli.run();
-            }
+            cli.parse(args);
+            cli.run();
+        } catch (ParameterException ex) {
+            L.log(Level.WARNING, "Parameter error: {0}", ex.getMessage());
         } catch (Throwable t) {
             L.log(Level.SEVERE, "Fatal error", t);
-        }
-    }
-    
-    @Parameter(
-        names = { "-v", "--verbose" },
-        description = "Show more verbose log output."
-    )
-    private boolean verbose;
-    
-    @Parameter(
-        names = { "-f", "--include" },
-        description = "Only process objects that use these classes. Expects a string with class names or IDs, separated by commas."
-    )
-    private String classListInclude;
-    
-    @Parameter(
-        names = { "-x", "--exclude" },
-        description = "Exclude objects from processing that use these classes. Expects a string with class names or IDs, separated by commas."
-    )
-    private String classListExclude;
-    
-    @Parameter(
-        description = "<command> <files>"
-    )
-    private List<String> remaining;
-    
-    public boolean showUsage() {
-        return remaining == null || remaining.size() < 2;
-    }
-
-    @Override
-    public void run() {
-        // convert unnamed argument list to deque
-        Deque<String> args = new ArrayDeque<>(remaining);
-        
-        DisUnityOptions ops = new DisUnityOptions();
-        
-        // set command
-        ops.setCommand(args.pollFirst());
-        
-        // add files
-        for (String path : args) {
-            ops.getFiles().add(Paths.get(path));
-        }
-        
-        // set class filter lists
-        if (classListInclude != null || classListExclude != null) {
-            SimpleClassFilter classFilter = new SimpleClassFilter();
-            parseClassList(classFilter.getAcceptedIDs(), classListInclude);
-            parseClassList(classFilter.getRejectedIDs(), classListExclude);
-            ops.setClassFilter(classFilter);
-        }
-        
-        // increase logging level if requested
-        if (verbose) {
-            LogUtils.configure(Level.ALL);
-        }
-        
-        // run processor
-        DisUnityProcessor processor = new DisUnityProcessor(ops);
-        processor.run();
-    }
-    
-    private void parseClassList(Set<Integer> classIDList, String classListString) {
-        if (StringUtils.isEmpty(classListString)) {
-            return;
-        }
-        
-        String[] values = StringUtils.split(classListString, ",");
-        for (String className : values) {
-            Integer classID;
-
-            try {
-                classID = Integer.parseInt(className);
-            } catch (NumberFormatException e) {
-                classID = ClassID.getIDForName(className, true);
-            }
-
-            if (classID == null) {
-                L.log(Level.WARNING, "Invalid class name or ID for filter: {0}", className);
-                continue;
-            }
-
-            classIDList.add(classID);
         }
     }
 }

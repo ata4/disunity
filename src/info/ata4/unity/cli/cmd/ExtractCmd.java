@@ -17,7 +17,7 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ExtractCmd extends Command {
+public class ExtractCmd extends AssetCommand {
     
     private boolean raw;
     
@@ -31,22 +31,7 @@ public class ExtractCmd extends Command {
     }
 
     @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
-    
-    @Override
-    public boolean requiresOutputDir() {
-        return true;
-    }
-
-    @Override
-    public void processAsset(AssetFile asset) throws IOException {
+    protected void processAsset(AssetFile asset) throws IOException {
         AssetExtractor ae = new AssetExtractor(asset);
         ae.setClassFilter(getOptions().getClassFilter());
         ae.setOutputDir(getOutputDir());

@@ -26,18 +26,13 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleInjectCmd extends Command {
+public class BundleInjectCmd extends AssetCommand {
     
     private static final Logger L = LogUtils.getLogger();
-
-    @Override
-    public boolean supportsAssets() {
-        return false;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return true;
+    
+    public BundleInjectCmd() {
+        setProcessAssets(false);
+        setProcessBundledAssets(false);
     }
     
     @Override

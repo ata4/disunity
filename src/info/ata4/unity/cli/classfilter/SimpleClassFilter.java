@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.classfilter;
 
 import info.ata4.unity.asset.struct.ObjectPath;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,15 +21,12 @@ import java.util.Set;
  */
 public class SimpleClassFilter implements ClassFilter {
     
-    private final Set<Integer> acceptedIDs = new HashSet<>();
-    private final Set<Integer> rejectedIDs = new HashSet<>();
+    private final Set<Integer> acceptedIDs;
+    private final Set<Integer> rejectedIDs;
     
-    public Set<Integer> getAcceptedIDs() {
-        return acceptedIDs;
-    }
-    
-    public Set<Integer> getRejectedIDs() {
-        return rejectedIDs;
+    public SimpleClassFilter(Collection<Integer> accepted, Collection<Integer> rejected) {
+         acceptedIDs = new HashSet<>(accepted);
+         rejectedIDs = new HashSet<>(rejected);
     }
 
     @Override

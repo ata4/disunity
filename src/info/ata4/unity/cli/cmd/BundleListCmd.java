@@ -20,25 +20,14 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleListCmd extends CommandPrint {
+public class BundleListCmd extends AssetCommand {
+    
+    private final PrintStream ps;
     
     public BundleListCmd(PrintStream ps) {
-        super(ps);
-    }
-
-    @Override
-    public boolean supportsAssets() {
-        return false;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return true;
-    }
-    
-    @Override
-    public boolean requiresOutputDir() {
-        return false;
+        this.ps = ps;
+        setProcessAssets(false);
+        setProcessBundledAssets(false);
     }
 
     @Override

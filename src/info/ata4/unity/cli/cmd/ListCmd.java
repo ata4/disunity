@@ -13,6 +13,7 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import info.ata4.unity.util.ClassID;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -21,24 +22,16 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ListCmd extends CommandPrint {
+public class ListCmd extends AssetCommand {
+    
+    private final PrintStream ps;
     
     public ListCmd(PrintStream ps) {
-        super(ps);
+        this.ps = ps;
     }
-
+    
     @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
-
-    @Override
-    public void processAsset(AssetFile asset) {
+    protected void processAsset(AssetFile asset) throws IOException {
         List<ObjectPath> paths = asset.getPaths();
 
         // dirty hardcoded table printer

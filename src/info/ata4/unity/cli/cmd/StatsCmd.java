@@ -24,24 +24,16 @@ import java.util.Map;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class StatsCmd extends CommandPrint {
-
+public class StatsCmd extends AssetCommand {
+    
+    private final PrintStream ps;
+    
     public StatsCmd(PrintStream ps) {
-        super(ps);
+        this.ps = ps;
     }
 
     @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
-
-    @Override
-    public void processAsset(AssetFile asset) throws IOException {
+    protected void processAsset(AssetFile asset) throws IOException {
         List<ObjectPath> paths = asset.getPaths();
         Map<String, Integer> classCounts = new HashMap<>();
         Map<String, Integer> classSizes = new HashMap<>();

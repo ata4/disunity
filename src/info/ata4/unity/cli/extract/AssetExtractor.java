@@ -20,6 +20,7 @@ import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -170,15 +171,6 @@ public class AssetExtractor {
                     }
                 }
             }
-        }
-
-        // delete directory if empty
-        boolean empty;
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(outputDir)) {
-            empty = !ds.iterator().hasNext();
-        }
-        if (empty) {
-            Files.delete(outputDir);
         }
     }
 

@@ -17,7 +17,7 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class DumpCmd extends Command {
+public class DumpCmd extends AssetCommand {
     
     private boolean dumpStructs = false;
     private boolean dumpToFiles = true;
@@ -38,21 +38,6 @@ public class DumpCmd extends Command {
     public DumpCmd setDumpToFiles(boolean dumpToFiles) {
         this.dumpToFiles = dumpToFiles;
         return this;
-    }
-
-    @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
-    
-    @Override
-    public boolean requiresOutputDir() {
-        return dumpToFiles;
     }
 
     @Override

@@ -24,23 +24,13 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleExtractCmd extends Command {
+public class BundleExtractCmd extends AssetCommand {
     
     private static final Logger L = LogUtils.getLogger();
-
-    @Override
-    public boolean supportsAssets() {
-        return false;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return true;
-    }
     
-    @Override
-    public boolean requiresOutputDir() {
-        return true;
+    public BundleExtractCmd() {
+        setProcessAssets(false);
+        setProcessBundledAssets(false);
     }
 
     @Override

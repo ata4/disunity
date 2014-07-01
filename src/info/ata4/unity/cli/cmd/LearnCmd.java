@@ -20,20 +20,10 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class LearnCmd extends Command {
+public class LearnCmd extends AssetCommand {
 
     private static final Logger L = LogUtils.getLogger();
     
-    @Override
-    public boolean supportsAssets() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAssetBundes() {
-        return false;
-    }
-
     @Override
     public void processAsset(AssetFile asset) throws IOException {
         int learned = StructDatabase.getInstance().learn(asset);
@@ -45,7 +35,7 @@ public class LearnCmd extends Command {
     }
 
     @Override
-    public void finished() {
+    public void processEnd() {
         StructDatabase.getInstance().update();
     }
 }
