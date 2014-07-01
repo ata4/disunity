@@ -14,12 +14,15 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
+import info.ata4.unity.asset.bundle.codec.AssetBundleCodec;
+import info.ata4.unity.asset.bundle.codec.XianjianCodec;
 import info.ata4.unity.asset.bundle.struct.AssetBundleHeader;
 import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.io.lzma.LzmaBufferUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,12 +62,28 @@ public class AssetBundle extends FileHandler {
         }
     }
     
+    private final List<AssetBundleCodec> codecsLoad = new ArrayList<>();
+    private final List<AssetBundleCodec> codecsSave = new ArrayList<>();
     private final AssetBundleHeader header = new AssetBundleHeader();
     private final Map<String, ByteBuffer> entries = new LinkedHashMap<>();
     private boolean compressed = false;
     
+    public AssetBundle() {
+        // register known codecs
+        codecsLoad.add(new XianjianCodec());
+    }
+    
     @Override
     public void load(ByteBuffer bb) throws IOException {
+        // decode buffer if required
+        for (AssetBundleCodec codec : codecsLoad) {
+            if (codec.isEncoded(bb)) {
+                L.log(Level.INFO, "Decoding: {0}", codec.getName());
+                bb = codec.decode(bb);
+                codecsSave.add(codec);
+            }
+        }
+        
         DataInputReader in = DataInputReader.newReader(bb);
         in.readStruct(header);
         
@@ -74,8 +93,8 @@ public class AssetBundle extends FileHandler {
         }
         
         // check compression flag in the signature
-        compressed = header.getSignature().equals(AssetBundleHeader.SIGNATURE_WEB);
-
+        compressed = header.isCompressed();
+        
         // get buffer slice for bundle data
         ByteBuffer bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
         
@@ -175,6 +194,12 @@ public class AssetBundle extends FileHandler {
             offsetMap.add(new ImmutablePair<>(dataSizeC, dataSizeU));
         }
         
+        // encode buffer
+        for (AssetBundleCodec codec : codecsSave) {
+            L.log(Level.INFO, "Encoding: {0}", codec.getName());
+            bbData = codec.encode(bbData);
+        }
+        
         // write file
         ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, bundleSize);
         DataOutputWriter out2 = DataOutputWriter.newWriter(bb);
@@ -184,6 +209,14 @@ public class AssetBundle extends FileHandler {
     
     public Map<String, ByteBuffer> getEntries() {
         return entries;
+    }
+    
+    public List<AssetBundleCodec> getLoadCodecs() {
+        return codecsLoad;
+    }
+
+    public List<AssetBundleCodec> getSaveCodecs() {
+        return codecsSave;
     }
 
     public int getFormat() {
