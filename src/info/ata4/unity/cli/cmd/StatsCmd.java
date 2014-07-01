@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
@@ -24,9 +24,9 @@ import java.util.Map;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class StatsAction extends PrintAction {
+public class StatsCmd extends CommandPrint {
 
-    public StatsAction(PrintStream ps) {
+    public StatsCmd(PrintStream ps) {
         super(ps);
     }
 

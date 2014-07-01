@@ -12,18 +12,18 @@ package info.ata4.unity.cli;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.bundle.AssetBundle;
-import info.ata4.unity.cli.action.Action;
-import info.ata4.unity.cli.action.BundleExtractAction;
-import info.ata4.unity.cli.action.BundleInjectAction;
-import info.ata4.unity.cli.action.BundleListAction;
-import info.ata4.unity.cli.action.DumpAction;
-import info.ata4.unity.cli.action.ExtractAction;
-import info.ata4.unity.cli.action.FixReferencesAction;
-import info.ata4.unity.cli.action.InfoAction;
-import info.ata4.unity.cli.action.LearnAction;
-import info.ata4.unity.cli.action.ListAction;
-import info.ata4.unity.cli.action.SplitAction;
-import info.ata4.unity.cli.action.StatsAction;
+import info.ata4.unity.cli.cmd.Command;
+import info.ata4.unity.cli.cmd.BundleExtractCmd;
+import info.ata4.unity.cli.cmd.BundleInjectCmd;
+import info.ata4.unity.cli.cmd.BundleListCmd;
+import info.ata4.unity.cli.cmd.DumpCmd;
+import info.ata4.unity.cli.cmd.ExtractCmd;
+import info.ata4.unity.cli.cmd.FixReferencesCmd;
+import info.ata4.unity.cli.cmd.InfoCmd;
+import info.ata4.unity.cli.cmd.LearnCmd;
+import info.ata4.unity.cli.cmd.ListCmd;
+import info.ata4.unity.cli.cmd.SplitCmd;
+import info.ata4.unity.cli.cmd.StatsCmd;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -48,26 +48,26 @@ import org.apache.commons.io.FilenameUtils;
 public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
 
     private static final Logger L = LogUtils.getLogger();
-    private static final Map<String, Action> COMMANDS;
+    private static final Map<String, Command> COMMANDS;
     
     static {
         PrintStream out = System.out;
-        Map<String, Action> commands = new HashMap<>();
-        commands.put("dump", new DumpAction().setDumpToFiles(false));
-        commands.put("dump-struct", new DumpAction().setDumpToFiles(false).setDumpStructs(true));
-        commands.put("extract", new ExtractAction());
-        commands.put("extract-raw", new ExtractAction().setRaw(true));
-        commands.put("extract-txt", new DumpAction());
-        commands.put("extract-struct", new DumpAction().setDumpStructs(true));
-        commands.put("fixrefs", new FixReferencesAction());
-        commands.put("info", new InfoAction(out));
-        commands.put("info-stats", new StatsAction(out));
-        commands.put("learn", new LearnAction());
-        commands.put("list", new ListAction(out));
-        commands.put("split", new SplitAction());
-        commands.put("bundle-extract", new BundleExtractAction());
-        commands.put("bundle-inject", new BundleInjectAction());
-        commands.put("bundle-list", new BundleListAction(out));
+        Map<String, Command> commands = new HashMap<>();
+        commands.put("dump", new DumpCmd().setDumpToFiles(false));
+        commands.put("dump-struct", new DumpCmd().setDumpToFiles(false).setDumpStructs(true));
+        commands.put("extract", new ExtractCmd());
+        commands.put("extract-raw", new ExtractCmd().setRaw(true));
+        commands.put("extract-txt", new DumpCmd());
+        commands.put("extract-struct", new DumpCmd().setDumpStructs(true));
+        commands.put("fixrefs", new FixReferencesCmd());
+        commands.put("info", new InfoCmd(out));
+        commands.put("info-stats", new StatsCmd(out));
+        commands.put("learn", new LearnCmd());
+        commands.put("list", new ListCmd(out));
+        commands.put("split", new SplitCmd());
+        commands.put("bundle-extract", new BundleExtractCmd());
+        commands.put("bundle-inject", new BundleInjectCmd());
+        commands.put("bundle-list", new BundleListCmd(out));
         COMMANDS = Collections.unmodifiableMap(commands);
     }
     
@@ -76,7 +76,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     }
     
     private final DisUnityOptions opts;
-    private Action action;
+    private Command cmd;
 
     public DisUnityProcessor(DisUnityOptions opts) {
         this.opts = opts;
@@ -85,14 +85,14 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     @Override
     public void run() {
         // parse command name
-        action = COMMANDS.get(opts.getCommand());
-        if (action == null) {
+        cmd = COMMANDS.get(opts.getCommand());
+        if (cmd == null) {
             L.log(Level.SEVERE, "Invalid command: {0}", opts.getCommand());
             return;
         }
         
-        // set options for action
-        action.setOptions(opts);
+        // set options for command
+        cmd.setOptions(opts);
         
         // process submitted files
         for (Path file : opts.getFiles()) {
@@ -115,7 +115,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
                     if (AssetBundle.isAssetBundle(file)) {
                         processAssetBundle(file);
                     } else {
-                        if (action.supportsAssets()) {
+                        if (cmd.supportsAssets()) {
                             processAsset(file);
                         } else {
                             L.log(Level.WARNING,
@@ -130,14 +130,14 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
         }
         
         // signal end of processing
-        action.finished();
+        cmd.finished();
     }
     
     private void processAssetBundle(Path file) throws IOException {
         L.log(Level.INFO, "Processing {0}", file.getFileName());
         
         Path outputDir = null;
-        if (action.requiresOutputDir()) {
+        if (cmd.requiresOutputDir()) {
             // create target directory based on the asset bundle file name
             String fileName = FilenameUtils.getBaseName(file.getFileName().toString());
             outputDir = file.resolveSibling(fileName);
@@ -146,28 +146,28 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
                 Files.createDirectory(outputDir);
             }
             
-            action.setOutputDir(outputDir);
+            cmd.setOutputDir(outputDir);
         }
         
         // load asset bundle
         AssetBundle ab = new AssetBundle();
-        if (action.requiresWriting()) {
+        if (cmd.requiresWriting()) {
             ab.load(file);
         } else {
             ab.open(file);
         }
         
         // process asset bundle
-        if (action.supportsAssetBundes()) {
-            action.processAssetBundle(ab);
+        if (cmd.supportsAssetBundes()) {
+            cmd.processAssetBundle(ab);
         }
         
         // skip processing of asset files if not supported
-        if (!action.supportsAssets()) {
+        if (!cmd.supportsAssets()) {
             return;
         }
         
-        if (action.requiresWriting()) {
+        if (cmd.requiresWriting()) {
             L.log(Level.WARNING,
                     "Command \"{0}\" can't edit assets in asset bundles, skipping {1}",
                     new Object[]{opts.getCommand(), file.getFileName()});
@@ -192,7 +192,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
             
             // reset output dir so it can be resolved in processAssetInBundle
             if (outputDir != null) {
-                action.setOutputDir(outputDir);
+                cmd.setOutputDir(outputDir);
             }
             
             try {
@@ -206,7 +206,7 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
     private void processAsset(Path file) throws IOException {
         L.log(Level.INFO, "Processing {0}", file.getFileName());
         
-        if (action.requiresOutputDir()) {
+        if (cmd.requiresOutputDir()) {
             String fileName = file.getFileName().toString();
             String assetName = FilenameUtils.removeExtension(fileName);
             
@@ -227,41 +227,41 @@ public class DisUnityProcessor implements Runnable, FileVisitor<Path> {
                 Files.createDirectory(outputDir);
             }
             
-            action.setOutputDir(outputDir);
+            cmd.setOutputDir(outputDir);
         }
         
         AssetFile asset = new AssetFile();
 
         // use memory mapping if the files aren't modified
-        if (action.requiresWriting()) {
+        if (cmd.requiresWriting()) {
             asset.load(file);
         } else {
             asset.open(file);
         }
 
-        action.processAsset(asset);
+        cmd.processAsset(asset);
     }
     
     private void processAssetInBundle(AssetBundle ab, String name, ByteBuffer bb) throws IOException {
         L.log(Level.INFO, "Processing {0}:{1}", new Object[] {ab.getSourceFile().getFileName(), name});
         
         // use sub directory based on the asset name
-        if (action.requiresOutputDir()) {
+        if (cmd.requiresOutputDir()) {
             String assetName = FilenameUtils.removeExtension(name);
-            Path outputDir = action.getOutputDir().resolve(assetName);
+            Path outputDir = cmd.getOutputDir().resolve(assetName);
             
             if (Files.notExists(outputDir)) {
                 Files.createDirectories(outputDir);
             }
             
-            action.setOutputDir(outputDir);
+            cmd.setOutputDir(outputDir);
         }
         
         AssetFile asset = new AssetFile();
         asset.load(bb);
         asset.setSourceBundle(ab);
 
-        action.processAsset(asset);
+        cmd.processAsset(asset);
     }
 
     @Override

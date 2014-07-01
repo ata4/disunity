@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
@@ -25,7 +25,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FixReferencesAction extends Action {
+public class FixReferencesCmd extends Command {
     
     private static final Logger L = LogUtils.getLogger();
 

@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.bundle.AssetBundle;
@@ -20,7 +20,7 @@ import java.nio.file.Path;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class Action {
+public abstract class Command {
     
     private Path outputDir;
     private DisUnityOptions opts;

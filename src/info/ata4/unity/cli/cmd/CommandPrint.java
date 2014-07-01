@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import java.io.PrintStream;
 
@@ -15,11 +15,11 @@ import java.io.PrintStream;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class PrintAction extends Action {
+public abstract class CommandPrint extends Command {
     
     protected final PrintStream ps;
     
-    public PrintAction(PrintStream ps) {
+    public CommandPrint(PrintStream ps) {
         this.ps = ps;
     }
 }

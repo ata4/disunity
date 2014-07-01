@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.cli.dump.AssetDumper;
@@ -17,7 +17,7 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class DumpAction extends Action {
+public class DumpCmd extends Command {
     
     private boolean dumpStructs = false;
     private boolean dumpToFiles = true;
@@ -26,7 +26,7 @@ public class DumpAction extends Action {
         return dumpStructs;
     }
 
-    public DumpAction setDumpStructs(boolean structs) {
+    public DumpCmd setDumpStructs(boolean structs) {
         this.dumpStructs = structs;
         return this;
     }
@@ -35,7 +35,7 @@ public class DumpAction extends Action {
         return dumpToFiles;
     }
 
-    public DumpAction setDumpToFiles(boolean dumpToFiles) {
+    public DumpCmd setDumpToFiles(boolean dumpToFiles) {
         this.dumpToFiles = dumpToFiles;
         return this;
     }

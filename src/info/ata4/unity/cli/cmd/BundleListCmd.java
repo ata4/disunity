@@ -1,5 +1,5 @@
 /*
- ** 2014 January 08
+ ** 2014 April 08
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,26 +7,24 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
-import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.bundle.AssetBundle;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleExtractAction extends Action {
+public class BundleListCmd extends CommandPrint {
     
-    private static final Logger L = LogUtils.getLogger();
+    public BundleListCmd(PrintStream ps) {
+        super(ps);
+    }
 
     @Override
     public boolean supportsAssets() {
@@ -40,25 +38,29 @@ public class BundleExtractAction extends Action {
     
     @Override
     public boolean requiresOutputDir() {
-        return true;
+        return false;
     }
 
     @Override
     public void processAssetBundle(AssetBundle bundle) throws IOException {
+        int p1 = 64;
+        int p2 = 10;
+        
+        ps.print(StringUtils.rightPad("Path", p1));
+        ps.print(" | ");
+        ps.print(StringUtils.leftPad("Size", p2));
+        ps.println();
+        
+        ps.print(StringUtils.repeat("-", p1));
+        ps.print(" | ");
+        ps.print(StringUtils.repeat("-", p2));
+        ps.println();
+        
         for (Map.Entry<String, ByteBuffer> entry : bundle.getEntries().entrySet()) {
-            String entryName = entry.getKey();
-            ByteBuffer entryBuffer = entry.getValue();
-            
-            L.log(Level.INFO, "Extracting {0}", entryName);
-            
-            Path entryFile = getOutputDir().resolve(entryName);
-            Path entryDir = entryFile.getParent();
-            
-            if (Files.notExists(entryDir)) {
-                Files.createDirectories(entryDir);
-            }
-            
-            ByteBufferUtils.save(entryFile, entryBuffer);
+            ps.print(StringUtils.rightPad(entry.getKey(), p1));
+            ps.print(" | ");
+            ps.print(StringUtils.leftPad(String.valueOf(entry.getValue().limit()), p2));
+            ps.println();
         }
     }
 }

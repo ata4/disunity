@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.action;
+package info.ata4.unity.cli.cmd;
 
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.cli.extract.AssetExtractor;
@@ -17,18 +17,7 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ExtractAction extends Action {
-    
-    private boolean raw;
-    
-    public boolean isRaw() {
-        return raw;
-    }
-
-    public ExtractAction setRaw(boolean raw) {
-        this.raw = raw;
-        return this;
-    }
+public class SplitCmd extends Command {
 
     @Override
     public boolean supportsAssets() {
@@ -44,12 +33,12 @@ public class ExtractAction extends Action {
     public boolean requiresOutputDir() {
         return true;
     }
-
+    
     @Override
     public void processAsset(AssetFile asset) throws IOException {
         AssetExtractor ae = new AssetExtractor(asset);
         ae.setClassFilter(getOptions().getClassFilter());
         ae.setOutputDir(getOutputDir());
-        ae.extract(isRaw());
+        ae.split();
     }
 }
