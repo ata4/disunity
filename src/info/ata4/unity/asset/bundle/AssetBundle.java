@@ -131,7 +131,7 @@ public class AssetBundle extends FileHandler {
             bundleHeaderSize += name.length() + 9;
             
             // count asset files
-            if (name.equals("mainData") || name.startsWith("level")) {
+            if (name.equals("mainData") || name.startsWith("level") || name.startsWith("CAB")) {
                 assets++;
             }
             
@@ -194,17 +194,21 @@ public class AssetBundle extends FileHandler {
             offsetMap.add(new ImmutablePair<>(dataSizeC, dataSizeU));
         }
         
-        // encode buffer
-        for (AssetBundleCodec codec : codecsSave) {
-            L.log(Level.INFO, "Encoding: {0}", codec.getName());
-            bbData = codec.encode(bbData);
-        }
-        
-        // write file
-        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, bundleSize);
+        // create bundle buffer
+        ByteBuffer bb = ByteBuffer.allocateDirect(bundleSize);
         DataOutputWriter out2 = DataOutputWriter.newWriter(bb);
         out2.writeStruct(header);
         out2.writeBuffer(bbData);
+        bb.flip();
+        
+        // encode bundle buffer
+        for (AssetBundleCodec codec : codecsSave) {
+            L.log(Level.INFO, "Encoding: {0}", codec.getName());
+            bb = codec.encode(bb);
+        }
+        
+        // write buffer to file
+        ByteBufferUtils.save(file, bb);
     }
     
     public Map<String, ByteBuffer> getEntries() {
