@@ -136,7 +136,7 @@ public class AssetExtractor {
                 String assetFileName = String.format("%06d.bin", path.getPathID());
                 Path classDir = outputDir.resolve(className);
                 if (Files.notExists(classDir)) {
-                    Files.createDirectory(classDir);
+                    Files.createDirectories(classDir);
                 }
                 
                 Path assetFile = classDir.resolve(assetFileName);
@@ -213,7 +213,7 @@ public class AssetExtractor {
             
             Path subAssetDir = outputDir.resolve(className);
             if (Files.notExists(subAssetDir)) {
-                Files.createDirectory(subAssetDir);
+                Files.createDirectories(subAssetDir);
             }
             
             // probe asset name

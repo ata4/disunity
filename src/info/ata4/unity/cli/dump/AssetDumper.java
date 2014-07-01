@@ -97,7 +97,7 @@ public class AssetDumper {
                 
                 Path classDir = outputDir.resolve(className);
                 if (Files.notExists(classDir)) {
-                    Files.createDirectory(classDir);
+                    Files.createDirectories(classDir);
                 }
                 
                 String fileName = String.format("%06d.txt", path.getPathID());
