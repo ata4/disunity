@@ -232,6 +232,10 @@ public class AssetDumper {
             }
             
             if (outputDir != null) {
+                if (Files.notExists(outputDir)) {
+                    Files.createDirectories(outputDir);
+                }
+                
                 String className = ClassID.getNameForID(classID, true);
                 String fileName = String.format("%s.txt", className);
                 Path file = outputDir.resolve(fileName);
