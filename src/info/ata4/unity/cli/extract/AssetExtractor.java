@@ -20,8 +20,6 @@ import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
