@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 import java.nio.ByteBuffer;
@@ -20,13 +20,13 @@ import java.util.List;
 //   vector m_Channels
 //   vector m_Streams
 //   TypelessData m_DataSize
-class VertexData {
+public class VertexData {
     
-    final Long currentChannels;
-    final Long vertexCount;
-    final List<ChannelInfo> channels;
-    final List<StreamInfo> streams;
-    final ByteBuffer dataSize;
+    public final Long currentChannels;
+    public final Long vertexCount;
+    public final List<ChannelInfo> channels;
+    public final List<StreamInfo> streams;
+    public final ByteBuffer dataSize;
 
     VertexData(UnityObject obj) {
         currentChannels = obj.getValue("m_CurrentChannels");

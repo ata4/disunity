@@ -9,6 +9,12 @@
  */
 package info.ata4.unity.cli.extract.mesh;
 
+import info.ata4.unity.engine.CompressedMesh;
+import info.ata4.unity.engine.PackedBitVector;
+import info.ata4.unity.engine.ChannelInfo;
+import info.ata4.unity.engine.SubMesh;
+import info.ata4.unity.engine.StreamInfo;
+import info.ata4.unity.engine.Mesh;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferInputStream;
 import info.ata4.io.streams.BitInputStream;
@@ -16,10 +22,10 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.cli.extract.AssetExtractHandler;
 import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.struct.Color32;
-import info.ata4.unity.struct.Vector2f;
-import info.ata4.unity.struct.Vector3f;
-import info.ata4.unity.struct.Vector4f;
+import info.ata4.unity.engine.struct.Color32;
+import info.ata4.unity.engine.struct.Vector2f;
+import info.ata4.unity.engine.struct.Vector3f;
+import info.ata4.unity.engine.struct.Vector4f;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedOutputStream;
 import java.io.IOException;

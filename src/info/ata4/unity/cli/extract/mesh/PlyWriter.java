@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.cli.extract.mesh;
 
-import info.ata4.unity.struct.Color32;
-import info.ata4.unity.struct.Vector2f;
-import info.ata4.unity.struct.Vector3f;
+import info.ata4.unity.engine.struct.Color32;
+import info.ata4.unity.engine.struct.Vector2f;
+import info.ata4.unity.engine.struct.Vector3f;
 import java.io.PrintStream;
 
 /**

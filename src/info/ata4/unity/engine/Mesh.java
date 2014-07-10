@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 import java.nio.ByteBuffer;
@@ -32,16 +32,16 @@ import java.util.List;
 //   CompressedMesh m_CompressedMesh
 //   AABB m_LocalAABB
 //   int m_MeshUsageFlags
-class Mesh {
+public class Mesh {
     
-    final String name;
-    final ByteBuffer indexBuffer;
-    final Integer meshCompression;
-    final VertexData vertexData;
-    final List<SubMesh> subMeshes;
-    final CompressedMesh compressedMesh;
+    public final String name;
+    public final ByteBuffer indexBuffer;
+    public final Integer meshCompression;
+    public final VertexData vertexData;
+    public final List<SubMesh> subMeshes;
+    public final CompressedMesh compressedMesh;
 
-    Mesh(UnityObject obj) {
+    public Mesh(UnityObject obj) {
         name = obj.getValue("m_Name");
         indexBuffer = obj.getValue("m_IndexBuffer");
         meshCompression = obj.getValue("m_MeshCompression");

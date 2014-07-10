@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 
@@ -17,13 +17,13 @@ import info.ata4.unity.serdes.UnityObject;
 //   UInt8 stride
 //   UInt8 dividerOp
 //   UInt16 frequency
-class StreamInfo {
+public class StreamInfo {
     
-    final Long channelMask;
-    final Long offset;
-    final Integer stride;
-    final Integer dividerOp;
-    final Integer frequency;
+    public final Long channelMask;
+    public final Long offset;
+    public final Integer stride;
+    public final Integer dividerOp;
+    public final Integer frequency;
 
     StreamInfo(UnityObject obj) {
         channelMask = obj.getValue("channelMask");

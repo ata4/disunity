@@ -9,12 +9,13 @@
  */
 package info.ata4.unity.cli.extract;
 
+import info.ata4.unity.engine.Texture2D;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.ObjectPath;
-import info.ata4.unity.enums.TextureFormat;
-import static info.ata4.unity.enums.TextureFormat.*;
+import info.ata4.unity.engine.enums.TextureFormat;
+import static info.ata4.unity.engine.enums.TextureFormat.*;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.util.io.image.dds.DDSHeader;
 import info.ata4.util.io.image.dds.DDSPixelFormat;
@@ -616,42 +617,4 @@ public class Texture2DHandler extends AssetExtractHandler {
         writeData(bb);
     }
     
-    private class Texture2D {
-        
-        String name;
-        Integer width;
-        Integer height;
-        Integer completeImageSize;
-        Integer textureFormatOrd;
-        TextureFormat textureFormat;
-        Boolean mipMap;
-        Boolean isReadable;
-        Boolean readAllowed;
-        Integer imageCount;
-        Integer textureDimension;
-        Integer lightmapFormat;
-        Integer colorSpace;
-        ByteBuffer imageBuffer;
-        
-        Texture2D(UnityObject obj) {
-            name = obj.getValue("m_Name");
-            width = obj.getValue("m_Width");
-            height = obj.getValue("m_Height");
-            completeImageSize = obj.getValue("m_CompleteImageSize");
-            
-            textureFormatOrd = obj.getValue("m_TextureFormat");
-            textureFormat = TextureFormat.fromOrdinal(textureFormatOrd);
-
-            mipMap = obj.getValue("m_MipMap");
-            isReadable = obj.getValue("m_IsReadable");
-            readAllowed = obj.getValue("m_ReadAllowed");
-            imageCount = obj.getValue("m_ImageCount");
-            textureDimension = obj.getValue("m_TextureDimension");
-            lightmapFormat = obj.getValue("m_LightmapFormat");
-            colorSpace = obj.getValue("m_ColorSpace");
-            
-            imageBuffer = obj.getValue("image data");
-            imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        }
-    }
 }

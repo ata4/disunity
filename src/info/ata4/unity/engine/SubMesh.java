@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 
@@ -18,13 +18,13 @@ import info.ata4.unity.serdes.UnityObject;
 //   unsigned int firstVertex
 //   unsigned int vertexCount
 //   AABB localAABB
-class SubMesh {
+public class SubMesh {
     
-    final Long firstByte;
-    final Long indexCount;
-    final Integer topology;
-    final Long firstVertex;
-    final Long vertexCount;
+    public final Long firstByte;
+    public final Long indexCount;
+    public final Integer topology;
+    public final Long firstVertex;
+    public final Long vertexCount;
 
     SubMesh(UnityObject obj) {
         firstByte = obj.getValue("firstByte");

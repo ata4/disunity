@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 import java.nio.ByteBuffer;
@@ -18,13 +18,13 @@ import java.nio.ByteBuffer;
 //   float m_Start
 //   vector m_Data
 //   UInt8 m_BitSize
-class PackedBitVector {
+public class PackedBitVector {
     
-    final Long numItems;
-    final Float range;
-    final Float start;
-    final ByteBuffer data;
-    final Integer bitSize;
+    public final Long numItems;
+    public final Float range;
+    public final Float start;
+    public final ByteBuffer data;
+    public final Integer bitSize;
 
     PackedBitVector(UnityObject obj) {
         numItems = obj.getValue("m_NumItems");

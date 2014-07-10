@@ -9,9 +9,10 @@
  */
 package info.ata4.unity.cli.extract;
 
+import info.ata4.unity.engine.AudioClip;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.enums.AudioType;
+import info.ata4.unity.engine.enums.AudioType;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -96,19 +97,4 @@ public class AudioClipHandler extends AssetExtractHandler {
         writeData(audio.audioBuffer);
     }
     
-    private class AudioClip {
-        
-        final String name;
-        final ByteBuffer audioBuffer;
-        final Integer stream;
-        final AudioType type;
-        
-        AudioClip(UnityObject obj) {
-            name = obj.getValue("m_Name");
-            audioBuffer = obj.getValue("m_AudioData");
-            stream = obj.getValue("m_Stream");
-            Integer typeInt = obj.getValue("m_Type");
-            type = AudioType.fromOrdinal(typeInt);
-        }
-    }
 }

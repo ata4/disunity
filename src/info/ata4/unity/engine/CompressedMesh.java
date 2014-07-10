@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 
@@ -23,21 +23,21 @@ import info.ata4.unity.serdes.UnityObject;
 //   PackedBitVector m_BoneIndices
 //   PackedBitVector m_Triangles
 //   PackedBitVector m_Colors
-class CompressedMesh {
+public class CompressedMesh {
     
-    final PackedBitVector vertices;
-    final PackedBitVector UV;
-    final PackedBitVector bindPoses;
-    final PackedBitVector normals;
-    final PackedBitVector tangents;
-    final PackedBitVector weights;
-    final PackedBitVector normalSigns;
-    final PackedBitVector tangentSigns;
-    final PackedBitVector boneIndices;
-    final PackedBitVector triangles;
-    final PackedBitVector colors;
+    public final PackedBitVector vertices;
+    public final PackedBitVector UV;
+    public final PackedBitVector bindPoses;
+    public final PackedBitVector normals;
+    public final PackedBitVector tangents;
+    public final PackedBitVector weights;
+    public final PackedBitVector normalSigns;
+    public final PackedBitVector tangentSigns;
+    public final PackedBitVector boneIndices;
+    public final PackedBitVector triangles;
+    public final PackedBitVector colors;
 
-    CompressedMesh(UnityObject obj) {
+    public CompressedMesh(UnityObject obj) {
         vertices = new PackedBitVector((UnityObject) obj.getValue("m_Vertices"));
         UV = new PackedBitVector((UnityObject) obj.getValue("m_UV"));
         bindPoses = new PackedBitVector((UnityObject) obj.getValue("m_BindPoses"));
