@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.extract;
 
+import info.ata4.unity.cli.extract.mesh.MeshHandler;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
