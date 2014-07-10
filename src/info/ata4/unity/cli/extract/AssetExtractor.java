@@ -156,7 +156,7 @@ public class AssetExtractor {
                     
                     try {
                         obj = deser.deserialize(path);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         L.log(Level.WARNING, "Can't deserialize " + path, ex);
                         continue;
                     }
@@ -164,7 +164,7 @@ public class AssetExtractor {
                     try {
                         handler.setObjectPath(path);
                         handler.extract(obj);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         L.log(Level.WARNING, "Can't extract " + path, ex);
                     }
                 }
