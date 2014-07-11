@@ -14,6 +14,7 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.io.file.FilenameSanitizer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -72,11 +73,8 @@ public abstract class AssetExtractHandler {
     }
 
     public void setOutputFileName(String outFileName) {
-        // remove any chars that could cause troubles on various file systems
-        if (!StringUtils.isBlank(outFileName)) {
-            outFileName = outFileName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
-        }
-        this.outFileName = outFileName;
+        // sanitize file name to avoid file system issues
+        this.outFileName = FilenameSanitizer.sanitizeName(outFileName);
     }
     
     public ObjectPath getObjectPath() {
