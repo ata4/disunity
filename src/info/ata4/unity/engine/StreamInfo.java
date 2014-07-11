@@ -21,9 +21,10 @@ public class StreamInfo {
     
     public final Long channelMask;
     public final Long offset;
-    public final Integer stride;
-    public final Integer dividerOp;
-    public final Integer frequency;
+    public final Long stride;
+    public final Long dividerOp;
+    public final Long frequency;
+    public final Long align;
 
     StreamInfo(UnityObject obj) {
         channelMask = obj.getValue("channelMask");
@@ -31,6 +32,7 @@ public class StreamInfo {
         stride = obj.getValue("stride");
         dividerOp = obj.getValue("dividerOp");
         frequency = obj.getValue("frequency");
+        align = obj.getValue("align");
     }
     
 }

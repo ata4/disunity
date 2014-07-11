@@ -40,15 +40,15 @@ public class VertexData {
     VertexData(UnityObject obj) {
         currentChannels = obj.getValue("m_CurrentChannels");
         vertexCount = obj.getValue("m_VertexCount");
+        
         List<UnityObject> channelObjects = obj.getValue("m_Channels");
+        channels = new ArrayList<>();
         if (channelObjects != null) {
-            channels = new ArrayList<>();
             for (UnityObject channelObject : channelObjects) {
                 channels.add(new ChannelInfo(channelObject));
             }
-        } else {
-            channels = null;
         }
+        
         List<UnityObject> streamObjects = obj.getValue("m_Streams");
         streams = new ArrayList<>();
         if (streamObjects != null) {
@@ -57,12 +57,13 @@ public class VertexData {
             }
         } else {
             for (int i = 0; i < 4; i++) {
-                UnityObject streamInfo = obj.getObject("m_Channels[" + i + "]");
+                UnityObject streamInfo = obj.getObject("m_Streams[" + i + "]");
                 if (streamInfo != null) {
                     streams.add(new StreamInfo(streamInfo));
                 }
             }
         }
+        
         dataSize = obj.getValue("m_DataSize");
     }
     

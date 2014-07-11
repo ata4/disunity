@@ -86,151 +86,10 @@ public class MeshHandler extends AssetExtractHandler {
         MeshData meshData = new MeshData(mesh);
         
         if (mesh.meshCompression == 0) {
-            // get vertex buffer
-            ByteBuffer vertexBuffer = mesh.vertexData.dataSize;
-            vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
-
-            L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
-
-            DataInputReader in = DataInputReader.newReader(vertexBuffer);
-
-            List<StreamInfo> streams = mesh.vertexData.streams;
-            List<ChannelInfo> channels = mesh.vertexData.channels;
-
-            try {
-                for (StreamInfo stream : streams) {
-                    // skip empty channels
-                    if (stream.channelMask == 0) {
-                        continue;
-                    }
-
-                    vertexBuffer.position(stream.offset.intValue());
-
-                    // read vertex data from each vertex and channel
-                    for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
-                        for (int j = 0; j < channels.size(); j++) {
-                            // skip unselected channels
-                            if ((stream.channelMask & 1 << j) == 0) {
-                                continue;
-                            }
-
-                            ChannelInfo channel = channels.get(j);
-                            boolean half = channel.format == 1;
-
-                            // Known channels:
-                            // 0 - Coordinates (Vector3f)
-                            // 1 - Normals (Vector3f)
-                            // 2 - Colors (Color32)
-                            // 3 - UV layer 1 (Vector2f)
-                            // 4 - UV layer 2 (Vector2f)
-                            // 5 - Tangents (Vector4f)
-                            switch (j) {
-                                case 0:
-                                    Vector3f v = new Vector3f();
-                                    v.setHalf(half);
-                                    v.read(in);
-                                    meshData.getVertices().add(v);
-                                    break;
-
-                                case 1:
-                                    Vector3f vn = new Vector3f();
-                                    vn.setHalf(half);
-                                    vn.read(in);
-                                    meshData.getNormals().add(vn);
-                                    if (half && channel.dimension == 4) {
-                                        in.skipBytes(2); // padding?
-                                    }
-                                    break;
-
-                                case 2:
-                                    Color32 c = new Color32();
-                                    c.read(in);
-                                    meshData.getColors().add(c);
-                                    break;
-
-                                case 3:
-                                case 4:
-                                    Vector2f vt = new Vector2f();
-                                    vt.setHalf(half);
-                                    vt.read(in);
-                                    if (j == 3) {
-                                        meshData.getUV1().add(vt);
-                                    } else {
-                                        meshData.getUV2().add(vt);
-                                    }
-                                    break;
-
-                                case 5:
-                                    Vector4f t = new Vector4f();
-                                    t.setHalf(half);
-                                    t.read(in);
-                                    meshData.getTangents().add(t);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                L.log(Level.SEVERE, "Vertex buffer reading error", ex);
-            }
-
-            try {
-                mesh.indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
-                in = DataInputReader.newReader(mesh.indexBuffer);
-                for (SubMesh subMesh : mesh.subMeshes) {
-                    in.position(subMesh.firstByte);
-
-                    for (int j = 0; j < subMesh.indexCount; j++) {
-                        meshData.getTriangles().add(in.readUnsignedShort());
-                    }
-                }
-            } catch (IOException ex) {
-                L.log(Level.SEVERE, "Index buffer reading error", ex);
-            }
+            readVertexBuffer(meshData);
+            readIndexBuffer(meshData);
         } else {
-            CompressedMesh cmesh = mesh.compressedMesh;
-
-            float[] vertexFloats = readPackedFloats(cmesh.vertices);
-            for (int i = 0; i < vertexFloats.length / 3; i++) {
-                Vector3f v = new Vector3f();
-                v.x = vertexFloats[i * 3];
-                v.y = vertexFloats[i * 3 + 1];
-                v.z = vertexFloats[i * 3 + 2];
-                meshData.getVertices().add(v);
-            }
-            
-            float[] normalFloats = readPackedNormals(cmesh.normals, cmesh.normalSigns);
-            for (int i = 0; i < normalFloats.length / 3; i++) {
-                Vector3f vn = new Vector3f();
-                vn.x = normalFloats[i * 3];
-                vn.y = normalFloats[i * 3 + 1];
-                vn.z = normalFloats[i * 3 + 2];
-                meshData.getNormals().add(vn);
-            }
-            
-            float[] uvFloats = readPackedFloats(cmesh.UV);
-            for (int i = 0; i < uvFloats.length / 2; i++) {
-                Vector2f vt = new Vector2f();
-                vt.x = uvFloats[i * 2];
-                vt.y = uvFloats[i * 2 + 1];
-                if (i < vertexFloats.length / 3) {
-                    meshData.getUV1().add(vt);
-                } else {
-                    meshData.getUV2().add(vt);
-                }
-            }
-            
-            int[] colorInts = readPackedBits(cmesh.colors);
-            for (int i = 0; i < colorInts.length; i++) {
-                Color32 c = new Color32();
-                c.fromInt(colorInts[i]);
-                meshData.getColors().add(c);
-            }
-            
-            int[] triangleInts = readPackedBits(cmesh.triangles);
-            for (int i = 0; i < triangleInts.length; i++) {
-                meshData.getTriangles().add(triangleInts[i]);
-            }
+            readCompressedMeshData(meshData);
         }
         
         return meshData;
@@ -313,5 +172,162 @@ public class MeshHandler extends AssetExtractHandler {
         }
         
         return floats;
+    }
+
+    private void readVertexBuffer(MeshData meshData) throws IOException {
+        Mesh mesh = meshData.getMesh();
+        
+        // get vertex buffer
+        ByteBuffer vertexBuffer = mesh.vertexData.dataSize;
+        vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        
+        L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
+
+        DataInputReader in = DataInputReader.newReader(vertexBuffer);
+
+        List<StreamInfo> streams = mesh.vertexData.streams;
+        List<ChannelInfo> channels = mesh.vertexData.channels;
+        
+        for (StreamInfo stream : streams) {
+            // skip empty channels
+            if (stream.channelMask == 0) {
+                continue;
+            }
+
+            vertexBuffer.position(stream.offset.intValue());
+
+            // read vertex data from each vertex and channel
+            for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
+                // Known channels:
+                // 0 - Coordinates (Vector3f)
+                // 1 - Normals (Vector3f)
+                // 2 - Colors (Color32)
+                // 3 - UV layer 1 (Vector2f)
+                // 4 - UV layer 2 (Vector2f)
+                // 5 - Tangents (Vector4f)
+                for (int j = 0; j < 5; j++) {
+                    // skip unselected channels
+                    if ((stream.channelMask & 1 << j) == 0) {
+                        continue;
+                    }
+                    
+                    boolean half = false;
+                    ChannelInfo channel = null;
+
+                    // channels may not be available in older versions
+                    if (!channels.isEmpty()) {
+                        channel = channels.get(j);
+                        half = channel.format == 1;
+                    }
+
+                    switch (j) {
+                        case 0:
+                            Vector3f v = new Vector3f();
+                            v.setHalf(half);
+                            v.read(in);
+                            meshData.getVertices().add(v);
+                            break;
+
+                        case 1:
+                            Vector3f vn = new Vector3f();
+                            vn.setHalf(half);
+                            vn.read(in);
+                            meshData.getNormals().add(vn);
+                            if (half && channel != null && channel.dimension == 4) {
+                                in.skipBytes(2); // padding?
+                            }
+                            break;
+
+                        case 2:
+                            Color32 c = new Color32();
+                            c.read(in);
+                            meshData.getColors().add(c);
+                            break;
+
+                        case 3:
+                        case 4:
+                            Vector2f vt = new Vector2f();
+                            vt.setHalf(half);
+                            vt.read(in);
+                            if (j == 3) {
+                                meshData.getUV1().add(vt);
+                            } else {
+                                meshData.getUV2().add(vt);
+                            }
+                            break;
+
+                        case 5:
+                            Vector4f t = new Vector4f();
+                            t.setHalf(half);
+                            t.read(in);
+                            meshData.getTangents().add(t);
+                            break;
+                    }
+                }
+                
+                in.align((int) in.position(), stream.stride.intValue());
+            }
+        }
+    }
+
+    private void readIndexBuffer(MeshData meshData) throws IOException {
+        Mesh mesh = meshData.getMesh();
+        
+        mesh.indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        DataInputReader in = DataInputReader.newReader(mesh.indexBuffer);
+        for (SubMesh subMesh : mesh.subMeshes) {
+            in.position(subMesh.firstByte);
+
+            for (int j = 0; j < subMesh.indexCount; j++) {
+                meshData.getTriangles().add(in.readUnsignedShort());
+            }
+        }
+    }
+
+    private void readCompressedMeshData(MeshData meshData) throws IOException {
+        Mesh mesh = meshData.getMesh();
+        CompressedMesh cmesh = mesh.compressedMesh;
+
+        float[] vertexFloats = readPackedFloats(cmesh.vertices);
+        for (int i = 0; i < vertexFloats.length / 3; i++) {
+            Vector3f v = new Vector3f();
+            v.x = vertexFloats[i * 3];
+            v.y = vertexFloats[i * 3 + 1];
+            v.z = vertexFloats[i * 3 + 2];
+            meshData.getVertices().add(v);
+        }
+
+        float[] normalFloats = readPackedNormals(cmesh.normals, cmesh.normalSigns);
+        for (int i = 0; i < normalFloats.length / 3; i++) {
+            Vector3f vn = new Vector3f();
+            vn.x = normalFloats[i * 3];
+            vn.y = normalFloats[i * 3 + 1];
+            vn.z = normalFloats[i * 3 + 2];
+            meshData.getNormals().add(vn);
+        }
+
+        float[] uvFloats = readPackedFloats(cmesh.UV);
+        for (int i = 0; i < uvFloats.length / 2; i++) {
+            Vector2f vt = new Vector2f();
+            vt.x = uvFloats[i * 2];
+            vt.y = uvFloats[i * 2 + 1];
+            if (i < vertexFloats.length / 3) {
+                meshData.getUV1().add(vt);
+            } else {
+                meshData.getUV2().add(vt);
+            }
+        }
+
+        int[] colorInts = readPackedBits(cmesh.colors);
+        for (int i = 0; i < colorInts.length; i++) {
+            Color32 c = new Color32();
+            c.fromInt(colorInts[i]);
+            meshData.getColors().add(c);
+        }
+
+        int[] triangleInts = readPackedBits(cmesh.triangles);
+        for (int i = 0; i < triangleInts.length; i++) {
+            meshData.getTriangles().add(triangleInts[i]);
+        }
     }
 }
