@@ -60,9 +60,9 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
         }
         
         if (unwrap) {
-            // unwrap all UnityValues
-            while (f.get() instanceof UnityValue) {
-                f = (UnityValue) f.get();
+            // unwrap UnityTag
+            while (f.get() instanceof UnityTag) {
+                f = (UnityTag) f.get();
             }
         }
         
@@ -81,9 +81,9 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
         }
         
         if (unwrap) {
-            // unwrap all UnityValues
-            while (f.get() instanceof UnityValue) {
-                f = (UnityValue) f.get();
+            // unwrap UnityTag
+            while (f.get() instanceof UnityTag) {
+                f = (UnityTag) f.get();
             }
         }
         
