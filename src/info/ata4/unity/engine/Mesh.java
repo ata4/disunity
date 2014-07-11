@@ -45,13 +45,13 @@ public class Mesh {
         name = obj.getValue("m_Name");
         indexBuffer = obj.getValue("m_IndexBuffer");
         meshCompression = obj.getValue("m_MeshCompression");
-        vertexData = new VertexData((UnityObject) obj.getValue("m_VertexData"));
+        vertexData = new VertexData(obj.getObject("m_VertexData"));
         List<UnityObject> subMeshObjects = obj.getValue("m_SubMeshes");
         subMeshes = new ArrayList<>();
         for (UnityObject subMeshObject : subMeshObjects) {
             subMeshes.add(new SubMesh(subMeshObject));
         }
-        compressedMesh = new CompressedMesh((UnityObject) obj.getValue("m_CompressedMesh"));
+        compressedMesh = new CompressedMesh(obj.getObject("m_CompressedMesh"));
     }
     
 }

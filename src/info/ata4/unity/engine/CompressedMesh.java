@@ -38,17 +38,17 @@ public class CompressedMesh {
     public final PackedBitVector colors;
 
     public CompressedMesh(UnityObject obj) {
-        vertices = new PackedBitVector((UnityObject) obj.getValue("m_Vertices"));
-        UV = new PackedBitVector((UnityObject) obj.getValue("m_UV"));
-        bindPoses = new PackedBitVector((UnityObject) obj.getValue("m_BindPoses"));
-        normals = new PackedBitVector((UnityObject) obj.getValue("m_Normals"));
-        tangents = new PackedBitVector((UnityObject) obj.getValue("m_Tangents"));
-        weights = new PackedBitVector((UnityObject) obj.getValue("m_Weights"));
-        normalSigns = new PackedBitVector((UnityObject) obj.getValue("m_NormalSigns"));
-        tangentSigns = new PackedBitVector((UnityObject) obj.getValue("m_TangentSigns"));
-        boneIndices = new PackedBitVector((UnityObject) obj.getValue("m_BoneIndices"));
-        triangles = new PackedBitVector((UnityObject) obj.getValue("m_Triangles"));
-        colors = new PackedBitVector((UnityObject) obj.getValue("m_Colors"));
+        vertices = new PackedBitVector(obj.getObject("m_Vertices"));
+        UV = new PackedBitVector(obj.getObject("m_UV"));
+        bindPoses = new PackedBitVector(obj.getObject("m_BindPoses"));
+        normals = new PackedBitVector(obj.getObject("m_Normals"));
+        tangents = new PackedBitVector(obj.getObject("m_Tangents"));
+        weights = new PackedBitVector(obj.getObject("m_Weights"));
+        normalSigns = new PackedBitVector(obj.getObject("m_NormalSigns"));
+        tangentSigns = new PackedBitVector(obj.getObject("m_TangentSigns"));
+        boneIndices = new PackedBitVector(obj.getObject("m_BoneIndices"));
+        triangles = new PackedBitVector(obj.getObject("m_Triangles"));
+        colors = new PackedBitVector(obj.getObject("m_Colors"));
     }
     
 }

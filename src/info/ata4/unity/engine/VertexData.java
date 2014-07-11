@@ -14,12 +14,21 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-// VertexData
+// VertexData (Unity 4)
 //   unsigned int m_CurrentChannels
 //   unsigned int m_VertexCount
 //   vector m_Channels
 //   vector m_Streams
 //   TypelessData m_DataSize
+
+// VertexData (Unity 3)
+//    UInt32 m_CurrentChannels
+//    UInt32 m_VertexCount
+//    StreamInfo m_Streams[0]
+//    StreamInfo m_Streams[1]
+//    StreamInfo m_Streams[2]
+//    StreamInfo m_Streams[3]
+//    TypelessData m_DataSize
 public class VertexData {
     
     public final Long currentChannels;
@@ -32,14 +41,27 @@ public class VertexData {
         currentChannels = obj.getValue("m_CurrentChannels");
         vertexCount = obj.getValue("m_VertexCount");
         List<UnityObject> channelObjects = obj.getValue("m_Channels");
-        channels = new ArrayList<>();
-        for (UnityObject channelObject : channelObjects) {
-            channels.add(new ChannelInfo(channelObject));
+        if (channelObjects != null) {
+            channels = new ArrayList<>();
+            for (UnityObject channelObject : channelObjects) {
+                channels.add(new ChannelInfo(channelObject));
+            }
+        } else {
+            channels = null;
         }
         List<UnityObject> streamObjects = obj.getValue("m_Streams");
         streams = new ArrayList<>();
-        for (UnityObject streamObject : streamObjects) {
-            streams.add(new StreamInfo(streamObject));
+        if (streamObjects != null) {
+            for (UnityObject streamObject : streamObjects) {
+                streams.add(new StreamInfo(streamObject));
+            }
+        } else {
+            for (int i = 0; i < 4; i++) {
+                UnityObject streamInfo = obj.getObject("m_Channels[" + i + "]");
+                if (streamInfo != null) {
+                    streams.add(new StreamInfo(streamInfo));
+                }
+            }
         }
         dataSize = obj.getValue("m_DataSize");
     }

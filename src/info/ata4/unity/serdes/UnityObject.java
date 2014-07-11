@@ -93,4 +93,13 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
     public <T> void setValue(String name, T value) {
         setValue(name, value, true);
     }
+    
+    public UnityObject getObject(String name) {
+        UnityTag tag = getValue(name, false);
+        return (UnityObject) tag;
+    }
+    
+    public void setObject(String name, UnityObject value) {
+        setValue(name, value, false);
+    }
 }
