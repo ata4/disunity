@@ -51,7 +51,7 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
         this.fields = value;
     }
     
-    public <T> T getValue(String name) {
+    public <T> T getValue(String name, boolean unwrap) {
         UnityTag f = fields.get(name);
 
         // return null if the field doesn't exist
@@ -59,26 +59,38 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
             return null;
         }
         
-        // unwrap all UnityValues
-        while (f.get() instanceof UnityValue) {
-            f = (UnityValue) f.get();
+        if (unwrap) {
+            // unwrap all UnityValues
+            while (f.get() instanceof UnityValue) {
+                f = (UnityValue) f.get();
+            }
         }
         
         return (T) f.get();
     }
     
-    public <T> void setValue(String name, T value) {
+    public <T> T getValue(String name) {
+        return getValue(name, true);
+    }
+    
+    public <T> void setValue(String name, T value, boolean unwrap) {
         UnityTag f = fields.get(name);
         
         if (f == null) {
             return;
         }
         
-        // unwrap all UnityValues
-        while (f.get() instanceof UnityValue) {
-            f = (UnityValue) f.get();
+        if (unwrap) {
+            // unwrap all UnityValues
+            while (f.get() instanceof UnityValue) {
+                f = (UnityValue) f.get();
+            }
         }
         
         f.set(value);
+    }
+    
+    public <T> void setValue(String name, T value) {
+        setValue(name, value, true);
     }
 }
