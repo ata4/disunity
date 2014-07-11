@@ -242,13 +242,13 @@ public class Deserializer {
         return readArray(type.getChildren().get(0));
     }
     
-    private String readString(TypeField type) throws IOException {
+    private UnityString readString(TypeField type) throws IOException {
         UnityValue array = readCollection(type);
         
         // strings use "char" arrays, so it should be wrapped in a ByteBuffer
         ByteBuffer buf = (ByteBuffer) array.get();
         
-        return new String(buf.array(), "UTF-8");
+        return new UnityString(buf.array());
     }
     
     public boolean isDebug() {
