@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.extract;
 
 import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.serdes.UnityString;
 import java.io.IOException;
 
 /**
@@ -25,9 +26,9 @@ public class TextAssetHandler extends AssetExtractHandler {
     @Override
     public void extract(UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
-        String script = obj.getValue("m_Script");
+        UnityString script = obj.getValue("m_Script", false);
         
         setOutputFileName(name);
-        writeData(script.getBytes("UTF8"));
+        writeData(script.getRaw());
     }
 }
