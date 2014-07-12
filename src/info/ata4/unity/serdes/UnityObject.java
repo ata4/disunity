@@ -102,4 +102,8 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
     public void setObject(String name, UnityObject value) {
         setValue(name, value, false);
     }
+
+    public boolean hasValue(String name) {
+        return fields.containsKey(name);
+    }
 }

@@ -11,25 +11,39 @@ package info.ata4.unity.engine;
 
 import info.ata4.unity.serdes.UnityObject;
 
-// SubMesh
+// SubMesh (Unity 4)
 //   unsigned int firstByte
 //   unsigned int indexCount
 //   int topology
 //   unsigned int firstVertex
 //   unsigned int vertexCount
 //   AABB localAABB
+
+// SubMesh (Unity 3)
+//   UInt32 firstByte
+//   UInt32 indexCount
+//   UInt32 isTriStrip
+//   UInt32 triangleCount
+//   UInt32 firstVertex
+//   UInt32 vertexCount
+//   AABB localAABB
+
 public class SubMesh {
     
     public final Long firstByte;
     public final Long indexCount;
-    public final Integer topology;
+    public final Long topology;
     public final Long firstVertex;
     public final Long vertexCount;
 
     SubMesh(UnityObject obj) {
         firstByte = obj.getValue("firstByte");
         indexCount = obj.getValue("indexCount");
-        topology = obj.getValue("topology");
+        if (obj.hasValue("topology")) {
+            topology = obj.getValue("topology");
+        } else {
+            topology = obj.getValue("isTriStrip");
+        }
         firstVertex = obj.getValue("firstVertex");
         vertexCount = obj.getValue("vertexCount");
     }
