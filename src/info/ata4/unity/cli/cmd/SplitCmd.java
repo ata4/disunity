@@ -19,10 +19,6 @@ import java.io.IOException;
  */
 public class SplitCmd extends AssetCommand {
     
-    public SplitCmd() {
-        setProcessBundles(false);
-    }
-    
     @Override
     public void processAsset(AssetFile asset) throws IOException {
         AssetExtractor ae = new AssetExtractor(asset);
