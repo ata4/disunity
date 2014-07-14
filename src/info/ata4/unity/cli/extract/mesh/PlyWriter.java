@@ -17,6 +17,7 @@ import info.ata4.unity.engine.struct.Vector2f;
 import info.ata4.unity.engine.struct.Vector3f;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,45 +38,43 @@ class PlyWriter extends MeshWriter {
 
         List<Vector3f> vertices = meshData.getVertices();
         List<Vector3f> normals = meshData.getNormals();
-        List<Integer> triangles = meshData.getTriangles();
         List<Vector2f> uv1 = meshData.getUV1();
         List<Vector2f> uv2 = meshData.getUV2();
         List<Color32> colors = meshData.getColors();
         
         // PLY can't have more than one mesh per file, so write one file per
         // sub-mesh
-        final int subMeshes = mesh.subMeshes.size();
-        for (int i = 0; i < subMeshes; i++) {
+        final int subMeshCount = mesh.subMeshes.size();
+        final int vertsPerFace = 3;
+        for (int i = 0; i < subMeshCount; i++) {
             SubMesh subMesh = mesh.subMeshes.get(i);
-
+            
             // use prefix if there's more than one submesh
             String name = mesh.name;
-            if (subMeshes > 1) {
+            if (subMeshCount > 1) {
                 name = String.format("%s_%d", name, i);
             }
             
-            try (PrintStream ps_ = handler.getPrintStream(mesh.name, "obj")) {
+            try (PrintStream ps_ = handler.getPrintStream(name, "ply")) {
                 ps = ps_;
                 
-                final int numVertices = subMesh.vertexCount.intValue();
-                final int ofsVertices = subMesh.firstVertex.intValue();
+                // write sub-mesh triangles
+                List<Integer> subMeshTriangles = meshData.getTriangles().get(i);
                 
-                // 3 indices per face
-                final int numFaces = subMesh.indexCount.intValue() / 3;
-                
-                // 3 indices per face, 2 bytes per index
-                final int ofsFaces = subMesh.firstByte.intValue() / 6;
+                final int firstVertex = subMesh.firstVertex.intValue();
+                final int vertexCount = subMesh.vertexCount.intValue();
+                final int faceCount = subMeshTriangles.size() / vertsPerFace;
 
                 // write header
                 writeHeaderStart();
                 writeComment("Created by " + DisUnity.getSignature());
-                writeVertexHeader(numVertices, !normals.isEmpty(), !uv1.isEmpty(),
+                writeVertexHeader(vertexCount, !normals.isEmpty(), !uv1.isEmpty(),
                         !uv2.isEmpty(), !colors.isEmpty());
-                writeFaceHeader(numFaces);
+                writeFaceHeader(faceCount);
                 writeHeaderEnd();
-
+                
                 // write vertices
-                for (int j = ofsVertices; j < ofsVertices + numVertices; j++) {
+                for (int j = firstVertex; j < firstVertex + vertexCount; j++) {
                     Vector3f v = vertices.get(j);
                     Vector3f vn = normals.isEmpty() ? null : normals.get(j);
                     Vector2f vt1 = uv1.isEmpty() ? null : uv1.get(j);
@@ -85,11 +84,13 @@ class PlyWriter extends MeshWriter {
                 }
 
                 // write faces
-                for (int j = ofsFaces; j < ofsFaces + numFaces; j++) {
-                    int i1 = triangles.get(j * 3);
-                    int i2 = triangles.get(j * 3 + 1);
-                    int i3 = triangles.get(j * 3 + 2);
-                    writeFace(i1, i2, i3);
+                List<Integer> faceTriangles = new ArrayList<>();
+                for (int j = 0; j < subMeshTriangles.size(); j++) {
+                    faceTriangles.add(subMeshTriangles.get(j) - firstVertex);
+                    if (faceTriangles.size() == vertsPerFace) {
+                        writeFace(faceTriangles);
+                        faceTriangles.clear();
+                    }
                 }
             }
         }
@@ -147,53 +148,54 @@ class PlyWriter extends MeshWriter {
 
     private void writeVector(Vector2f v) {
         ps.print(v.x);
-        ps.print(" ");
+        ps.print(' ');
         ps.print(v.y);
     }
 
     private void writeVector(Vector3f v) {
         ps.print(v.x);
-        ps.print(" ");
+        ps.print(' ');
         ps.print(v.y);
-        ps.print(" ");
+        ps.print(' ');
         ps.print(v.z);
     }
 
     private void writeColor(Color32 c) {
         ps.print(c.r);
-        ps.print(" ");
+        ps.print(' ');
         ps.print(c.g);
-        ps.print(" ");
+        ps.print(' ');
         ps.print(c.b);
     }
 
     private void writeVertex(Vector3f v, Vector3f vn, Vector2f vt1, Vector2f vt2, Color32 c) {
         writeVector(v);
         if (vn != null) {
-            ps.print(" ");
+            ps.print(' ');
             writeVector(vn);
         }
         if (vt1 != null) {
-            ps.print(" ");
+            ps.print(' ');
             writeVector(vt1);
         }
         if (vt2 != null) {
-            ps.print(" ");
+            ps.print(' ');
             writeVector(vt2);
         }
         if (c != null) {
-            ps.print(" ");
+            ps.print(' ');
             writeColor(c);
         }
         writeLine();
     }
 
-    private void writeFace(int i1, int i2, int i3) {
-        ps.print("3 ");
-        ps.print(i1);
-        ps.print(" ");
-        ps.print(i2);
-        ps.print(" ");
-        ps.println(i3);
+    private void writeFace(List<Integer> indices) {
+        ps.print(indices.size());
+        ps.print(' ');
+        for (Integer index : indices) {
+            ps.print(index);
+            ps.print(' ');
+        }
+        ps.println();
     }
 }
