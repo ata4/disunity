@@ -32,18 +32,21 @@ public class SubMesh {
     
     public final Long firstByte;
     public final Long indexCount;
-    public final Long topology;
+    public final Integer topology;
     public final Long firstVertex;
     public final Long vertexCount;
 
     SubMesh(UnityObject obj) {
         firstByte = obj.getValue("firstByte");
         indexCount = obj.getValue("indexCount");
+        
+        // use legacy field "isTriStrip" if "topology" is not available
         if (obj.hasValue("topology")) {
             topology = obj.getValue("topology");
         } else {
-            topology = obj.getValue("isTriStrip");
+            topology = obj.getNumber("isTriStrip").intValue();
         }
+        
         firstVertex = obj.getValue("firstVertex");
         vertexCount = obj.getValue("vertexCount");
     }

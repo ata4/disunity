@@ -102,6 +102,11 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
     public void setObject(String name, UnityObject value) {
         setValue(name, value, false);
     }
+    
+    public Number getNumber(String name) {
+        Number number = getValue(name, true);
+        return (Number) number;
+    }
 
     public boolean hasValue(String name) {
         return fields.containsKey(name);

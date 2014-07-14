@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-// Mesh
+// Mesh (Unity 4)
 //   string m_Name
 //   vector m_SubMeshes
 //   BlendShapeData m_Shapes
@@ -32,6 +32,19 @@ import java.util.List;
 //   CompressedMesh m_CompressedMesh
 //   AABB m_LocalAABB
 //   int m_MeshUsageFlags
+
+// Mesh (Unity 3)
+//   string m_Name
+//   vector m_SubMeshes
+//   UInt8 m_MeshCompression
+//   vector m_IndexBuffer
+//   vector m_Skin
+//   vector m_BindPose
+//   VertexData m_VertexData
+//   CompressedMesh m_CompressedMesh
+//   AABB m_LocalAABB
+//   int m_MeshUsageFlags
+
 public class Mesh {
     
     public final String name;
