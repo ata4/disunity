@@ -9,8 +9,12 @@
  */
 package info.ata4.unity.serdes;
 
+import info.ata4.log.LogUtils;
+import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Unity object that can contain one or more named fields.
@@ -18,6 +22,8 @@ import java.util.Map;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityObject implements UnityTag<Map<String, UnityTag>> {
+    
+    private static final Logger L = LogUtils.getLogger();
     
     private String name;
     private String type;
@@ -94,13 +100,21 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
         setValue(name, value, true);
     }
     
-    public UnityObject getObject(String name) {
-        UnityTag tag = getValue(name, false);
-        return (UnityObject) tag;
-    }
-    
-    public void setObject(String name, UnityObject value) {
-        setValue(name, value, false);
+    public <T> T getObject(String name, Class<T> clazz) {
+        if (!hasValue(name)) {
+            return null;
+        }
+        
+        UnityObject obj = getValue(name, false);
+        
+        try {
+            Constructor<T> cnst = clazz.getConstructor(UnityObject.class);
+            return cnst.newInstance(obj);
+        } catch (ReflectiveOperationException ex) {
+            L.log(Level.SEVERE, "Can't instantiate object from class " + clazz.getName(), ex);
+        }
+        
+        return null;
     }
     
     public Number getNumber(String name) {

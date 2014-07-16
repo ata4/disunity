@@ -33,7 +33,7 @@ public class StreamInfo {
     public final Integer frequency;
     public final Long align;
 
-    StreamInfo(UnityObject obj) {
+    public StreamInfo(UnityObject obj) {
         channelMask = obj.getValue("channelMask");
         offset = obj.getValue("offset");
         stride = obj.getNumber("stride").intValue();

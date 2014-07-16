@@ -26,7 +26,7 @@ public class PackedBitVector {
     public final ByteBuffer data;
     public final Integer bitSize;
 
-    PackedBitVector(UnityObject obj) {
+    public PackedBitVector(UnityObject obj) {
         numItems = obj.getValue("m_NumItems");
         range = obj.getValue("m_Range");
         start = obj.getValue("m_Start");

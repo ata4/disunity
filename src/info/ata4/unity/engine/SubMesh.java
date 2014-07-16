@@ -36,7 +36,7 @@ public class SubMesh {
     public final Long firstVertex;
     public final Long vertexCount;
 
-    SubMesh(UnityObject obj) {
+    public SubMesh(UnityObject obj) {
         firstByte = obj.getValue("firstByte");
         indexCount = obj.getValue("indexCount");
         

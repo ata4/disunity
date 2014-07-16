@@ -37,7 +37,7 @@ public class VertexData {
     public final List<StreamInfo> streams;
     public final ByteBuffer dataSize;
 
-    VertexData(UnityObject obj) {
+    public VertexData(UnityObject obj) {
         currentChannels = obj.getValue("m_CurrentChannels");
         vertexCount = obj.getValue("m_VertexCount");
         
@@ -57,9 +57,9 @@ public class VertexData {
             }
         } else {
             for (int i = 0; i < 4; i++) {
-                UnityObject streamInfo = obj.getObject("m_Streams[" + i + "]");
+                StreamInfo streamInfo = obj.getObject("m_Streams[" + i + "]", StreamInfo.class);
                 if (streamInfo != null) {
-                    streams.add(new StreamInfo(streamInfo));
+                    streams.add(streamInfo);
                 }
             }
         }
