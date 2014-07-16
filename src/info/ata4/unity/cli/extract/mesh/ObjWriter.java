@@ -16,6 +16,7 @@ import info.ata4.unity.engine.struct.Vector3f;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -123,6 +124,9 @@ class ObjWriter extends MeshWriter {
     private void writeFace(List<Integer> indices) {
         ps.print("f ");
         
+        // reverse winding to fix normals after x axis has been flipped
+        Collections.reverse(indices);
+        
         boolean vt = !vts.isEmpty();
         boolean vn = !vns.isEmpty();
         
@@ -157,14 +161,14 @@ class ObjWriter extends MeshWriter {
         ps.print(' ');
         ps.print(v.x);
         ps.print(' ');
-        ps.print(v.y);
+        ps.print(1 - v.y);
         ps.println();
     }
 
     private void writeVector(String prefix, Vector3f v) {
         ps.print(prefix);
         ps.print(' ');
-        ps.print(v.x);
+        ps.print(-v.x);
         ps.print(' ');
         ps.print(v.y);
         ps.print(' ');

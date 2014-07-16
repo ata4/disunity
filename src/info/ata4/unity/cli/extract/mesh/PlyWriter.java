@@ -18,6 +18,7 @@ import info.ata4.unity.engine.struct.Vector3f;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -149,15 +150,15 @@ class PlyWriter extends MeshWriter {
     private void writeVector(Vector2f v) {
         ps.print(v.x);
         ps.print(' ');
-        ps.print(v.y);
+        ps.print(1 - v.y);
     }
 
     private void writeVector(Vector3f v) {
-        ps.print(v.x);
+        ps.print(-v.x);
+        ps.print(' ');
+        ps.print(-v.z);
         ps.print(' ');
         ps.print(v.y);
-        ps.print(' ');
-        ps.print(v.z);
     }
 
     private void writeColor(Color32 c) {
@@ -190,6 +191,9 @@ class PlyWriter extends MeshWriter {
     }
 
     private void writeFace(List<Integer> indices) {
+        // reverse winding to fix normals after x axis has been flipped
+        Collections.reverse(indices);
+        
         ps.print(indices.size());
         ps.print(' ');
         for (Integer index : indices) {
