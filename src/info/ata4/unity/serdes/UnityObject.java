@@ -105,7 +105,7 @@ public class UnityObject implements UnityTag<Map<String, UnityTag>> {
     
     public Number getNumber(String name) {
         Number number = getValue(name, true);
-        return (Number) number;
+        return number;
     }
 
     public boolean hasValue(String name) {
