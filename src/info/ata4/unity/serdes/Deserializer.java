@@ -10,13 +10,11 @@
 package info.ata4.unity.serdes;
 
 import info.ata4.io.DataInputReader;
-import info.ata4.io.Struct;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.TypeField;
 import info.ata4.unity.cli.classfilter.ClassFilter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class Deserializer {
     private static final int ALIGN = 4;
     
     private final AssetFile asset;
-    private SerializedInput in;
+    private DataInputReader in;
     private ByteBuffer bb;
     private boolean debug = false;
     
@@ -60,7 +58,7 @@ public class Deserializer {
         bb = asset.getPathBuffer(path);
         bb.order(ByteOrder.LITTLE_ENDIAN);
 
-        in = new SerializedInput(DataInputReader.newReader(bb));
+        in = DataInputReader.newReader(bb);
         
         Map<Integer, TypeField> typeFields = asset.getTypeTree().getFields();
         TypeField type = typeFields.get(path.getClassID());
@@ -72,13 +70,6 @@ public class Deserializer {
         
         // read object
         final UnityObject obj = readObject(type);
-
-        // read remaining bytes
-        try {
-            in.align();
-        } catch (IOException ex) {
-            throw new IOException("Alignment failed", ex);
-        }
         
         // check if all bytes have been read
         if (bb.hasRemaining()) {
@@ -104,9 +95,9 @@ public class Deserializer {
             value.set(readValue(subType));
 
             if (subType.isForceAlign()) {
-                in.align();
+                in.align(ALIGN);
             }
-            
+
             obj.get().put(subType.getName(), value);
             
             if (debug) {
@@ -142,50 +133,56 @@ public class Deserializer {
                 default:
                     return readObject(type);
             }
-        }
-        
-        // read primitive object
-        switch (type.getType()) {
-            case "UInt64":
-                return in.readUnsignedLong();
+        } else {
+            // read primitive object
+            switch (type.getType()) {
+                // 1 byte
+                case "bool":
+                    return in.readBoolean();
+                    
+                case "SInt8":
+                    return in.readByte();
+                    
+                case "UInt8":
+                case "char":
+                    return in.readUnsignedByte();
+                
+                // 2 bytes
+                case "SInt16":
+                case "short":
+                    return in.readShort();
 
-            case "SInt64":
-                return in.readLong();
+                case "UInt16":
+                case "unsigned short":
+                    return in.readUnsignedShort();
 
-            case "SInt32":
-            case "int":
-                return in.readInt();
+                // 4 bytes
+                case "SInt32":
+                case "int":
+                    return in.readInt();
 
-            case "UInt32":
-            case "unsigned int":
-                return in.readUnsignedInt();
+                case "UInt32":
+                case "unsigned int":
+                    return in.readUnsignedInt();
+                
+                case "float":
+                    return in.readFloat();
+                    
+                // 8 bytes
+                case "SInt64":
+                case "long":
+                    return in.readLong();
+                
+                case "UInt64":
+                case "unsigned long":
+                    return in.readUnsignedLong();
 
-            case "SInt16":
-            case "short":
-                return in.readShort();
+                case "double":
+                    return in.readDouble();
 
-            case "UInt16":
-            case "unsigned short":
-                return in.readUnsignedShort();
-
-            case "SInt8":
-                return in.readByte();
-
-            case "UInt8":
-            case "char":
-                return in.readUnsignedByte();
-
-            case "float":
-                return in.readFloat();
-
-            case "double":
-                return in.readDouble();
-
-            case "bool":
-                return in.readBoolean();
-
-            default:
-                throw new IOException("Unknown primitive type: " + type.getType());
+                default:
+                    throw new IOException("Unknown primitive type: " + type.getType());
+            }
         }
     }
     
@@ -222,7 +219,18 @@ public class Deserializer {
             case "SInt8":
             case "UInt8":
             case "char":
-                value.set(in.readByteBuffer(size));
+                byte[] data = new byte[size];
+
+                // NOTE: AudioClips "fake" the size of m_AudioData when the stream is
+                // stored in a separate file. The array contains just an offset integer
+                // in that case, so pay attention to the bytes remaining in the buffer
+                // as well to avoid EOFExceptions.
+                // TODO: is there a flag for this behavior?
+                int bufsize = Math.min(size, (int) in.remaining());
+
+                in.readFully(data, 0, bufsize);
+                in.align(ALIGN);
+                value.set(ByteBuffer.wrap(data));
                 break;
                 
             // read a list of objects
@@ -257,98 +265,5 @@ public class Deserializer {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
-    }
-    
-    private class SerializedInput {
-
-        final DataInputReader in;
-        int bytes;
-
-        SerializedInput(DataInputReader in) {
-            this.in = in;
-        }
-
-        Byte readByte() throws IOException {
-            bytes++;
-            return in.readByte();
-        }
-
-        Integer readUnsignedByte() throws IOException {
-            bytes++;
-            return in.readUnsignedByte();
-        }
-
-        Boolean readBoolean() throws IOException {
-            bytes++;
-            return in.readBoolean();
-        }
-
-        Short readShort() throws IOException {
-            bytes += 2;
-            return in.readShort();
-        }
-
-        Integer readUnsignedShort() throws IOException {
-            bytes += 2;
-            return in.readUnsignedShort();
-        }
-
-        Integer readInt() throws IOException {
-            align();
-            return in.readInt();
-        }
-
-        Long readUnsignedInt() throws IOException {
-            align();
-            return in.readUnsignedInt();
-        }
-
-        Long readLong() throws IOException {
-            align();
-            return in.readLong();
-        }
-
-        BigInteger readUnsignedLong() throws IOException {
-            align();
-            return in.readUnsignedLong();
-        }
-
-        Float readFloat() throws IOException {
-            align();
-            return in.readFloat();
-        }
-
-        Double readDouble() throws IOException {
-            align();
-            return in.readDouble();
-        }
-
-        ByteBuffer readByteBuffer(int size) throws IOException {
-            byte[] data = new byte[size];
-
-            // NOTE: AudioClips "fake" the size of m_AudioData when the stream is
-            // stored in a separate file. The array contains just an offset integer
-            // in that case, so pay attention to the bytes remaining in the buffer
-            // as well to avoid EOFExceptions.
-            // TODO: is there a flag for this behavior?
-            size = Math.min(size, (int) in.remaining());
-
-            in.readFully(data, 0, size);
-            bytes = size;
-            align();
-            return ByteBuffer.wrap(data);
-        }
-
-        void readStruct(Struct obj) throws IOException {
-            align();
-            obj.read(in);
-        }
-
-        void align() throws IOException {
-            if (bytes > 0) {
-                in.align(bytes, ALIGN);
-                bytes = 0;
-            }
-        }
     }
 }

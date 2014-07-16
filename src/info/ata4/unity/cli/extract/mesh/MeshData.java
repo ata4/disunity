@@ -265,7 +265,7 @@ class MeshData {
                     }
                 }
                 
-                in.align((int) in.position(), stream.stride);
+                in.align(stream.stride);
             }
         }
     }
