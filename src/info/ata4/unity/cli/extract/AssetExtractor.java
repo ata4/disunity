@@ -9,13 +9,14 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.cli.extract.mesh.MeshHandler;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.io.file.FilenameSanitizer;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.asset.struct.TypeTree;
 import info.ata4.unity.cli.classfilter.ClassFilter;
+import info.ata4.unity.cli.extract.mesh.MeshHandler;
 import info.ata4.unity.serdes.Deserializer;
 import info.ata4.unity.serdes.UnityObject;
 import info.ata4.unity.util.ClassID;
@@ -219,10 +220,10 @@ public class AssetExtractor {
             String subAssetName = getObjectName(asset, path);
             if (subAssetName != null) {
                 // remove any chars that could cause troubles on various file systems
-                subAssetName = subAssetName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+                subAssetName = FilenameSanitizer.sanitizeName(subAssetName);
             } else {
-                // probably can't exist in a standalone file anyway
-                continue;
+                // use numeric names
+                subAssetName = String.format("%06d", path.getPathID());
             }
             subAssetName += ".asset";
             
