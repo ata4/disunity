@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.util.ClassID;
@@ -24,6 +25,10 @@ import java.util.Map;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "info-stats",
+    commandDescription = "Shows class usage stats."
+)
 public class StatsCmd extends AssetCommand {
     
     private final PrintStream ps;
@@ -50,7 +55,7 @@ public class StatsCmd extends AssetCommand {
             classSizes.put(className, classSizes.get(className) + path.getLength());
         }
         
-        ps.println("Classes by quantity:");
+        ps.println("Classes by object instances:");
         Map<String, Integer> classCountsSorted = MapUtils.sortByValue(classCounts, true);
         for (Map.Entry<String, Integer> entry : classCountsSorted.entrySet()) {
             String className = entry.getKey();
@@ -58,7 +63,7 @@ public class StatsCmd extends AssetCommand {
             ps.printf("  %s: %d\n", className, classCount);
         }
 
-        ps.println("Classes by data size:");
+        ps.println("Classes by object data size:");
         Map<String, Integer> classSizesSorted = MapUtils.sortByValue(classSizes, true);
         for (Map.Entry<String, Integer> entry : classSizesSorted.entrySet()) {
             String className = entry.getKey();

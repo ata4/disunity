@@ -10,6 +10,7 @@
 package info.ata4.unity.cli.cmd;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.bundle.AssetBundle;
@@ -26,6 +27,10 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "bundle-extract",
+    commandDescription = "Extracts files from asset bundles."
+)
 public class BundleExtractCmd extends AssetCommand {
     
     @Parameter(

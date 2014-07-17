@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.cli.dump.AssetDumper;
 import java.io.IOException;
@@ -17,10 +18,14 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "dump",
+    commandDescription = "Dumps object data to console."
+)
 public class DumpCmd extends AssetCommand {
     
     private boolean dumpStructs = false;
-    private boolean dumpToFiles = true;
+    private boolean dumpToFiles = false;
     
     public boolean isDumpStructs() {
         return dumpStructs;

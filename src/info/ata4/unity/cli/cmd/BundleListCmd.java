@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.bundle.AssetBundle;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -20,6 +21,10 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "bundle-list",
+    commandDescription = "List files contained in asset bundles."
+)
 public class BundleListCmd extends AssetCommand {
     
     private final PrintStream ps;

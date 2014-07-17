@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.struct.TypeField;
 import info.ata4.unity.serdes.db.FieldTypeMap;
@@ -30,6 +31,10 @@ import org.apache.commons.lang3.tuple.Pair;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "debug-structdb",
+    commandDescription = "Shows structure database stats."
+)
 public class DebugStructDBCmd extends Command {
     
     private static final Logger L = LogUtils.getLogger();

@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import java.io.IOException;
@@ -17,6 +18,10 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "split",
+    commandDescription = "Splits asset files into sub-asset files."
+)
 public class SplitCmd extends AssetCommand {
     
     @Override

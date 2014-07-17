@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.serdes.db.StructDatabase;
@@ -20,6 +21,10 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "learn",
+    commandDescription = "Copies new structure information to database."
+)
 public class LearnCmd extends AssetCommand {
 
     private static final Logger L = LogUtils.getLogger();

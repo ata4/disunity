@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.bundle.AssetBundle;
@@ -26,6 +27,10 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "bundle-inject",
+    commandDescription = "Injects extracted files back into asset bundles."
+)
 public class BundleInjectCmd extends AssetCommand {
     
     private static final Logger L = LogUtils.getLogger();

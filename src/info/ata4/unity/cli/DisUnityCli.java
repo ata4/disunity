@@ -20,7 +20,11 @@ import info.ata4.unity.cli.cmd.Command;
 import info.ata4.unity.cli.cmd.DebugDeserializerCmd;
 import info.ata4.unity.cli.cmd.DebugStructDBCmd;
 import info.ata4.unity.cli.cmd.DumpCmd;
+import info.ata4.unity.cli.cmd.DumpStructCmd;
 import info.ata4.unity.cli.cmd.ExtractCmd;
+import info.ata4.unity.cli.cmd.ExtractRawCmd;
+import info.ata4.unity.cli.cmd.ExtractStructCmd;
+import info.ata4.unity.cli.cmd.ExtractTxtCmd;
 import info.ata4.unity.cli.cmd.InfoCmd;
 import info.ata4.unity.cli.cmd.LearnCmd;
 import info.ata4.unity.cli.cmd.ListCmd;
@@ -49,26 +53,26 @@ public class DisUnityCli implements Runnable {
         PrintStream out = System.out;
         
         // asset commands
-        jc.addCommand("dump", new DumpCmd().setDumpToFiles(false));
-        jc.addCommand("dump-struct", new DumpCmd().setDumpToFiles(false).setDumpStructs(true));
-        jc.addCommand("extract", new ExtractCmd());
-        jc.addCommand("extract-raw", new ExtractCmd().setRaw(true));
-        jc.addCommand("extract-txt", new DumpCmd());
-        jc.addCommand("extract-struct", new DumpCmd().setDumpStructs(true));
-        jc.addCommand("info", new InfoCmd(out));
-        jc.addCommand("info-stats", new StatsCmd(out));
-        jc.addCommand("learn", new LearnCmd());
-        jc.addCommand("list", new ListCmd(out));
-        jc.addCommand("split", new SplitCmd());
+        jc.addCommand(new DumpCmd());
+        jc.addCommand(new DumpStructCmd());
+        jc.addCommand(new ExtractCmd());
+        jc.addCommand(new ExtractRawCmd());
+        jc.addCommand(new ExtractTxtCmd());
+        jc.addCommand(new ExtractStructCmd());
+        jc.addCommand(new InfoCmd(out));
+        jc.addCommand(new StatsCmd(out));
+        jc.addCommand(new LearnCmd());
+        jc.addCommand(new ListCmd(out));
+        jc.addCommand(new SplitCmd());
         
         // bundle commands
-        jc.addCommand("bundle-extract", new BundleExtractCmd());
-        jc.addCommand("bundle-inject", new BundleInjectCmd());
-        jc.addCommand("bundle-list", new BundleListCmd(out));
+        jc.addCommand(new BundleExtractCmd());
+        jc.addCommand(new BundleInjectCmd());
+        jc.addCommand(new BundleListCmd(out));
         
         // debug commands
-        jc.addCommand("debug-deserializer", new DebugDeserializerCmd());
-        jc.addCommand("debug-structdb", new DebugStructDBCmd());
+        jc.addCommand(new DebugDeserializerCmd());
+        jc.addCommand(new DebugStructDBCmd());
     }
     
     public void parse(String[] args) {
@@ -91,6 +95,7 @@ public class DisUnityCli implements Runnable {
     public void run() {
         String cmdName = jc.getParsedCommand();
         if (cmdName == null) {
+            jc.usage();
             return;
         }
         

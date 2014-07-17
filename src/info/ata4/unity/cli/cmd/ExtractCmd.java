@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.cli.extract.AssetExtractor;
 import java.io.IOException;
@@ -17,6 +18,10 @@ import java.io.IOException;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "extract",
+    commandDescription = "Extracts content from asset files."
+)
 public class ExtractCmd extends AssetCommand {
     
     private boolean raw;

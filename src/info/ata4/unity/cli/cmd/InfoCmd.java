@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.bundle.AssetBundle;
 import info.ata4.unity.asset.struct.AssetHeader;
@@ -25,6 +26,10 @@ import org.apache.commons.lang3.BooleanUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "info",
+    commandDescription = "Shows basic information about assets and asset bundles."
+)
 public class InfoCmd extends AssetCommand {
     
     private final PrintStream ps;

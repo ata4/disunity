@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import com.beust.jcommander.Parameters;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.struct.ObjectPath;
@@ -21,6 +22,10 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
+@Parameters(
+    commandNames = "debug-deserializer",
+    commandDescription = "Performs an asset deserialization test."
+)
 public class DebugDeserializerCmd extends AssetCommand {
     
     private static final Logger L = LogUtils.getLogger();
