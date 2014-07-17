@@ -17,6 +17,8 @@ import info.ata4.unity.cli.cmd.BundleExtractCmd;
 import info.ata4.unity.cli.cmd.BundleInjectCmd;
 import info.ata4.unity.cli.cmd.BundleListCmd;
 import info.ata4.unity.cli.cmd.Command;
+import info.ata4.unity.cli.cmd.DebugDeserializerCmd;
+import info.ata4.unity.cli.cmd.DebugStructDBCmd;
 import info.ata4.unity.cli.cmd.DumpCmd;
 import info.ata4.unity.cli.cmd.ExtractCmd;
 import info.ata4.unity.cli.cmd.InfoCmd;
@@ -63,6 +65,10 @@ public class DisUnityCli implements Runnable {
         jc.addCommand("bundle-extract", new BundleExtractCmd());
         jc.addCommand("bundle-inject", new BundleInjectCmd());
         jc.addCommand("bundle-list", new BundleListCmd(out));
+        
+        // debug commands
+        jc.addCommand("debug-deserializer", new DebugDeserializerCmd());
+        jc.addCommand("debug-structdb", new DebugStructDBCmd());
     }
     
     public void parse(String[] args) {
