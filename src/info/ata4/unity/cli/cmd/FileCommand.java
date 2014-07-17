@@ -30,7 +30,8 @@ public abstract class FileCommand extends Command {
     
     @Parameter(
         description = "<file> [file]...",
-        converter = PathConverter.class
+        converter = PathConverter.class,
+        required = true
     )
     private List<Path> files;
     
@@ -71,7 +72,7 @@ public abstract class FileCommand extends Command {
                 L.log(Level.WARNING, "File not found: {0}", file);
                 continue;
             }
-            
+
             processPath(file, true);
         }
         
