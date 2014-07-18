@@ -16,7 +16,7 @@ import com.beust.jcommander.Parameters;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @Parameters(
-    commandNames = "extract-struct",
+    commandNames = "extract-txt",
     commandDescription = "Extracts object data to text files."
 )
 public class ExtractTxtCmd extends DumpCmd {
