@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.engine.AudioClip;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
+import info.ata4.unity.engine.AudioClip;
 import info.ata4.unity.engine.enums.AudioType;
 import info.ata4.unity.serdes.UnityObject;
 import java.io.IOException;
@@ -28,11 +28,11 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AudioClipHandler extends AssetExtractHandler {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     private static final Map<AudioType, String> AUDIO_EXT;
-    
+
     static {
         Map<AudioType, String> extMap = new EnumMap<>(AudioType.class);
         extMap.put(AudioType.ACC, "aif");
@@ -53,48 +53,53 @@ public class AudioClipHandler extends AssetExtractHandler {
     public void extract(UnityObject obj) throws IOException {
         AudioClip audio = new AudioClip(obj);
 
+        ByteBuffer audioBuffer = audio.audioBuffer;
+
         // load audio buffer from external buffer if stream is set to 2
         int stream = obj.getValue("m_Stream");
         if (stream == 2) {
             L.log(Level.FINE, "Audio clip {0} uses external audio data",
                     audio.name);
             int size = audio.audioBuffer.capacity();
-            
+
             // read offset integer from buffer
             audio.audioBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            int offset = audio.audioBuffer.getInt();
-            audio.audioBuffer.rewind();
-            
+            int offset = audio.audioBuffer.getInt(0);
+
             ByteBuffer audioBufferAux = getAssetFile().getAudioBuffer();
-            
+
             // make sure the .resS is loaded
             if (audioBufferAux == null) {
                 L.log(Level.WARNING, "Audio clip {0} uses an external .resS file that doesn't exist!",
                         audio.name);
                 return;
             }
-            
-            audio.audioBuffer.put(ByteBufferUtils.getSlice(audioBufferAux, offset, size));
-            audio.audioBuffer.rewind();
+
+            audioBuffer = ByteBufferUtils.getSlice(audioBufferAux, offset, size);
         }
-        
-        String ext = "bin";
-        
-        if (audio.type == null) {
+
+        // skip empty buffers
+        if (audioBuffer.capacity() == 0) {
+            L.log(Level.WARNING, "Audio clip {0} is empty", audio.name);
+            return;
+        }
+
+        String ext = null;
+
+        if (audio.type != null) {
+            ext = AUDIO_EXT.get(audio.type);
+        }
+
+        // use .bin if the file extension cannot be determined
+        if (ext == null) {
             L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",
                     new Object[]{audio.name, audio.type});
-        } else {
-            if (AUDIO_EXT.containsKey(audio.type)) {
-                ext = AUDIO_EXT.get(audio.type);
-            } else {
-                L.log(Level.WARNING, "Audio clip {0} uses unknown audio type {1}",
-                        new Object[]{audio.name, audio.type});
-            }
+            ext = "bin";
         }
-        
+
         setOutputFileName(audio.name);
         setOutputFileExtension(ext);
-        writeData(audio.audioBuffer);
+        writeData(audioBuffer);
     }
-    
+
 }
