@@ -67,11 +67,12 @@ public class AssetFile extends FileHandler {
         setSourceFile(file);
         
         String fileName = file.getFileName().toString();
+        String fileExt = FilenameUtils.getExtension(fileName);
         
         ByteBuffer bb;
         
         // join split asset files before loading
-        if (FilenameUtils.getExtension(fileName).startsWith("split")) {
+        if (fileExt.startsWith("split")) {
             fileName = FilenameUtils.removeExtension(fileName);
             List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
@@ -170,9 +171,8 @@ public class AssetFile extends FileHandler {
         
         // align block to 16 bytes
         int structSize = bosStruct.size();
-        int structOffset = structSize + AssetHeader.SIZE;
         int structAlign = 16;
-        outStruct.align(structOffset, structAlign);
+        outStruct.align(structAlign);
         
         ByteBuffer bbStruct = ByteBuffer.wrap(bosStruct.toByteArray());
         

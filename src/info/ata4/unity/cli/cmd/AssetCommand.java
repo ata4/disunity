@@ -9,6 +9,8 @@
  */
 package info.ata4.unity.cli.cmd;
 
+import info.ata4.io.file.FilenameSanitizer;
+import info.ata4.io.util.PathUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.bundle.AssetBundle;
@@ -19,7 +21,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -30,7 +32,6 @@ public abstract class AssetCommand extends FileCommand {
     private static final Logger L = LogUtils.getLogger();
     
     private Path outputDir;
-    private String outputDirName;
     private boolean processAssets = true;
     private boolean processBundledAssets = true;
     private boolean processBundles = true;
@@ -39,17 +40,19 @@ public abstract class AssetCommand extends FileCommand {
         return outputDir;
     }
     
-    protected void setOutputDir(Path outputDir) {
-        // try to delete previous output dir in case it's empty and don't mind
-        // if it doesn't work
-        try {
-            if (outputDir == null && this.outputDir != null) {
-                Files.delete(this.outputDir);
-            }
-        } catch (IOException ex) {
+    protected void setOutputDir(Path path) {
+        // delete previous output dir if empty
+        if (outputDir != null && PathUtils.isDirectoryEmpty(outputDir)) {
+            PathUtils.deleteQuietly(outputDir);
         }
         
-        this.outputDir = outputDir;
+        // if the directory path points to an existing file, append a "_" to
+        // avoid clashes
+        if (Files.isRegularFile(path)) {
+            path = PathUtils.append(path, "_");
+        }
+        
+        this.outputDir = path;
     }
     
     protected boolean isProcessAssets() {
@@ -78,17 +81,6 @@ public abstract class AssetCommand extends FileCommand {
     
     @Override
     protected void processFile(Path file) throws IOException {
-        // file name minus extension
-        outputDirName = file.getFileName().toString();
-        
-        // if the file has no extension, append a "_" to the output directory
-        // name so the file system won't have a file and dir with the same name
-        if (FilenameUtils.getExtension(outputDirName).isEmpty()) {
-            outputDirName += "_";
-        } else {
-            outputDirName = FilenameUtils.removeExtension(outputDirName);
-        }
-        
         if (AssetBundle.isAssetBundle(file)) {
             if (processBundles) {
                 processAssetBundleFile(file);
@@ -104,46 +96,54 @@ public abstract class AssetCommand extends FileCommand {
         AssetFile asset = new AssetFile();
         asset.open(file);
 
-        setOutputDir(file.resolveSibling(outputDirName));
+        setOutputDir(PathUtils.removeExtension(file));
         processAsset(asset);
-        setOutputDir(null);
     }
 
     protected void processAssetBundleFile(Path file) throws IOException {
         // load asset bundle
         AssetBundle ab = new AssetBundle();
         ab.open(file);
-
-        setOutputDir(file.resolveSibling(outputDirName));
+        
+        // process bundle
+        Path outDir = PathUtils.removeExtension(file);
+        setOutputDir(outDir);
         processAssetBundle(ab);
-        setOutputDir(null);
         
         if (processAssets && processBundledAssets) {
             // process bundle entries
             for (Map.Entry<String, ByteBuffer> entry : ab.getEntries().entrySet()) {
-                String name = entry.getKey();
+                String pathString = entry.getKey();
 
                 // skip libraries
-                if (name.endsWith(".dll") || name.endsWith(".mdb")) {
+                if (pathString.endsWith(".dll") || pathString.endsWith(".mdb")) {
                     continue;
                 }
 
                 // skip dummy asset from Unity3D Obfuscator
-                if (name.equals("33Obf")) {
+                if (pathString.equals("33Obf")) {
                     continue;
                 }
+                
+                Path path = outDir;
+                
+                // split path string and assemble path
+                String[] names = StringUtils.split(pathString, '/');
+                for (String name : names) {
+                    path = path.resolve(FilenameSanitizer.sanitizeName(name));
+                }
+                
+                L.log(Level.INFO, "{0}{1}{2}", new Object[]{file.toString(), file.getFileSystem().getSeparator(), pathString});
 
-                L.log(Level.INFO, "{0}{1}{2}", new Object[]{file.toString(), file.getFileSystem().getSeparator(), name});
-
+                // load asset
                 ByteBuffer bb = entry.getValue();
-
                 AssetFile asset = new AssetFile();
                 asset.load(bb);
                 asset.setSourceBundle(ab);
 
-                setOutputDir(file.resolveSibling(outputDirName).resolve(name));
+                // process asset
+                setOutputDir(PathUtils.removeExtension(path));
                 processAsset(asset);
-                setOutputDir(null);
             }
         }
     }

@@ -11,6 +11,7 @@ package info.ata4.unity.cli.cmd;
 
 import com.beust.jcommander.Parameters;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.io.util.PathUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.bundle.AssetBundle;
 import java.io.IOException;
@@ -21,7 +22,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -43,9 +43,7 @@ public class BundleInjectCmd extends AssetCommand {
     @Override
     public void processAssetBundle(AssetBundle bundle) throws IOException {
         Path bundleFile = bundle.getSourceFile();
-        String bundleFileName = bundleFile.getFileName().toString();
-        String bundleName = FilenameUtils.removeExtension(bundleFileName);
-        Path bundleDir = bundleFile.resolveSibling(bundleName);
+        Path bundleDir = PathUtils.removeExtension(bundleFile);
         
         // there's no point in injection if the files haven't been extracted yet
         if (Files.notExists(bundleDir)) {
@@ -65,7 +63,7 @@ public class BundleInjectCmd extends AssetCommand {
         }
         
         // create backup by renaming the original file
-        Path bundleFileBackup = bundleFile.resolveSibling(bundleFileName + ".bak");
+        Path bundleFileBackup = PathUtils.append(bundleFile, ".bak");
         Files.move(bundleFile, bundleFileBackup, StandardCopyOption.REPLACE_EXISTING);
 
         // save bundle to original path
