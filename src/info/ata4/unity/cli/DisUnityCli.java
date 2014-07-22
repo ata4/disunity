@@ -93,6 +93,10 @@ public class DisUnityCli implements Runnable {
 
     @Override
     public void run() {
+        if (opts.isHelp()) {
+            return;
+        }
+        
         String cmdName = jc.getParsedCommand();
         if (cmdName == null) {
             jc.usage();
