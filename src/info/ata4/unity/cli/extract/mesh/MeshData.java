@@ -33,7 +33,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Container for decoded mesh data than is used by MeshWriter objects.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 class MeshData {

@@ -12,7 +12,8 @@ package info.ata4.unity.cli.extract.mesh;
 import java.io.IOException;
 
 /**
- *
+ * Mesh writer interface to write MeshData containers to mesh files.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 abstract class MeshWriter {
