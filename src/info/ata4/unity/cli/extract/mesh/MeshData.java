@@ -40,6 +40,14 @@ class MeshData {
     
     private static final Logger L = LogUtils.getLogger();
     
+    private static final int CHANNEL_COUNT = 6;
+    private static final int CHANNEL_VERTS = 0;
+    private static final int CHANNEL_NORMALS = 1;
+    private static final int CHANNEL_COLORS = 2;
+    private static final int CHANNEL_UV1 = 3;
+    private static final int CHANNEL_UV2 = 4;
+    private static final int CHANNEL_TANGENTS = 5;
+    
     private final Mesh mesh;
     private final List<Vector3f> vertices = new ArrayList<>();
     private final List<Vector3f> normals = new ArrayList<>();
@@ -198,14 +206,7 @@ class MeshData {
 
             // read vertex data from each vertex and channel
             for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
-                // Known channels:
-                // 0 - Coordinates (Vector3f)
-                // 1 - Normals (Vector3f)
-                // 2 - Colors (Color32)
-                // 3 - UV layer 1 (Vector2f)
-                // 4 - UV layer 2 (Vector2f)
-                // 5 - Tangents (Vector4f)
-                for (int j = 0; j < 5; j++) {
+                for (int j = 0; j < CHANNEL_COUNT; j++) {
                     // skip unselected channels
                     if ((stream.channelMask & 1 << j) == 0) {
                         continue;
@@ -221,14 +222,14 @@ class MeshData {
                     }
 
                     switch (j) {
-                        case 0:
+                        case CHANNEL_VERTS:
                             Vector3f v = new Vector3f();
                             v.setHalf(half);
                             v.read(in);
                             vertices.add(v);
                             break;
 
-                        case 1:
+                        case CHANNEL_NORMALS:
                             Vector3f vn = new Vector3f();
                             vn.setHalf(half);
                             vn.read(in);
@@ -238,25 +239,25 @@ class MeshData {
                             }
                             break;
 
-                        case 2:
+                        case CHANNEL_COLORS:
                             Color32 c = new Color32();
                             c.read(in);
                             colors.add(c);
                             break;
 
-                        case 3:
-                        case 4:
+                        case CHANNEL_UV1:
+                        case CHANNEL_UV2:
                             Vector2f vt = new Vector2f();
                             vt.setHalf(half);
                             vt.read(in);
-                            if (j == 3) {
+                            if (j == CHANNEL_UV1) {
                                 uv1.add(vt);
                             } else {
                                 uv2.add(vt);
                             }
                             break;
 
-                        case 5:
+                        case CHANNEL_TANGENTS:
                             Vector4f t = new Vector4f();
                             t.setHalf(half);
                             t.read(in);
