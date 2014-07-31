@@ -74,7 +74,7 @@ public abstract class AssetExtractHandler {
     public void setOutputFileName(String outFileName) {
         // remove any chars that could cause troubles on various file systems
         if (!StringUtils.isBlank(outFileName)) {
-            outFileName = outFileName.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+            outFileName = outFileName.replaceAll("[^a-zA-Z0-9\\._-]+", "_");
         }
         this.outFileName = outFileName;
     }

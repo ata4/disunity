@@ -203,12 +203,17 @@ public class Texture2DHandler extends AssetExtractHandler {
             default:
                 throw new IllegalStateException("Invalid texture format for DDS: " + tex.textureFormat);
         }
-
+        
         // set mip map flags if required
         if (tex.mipMap) {
             header.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_MIPMAP;
             header.dwCaps |= DDSHeader.DDS_SURFACE_FLAGS_MIPMAP;
             header.dwMipMapCount = getMipMapCount(header.dwWidth, header.dwHeight);
+        }
+        
+        if( tex.textureFormat == DXT1 || tex.textureFormat == DXT5 )
+        {
+            flipDDSVertically( header.dwMipMapCount );
         }
         
         // set and calculate linear size
@@ -241,7 +246,130 @@ public class Texture2DHandler extends AssetExtractHandler {
         setOutputFileExtension("dds");
         writeData(bbTex);
     }
+    
+    /**
+     * Flip image vertically (DXT1 and DXT5 only)
+     * @param mipmapCount mipmap count
+     */
+    private void flipDDSVertically( int mipmapCount )
+    {
+        if( tex.textureFormat != DXT1 && tex.textureFormat != DXT5 )
+        {
+            throw new IllegalStateException("Only DXT1 and DXT5 compressed image are supported. Texture format: " + tex.textureFormat);
+        }
+        
+        int width = tex.width, height = tex.height;
+        byte[] imageData = tex.imageBuffer.array();
+        byte[] imageDataCopy = new byte[ imageData.length ];
+        
+        int mipmapByteOffset = 0;
+        
+        int blockByteSize = 8;
+        if( tex.textureFormat == DXT5 )
+        {
+            blockByteSize = 16;
+        }
+        
+        // For each texture mipmap plane
+        for( int i = 0; i < mipmapCount; ++i )
+        {
+            int byteCount = ( ( width + 3 ) / 4 ) * ( ( height + 3 ) / 4 ) * blockByteSize;
+            int widthBlockCount = ( ( width + 3 ) / 4 );
+            int heightBlockCount = ( ( height + 3 ) / 4 );
+            int blockRowByteCount =  widthBlockCount * blockByteSize;
+            
+            // Process one row of block at a time
+            for( int j = 0; j < heightBlockCount; ++j )
+            {
+                int srcRowOffset = mipmapByteOffset + j * blockRowByteCount;
+                int dstRowOffset = mipmapByteOffset + ( heightBlockCount - j - 1 ) * blockRowByteCount;
+                
+                // Copy each src block row from top to bottom to dst from bottom to top. This flips vertically DXTn block rows.
+                System.arraycopy( imageData, srcRowOffset, imageDataCopy, dstRowOffset, blockRowByteCount );
+                
+                /**
+                 * Flip vertically pixels of each DXTn block
+                 * 
+                 * DXT1 color block layout (64 bits, 4x4 pixel block)
+                 * bytes 0 and 1: color0
+                 * bytes 2 and 3: color1
+                 * bytes 4 to 7: 4x4 2 bits lookup table (32 bits)
+                 * 
+                 * DXT5 color + alpha block layout (128 bits, 4x4 pixel block)
+                 * byte 0 alpha0
+                 * byte 1 alpha1
+                 * bytes 2 to 7 4x4 3 bits lookup table (48 bits)
+                 * bytes 8 to 15 DXT1 block
+                 * 
+                 * See: http://www.opengl.org/registry/specs/EXT/texture_compression_s3tc.txt
+                 */
+                for( int k = 0; k < widthBlockCount; ++k )
+                {
+                    // color block data start position in DTX1 block (no alpha data).
+                    int blockByteOffset = dstRowOffset + k * blockByteSize + 4;
+                     
+                    if( tex.textureFormat == DXT5 )
+                    {
+                        // 4x4 pixel alpha block vertical flip
+                        //
 
+                        // alpha block data start position
+                        blockByteOffset = dstRowOffset + k * blockByteSize + 2;
+                        
+                        /**
+                         * Since row are made of 12 bits (4 pixels of 3 bits each) row data is not byte aligned, so append data in integers, to work with bit masks.
+                         * In row12 and row34:
+                         * Nibbles (half-bytes) are ordered like this: 0,1,2,3,4,5,6,7,8,9,10,11
+                         * After vertical flip, nibbles follow this order: 9,10,11,6,7,8,3,4,5,0,1,2
+                         */
+                        int row12 = ( ( imageDataCopy[ blockByteOffset + 5 ] << 16 ) & 0x00ff0000 ) |
+                                    ( ( imageDataCopy[ blockByteOffset + 4 ] << 8 ) & 0x0000ff00 ) |
+                                    ( ( imageDataCopy[ blockByteOffset + 3 ] ) & 0x000000ff );
+                        int row34 = ( ( imageDataCopy[ blockByteOffset + 2 ] << 16 ) & 0x00ff0000 ) |
+                                    ( ( imageDataCopy[ blockByteOffset + 1 ] << 8 ) & 0x0000ff00 ) |
+                                    ( ( imageDataCopy[ blockByteOffset + 0 ] ) & 0x000000ff );
+                        
+                        // After these two lines nibbles follow this order : 3,4,5,0,1,2,9,10,11,6,7,8
+                        row12 = ( ( row12 & 0x00000fff ) << 12 ) | ( ( row12 & 0x00fff000 ) >> 12 );
+                        row34 = ( ( row34 & 0x00000fff ) << 12 ) | ( ( row34 & 0x00fff000 ) >> 12 );
+                        
+                        // Nibbles can now be swapped by pair
+                        imageDataCopy[ blockByteOffset + 5 ] = (byte)( ( row34 & 0x00ff0000 ) >> 16 );
+                        imageDataCopy[ blockByteOffset + 4 ] = (byte)( ( row34 & 0x0000ff00 ) >> 8 );
+                        imageDataCopy[ blockByteOffset + 3 ] = (byte)( ( row34 & 0x000000ff ) );
+                        imageDataCopy[ blockByteOffset + 2 ] = (byte)( ( row12 & 0x00ff0000 ) >> 16 );
+                        imageDataCopy[ blockByteOffset + 1 ] = (byte)( ( row12 & 0x0000ff00 ) >> 8 );
+                        imageDataCopy[ blockByteOffset + 0 ] = (byte)( ( row12 & 0x000000ff ) );
+                        
+                        // color block data start position after alpha block
+                        blockByteOffset += 10;
+                    }
+                    
+                    // 4x4 pixel color block vertical flip
+                    //
+                    
+                    // switch row 1 and 4
+                    byte temp = imageDataCopy[ blockByteOffset ];
+                    imageDataCopy[ blockByteOffset ] = imageDataCopy[ blockByteOffset + 3 ];
+                    imageDataCopy[ blockByteOffset + 3 ] = temp;
+                    
+                    // switch row 2 and 3
+                    temp = imageDataCopy[ blockByteOffset + 1 ];
+                    imageDataCopy[ blockByteOffset + 1 ] = imageDataCopy[ blockByteOffset + 2 ];
+                    imageDataCopy[ blockByteOffset + 2 ] = temp;
+                }
+            }
+            
+            mipmapByteOffset += byteCount;
+            width = Math.max( 1 , width / 2 );
+            height = Math.max( 1 , height / 2 );
+        }
+        
+        tex.imageBuffer.rewind();
+        tex.imageBuffer.put( imageDataCopy );
+        tex.imageBuffer.rewind();
+    }
+    
     private void extractPKM() throws IOException {
         // texWidth and texHeight are width and height rounded up to multiple of 4.
         int texWidth = ((tex.width - 1) | 3) + 1;
@@ -652,6 +780,8 @@ public class Texture2DHandler extends AssetExtractHandler {
             
             imageBuffer = obj.getValue("image data");
             imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            
+            //L.log( Level.INFO, "texture name: {0} width: {1} height: {2} lightmapFormat: {3} textureFormat: {4} textureFormatOrd: {5} colorSpace: {6} mipMap: {7}", new Object[] { name, width, height, lightmapFormat, textureFormat, textureFormatOrd, colorSpace, mipMap } );
         }
     }
 }
