@@ -29,8 +29,8 @@ Usage
 | info           | Outputs various information about assets and asset bundle files.
 | info-stats     | Outputs class usage statistics for asset files.
 | bundle-extract | Extracts all packed files from asset bundles.
+| bundle-inject  | Injects files previously extracted with the *bundle-extract* back into the asset bundle.
 | bundle-list    | Lists all files contained in asset bundles.
-| fixrefs        | Fixes shared asset references in extracted scene files by converting relative to absolute paths so they can be opened with the Unity editor correctly. **Note:** If the shared assets are moved to a different folder, the scene needs to be fixed again.
 | split          | Attempts to split an asset file into multiple smaller asset files.
 | list           | Lists all asset objects in a tabular form.
 
