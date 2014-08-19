@@ -32,7 +32,7 @@ public class SubMesh {
     
     public final Long firstByte;
     public final Long indexCount;
-    public final Integer topology;
+    public final Long topology;
     public final Long firstVertex;
     public final Long vertexCount;
 
@@ -44,7 +44,7 @@ public class SubMesh {
         if (obj.hasValue("topology")) {
             topology = obj.getValue("topology");
         } else {
-            topology = obj.getNumber("isTriStrip").intValue();
+            topology = obj.getValue("isTriStrip");
         }
         
         firstVertex = obj.getValue("firstVertex");
