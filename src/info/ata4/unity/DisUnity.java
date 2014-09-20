@@ -25,7 +25,7 @@ public class DisUnity {
     }
     
     public static String getVersion() {
-        return "0.3.2";
+        return "0.3.3";
     }
     
     public static String getSignature() {
