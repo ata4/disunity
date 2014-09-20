@@ -199,7 +199,7 @@ class MeshData {
         
         for (StreamInfo stream : streams) {
             // skip empty channels
-            if (stream.channelMask == 0) {
+            if (stream.channelMask.longValue() == 0) {
                 continue;
             }
 
@@ -209,7 +209,7 @@ class MeshData {
             for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
                 for (int j = 0; j < CHANNEL_COUNT; j++) {
                     // skip unselected channels
-                    if ((stream.channelMask & 1 << j) == 0) {
+                    if ((stream.channelMask.longValue() & 1 << j) == 0) {
                         continue;
                     }
                     
@@ -280,13 +280,13 @@ class MeshData {
             List<Integer> subMeshIndices = new ArrayList<>();
             List<Integer> subMeshTriangles = new ArrayList<>();
             
-            in.position(subMesh.firstByte);
-            for (int j = 0; j < subMesh.indexCount; j++) {
+            in.position(subMesh.firstByte.longValue());
+            for (long j = 0; j < subMesh.indexCount.longValue(); j++) {
                 subMeshIndices.add(in.readUnsignedShort());
             }
             
             // read triangle strips if topology/isTriStrip is not zero
-            if (subMesh.topology == 0) {
+            if (subMesh.topology.longValue() == 0) {
                 // use indices as is
                 subMeshTriangles.addAll(subMeshIndices);
             } else {

@@ -30,11 +30,11 @@ import info.ata4.unity.serdes.UnityObject;
 
 public class SubMesh {
     
-    public final Long firstByte;
-    public final Long indexCount;
-    public final Long topology;
-    public final Long firstVertex;
-    public final Long vertexCount;
+    public final Number firstByte;
+    public final Number indexCount;
+    public final Number topology;
+    public final Number firstVertex;
+    public final Number vertexCount;
 
     public SubMesh(UnityObject obj) {
         firstByte = obj.getValue("firstByte");

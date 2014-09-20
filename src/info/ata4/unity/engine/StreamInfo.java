@@ -26,12 +26,12 @@ import info.ata4.unity.serdes.UnityObject;
 
 public class StreamInfo {
     
-    public final Long channelMask;
-    public final Long offset;
-    public final Long stride;
-    public final Long dividerOp;
-    public final Long frequency;
-    public final Long align;
+    public final Number channelMask;
+    public final Number offset;
+    public final Number stride;
+    public final Number dividerOp;
+    public final Number frequency;
+    public final Number align;
 
     public StreamInfo(UnityObject obj) {
         channelMask = obj.getValue("channelMask");
