@@ -23,7 +23,7 @@ public class FontHandler extends AssetExtractHandler {
     public void extract(UnityObject obj) throws IOException {
         String name = obj.getValue("m_Name");
         ByteBuffer fontBuffer = obj.getValue("m_FontData");
-        if (fontBuffer.capacity() > 0) {
+        if (fontBuffer != null && fontBuffer.capacity() > 0) {
             setOutputFileName(name);
             // TODO: detect OpenType fonts and use "otf" in these cases
             setOutputFileExtension("ttf");
