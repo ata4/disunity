@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.gui.model;
 
+import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.Component;
@@ -21,6 +22,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -54,6 +56,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     public AssetFileTreeCellRenderer() {
         setOpenIcon(openIconCustom);
         setClosedIcon(closedIconCustom);
+        setLeafIcon(fileIcon);
     }
 
     @Override
@@ -65,71 +68,70 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
             Object userObject = treeNode.getUserObject();
             
             if (userObject instanceof Path) {
-                Path path = (Path) userObject;
-                
-                setIcon(fileIcon);
-                setText(path.getFileName().toString());
+                formatPath((Path) userObject);
             } else if (userObject instanceof FieldNode) {
-                FieldNode fieldNode = (FieldNode) userObject;
-                
-                switch (fieldNode.getType().getTypeName()) {
-                    case "bool":
-                        setIcon(boolIcon);
-                        break;
-                        
-                    case "SInt8":
-                    case "UInt8":
-                    case "char":
-                        setIcon(byteIcon);
-                        break;
-                    
-                    case "SInt16":
-                    case "short":
-                    case "UInt16":
-                    case "unsigned short":
-                        setIcon(shortIcon);
-                        break;
-                    
-                    case "SInt32":
-                    case "int":
-                    case "UInt32":
-                    case "unsigned int":
-                        setIcon(intIcon);
-                        break;
-                        
-                    case "float":
-                        setIcon(floatIcon);
-                        break;
-                        
-                    case "double":
-                        setIcon(doubleIcon);
-                        break;
-                        
-                    case "string":
-                        setIcon(stringIcon);
-                        break;
-                        
-                    case "TypelessData":
-                        setIcon(binaryIcon);
-                        break;
-                        
-                    default:
-                        setIcon(defaultIcon);
-                }
-                
-                setText(StringUtils.abbreviate(fieldNodeToString(fieldNode), 128));
+                formatFieldNode((FieldNode) userObject);
             } else if (userObject instanceof ObjectData) {
-                ObjectData objectData = (ObjectData) userObject;
-                int id = objectData.getPath().getPathID();
-                String size = FileUtils.byteCountToDisplaySize(objectData.getBuffer().capacity());
-                setText(String.format("ID: %d, size: %s", id, size));
+                formatObjectData((ObjectData) userObject);
+            } else if (userObject instanceof AssetBundleEntry) {
+                formatAssetBundleEntry((AssetBundleEntry) userObject);
             }
         }
 
         return this;
     }
     
-    private String fieldNodeToString(FieldNode node) {
+    private void formatPath(Path path) {
+        setText(path.getFileName().toString());
+        setIcon(fileIcon);
+    }
+    
+    private void formatFieldNode(FieldNode node) {
+        switch (node.getType().getTypeName()) {
+            case "bool":
+                setIcon(boolIcon);
+                break;
+
+            case "SInt8":
+            case "UInt8":
+            case "char":
+                setIcon(byteIcon);
+                break;
+
+            case "SInt16":
+            case "short":
+            case "UInt16":
+            case "unsigned short":
+                setIcon(shortIcon);
+                break;
+
+            case "SInt32":
+            case "int":
+            case "UInt32":
+            case "unsigned int":
+                setIcon(intIcon);
+                break;
+
+            case "float":
+                setIcon(floatIcon);
+                break;
+
+            case "double":
+                setIcon(doubleIcon);
+                break;
+
+            case "string":
+                setIcon(stringIcon);
+                break;
+
+            case "TypelessData":
+                setIcon(binaryIcon);
+                break;
+
+            default:
+                setIcon(defaultIcon);
+        }
+        
         StringBuilder sb = new StringBuilder();
         sb.append(node.getType().getTypeName());
 
@@ -165,9 +167,18 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 }
             }
         }
-        
-        return sb.toString();
+         
+        setText(StringUtils.abbreviate(sb.toString(), 128));
+    }
     
+    private void formatObjectData(ObjectData objectData) {
+        int id = objectData.getPath().getPathID();
+        String size = FileUtils.byteCountToDisplaySize(objectData.getBuffer().capacity());
+        setText(String.format("ID: %d, size: %s", id, size));
+    }
+
+    private void formatAssetBundleEntry(AssetBundleEntry entry) {
+        setText(FilenameUtils.getName(entry.getName()));
     }
     
 }

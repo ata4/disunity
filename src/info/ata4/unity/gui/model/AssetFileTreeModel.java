@@ -14,22 +14,84 @@ import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldType;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.asset.ObjectPath;
+import info.ata4.unity.assetbundle.AssetBundleEntry;
+import info.ata4.unity.assetbundle.AssetBundleReader;
+import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.rtti.RuntimeTypeException;
+import info.ata4.util.collection.TreeNode;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetFileTreeModel extends DefaultTreeModel {
+
+    public AssetFileTreeModel(Path file) throws IOException {
+        super(new DefaultMutableTreeNode(file));
+        
+        if (AssetBundleUtils.isAssetBundle(file)) {
+            try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
+                addAssetBundle(assetBundle);
+            }
+        } else {
+            AssetFile asset = new AssetFile();
+            asset.load(file);
+
+            addAsset(asset);
+        }
+    }
     
     public AssetFileTreeModel(AssetFile asset) {
         super(new DefaultMutableTreeNode(asset.getSourceFile()));
-        
+        addAsset(asset);
+    }
+    
+    private void addAssetBundle(AssetBundleReader assetBundle) throws IOException {
+        for (AssetBundleEntry entry : assetBundle.getEntries()) {
+            DefaultMutableTreeNode current = (DefaultMutableTreeNode) root;
+
+            // create folders in case the name contains path separators
+            String[] parts = StringUtils.split(entry.getName(), '/');
+            for (int i = 0; i < parts.length - 1; i++) {
+                DefaultMutableTreeNode folderNode = null;
+                String folderName = parts[i];
+
+                // look for existing folder node
+                for (int j = 0; j < current.getChildCount(); j++) {
+                    DefaultMutableTreeNode child = ((DefaultMutableTreeNode) current.getChildAt(j));
+                    if (child.getUserObject().equals(folderName)) {
+                        folderNode = child;
+                        break;
+                    }
+                }
+
+                // create and add folder node if required
+                if (folderNode == null) {
+                    folderNode = new DefaultMutableTreeNode(folderName);
+                    current.add(folderNode);
+                }
+
+                // move one level up
+                current = folderNode;
+            }
+
+            current.add(new DefaultMutableTreeNode(entry));
+        }
+    }
+    
+    private void addAsset(AssetFile asset) {
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
         for (ObjectData objectData : asset.getObjects()) {
             try {

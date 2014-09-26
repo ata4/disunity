@@ -125,7 +125,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="dataTreeScrollPane" pref="421" max="32767" attributes="0"/>
+              <Component id="dataTreeScrollPane" pref="697" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -134,7 +134,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="dataTreeScrollPane" pref="276" max="32767" attributes="0"/>
+              <Component id="dataTreeScrollPane" pref="536" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>

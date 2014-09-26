@@ -34,6 +34,23 @@ public class AssetBundleUtils {
     private AssetBundleUtils() {
     }
     
+    public static boolean isAssetBundle(Path file) {
+        if (!Files.isRegularFile(file)) {
+            return false;
+        }
+        
+        try (InputStream is = Files.newInputStream(file)) {
+            byte[] header = new byte[8];
+            is.read(header);
+            String headerString = new String(header, "ASCII");
+            return headerString.equals(AssetBundleHeader.SIGNATURE_WEB)
+                    || headerString.equals(AssetBundleHeader.SIGNATURE_RAW);
+        } catch (IOException ex) {
+        }
+        
+        return false;
+    }
+    
     public static void extract(Path file, Path outDir) throws IOException {
         try(
             AssetBundleReader assetBundle = new AssetBundleReader(file)

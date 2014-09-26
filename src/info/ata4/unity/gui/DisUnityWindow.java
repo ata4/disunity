@@ -16,6 +16,7 @@ import info.ata4.unity.gui.model.AssetFileTreeCellRenderer;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.FileExtensionFilter;
 import java.awt.Cursor;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,24 +58,21 @@ public class DisUnityWindow extends javax.swing.JFrame {
     public void loadFile(Path file) {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         
-        AssetFile asset = new AssetFile();
-        try {
-            asset.load(file);
-            filePrevious = file;
-        } catch (Exception ex) {
-            errorMessage("Error loading file " + file.getFileName());
-            L.log(Level.WARNING, "Can't load asset file", ex);
-        }
-        
         dataTree.setModel(null);
         
         try {
-            dataTree.setModel(new AssetFileTreeModel(asset));
+            AssetFileTreeModel treeModel = new AssetFileTreeModel(file);
+            dataTree.setModel(treeModel);
+            filePrevious = file;
+        } catch (IOException ex) {
+            errorMessage("Error loading file " + file.getFileName());
+            L.log(Level.WARNING, "Can't load file", ex);
         } catch (Exception ex) {
+            errorMessage("Error loading file " + file.getFileName());
             L.log(Level.WARNING, "Can't set tree model", ex);
+        } finally {        
+            setCursor(Cursor.getDefaultCursor());
         }
-        
-        setCursor(Cursor.getDefaultCursor());
     }
 
     /**
@@ -184,14 +182,14 @@ public class DisUnityWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
