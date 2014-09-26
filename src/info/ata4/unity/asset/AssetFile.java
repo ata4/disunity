@@ -14,15 +14,9 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.bundle.AssetBundle;
-import info.ata4.unity.asset.struct.AssetHeader;
-import info.ata4.unity.asset.struct.AssetRef;
-import info.ata4.unity.asset.struct.AssetRefTable;
-import info.ata4.unity.asset.struct.ObjectPath;
-import info.ata4.unity.asset.struct.ObjectPathTable;
-import info.ata4.unity.asset.struct.TypeTree;
-import info.ata4.unity.serdes.db.StructDatabase;
-import java.io.ByteArrayOutputStream;
+import info.ata4.unity.rtti.FieldTypeDatabase;
+import info.ata4.unity.rtti.FieldTypeTree;
+import info.ata4.unity.rtti.ObjectData;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -44,32 +38,22 @@ public class AssetFile extends FileHandler {
     
     private static final Logger L = LogUtils.getLogger();
 
-    private AssetHeader header = new AssetHeader();
-    private TypeTree typeTree = new TypeTree();
-    private ObjectPathTable objTable = new ObjectPathTable();
-    private AssetRefTable refTable = new AssetRefTable();
-    private AssetBundle sourceBundle;
+    private final AssetHeader header = new AssetHeader();
+    private final FieldTypeTree typeTree = new FieldTypeTree();
+    private final ObjectPathTable objTable = new ObjectPathTable();
+    private final ReferenceTable refTable = new ReferenceTable();
     
-    private ByteBuffer bbData;
-    private ByteBuffer bbAudio;
-    
-    @Override
-    public void open(Path file) throws IOException {
-        load(file, true);
-    }
-    
+    private List<ObjectData> objects;
+    private DataInputReader audioData;
+
     @Override
     public void load(Path file) throws IOException {
-        load(file, false);
-    }
-    
-    private void load(Path file, boolean map) throws IOException {
-        setSourceFile(file);
+        sourceFile = file;
         
         String fileName = file.getFileName().toString();
         String fileExt = FilenameUtils.getExtension(fileName);
         
-        ByteBuffer bb;
+        DataInputReader in;
         
         // join split asset files before loading
         if (fileExt.startsWith("split")) {
@@ -88,157 +72,83 @@ public class AssetFile extends FileHandler {
                 parts.add(part);
             }
             
-            // load all parts into one byte buffer
-            bb = ByteBufferUtils.load(parts);
-        } else if (map) {
-            bb = ByteBufferUtils.openReadOnly(file);
+            // load all parts to one byte buffer
+            in = DataInputReader.newReader(ByteBufferUtils.load(parts));
         } else {
-            bb = ByteBufferUtils.load(file);
+            // map single file to memory
+            in = DataInputReader.newMappedReader(file);
         }
         
         // load audio stream if existing
         Path audioStreamFile = file.resolveSibling(fileName + ".resS");
         if (Files.exists(audioStreamFile)) {
-            bbAudio = ByteBufferUtils.openReadOnly(audioStreamFile);
+            audioData = DataInputReader.newMappedReader(audioStreamFile);
+        } else {
+            audioData = null;
         }
         
-        load(bb);
+        load(in);
     }
     
     @Override
-    public void load(ByteBuffer bb) throws IOException {
-        DataInputReader in = DataInputReader.newReader(bb);
+    public void load(DataInputReader in) throws IOException {
+        // read header    
         in.readStruct(header);
         in.setSwap(true);
-        
-        typeTree = new TypeTree();
-        objTable = new ObjectPathTable();
-        refTable = new AssetRefTable();
-        
-        typeTree.setFormat(header.getFormat());
-        
-        switch (header.getFormat()) {
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-                // first data, then struct
-                int treeOffset = header.getFileSize() - header.getTreeSize() + 1;
-                bbData = ByteBufferUtils.getSlice(bb, 0, treeOffset);
-                bb.position(treeOffset);
 
-                in.readStruct(typeTree);
-                in.readStruct(objTable);
-                in.readStruct(refTable);
-                break;
-                
-            case 9:
-                // first struct, then data
-                in.readStruct(typeTree);
-                in.readStruct(objTable);
-                in.readStruct(refTable);
-                
-                bbData = ByteBufferUtils.getSlice(bb, header.getDataOffset());
-                break;
-                
-            default:
-                throw new AssetException("Unknown asset format " + header.getFormat());
+        // older formats store the object data before the structure data
+        if (header.getVersion() < 9) {
+            in.position(header.getFileSize() - header.getMetadataSize() + 1);
         }
+        
+        // read structure data
+        typeTree.setFormat(header.getVersion());
+        in.readStruct(typeTree);
+        in.readStruct(objTable);
+        in.readStruct(refTable);
         
         // try to get struct from database if the embedded one is empty
         if (typeTree.getFields().isEmpty()) {
             L.info("Standalone asset file detected, using structure from database");
-            StructDatabase.getInstance().fill(this);
+            FieldTypeDatabase.getInstance().fill(this);
+        }
+        
+        // read object data
+        objects = new ArrayList<>();
+        
+        for (ObjectPath path : objTable.getPaths()) {
+            if (path.getTypeID() < 0) {
+                continue;
+            }
+            
+            ByteBuffer buf = ByteBufferUtils.allocate(path.getLength());
+
+            in.position(header.getDataOffset() + path.getOffset());
+            in.readBuffer(buf);
+           
+            ObjectData data = new ObjectData();
+            data.setPath(path);
+            data.setBuffer(buf);
+            data.setTypeTree(typeTree.getFields().get(path.getTypeID()));
+            
+            objects.add(data);
         }
     }
     
     @Override
-    public void save(Path file) throws IOException {
-        // TODO: support older formats
-        if (header.getFormat() != 9) {
-            throw new AssetException("Only format 9 is supported right now");
-        }
-        
-        // build struct info
-        ByteArrayOutputStream bosStruct = new ByteArrayOutputStream();
-        DataOutputWriter outStruct = DataOutputWriter.newWriter(bosStruct);
-        outStruct.setSwap(true);
-        
-        typeTree.setFormat(header.getFormat());
-        typeTree.write(outStruct);
-        objTable.write(outStruct);
-        refTable.write(outStruct);
-        
-        // align block to 16 bytes
-        int structSize = bosStruct.size();
-        int structAlign = 16;
-        outStruct.align(structAlign);
-        
-        ByteBuffer bbStruct = ByteBuffer.wrap(bosStruct.toByteArray());
-        
-        // calculate padding
-        int minSize = 4096;
-        int padding = Math.max(0, minSize - AssetHeader.SIZE - bbStruct.limit());
-        
-        // configure header
-        header.setTreeSize(structSize);
-        header.setDataOffset(AssetHeader.SIZE + bbStruct.limit() + padding);
-        header.setFileSize(header.getDataOffset() + bbData.limit());
-        
-        // open file
-        ByteBuffer bb = ByteBufferUtils.openReadWrite(file, 0, header.getFileSize());
-        DataOutputWriter out = DataOutputWriter.newWriter(bb);
-        
-        // write header
-        header.write(out);
-
-        // write struct
-        bb.put(bbStruct);
-        
-        // write padding
-        out.skipBytes(padding);
-        
-        // write data
-        bb.put(bbData);
-    }
-    
-    public AssetBundle getSourceBundle() {
-        return sourceBundle;
-    }
-
-    public void setSourceBundle(AssetBundle sourceBundle) {
-        this.sourceBundle = sourceBundle;
-    }
-
-    public ByteBuffer getDataBuffer() {
-        return bbData;
-    }
-    
-    public void setDataBuffer(ByteBuffer bbData) {
-        this.bbData = bbData;
-    }
-    
-    public ByteBuffer getAudioBuffer() {
-        return bbAudio;
-    }
-
-    public void setAudioBuffer(ByteBuffer bbAudio) {
-        this.bbAudio = bbAudio;
+    public void save(DataOutputWriter in) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public AssetHeader getHeader() {
         return header;
     }
 
-    public TypeTree getTypeTree() {
+    public FieldTypeTree getTypeTree() {
         return typeTree;
     }
-
-    public List<ObjectPath> getPaths() {
-        return objTable.getPaths();
-    }
     
-    public List<AssetRef> getReferences() {
+    public List<Reference> getReferences() {
         return refTable.getReferences();
     }
     
@@ -251,8 +161,12 @@ public class AssetFile extends FileHandler {
         
         return classIDs;
     }
-    
-    public ByteBuffer getPathBuffer(ObjectPath path) {
-        return ByteBufferUtils.getSlice(getDataBuffer(), path.getOffset(), path.getLength());
+
+    public List<ObjectData> getObjects() {
+        return objects;
+    }
+
+    public DataInputReader getAudioData() {
+        return audioData;
     }
 }
