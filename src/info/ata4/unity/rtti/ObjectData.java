@@ -15,6 +15,7 @@ import info.ata4.unity.asset.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -98,7 +99,7 @@ public class ObjectData {
     private FieldNode readObject(DataInputReader in, FieldTypeNode typeNode) throws IOException {
         FieldNode fieldNode = new FieldNode(typeNode);
         
-        for (FieldTypeNode childTypeNode : typeNode.getChildren()) {
+        for (FieldTypeNode childTypeNode : typeNode) {
             FieldNode childFieldNode = new FieldNode(childTypeNode);
             
             long pos = 0;
@@ -119,7 +120,7 @@ public class ObjectData {
                         pos, type.getTypeName(), type.getFieldName(), childFieldNode.getValue(), bytes, type.getFlags1(), type.getFlags2());
             }
             
-            fieldNode.getChildren().add(childFieldNode);
+            fieldNode.add(childFieldNode);
         }
 
         return fieldNode;
@@ -127,7 +128,7 @@ public class ObjectData {
     
     private Object readValue(DataInputReader in, FieldTypeNode typeNode) throws IOException, RuntimeTypeException {
         FieldType fieldType = typeNode.getType();
-        if (!typeNode.getChildren().isEmpty()) {
+        if (!typeNode.isEmpty()) {
             switch (fieldType.getTypeName()) {
                 // convert char arrays to string objects
                 case "string":
@@ -194,15 +195,14 @@ public class ObjectData {
     }
     
     private FieldNode readArray(DataInputReader in, FieldTypeNode typeNode) throws IOException, RuntimeTypeException {
-        List<FieldTypeNode> children = typeNode.getChildren();
-        
         // there should be exactly two fields in an array object: size and data
-        if (children.size() != 2) {
-            throw new RuntimeTypeException("Unexpected number of array fields: " + children.size());
+        if (typeNode.size() != 2) {
+            throw new RuntimeTypeException("Unexpected number of array fields: " + typeNode.size());
         }
         
-        FieldTypeNode nodeSize = children.get(0);
-        FieldTypeNode nodeData = children.get(1);
+        Iterator<FieldTypeNode> iter = typeNode.iterator();
+        FieldTypeNode nodeSize = iter.next();
+        FieldTypeNode nodeData = iter.next();
         
         FieldType typeSize = nodeSize.getType();
         FieldType typeData = nodeData.getType();
@@ -266,7 +266,7 @@ public class ObjectData {
     }
     
     private String readString(DataInputReader in, FieldTypeNode typeNode) throws IOException {
-        FieldNode array = readArray(in, typeNode.getChildren().get(0));
+        FieldNode array = readArray(in, typeNode.iterator().next());
         
         // strings use "char" arrays, so it should be wrapped in a ByteBuffer
         ByteBuffer buf = (ByteBuffer) array.getValue();
