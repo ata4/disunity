@@ -271,6 +271,6 @@ public class ObjectData {
         // strings use "char" arrays, so it should be wrapped in a ByteBuffer
         ByteBuffer buf = (ByteBuffer) array.getValue();
         
-        return new String(buf.array());
+        return new String(buf.array(), "UTF-8");
     }
 }
