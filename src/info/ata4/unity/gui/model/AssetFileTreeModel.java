@@ -11,6 +11,7 @@ package info.ata4.unity.gui.model;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferOutputStream;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
@@ -29,6 +30,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,6 +45,8 @@ import org.apache.commons.lang3.StringUtils;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpandListener {
+    
+    private static final Logger L = LogUtils.getLogger();
     
     private final Window window;
     private DefaultMutableTreeNode rootNode;
@@ -120,7 +125,8 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                     
                     entryNode.add(new DefaultMutableTreeNode(DataInputReader.newReader(bb)));
                 } else {
-                    // TODO
+                    // TODO: create temporary file
+                    L.log(Level.WARNING, "Asset bundle entry {0} is too large for loading", entry);
                 }
             }
 
@@ -149,6 +155,7 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                 
                 nodeCategories.get(fieldNodeType).add(objectDataNode);
             } catch (RuntimeTypeException ex) {
+                L.log(Level.WARNING, "Can't deserialize object " + objectData, ex);
                 root.add(new DefaultMutableTreeNode(ex));
             }
         }
@@ -209,14 +216,18 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         
         busyState();
         
+        L.log(Level.FINE, "Lazy-loading asset for entry {0}", treeNode.getUserObject());
+        
         try {
             AssetFile asset = new AssetFile();
             asset.load(in);
             addAsset(treeNode, asset);
         } catch (IOException ex) {
+            L.log(Level.WARNING, "Can't load asset", ex);
             treeNode.add(new DefaultMutableTreeNode(ex));
         } finally {
             idleState();
+            System.gc();
         }
     }
 
