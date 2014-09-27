@@ -11,6 +11,7 @@ package info.ata4.unity.gui.model;
 
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.rtti.FieldNode;
+import info.ata4.unity.rtti.FieldType;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.Color;
 import java.awt.Component;
@@ -94,7 +95,9 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     }
     
     private void formatFieldNode(FieldNode node) {
-        switch (node.getType().getTypeName()) {
+        FieldType type = node.getType();
+        
+        switch (type.getTypeName()) {
             case "bool":
                 setIcon(boolIcon);
                 break;
@@ -139,11 +142,11 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 setIcon(defaultIcon);
         }
         
-        String text = textCache.get(node.getType());
+        String text = textCache.get(type);
         
         if (text == null) {
             StringBuilder sb = new StringBuilder();
-            sb.append(node.getType().getTypeName());
+            sb.append(type.getTypeName());
 
             Object value = node.getValue();
             if (value instanceof List) {
@@ -151,7 +154,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 sb.append(((List) value).size());
                 sb.append(']');
             } else {
-                String fieldName = node.getType().getFieldName();
+                String fieldName = type.getFieldName();
                 if (!fieldName.equals("Base")) {
                     sb.append(' ');
                     if (fieldName.contains(" ")) {
@@ -180,7 +183,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
             
             text = StringUtils.abbreviate(sb.toString(), 128);
             
-            textCache.put(node.getType(), text);
+            textCache.put(type, text);
         }
          
         setText(text);
