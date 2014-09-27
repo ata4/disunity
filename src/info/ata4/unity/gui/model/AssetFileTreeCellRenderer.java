@@ -16,7 +16,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -53,6 +55,8 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     private final Icon defaultIcon = createIcon("document-block.png");
     private final Icon binaryIcon = createIcon("document-binary.png");
     private final Icon stringIcon = createIcon("document-text.png");
+    
+    private final Map<Object, String> textCache = new HashMap<>();
 
     public AssetFileTreeCellRenderer() {
         setOpenIcon(openIconCustom);
@@ -135,53 +139,70 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 setIcon(defaultIcon);
         }
         
-        StringBuilder sb = new StringBuilder();
-        sb.append(node.getType().getTypeName());
+        String text = textCache.get(node.getType());
+        
+        if (text == null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(node.getType().getTypeName());
 
-        Object value = node.getValue();
-        if (value instanceof List) {
-            sb.append('[');
-            sb.append(((List) value).size());
-            sb.append(']');
-        } else {
-            String fieldName = node.getType().getFieldName();
-            if (!fieldName.equals("Base")) {
-                sb.append(' ');
-                if (fieldName.contains(" ")) {
-                    sb.append('"');
-                    sb.append(fieldName);
-                    sb.append('"');
-                } else {
-                    sb.append(fieldName);
+            Object value = node.getValue();
+            if (value instanceof List) {
+                sb.append('[');
+                sb.append(((List) value).size());
+                sb.append(']');
+            } else {
+                String fieldName = node.getType().getFieldName();
+                if (!fieldName.equals("Base")) {
+                    sb.append(' ');
+                    if (fieldName.contains(" ")) {
+                        sb.append('"');
+                        sb.append(fieldName);
+                        sb.append('"');
+                    } else {
+                        sb.append(fieldName);
+                    }
+                }
+
+                if (value != null) {
+                    sb.append(": ");
+                    if (value instanceof String) {
+                        sb.append('"');
+                        sb.append(value);
+                        sb.append('"');
+                    } else if (value instanceof ByteBuffer) {
+                        ByteBuffer buf = (ByteBuffer) value;
+                        sb.append(FileUtils.byteCountToDisplaySize(buf.capacity()));
+                    } else {
+                        sb.append(value);
+                    }
                 }
             }
             
-            if (value != null) {
-                sb.append(": ");
-                if (value instanceof String) {
-                    sb.append('"');
-                    sb.append(value);
-                    sb.append('"');
-                } else if (value instanceof ByteBuffer) {
-                    ByteBuffer buf = (ByteBuffer) value;
-                    sb.append(FileUtils.byteCountToDisplaySize(buf.capacity()));
-                } else {
-                    sb.append(value);
-                }
-            }
+            text = StringUtils.abbreviate(sb.toString(), 128);
+            
+            textCache.put(node.getType(), text);
         }
          
-        setText(StringUtils.abbreviate(sb.toString(), 128));
+        setText(text);
     }
     
     private void formatObjectData(ObjectData objectData) {
         int id = objectData.getPath().getPathID();
-        String name = objectData.getName();
-        if (name == null || name.isEmpty()) {
-            setText(String.format("0x%08x", id));
-        } else {
-            setText(name);
+        
+        String text = textCache.get(objectData);
+        
+        if (text == null) {
+            String name = objectData.getName();
+            if (name == null || name.isEmpty()) {
+                text = String.format("0x%08x", id);
+            } else {
+                text = name;
+            }
+            
+            textCache.put(objectData, text);
         }
+        
+        setText(text);
     }
 
     private void formatAssetBundleEntry(AssetBundleEntry entry) {
