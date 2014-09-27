@@ -9,27 +9,28 @@
  */
 package info.ata4.unity.gui.model;
 
+import info.ata4.io.DataInputReader;
+import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.rtti.FieldNode;
-import info.ata4.unity.rtti.FieldType;
-import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
+import info.ata4.unity.rtti.FieldNode;
+import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
-import info.ata4.util.collection.TreeNode;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -37,30 +38,35 @@ import org.apache.commons.lang3.StringUtils;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetFileTreeModel extends DefaultTreeModel {
+    
+    private DefaultMutableTreeNode rootNode;
 
     public AssetFileTreeModel(Path file) throws IOException {
-        super(new DefaultMutableTreeNode(file));
+        super(null);
+        
+        rootNode = new DefaultMutableTreeNode(file);
+        root = rootNode;
         
         if (AssetBundleUtils.isAssetBundle(file)) {
             try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
-                addAssetBundle(assetBundle);
+                addAssetBundle(rootNode, assetBundle);
             }
         } else {
             AssetFile asset = new AssetFile();
             asset.load(file);
 
-            addAsset(asset);
+            addAsset(rootNode, asset);
         }
     }
     
     public AssetFileTreeModel(AssetFile asset) {
         super(new DefaultMutableTreeNode(asset.getSourceFile()));
-        addAsset(asset);
+        addAsset(rootNode, asset);
     }
     
-    private void addAssetBundle(AssetBundleReader assetBundle) throws IOException {
-        for (AssetBundleEntry entry : assetBundle.getEntries()) {
-            DefaultMutableTreeNode current = (DefaultMutableTreeNode) root;
+    private void addAssetBundle(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
+        for (AssetBundleEntry entry : assetBundle) {
+            DefaultMutableTreeNode current = root;
 
             // create folders in case the name contains path separators
             String[] parts = StringUtils.split(entry.getName(), '/');
@@ -86,12 +92,31 @@ public class AssetFileTreeModel extends DefaultTreeModel {
                 // move one level up
                 current = folderNode;
             }
+            
+            DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry);
+            
+            if (!FilenameUtils.getExtension(entry.getName()).equals("dll")) {
+                if (entry.getLength() < Integer.MAX_VALUE) {
+                    ByteBuffer bb = ByteBuffer.allocateDirect((int) entry.getLength());
+                    InputStream is = entry.getInputStream();
+                    OutputStream os = new ByteBufferOutputStream(bb);
+                    IOUtils.copyLarge(is, os);
+                    bb.flip();
+                    
+                    AssetFile asset = new AssetFile();
+                    asset.load(DataInputReader.newReader(bb));
+                    
+                    addAsset(entryNode, asset);
+                } else {
+                    // TODO
+                }
+            }
 
-            current.add(new DefaultMutableTreeNode(entry));
+            current.add(entryNode);
         }
     }
     
-    private void addAsset(AssetFile asset) {
+    private void addAsset(DefaultMutableTreeNode root, AssetFile asset) {
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
         for (ObjectData objectData : asset.getObjects()) {
             try {
@@ -116,9 +141,8 @@ public class AssetFileTreeModel extends DefaultTreeModel {
             }
         }
         
-        DefaultMutableTreeNode rootMutable = (DefaultMutableTreeNode) root;
         for (DefaultMutableTreeNode treeNode : nodeCategories.values()) {
-            rootMutable.add(treeNode);
+            root.add(treeNode);
         }
     }
     
