@@ -27,8 +27,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +50,9 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
     
     private static final Logger L = LogUtils.getLogger();
     
+    private final Set<DefaultMutableTreeNode> unloadedObjectDataNodes = new HashSet<>();
+    private final Set<DefaultMutableTreeNode> unloadedAssetBundleEntryNodes = new HashSet<>();
+    
     private final Window window;
     private DefaultMutableTreeNode rootNode;
 
@@ -56,12 +61,12 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         
         window = parent;
         
-        busyState();
-        
         try {
             rootNode = new DefaultMutableTreeNode(file);
             root = rootNode;
 
+            busyState();
+            
             if (AssetBundleUtils.isAssetBundle(file)) {
                 try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
                     addAssetBundle(rootNode, assetBundle);
@@ -124,6 +129,7 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                     bb.flip();
                     
                     entryNode.add(new DefaultMutableTreeNode(DataInputReader.newReader(bb)));
+                    unloadedAssetBundleEntryNodes.add(entryNode);
                 } else {
                     // TODO: create temporary file
                     L.log(Level.WARNING, "Asset bundle entry {0} is too large for loading", entry);
@@ -138,9 +144,7 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
         for (ObjectData objectData : asset.getObjects()) {
             try {
-                ObjectPath path = objectData.getPath();
-                FieldNode fieldNode = objectData.getInstance();
-                String fieldNodeType = fieldNode.getType().getTypeName();
+                String fieldNodeType = objectData.getTypeTree().getType().getTypeName();
                 
                 if (!nodeCategories.containsKey(fieldNodeType)) {
                     DefaultMutableTreeNode nodeCategory = new DefaultMutableTreeNode(fieldNodeType);
@@ -148,11 +152,8 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                 }
                 
                 DefaultMutableTreeNode objectDataNode = new DefaultMutableTreeNode(objectData);
-                
-                for (FieldNode childFieldNode : fieldNode) {
-                    objectDataNode.add(convertNode(childFieldNode, path));
-                }
-                
+                objectDataNode.add(new DefaultMutableTreeNode());
+                unloadedObjectDataNodes.add(objectDataNode);
                 nodeCategories.get(fieldNodeType).add(objectDataNode);
             } catch (RuntimeTypeException ex) {
                 L.log(Level.WARNING, "Can't deserialize object " + objectData, ex);
@@ -201,33 +202,52 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         }
         
         DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) obj;
-        if (!(treeNode.getUserObject() instanceof AssetBundleEntry)) {
-            return;
-        }
         
-        DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) treeNode.getFirstChild();
-        if (!(dataNode.getUserObject() instanceof DataInputReader)) {
-            return;
-        }
-        
-        treeNode.remove(dataNode);
-        
-        DataInputReader in = (DataInputReader) dataNode.getUserObject();
-        
-        busyState();
-        
-        L.log(Level.FINE, "Lazy-loading asset for entry {0}", treeNode.getUserObject());
-        
-        try {
-            AssetFile asset = new AssetFile();
-            asset.load(in);
-            addAsset(treeNode, asset);
-        } catch (IOException ex) {
-            L.log(Level.WARNING, "Can't load asset", ex);
-            treeNode.add(new DefaultMutableTreeNode(ex));
-        } finally {
-            idleState();
-            System.gc();
+        Object userObj = treeNode.getUserObject();
+        if (unloadedAssetBundleEntryNodes.contains(treeNode)) {
+            // get first child that contains the DataInputReader
+            DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) treeNode.getFirstChild();
+            
+            Object userObjData = dataNode.getUserObject();
+            if (!(userObjData instanceof DataInputReader)) {
+                return;
+            }
+            
+            DataInputReader in = (DataInputReader) userObjData;
+                        
+            // clear node
+            treeNode.removeAllChildren();
+
+            // load the asset
+            L.log(Level.FINE, "Lazy-loading asset for entry {0}", userObj);
+
+            try {
+                busyState();
+                AssetFile asset = new AssetFile();
+                asset.load(in);
+                addAsset(treeNode, asset);
+            } catch (IOException ex) {
+                L.log(Level.WARNING, "Can't load asset", ex);
+                treeNode.add(new DefaultMutableTreeNode(ex));
+            } finally {
+                idleState();
+                System.gc();
+            }
+            
+            unloadedAssetBundleEntryNodes.remove(treeNode);
+        } else if (unloadedObjectDataNodes.contains(treeNode)) {
+            ObjectData objectData = (ObjectData) userObj;
+            ObjectPath objectPath = objectData.getPath();
+            FieldNode fieldNode = objectData.getInstance();
+            
+            L.log(Level.FINE, "Lazy-loading object {0}", objectPath);
+            
+            treeNode.removeAllChildren();
+            for (FieldNode childFieldNode : fieldNode) {
+                treeNode.add(convertNode(childFieldNode, objectPath));
+            }
+            
+            unloadedObjectDataNodes.remove(treeNode);
         }
     }
 

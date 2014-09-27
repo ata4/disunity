@@ -77,4 +77,9 @@ public class AssetBundleEntry implements Struct {
         out.writeUnsignedInt(offset);
         out.writeUnsignedInt(length);
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

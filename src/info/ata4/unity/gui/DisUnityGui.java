@@ -11,6 +11,7 @@ package info.ata4.unity.gui;
 
 import info.ata4.log.LogUtils;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 
@@ -26,7 +27,7 @@ public class DisUnityGui {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        LogUtils.configure();
+        LogUtils.configure(Level.ALL);
         
         // set the system look and feel
         try {
