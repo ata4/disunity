@@ -83,8 +83,10 @@ public class ObjectData {
             DataInputReader in = DataInputReader.newReader(buffer);
             in.setSwap(true);
             in.position(0);
-
+            
             for (FieldTypeNode type : typeTree) {
+                Object value = readValue(in, type);
+                
                 if (!type.getType().getFieldName().equals("m_Name")) {
                     continue;
                 }
@@ -92,8 +94,7 @@ public class ObjectData {
                 if (!type.getType().getTypeName().equals("string")) {
                     continue;
                 }
-
-                Object value = readValue(in, type);
+                
                 if (value instanceof String) {
                     return (String) value;
                 }
