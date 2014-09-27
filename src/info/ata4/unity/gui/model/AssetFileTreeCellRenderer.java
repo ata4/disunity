@@ -176,12 +176,11 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private void formatObjectData(ObjectData objectData) {
         int id = objectData.getPath().getPathID();
-        String size = FileUtils.byteCountToDisplaySize(objectData.getBuffer().capacity());
         String name = objectData.getName();
-        if (name == null) {
-            setText(String.format("0x%08x (%s)", id, size));
+        if (name == null || name.isEmpty()) {
+            setText(String.format("0x%08x", id));
         } else {
-            setText(String.format("0x%08x: %s (%s)", id, name, size));
+            setText(name);
         }
     }
 
