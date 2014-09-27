@@ -12,6 +12,7 @@ package info.ata4.unity.gui.model;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
+import java.awt.Color;
 import java.awt.Component;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
@@ -75,6 +76,8 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 formatObjectData((ObjectData) userObject);
             } else if (userObject instanceof AssetBundleEntry) {
                 formatAssetBundleEntry((AssetBundleEntry) userObject);
+            } else if (userObject instanceof Exception) {
+                formatException((Exception) userObject);
             }
         }
 
@@ -184,6 +187,11 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
 
     private void formatAssetBundleEntry(AssetBundleEntry entry) {
         setText(FilenameUtils.getName(entry.getName()));
+    }
+    
+    private void formatException(Exception ex) {
+        setForeground(Color.RED);
+        setText("Error: " + ex.toString());
     }
     
 }

@@ -11,11 +11,9 @@ package info.ata4.unity.gui;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.gui.model.AssetFileTreeCellRenderer;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.FileExtensionFilter;
-import java.awt.Cursor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -56,13 +54,12 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }
     
     public void loadFile(Path file) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
         dataTree.setModel(null);
         
         try {
-            AssetFileTreeModel treeModel = new AssetFileTreeModel(file);
+            AssetFileTreeModel treeModel = new AssetFileTreeModel(this, file);
             dataTree.setModel(treeModel);
+            dataTree.addTreeWillExpandListener(treeModel);
             filePrevious = file;
         } catch (IOException ex) {
             errorMessage("Error loading file " + file.getFileName());
@@ -70,8 +67,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
         } catch (Exception ex) {
             errorMessage("Error loading file " + file.getFileName());
             L.log(Level.WARNING, "Can't set tree model", ex);
-        } finally {        
-            setCursor(Cursor.getDefaultCursor());
         }
     }
 

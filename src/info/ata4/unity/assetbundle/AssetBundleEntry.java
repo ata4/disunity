@@ -14,6 +14,7 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -56,6 +57,11 @@ public class AssetBundleEntry implements Struct {
 
     public void setInputStream(InputStream is) {
         this.is = is;
+    }
+    
+    public boolean isAsset() {
+        String ext = FilenameUtils.getExtension(getName());
+        return !ext.equals("dll") && !ext.equals("mdb");
     }
 
     @Override

@@ -19,6 +19,8 @@ import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
+import java.awt.Cursor;
+import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,9 +29,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.apache.commons.io.FilenameUtils;
+import javax.swing.tree.ExpandVetoException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,31 +41,57 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreeModel extends DefaultTreeModel {
+public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpandListener {
     
+    private final Window window;
     private DefaultMutableTreeNode rootNode;
 
-    public AssetFileTreeModel(Path file) throws IOException {
+    public AssetFileTreeModel(Window parent, Path file) throws IOException {
         super(null);
         
-        rootNode = new DefaultMutableTreeNode(file);
-        root = rootNode;
+        window = parent;
         
-        if (AssetBundleUtils.isAssetBundle(file)) {
-            try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
-                addAssetBundle(rootNode, assetBundle);
-            }
-        } else {
-            AssetFile asset = new AssetFile();
-            asset.load(file);
+        busyState();
+        
+        try {
+            rootNode = new DefaultMutableTreeNode(file);
+            root = rootNode;
 
-            addAsset(rootNode, asset);
+            if (AssetBundleUtils.isAssetBundle(file)) {
+                try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
+                    addAssetBundle(rootNode, assetBundle);
+                }
+            } else {
+                AssetFile asset = new AssetFile();
+                asset.load(file);
+
+                addAsset(rootNode, asset);
+            }
+        } finally {
+            idleState();
         }
     }
     
-    public AssetFileTreeModel(AssetFile asset) {
+    public AssetFileTreeModel(Window parent, AssetFile asset) {
         super(new DefaultMutableTreeNode(asset.getSourceFile()));
-        addAsset(rootNode, asset);
+        
+        window = parent;
+        
+        busyState();
+        
+        try {
+            addAsset(rootNode, asset);
+        } finally {
+            idleState();
+        }
+    }
+    
+    private void busyState() {
+        window.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    }
+    
+    private void idleState() {
+        window.setCursor(Cursor.getDefaultCursor());
     }
     
     private void addAssetBundle(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
@@ -94,8 +124,7 @@ public class AssetFileTreeModel extends DefaultTreeModel {
             }
             
             DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry);
-            
-            if (!FilenameUtils.getExtension(entry.getName()).equals("dll")) {
+            if (entry.isAsset()) {
                 if (entry.getLength() < Integer.MAX_VALUE) {
                     ByteBuffer bb = ByteBuffer.allocateDirect((int) entry.getLength());
                     InputStream is = entry.getInputStream();
@@ -103,10 +132,7 @@ public class AssetFileTreeModel extends DefaultTreeModel {
                     IOUtils.copyLarge(is, os);
                     bb.flip();
                     
-                    AssetFile asset = new AssetFile();
-                    asset.load(DataInputReader.newReader(bb));
-                    
-                    addAsset(entryNode, asset);
+                    entryNode.add(new DefaultMutableTreeNode(DataInputReader.newReader(bb)));
                 } else {
                     // TODO
                 }
@@ -173,5 +199,42 @@ public class AssetFileTreeModel extends DefaultTreeModel {
         
         return treeNode;
     }
-    
+
+    @Override
+    public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+        Object obj = event.getPath().getLastPathComponent();
+        if (!(obj instanceof DefaultMutableTreeNode)) {
+            return;
+        }
+        
+        DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) obj;
+        if (!(treeNode.getUserObject() instanceof AssetBundleEntry)) {
+            return;
+        }
+        
+        DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) treeNode.getFirstChild();
+        if (!(dataNode.getUserObject() instanceof DataInputReader)) {
+            return;
+        }
+        
+        treeNode.remove(dataNode);
+        
+        DataInputReader in = (DataInputReader) dataNode.getUserObject();
+        
+        busyState();
+        
+        try {
+            AssetFile asset = new AssetFile();
+            asset.load(in);
+            addAsset(treeNode, asset);
+        } catch (IOException ex) {
+            treeNode.add(new DefaultMutableTreeNode(ex));
+        } finally {
+            idleState();
+        }
+    }
+
+    @Override
+    public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+    }
 }
