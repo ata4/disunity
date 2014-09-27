@@ -78,33 +78,6 @@ public class ObjectData {
         this.instance = instance;
     }
     
-    public String getName() {
-        try {
-            DataInputReader in = DataInputReader.newReader(buffer);
-            in.setSwap(true);
-            in.position(0);
-            
-            for (FieldTypeNode type : typeTree) {
-                Object value = readValue(in, type);
-                
-                if (!type.getType().getFieldName().equals("m_Name")) {
-                    continue;
-                }
-
-                if (!type.getType().getTypeName().equals("string")) {
-                    continue;
-                }
-                
-                if (value instanceof String) {
-                    return (String) value;
-                }
-            }
-        } catch (IOException ex) {            
-        }
-        
-        return null;
-    }
-    
     private void serialize() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

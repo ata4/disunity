@@ -142,7 +142,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 setIcon(defaultIcon);
         }
         
-        String text = textCache.get(type);
+        String text = textCache.get(node);
         
         if (text == null) {
             StringBuilder sb = new StringBuilder();
@@ -183,7 +183,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
             
             text = StringUtils.abbreviate(sb.toString(), 128);
             
-            textCache.put(type, text);
+            textCache.put(node, text);
         }
          
         setText(text);
@@ -191,20 +191,18 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private void formatObjectData(ObjectData objectData) {
         int id = objectData.getPath().getPathID();
-        
         String text = textCache.get(objectData);
         
         if (text == null) {
-            String name = objectData.getName();
-            if (name == null || name.isEmpty()) {
-                text = String.format("0x%08x", id);
-            } else {
-                text = name;
+            text = objectData.getInstance().getField("m_Name");
+            
+            if (text == null || text.isEmpty()) {
+                text = String.format("Object %d", id);
             }
             
             textCache.put(objectData, text);
         }
-        
+
         setText(text);
     }
 
