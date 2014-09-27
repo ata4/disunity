@@ -72,20 +72,6 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         }
     }
     
-    public AssetFileTreeModel(Window parent, AssetFile asset) {
-        super(new DefaultMutableTreeNode(asset.getSourceFile()));
-        
-        window = parent;
-        
-        busyState();
-        
-        try {
-            addAsset(rootNode, asset);
-        } finally {
-            idleState();
-        }
-    }
-    
     private void busyState() {
         window.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -163,7 +149,7 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                 
                 nodeCategories.get(fieldNodeType).add(objectDataNode);
             } catch (RuntimeTypeException ex) {
-                ex.printStackTrace();
+                root.add(new DefaultMutableTreeNode(ex));
             }
         }
         
