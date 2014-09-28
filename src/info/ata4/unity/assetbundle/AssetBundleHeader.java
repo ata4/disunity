@@ -20,9 +20,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * UnityWebStreamHeader structure for Unity asset bundles.
+ * Structure for Unity asset bundles.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity UnityWebStreamHeader
  */
 public class AssetBundleHeader implements Struct {
     

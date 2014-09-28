@@ -19,6 +19,7 @@ import java.util.Objects;
  * Class that contains the runtime type of a single field.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity TypeTree
  */
 public class FieldType implements Struct {
     

@@ -18,6 +18,7 @@ import java.util.UUID;
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity FileIdentifier 
  */
 public class Reference implements Struct {
     

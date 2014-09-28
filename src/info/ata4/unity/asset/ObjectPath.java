@@ -16,8 +16,9 @@ import info.ata4.unity.util.ClassID;
 import java.io.IOException;
 
 /**
- *
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity SerializedFile::ObjectInfo
  */
 public class ObjectPath implements Struct {
     
