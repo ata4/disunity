@@ -141,9 +141,12 @@ public class AssetFileTreeController {
     }
     
     private class MouseAdapterImpl extends MouseAdapter {
-        
+
         @Override
         public void mousePressed(MouseEvent ev) {
+            int selRow = tree.getRowForLocation(ev.getX(), ev.getY());
+            tree.setSelectionRow(selRow);
+            
             if (ev.isPopupTrigger()) {
                 showMenu(ev);
             }
@@ -151,6 +154,9 @@ public class AssetFileTreeController {
 
         @Override
         public void mouseReleased(MouseEvent ev) {
+            int selRow = tree.getRowForLocation(ev.getX(), ev.getY());
+            tree.setSelectionRow(selRow);
+            
             if (ev.isPopupTrigger()) {
                 showMenu(ev);
             }
