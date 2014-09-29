@@ -11,18 +11,12 @@ package info.ata4.unity.gui.model;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundleReader;
-import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.assetbundle.StreamedEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
-import java.awt.Cursor;
-import java.awt.Window;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,62 +24,27 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeNode;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpandListener {
+public class AssetFileTreeModel extends DefaultTreeModel {
     
     private static final Logger L = LogUtils.getLogger();
     
     private final Set<DefaultMutableTreeNode> unloadedObjectDataNodes = new HashSet<>();
     private final Set<DefaultMutableTreeNode> unloadedAssetBundleEntryNodes = new HashSet<>();
     
-    private final Window window;
-    private DefaultMutableTreeNode rootNode;
-
-    public AssetFileTreeModel(Window parent, Path file) throws IOException {
-        super(null);
-        
-        window = parent;
-        
-        try {
-            rootNode = new DefaultMutableTreeNode(file);
-            root = rootNode;
-
-            busyState();
-            
-            if (AssetBundleUtils.isAssetBundle(file)) {
-                try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
-                    addAssetBundle(rootNode, assetBundle);
-                }
-            } else {
-                AssetFile asset = new AssetFile();
-                asset.load(file);
-
-                addAsset(rootNode, asset);
-            }
-        } finally {
-            idleState();
-        }
+    public AssetFileTreeModel(TreeNode root) {
+        super(root);
     }
     
-    private void busyState() {
-        window.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    }
-    
-    private void idleState() {
-        window.setCursor(Cursor.getDefaultCursor());
-    }
-    
-    private void addAssetBundle(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
+    public void addAssetBundleNodes(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
         for (StreamedEntry entry : assetBundle) {
             DefaultMutableTreeNode current = root;
 
@@ -124,7 +83,7 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         }
     }
     
-    private void addAsset(DefaultMutableTreeNode root, AssetFile asset) {
+    public void addAssetNodes(DefaultMutableTreeNode root, AssetFile asset) {
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
         for (ObjectData objectData : asset.getObjects()) {
             try {
@@ -150,19 +109,19 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         }
     }
     
-    private DefaultMutableTreeNode convertNode(FieldNode fieldNode, ObjectPath path) {
+    public void addFieldNode(DefaultMutableTreeNode root, FieldNode fieldNode) {
         Object fieldValue = fieldNode.getValue();
-        DefaultMutableTreeNode treeNode;
+        DefaultMutableTreeNode treeNode = null;
         
         if (fieldValue instanceof FieldNode) {
-            treeNode = convertNode((FieldNode) fieldValue, path);
+            addFieldNode(root, (FieldNode) fieldValue);
         } else if (fieldValue instanceof List) {
-            List fieldList = (List) fieldValue;
             treeNode = new DefaultMutableTreeNode(fieldNode);
-            
+            List fieldList = (List) fieldValue;
+
             for (Object item : fieldList) {
                 if (item instanceof FieldNode) {
-                    treeNode.add(convertNode((FieldNode) item, path));
+                    addFieldNode(treeNode, (FieldNode) item);
                 } else {
                     treeNode.add(new DefaultMutableTreeNode(item));
                 }
@@ -171,62 +130,28 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
             treeNode = new DefaultMutableTreeNode(fieldNode);
         }
         
-        for (FieldNode childFieldNode : fieldNode) {
-            treeNode.add(convertNode(childFieldNode, path));
-        }
-        
-        return treeNode;
-    }
-
-    @Override
-    public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-        Object obj = event.getPath().getLastPathComponent();
-        if (!(obj instanceof DefaultMutableTreeNode)) {
-            return;
-        }
-        
-        DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) obj;
-        
-        Object userObj = treeNode.getUserObject();
-        if (unloadedAssetBundleEntryNodes.contains(treeNode)) {
-            BufferedEntry entry = (BufferedEntry) userObj;
-      
-            // clear node
-            treeNode.removeAllChildren();
-
-            // load the asset
-            L.log(Level.FINE, "Lazy-loading asset for entry {0}", entry);
-
-            try {
-                busyState();
-                AssetFile asset = new AssetFile();
-                asset.load(entry.getReader());
-                addAsset(treeNode, asset);
-            } catch (IOException ex) {
-                L.log(Level.WARNING, "Can't load asset", ex);
-                treeNode.add(new DefaultMutableTreeNode(ex));
-            } finally {
-                idleState();
-            }
-            
-            unloadedAssetBundleEntryNodes.remove(treeNode);
-        } else if (unloadedObjectDataNodes.contains(treeNode)) {
-            ObjectData objectData = (ObjectData) userObj;
-            ObjectPath objectPath = objectData.getPath();
-            FieldNode fieldNode = objectData.getInstance();
-            
-            L.log(Level.FINE, "Lazy-loading object {0}", objectPath);
-            
-            treeNode.removeAllChildren();
+        if (treeNode != null) {
             for (FieldNode childFieldNode : fieldNode) {
-                treeNode.add(convertNode(childFieldNode, objectPath));
+                addFieldNode(treeNode, childFieldNode);
             }
             
-            unloadedObjectDataNodes.remove(treeNode);
+            root.add(treeNode);
         }
     }
-
-    @Override
-    public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+    
+    public boolean isObjectDataNodeUnloaded(DefaultMutableTreeNode node) {
+        return unloadedObjectDataNodes.contains(node);
+    }
+    
+    public void setObjectDataNodeLoaded(DefaultMutableTreeNode node) {
+        unloadedObjectDataNodes.remove(node);
+    }
+    
+    public boolean isAssetBundleEntryNodeUnloaded(DefaultMutableTreeNode node) {
+        return unloadedAssetBundleEntryNodes.contains(node);
+    }
+    
+    public void setAssetBundleEntryNodeLoaded(DefaultMutableTreeNode node) {
+        unloadedAssetBundleEntryNodes.remove(node);
     }
 }

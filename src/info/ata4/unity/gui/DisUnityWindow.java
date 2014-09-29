@@ -11,8 +11,7 @@ package info.ata4.unity.gui;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.gui.control.AssetFileTreeMouseAdapter;
-import info.ata4.unity.gui.model.AssetFileTreeModel;
+import info.ata4.unity.gui.control.AssetFileTreeController;
 import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.gui.util.FileExtensionFilter;
 import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
@@ -32,6 +31,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
     private static final Logger L = LogUtils.getLogger();
     
     private Path filePrevious;
+    private AssetFileTreeController treeCtl;
     
     /**
      * Creates new form DisUnityWindow
@@ -47,17 +47,14 @@ public class DisUnityWindow extends javax.swing.JFrame {
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
         
-        dataTree.addMouseListener(new AssetFileTreeMouseAdapter(dataTree));
+        treeCtl = new AssetFileTreeController(this, dataTree);
     }
     
     public void loadFile(Path file) {
-        dataTree.setModel(null);
+        filePrevious = file;
         
         try {
-            AssetFileTreeModel treeModel = new AssetFileTreeModel(this, file);
-            dataTree.setModel(treeModel);
-            dataTree.addTreeWillExpandListener(treeModel);
-            filePrevious = file;
+            treeCtl.load(file);
         } catch (IOException ex) {
             DialogUtils.exception(ex, "Error loading file " + file.getFileName());
             L.log(Level.WARNING, "Can't load file", ex);

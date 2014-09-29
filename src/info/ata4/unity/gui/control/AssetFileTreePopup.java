@@ -13,7 +13,9 @@ import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.gui.util.DialogUtils;
+import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.ObjectData;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -109,11 +111,7 @@ public class AssetFileTreePopup extends JPopupMenu {
         
         Path dir = fileChooser.getSelectedFile().toPath();
         
-        try {
-            AssetBundleUtils.extract(file, dir);
-        } catch (IOException ex) {
-            DialogUtils.exception(ex, "Error extracting file " + file.getFileName());
-        }
+        new AssetBundleExtractTask(this, file, dir).execute();
     }
     
     private void extractAssetBundleEntry(BufferedEntry entry) {
@@ -131,6 +129,24 @@ public class AssetFileTreePopup extends JPopupMenu {
             Files.copy(entry.getReader().getSocket().getInputStream(), file);
         } catch (IOException ex) {
             DialogUtils.exception(ex, "Error saving file " + file.getFileName());
+        }
+    }
+    
+    private class AssetBundleExtractTask extends ProgressTask<Void, Void> {
+
+        private final Path file;
+        private final Path dir;
+
+        private AssetBundleExtractTask(Component parent, Path file, Path dir) {
+            super(parent, "Extracting asset bundle", "");
+            this.file = file;
+            this.dir = dir;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            AssetBundleUtils.extract(file, dir, progress);
+            return null;
         }
     }
 }

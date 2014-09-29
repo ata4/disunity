@@ -12,6 +12,8 @@ package info.ata4.unity.assetbundle;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.DataRandomAccess;
+import info.ata4.unity.gui.util.progress.DummyProgress;
+import info.ata4.unity.gui.util.progress.Progress;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -51,16 +53,37 @@ public class AssetBundleUtils {
         return false;
     }
     
-    public static void extract(Path file, Path outDir) throws IOException {
+    public static void extract(Path file, Path outDir, Progress progress) throws IOException {
         try(
             AssetBundleReader assetBundle = new AssetBundleReader(file)
         ) {
+            long current = 0;
+            long total = 0;
+            for (EntryInfo entry : assetBundle.getEntries()) {
+                total += entry.getLength();
+            }
+            
+            progress.setLimit(total);
+
             for (StreamedEntry entry : assetBundle) {
+                if (progress.isCanceled()) {
+                    break;
+                }
+                
+                progress.setLabel(entry.getInfo().getName());
+                
                 Path entryFile = outDir.resolve(entry.getInfo().getName());
                 Files.createDirectories(entryFile.getParent());
                 Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
+                
+                current += entry.getInfo().getLength();
+                progress.update(current);
             }
         }
+    }
+    
+    public static void extract(Path file, Path outDir) throws IOException {
+        extract(file, outDir, new DummyProgress());
     }
     
     public static void compress(Path inFile, Path outFile) throws IOException {
