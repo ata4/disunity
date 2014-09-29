@@ -9,12 +9,9 @@
  */
 package info.ata4.unity.gui.model;
 
-import info.ata4.io.DataRandomAccess;
-import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectPath;
-import info.ata4.unity.assetbundle.EntryInfo;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
@@ -25,9 +22,6 @@ import info.ata4.unity.rtti.RuntimeTypeException;
 import java.awt.Cursor;
 import java.awt.Window;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +35,6 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
