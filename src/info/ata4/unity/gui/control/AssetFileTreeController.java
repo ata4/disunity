@@ -144,35 +144,29 @@ public class AssetFileTreeController {
 
         @Override
         public void mousePressed(MouseEvent ev) {
-            int selRow = tree.getRowForLocation(ev.getX(), ev.getY());
-            tree.setSelectionRow(selRow);
-            
-            if (ev.isPopupTrigger()) {
-                showMenu(ev);
-            }
+            onClick(ev);
         }
 
         @Override
         public void mouseReleased(MouseEvent ev) {
+            onClick(ev);
+        }
+        
+        private void onClick(MouseEvent ev) {
             int selRow = tree.getRowForLocation(ev.getX(), ev.getY());
             tree.setSelectionRow(selRow);
             
             if (ev.isPopupTrigger()) {
-                showMenu(ev);
-            }
-        }
+                TreePath selPath = tree.getPathForLocation(ev.getX(), ev.getY());
 
-        private void showMenu(MouseEvent ev) {
-            int selRow = tree.getRowForLocation(ev.getX(), ev.getY());
-            TreePath selPath = tree.getPathForLocation(ev.getX(), ev.getY());
+                if (selPath == null) {
+                    return;
+                }
 
-            if (selPath == null) {
-                return;
-            }
-
-            AssetFileTreePopup popup = new AssetFileTreePopup(selRow, selPath);
-            if (popup.getComponentCount() > 0) {
-                popup.show(ev.getComponent(), ev.getX(), ev.getY());
+                AssetFileTreePopup popup = new AssetFileTreePopup(selRow, selPath);
+                if (popup.getComponentCount() > 0) {
+                    popup.show(ev.getComponent(), ev.getX(), ev.getY());
+                }
             }
         }
     }
