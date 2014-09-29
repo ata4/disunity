@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.cli.classfilter;
 
-import info.ata4.unity.asset.struct.ObjectPath;
+import info.ata4.unity.asset.ObjectPath;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
