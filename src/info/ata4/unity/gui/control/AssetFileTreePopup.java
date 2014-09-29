@@ -9,10 +9,9 @@
  */
 package info.ata4.unity.gui.control;
 
-import info.ata4.io.DataRandomAccess;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
-import info.ata4.unity.assetbundle.EntryInfo;
 import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.event.ActionEvent;
@@ -53,6 +52,18 @@ public class AssetFileTreePopup extends JPopupMenu {
                 }
             });
             add(item);
+        } else if (userObject instanceof Path) {
+            final Path file = (Path) userObject;
+            if (AssetBundleUtils.isAssetBundle(file)) {
+                JMenuItem item = new JMenuItem("Extract asset bundle");
+                item.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        extractAssetBundle(file);
+                    }
+                });
+                add(item);
+            }
         } else if (userObject instanceof BufferedEntry) {
             final BufferedEntry entry = (BufferedEntry) userObject;
             JMenuItem item = new JMenuItem("Extract file");
@@ -63,7 +74,7 @@ public class AssetFileTreePopup extends JPopupMenu {
                 }
             });
             add(item);
-        }
+        } 
     }
     
     private void extractObjectData(ObjectData objectData) {
@@ -83,6 +94,25 @@ public class AssetFileTreePopup extends JPopupMenu {
             ByteBufferUtils.save(file, bb);
         } catch (IOException ex) {
             DialogUtils.exception(ex, "Error saving file " + file.getFileName());
+        }
+    }
+    
+    private void extractAssetBundle(Path file) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(file.getParent().toFile());
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        int result = fileChooser.showSaveDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        Path dir = fileChooser.getSelectedFile().toPath();
+        
+        try {
+            AssetBundleUtils.extract(file, dir);
+        } catch (IOException ex) {
+            DialogUtils.exception(ex, "Error extracting file " + file.getFileName());
         }
     }
     
