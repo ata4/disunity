@@ -7,9 +7,9 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.model;
+package info.ata4.unity.gui.view;
 
-import info.ata4.unity.assetbundle.AssetBundleEntry;
+import info.ata4.unity.assetbundle.Entry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldType;
 import info.ata4.unity.rtti.ObjectData;
@@ -79,8 +79,8 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 formatFieldNode((FieldNode) userObject);
             } else if (userObject instanceof ObjectData) {
                 formatObjectData((ObjectData) userObject);
-            } else if (userObject instanceof AssetBundleEntry) {
-                formatAssetBundleEntry((AssetBundleEntry) userObject);
+            } else if (userObject instanceof Entry) {
+                formatAssetBundleEntry((Entry) userObject);
             } else if (userObject instanceof Exception) {
                 formatException((Exception) userObject);
             }
@@ -190,24 +190,18 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     }
     
     private void formatObjectData(ObjectData objectData) {
-        int id = objectData.getPath().getPathID();
         String text = textCache.get(objectData);
         
         if (text == null) {
-            text = objectData.getInstance().getField("m_Name");
-            
-            if (text == null || text.isEmpty()) {
-                text = String.format("Object %d", id);
-            }
-            
+            text = objectData.getName();
             textCache.put(objectData, text);
         }
 
         setText(text);
     }
 
-    private void formatAssetBundleEntry(AssetBundleEntry entry) {
-        setText(FilenameUtils.getName(entry.getName()));
+    private void formatAssetBundleEntry(Entry entry) {
+        setText(FilenameUtils.getName(entry.getInfo().getName()));
     }
     
     private void formatException(Exception ex) {

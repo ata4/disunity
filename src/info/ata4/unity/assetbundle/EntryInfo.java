@@ -13,19 +13,17 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
-import java.io.InputStream;
 import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundleEntry implements Struct {
+public class EntryInfo implements Struct {
     
     private String name;
     private long offset;
     private long length;
-    private InputStream is;
 
     public String getName() {
         return name;
@@ -49,14 +47,6 @@ public class AssetBundleEntry implements Struct {
 
     public void setLength(long length) {
         this.length = length;
-    }
-
-    public InputStream getInputStream() {
-        return is;
-    }
-
-    public void setInputStream(InputStream is) {
-        this.is = is;
     }
     
     public boolean isAsset() {

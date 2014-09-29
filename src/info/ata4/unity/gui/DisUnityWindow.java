@@ -11,15 +11,16 @@ package info.ata4.unity.gui;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.gui.model.AssetFileTreeCellRenderer;
+import info.ata4.unity.gui.control.AssetFileTreeMouseAdapter;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
+import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.gui.util.FileExtensionFilter;
+import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -47,10 +48,8 @@ public class DisUnityWindow extends javax.swing.JFrame {
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity scene", "unity"));
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
-    }
-    
-    private void errorMessage(String message) {
-        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+        
+        dataTree.addMouseListener(new AssetFileTreeMouseAdapter(dataTree));
     }
     
     public void loadFile(Path file) {
@@ -62,10 +61,10 @@ public class DisUnityWindow extends javax.swing.JFrame {
             dataTree.addTreeWillExpandListener(treeModel);
             filePrevious = file;
         } catch (IOException ex) {
-            errorMessage("Error loading file " + file.getFileName());
+            DialogUtils.exception(ex, "Error loading file " + file.getFileName());
             L.log(Level.WARNING, "Can't load file", ex);
         } catch (Exception ex) {
-            errorMessage("Error loading file " + file.getFileName());
+            DialogUtils.exception(ex, "Error loading file " + file.getFileName());
             L.log(Level.WARNING, "Can't set tree model", ex);
         }
     }
@@ -94,7 +93,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
         pasteMenuItem = new javax.swing.JMenuItem();
         deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -159,10 +157,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
 
-        contentsMenuItem.setMnemonic('c');
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
-
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
         helpMenu.add(aboutMenuItem);
@@ -210,7 +204,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JTree dataTree;

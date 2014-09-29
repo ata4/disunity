@@ -55,8 +55,8 @@ public class AssetBundleUtils {
         try(
             AssetBundleReader assetBundle = new AssetBundleReader(file)
         ) {
-            for (AssetBundleEntry entry : assetBundle) {
-                Path entryFile = outDir.resolve(entry.getName());
+            for (StreamedEntry entry : assetBundle) {
+                Path entryFile = outDir.resolve(entry.getInfo().getName());
                 Files.createDirectories(entryFile.getParent());
                 Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
             }

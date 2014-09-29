@@ -62,6 +62,16 @@ public class ObjectData {
     public void setTypeTree(FieldTypeNode typeTree) {
         this.typeTree = typeTree;
     }
+    
+    public String getName() {
+        String name = getInstance().getField("m_Name");
+
+        if (name == null || name.isEmpty()) {
+            name = String.format("Object %d", getPath().getPathID());
+        }
+        
+        return name;
+    }
 
     public FieldNode getInstance() {
         if (instance == null && buffer != null && typeTree != null) {

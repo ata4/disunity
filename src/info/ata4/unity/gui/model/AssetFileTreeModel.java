@@ -9,14 +9,16 @@
  */
 package info.ata4.unity.gui.model;
 
-import info.ata4.io.DataInputReader;
+import info.ata4.io.DataRandomAccess;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectPath;
-import info.ata4.unity.assetbundle.AssetBundleEntry;
+import info.ata4.unity.assetbundle.EntryInfo;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
+import info.ata4.unity.assetbundle.BufferedEntry;
+import info.ata4.unity.assetbundle.StreamedEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
@@ -91,11 +93,11 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
     }
     
     private void addAssetBundle(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
-        for (AssetBundleEntry entry : assetBundle) {
+        for (StreamedEntry entry : assetBundle) {
             DefaultMutableTreeNode current = root;
 
             // create folders in case the name contains path separators
-            String[] parts = StringUtils.split(entry.getName(), '/');
+            String[] parts = StringUtils.split(entry.getInfo().getName(), '/');
             for (int i = 0; i < parts.length - 1; i++) {
                 DefaultMutableTreeNode folderNode = null;
                 String folderName = parts[i];
@@ -118,22 +120,14 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                 // move one level up
                 current = folderNode;
             }
-            
-            DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry);
-            if (entry.isAsset()) {
-                if (entry.getLength() < Integer.MAX_VALUE) {
-                    ByteBuffer bb = ByteBuffer.allocateDirect((int) entry.getLength());
-                    InputStream is = entry.getInputStream();
-                    OutputStream os = new ByteBufferOutputStream(bb);
-                    IOUtils.copyLarge(is, os);
-                    bb.flip();
-                    
-                    entryNode.add(new DefaultMutableTreeNode(DataInputReader.newReader(bb)));
-                    unloadedAssetBundleEntryNodes.add(entryNode);
-                } else {
-                    // TODO: create temporary file
-                    L.log(Level.WARNING, "Asset bundle entry {0} is too large for loading", entry);
-                }
+
+            DefaultMutableTreeNode entryNode;
+            if (entry.getInfo().isAsset()) {
+                entryNode = new DefaultMutableTreeNode(entry.buffer());
+                entryNode.add(new DefaultMutableTreeNode());
+                unloadedAssetBundleEntryNodes.add(entryNode);
+            } else {
+                entryNode = new DefaultMutableTreeNode(entry);
             }
 
             current.add(entryNode);
@@ -205,33 +199,24 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
         
         Object userObj = treeNode.getUserObject();
         if (unloadedAssetBundleEntryNodes.contains(treeNode)) {
-            // get first child that contains the DataInputReader
-            DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) treeNode.getFirstChild();
-            
-            Object userObjData = dataNode.getUserObject();
-            if (!(userObjData instanceof DataInputReader)) {
-                return;
-            }
-            
-            DataInputReader in = (DataInputReader) userObjData;
-                        
+            BufferedEntry entry = (BufferedEntry) userObj;
+      
             // clear node
             treeNode.removeAllChildren();
 
             // load the asset
-            L.log(Level.FINE, "Lazy-loading asset for entry {0}", userObj);
+            L.log(Level.FINE, "Lazy-loading asset for entry {0}", entry);
 
             try {
                 busyState();
                 AssetFile asset = new AssetFile();
-                asset.load(in);
+                asset.load(entry.getReader());
                 addAsset(treeNode, asset);
             } catch (IOException ex) {
                 L.log(Level.WARNING, "Can't load asset", ex);
                 treeNode.add(new DefaultMutableTreeNode(ex));
             } finally {
                 idleState();
-                System.gc();
             }
             
             unloadedAssetBundleEntryNodes.remove(treeNode);
