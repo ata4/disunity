@@ -39,8 +39,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
     public DisUnityWindow() {
         initComponents();
         initComponentsCustom();
-        
-        setTitle(DisUnity.getSignature());
     }
     
     private void initComponentsCustom() {
@@ -96,6 +94,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(DisUnity.getSignature());
 
         dataTree.setModel(new DefaultTreeModel(null));
         dataTree.setCellRenderer(new AssetFileTreeCellRenderer());
