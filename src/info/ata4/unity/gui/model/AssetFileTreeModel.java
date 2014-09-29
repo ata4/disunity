@@ -114,13 +114,10 @@ public class AssetFileTreeModel extends DefaultTreeModel implements TreeWillExpa
                 current = folderNode;
             }
 
-            DefaultMutableTreeNode entryNode;
+            DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry.buffer());
             if (entry.getInfo().isAsset()) {
-                entryNode = new DefaultMutableTreeNode(entry.buffer());
                 entryNode.add(new DefaultMutableTreeNode());
                 unloadedAssetBundleEntryNodes.add(entryNode);
-            } else {
-                entryNode = new DefaultMutableTreeNode(entry);
             }
 
             current.add(entryNode);
