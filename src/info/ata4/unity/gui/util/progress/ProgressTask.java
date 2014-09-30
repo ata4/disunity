@@ -19,7 +19,7 @@ import javax.swing.SwingWorker;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class ProgressTask<T, V> extends SwingWorker<Void, Void> {
+public abstract class ProgressTask<T, V> extends SwingWorker<T, V> {
     
     protected final ProgressMonitor monitor;
     protected final Progress progress;
