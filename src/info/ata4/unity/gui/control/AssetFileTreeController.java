@@ -167,21 +167,29 @@ public class AssetFileTreeController {
 
         @Override
         protected Void doInBackground() throws Exception {
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
-            model = new AssetFileTreeModel(root);
+            busyState();
+            
+            tree.setModel(null);
+            
+            try {
+                DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
+                model = new AssetFileTreeModel(root);
 
-            if (AssetBundleUtils.isAssetBundle(file)) {
-                List<BufferedEntry> entries = AssetBundleUtils.buffer(file, progress);
-                
-                model.addAssetBundleNodes(root, entries);
-            } else {
-                AssetFile asset = new AssetFile();
-                asset.load(file);
-                
-                model.addAssetNodes(root, asset);
+                if (AssetBundleUtils.isAssetBundle(file)) {
+                    List<BufferedEntry> entries = AssetBundleUtils.buffer(file, progress);
+
+                    model.addAssetBundleNodes(root, entries);
+                } else {
+                    AssetFile asset = new AssetFile();
+                    asset.load(file);
+
+                    model.addAssetNodes(root, asset);
+                }
+
+                tree.setModel(model);
+            } finally {
+                idleState();
             }
-
-            tree.setModel(model);
             
             return null;
         }
