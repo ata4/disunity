@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
+import java.util.ArrayList;
+import java.util.List;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 
@@ -84,6 +86,46 @@ public class AssetBundleUtils {
     
     public static void extract(Path file, Path outDir) throws IOException {
         extract(file, outDir, new DummyProgress());
+    }
+    
+    public static List<BufferedEntry> buffer(AssetBundleReader reader, Progress progress) throws IOException {
+        long current = 0;
+        long total = 0;
+        for (EntryInfo entry : reader.getEntries()) {
+            total += entry.getLength();
+        }
+
+        progress.setLimit(total);
+
+        List<BufferedEntry> entries = new ArrayList<>();
+        for (StreamedEntry entry : reader) {
+            if (progress.isCanceled()) {
+                break;
+            }
+
+            progress.setLabel(entry.getInfo().getName());
+
+            entries.add(entry.buffer());
+
+            current += entry.getInfo().getLength();
+            progress.update(current);
+        }
+
+        return entries;
+    }
+    
+    public static List<BufferedEntry> buffer(AssetBundleReader reader) throws IOException {
+        return buffer(reader, new DummyProgress());
+    }
+    
+    public static List<BufferedEntry> buffer(Path file, Progress progress) throws IOException {
+        try (AssetBundleReader reader = new AssetBundleReader(file)) {
+            return buffer(reader, progress);
+        }
+    }
+    
+    public static List<BufferedEntry> buffer(Path file) throws IOException {
+        return buffer(file, new DummyProgress());
     }
     
     public static void compress(Path inFile, Path outFile) throws IOException {

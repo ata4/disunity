@@ -12,6 +12,7 @@ package info.ata4.unity.gui.model;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundleReader;
+import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.assetbundle.StreamedEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
@@ -44,8 +45,8 @@ public class AssetFileTreeModel extends DefaultTreeModel {
         super(root);
     }
     
-    public void addAssetBundleNodes(DefaultMutableTreeNode root, AssetBundleReader assetBundle) throws IOException {
-        for (StreamedEntry entry : assetBundle) {
+    public void addAssetBundleNodes(DefaultMutableTreeNode root, List<BufferedEntry> entries) throws IOException {
+        for (BufferedEntry entry : entries) {
             DefaultMutableTreeNode current = root;
 
             // create folders in case the name contains path separators
@@ -73,7 +74,7 @@ public class AssetFileTreeModel extends DefaultTreeModel {
                 current = folderNode;
             }
 
-            DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry.buffer());
+            DefaultMutableTreeNode entryNode = new DefaultMutableTreeNode(entry);
             if (entry.getInfo().isAsset()) {
                 entryNode.add(new DefaultMutableTreeNode());
                 unloadedAssetBundleEntryNodes.add(entryNode);

@@ -21,12 +21,11 @@ import javax.swing.SwingWorker;
  */
 public abstract class ProgressTask<T, V> extends SwingWorker<Void, Void> {
     
-    private final ProgressMonitor monitor;
+    protected final ProgressMonitor monitor;
     protected final Progress progress;
     
     public ProgressTask(Component parent, Object message, String note) {
         monitor = new ProgressMonitor(parent, message, note, 0, 100);
-        monitor.setMillisToPopup(1000);
 
         ProgressListener listener = new ProgressListener();
         addPropertyChangeListener(listener);

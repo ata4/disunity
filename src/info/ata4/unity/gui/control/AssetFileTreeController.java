@@ -16,6 +16,7 @@ import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
+import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.Component;
@@ -24,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
@@ -54,27 +56,7 @@ public class AssetFileTreeController {
     }
     
     public void load(Path file) throws IOException {
-        try {
-            busyState();
-            
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
-            model = new AssetFileTreeModel(root);
-            
-            if (AssetBundleUtils.isAssetBundle(file)) {
-                try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
-                    model.addAssetBundleNodes(root, assetBundle);
-                }
-            } else {
-                AssetFile asset = new AssetFile();
-                asset.load(file);
-
-                model.addAssetNodes(root, asset);
-            }
-            
-            tree.setModel(model);
-        } finally {
-            idleState();
-        }
+        new AssetFileLoadTask(parent, file).execute();
     }
     
     private void busyState() {
@@ -169,5 +151,40 @@ public class AssetFileTreeController {
                 }
             }
         }
+    }
+    
+    private class AssetFileLoadTask extends ProgressTask<Void, Void> {
+        
+        private final Path file;
+        
+        private AssetFileLoadTask(Component parent, Path file) {
+            super(parent, "Loading " + file.getFileName(), "");
+            this.file = file;
+            
+            monitor.setMillisToDecideToPopup(500);
+            monitor.setMillisToPopup(0);
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
+            model = new AssetFileTreeModel(root);
+
+            if (AssetBundleUtils.isAssetBundle(file)) {
+                List<BufferedEntry> entries = AssetBundleUtils.buffer(file, progress);
+                
+                model.addAssetBundleNodes(root, entries);
+            } else {
+                AssetFile asset = new AssetFile();
+                asset.load(file);
+                
+                model.addAssetNodes(root, asset);
+            }
+
+            tree.setModel(model);
+            
+            return null;
+        }
+        
     }
 }
