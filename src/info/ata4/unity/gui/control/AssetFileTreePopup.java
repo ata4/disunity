@@ -14,6 +14,7 @@ import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.gui.util.progress.ProgressTask;
+import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -50,7 +51,7 @@ public class AssetFileTreePopup extends JPopupMenu {
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-                    extractObjectData(objectData);
+                    extractByteBuffer(objectData.getBuffer(), objectData.getName());
                 }
             });
             add(item);
@@ -76,12 +77,26 @@ public class AssetFileTreePopup extends JPopupMenu {
                 }
             });
             add(item);
-        } 
+        } else if (userObject instanceof FieldNode) {
+            final FieldNode fieldNode = (FieldNode) userObject;
+            Object fieldValue = fieldNode.getValue();
+            if (fieldValue instanceof ByteBuffer) {
+                final ByteBuffer bb = (ByteBuffer) fieldValue;
+                JMenuItem item = new JMenuItem("Extract array data");
+                item.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        extractByteBuffer(bb, fieldNode.getType().getFieldName());
+                    }
+                });
+                add(item);
+            }
+        }
     }
     
-    private void extractObjectData(ObjectData objectData) {
+    private void extractByteBuffer(ByteBuffer bb, String name) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setSelectedFile(new File(String.format("%s.bin", objectData.getName())));
+        fileChooser.setSelectedFile(new File(String.format("%s.bin", name)));
         
         int result = fileChooser.showSaveDialog(this);
         if (result != JFileChooser.APPROVE_OPTION) {
@@ -89,7 +104,6 @@ public class AssetFileTreePopup extends JPopupMenu {
         }
         
         Path file = fileChooser.getSelectedFile().toPath();
-        ByteBuffer bb = objectData.getBuffer();
         bb.rewind();
         
         try {
