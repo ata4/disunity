@@ -9,12 +9,13 @@
  */
 package info.ata4.unity.gui.control;
 
+import info.ata4.io.util.ObjectToString;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectPath;
-import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BufferedEntry;
+import info.ata4.unity.assetbundle.Entry;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.FieldNode;
@@ -35,8 +36,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.ExpandVetoException;
@@ -53,14 +57,17 @@ public class AssetFileTreeController {
 
     private final Component parent;
     private final JTree tree;
+    private final JTextPane text;
     private AssetFileTreeModel model;
 
-    public AssetFileTreeController(Component parent, JTree tree) {
+    public AssetFileTreeController(Component parent, JTree tree, JTextPane text) {
         this.parent = parent;
         this.tree = tree;
+        this.text = text;
         
         tree.addTreeWillExpandListener(new TreeWillExpandListenerImpl());
         tree.addMouseListener(new MouseAdapterImpl());
+        tree.addTreeSelectionListener(new TreeSelectionListenerImpl());
     }
     
     public void load(Path file) throws IOException {
@@ -97,6 +104,41 @@ public class AssetFileTreeController {
     
     private void idleState() {
         parent.setCursor(Cursor.getDefaultCursor());
+    }
+    
+    private class TreeSelectionListenerImpl implements TreeSelectionListener {
+
+        @Override
+        public void valueChanged(TreeSelectionEvent e) {
+            text.setText(null);
+            
+            if (e.getNewLeadSelectionPath() == null) {
+                return;
+            }
+            
+            Object obj = e.getNewLeadSelectionPath().getLastPathComponent();
+            
+            if (!(obj instanceof DefaultMutableTreeNode)) {
+                return;
+            }
+            
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj;
+            
+            Object userObj = node.getUserObject();
+            if (userObj instanceof FieldNode) {
+                FieldNode fieldNode = (FieldNode) userObj;
+                text.setText(ObjectToString.toString(fieldNode.getType()));
+            } else if (userObj instanceof FieldTypeNode) {
+                FieldTypeNode fieldTypeNode = (FieldTypeNode) userObj;
+                text.setText(ObjectToString.toString(fieldTypeNode.getType()));
+            } else if (userObj instanceof Entry) {
+                Entry entry = (Entry) userObj;
+                text.setText(ObjectToString.toString(entry.getInfo()));
+            } else if (userObj instanceof ObjectData) {
+                ObjectData objData = (ObjectData) userObj;
+                text.setText(ObjectToString.toString(objData.getPath()));
+            }
+        }
     }
     
     private class TreeWillExpandListenerImpl implements TreeWillExpandListener {

@@ -48,7 +48,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
         
-        treeCtl = new AssetFileTreeController(this, dataTree);
+        treeCtl = new AssetFileTreeController(this, dataTree, dataText);
     }
     
     public void loadFile(Path file) {
@@ -75,8 +75,11 @@ public class DisUnityWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         openFileChooser = new javax.swing.JFileChooser();
+        dataSplitPane = new javax.swing.JSplitPane();
         dataTreeScrollPane = new javax.swing.JScrollPane();
         dataTree = new javax.swing.JTree();
+        dataTextScrollPane = new javax.swing.JScrollPane();
+        dataText = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -91,9 +94,19 @@ public class DisUnityWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(DisUnity.getSignature());
 
+        dataSplitPane.setDividerLocation(300);
+
         dataTree.setModel(new DefaultTreeModel(null));
         dataTree.setCellRenderer(new AssetFileTreeCellRenderer());
         dataTreeScrollPane.setViewportView(dataTree);
+
+        dataSplitPane.setLeftComponent(dataTreeScrollPane);
+
+        dataText.setEditable(false);
+        dataText.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        dataTextScrollPane.setViewportView(dataText);
+
+        dataSplitPane.setRightComponent(dataTextScrollPane);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -158,14 +171,14 @@ public class DisUnityWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
+                .addComponent(dataSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
+                .addComponent(dataSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -195,6 +208,9 @@ public class DisUnityWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JSplitPane dataSplitPane;
+    private javax.swing.JTextPane dataText;
+    private javax.swing.JScrollPane dataTextScrollPane;
     private javax.swing.JTree dataTree;
     private javax.swing.JScrollPane dataTreeScrollPane;
     private javax.swing.JMenuItem exitMenuItem;
