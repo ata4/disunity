@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -96,8 +95,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
 
         dataSplitPane.setDividerLocation(300);
 
-        dataTree.setModel(new DefaultTreeModel(null));
-        dataTree.setCellRenderer(new AssetFileTreeCellRenderer());
         dataTreeScrollPane.setViewportView(dataTree);
 
         dataSplitPane.setLeftComponent(dataTreeScrollPane);

@@ -18,6 +18,7 @@ import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.assetbundle.BundleEntry;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.progress.ProgressTask;
+import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeMap;
@@ -65,6 +66,7 @@ public class AssetFileTreeController {
         this.tree = tree;
         this.text = text;
         
+        tree.setCellRenderer(new AssetFileTreeCellRenderer());
         tree.addTreeWillExpandListener(new TreeWillExpandListenerImpl());
         tree.addMouseListener(new MouseAdapterImpl());
         tree.addTreeSelectionListener(new TreeSelectionListenerImpl());
