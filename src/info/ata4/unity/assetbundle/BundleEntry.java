@@ -13,15 +13,15 @@ package info.ata4.unity.assetbundle;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Entry {
+public class BundleEntry {
     
-    protected final EntryInfo info;
+    protected final BundleEntryInfo info;
     
-    public Entry(EntryInfo info) {
+    public BundleEntry(BundleEntryInfo info) {
         this.info = info;
     }
     
-    public EntryInfo getInfo() {
+    public BundleEntryInfo getInfo() {
         return info;
     }
 

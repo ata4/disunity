@@ -17,11 +17,11 @@ import info.ata4.io.DataRandomAccess;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BufferedEntry extends Entry {
+public class BundleEntryBuffered extends BundleEntry {
     
     private DataRandomAccess ra;
 
-    public BufferedEntry(EntryInfo info) {
+    public BundleEntryBuffered(BundleEntryInfo info) {
         super(info);
     }
 

@@ -11,7 +11,7 @@ package info.ata4.unity.gui.control;
 
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.assetbundle.BufferedEntry;
+import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.FieldNode;
@@ -67,8 +67,8 @@ public class AssetFileTreePopup extends JPopupMenu {
                 });
                 add(item);
             }
-        } else if (userObject instanceof BufferedEntry) {
-            final BufferedEntry entry = (BufferedEntry) userObject;
+        } else if (userObject instanceof BundleEntryBuffered) {
+            final BundleEntryBuffered entry = (BundleEntryBuffered) userObject;
             JMenuItem item = new JMenuItem("Extract file");
             item.addActionListener(new ActionListener() {
                 @Override
@@ -128,7 +128,7 @@ public class AssetFileTreePopup extends JPopupMenu {
         new AssetBundleExtractTask(this, file, dir).execute();
     }
     
-    private void extractAssetBundleEntry(BufferedEntry entry) {
+    private void extractAssetBundleEntry(BundleEntryBuffered entry) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setSelectedFile(new File(entry.getInfo().getName()));
         

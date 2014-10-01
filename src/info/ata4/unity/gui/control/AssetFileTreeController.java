@@ -14,8 +14,8 @@ import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.assetbundle.BufferedEntry;
-import info.ata4.unity.assetbundle.Entry;
+import info.ata4.unity.assetbundle.BundleEntryBuffered;
+import info.ata4.unity.assetbundle.BundleEntry;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.FieldNode;
@@ -131,8 +131,8 @@ public class AssetFileTreeController {
             } else if (userObj instanceof FieldTypeNode) {
                 FieldTypeNode fieldTypeNode = (FieldTypeNode) userObj;
                 text.setText(ObjectToString.toString(fieldTypeNode.getType()));
-            } else if (userObj instanceof Entry) {
-                Entry entry = (Entry) userObj;
+            } else if (userObj instanceof BundleEntry) {
+                BundleEntry entry = (BundleEntry) userObj;
                 text.setText(ObjectToString.toString(entry.getInfo()));
             } else if (userObj instanceof ObjectData) {
                 ObjectData objData = (ObjectData) userObj;
@@ -154,7 +154,7 @@ public class AssetFileTreeController {
 
             Object userObj = treeNode.getUserObject();
             if (model.isAssetBundleEntryNodeUnloaded(treeNode)) {
-                BufferedEntry entry = (BufferedEntry) userObj;
+                BundleEntryBuffered entry = (BundleEntryBuffered) userObj;
 
                 // clear node
                 treeNode.removeAllChildren();
@@ -250,7 +250,7 @@ public class AssetFileTreeController {
                 model = new AssetFileTreeModel(root);
 
                 if (AssetBundleUtils.isAssetBundle(file)) {
-                    List<BufferedEntry> entries = AssetBundleUtils.buffer(file, progress);
+                    List<BundleEntryBuffered> entries = AssetBundleUtils.buffer(file, progress);
 
                     model.addAssetBundleNodes(root, entries);
                 } else {

@@ -12,8 +12,8 @@ package info.ata4.unity.gui.model;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundleReader;
-import info.ata4.unity.assetbundle.BufferedEntry;
-import info.ata4.unity.assetbundle.StreamedEntry;
+import info.ata4.unity.assetbundle.BundleEntryBuffered;
+import info.ata4.unity.assetbundle.BundleEntryStreamed;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
@@ -46,8 +46,8 @@ public class AssetFileTreeModel extends DefaultTreeModel {
         super(root);
     }
     
-    public void addAssetBundleNodes(DefaultMutableTreeNode root, List<BufferedEntry> entries) throws IOException {
-        for (BufferedEntry entry : entries) {
+    public void addAssetBundleNodes(DefaultMutableTreeNode root, List<BundleEntryBuffered> entries) throws IOException {
+        for (BundleEntryBuffered entry : entries) {
             DefaultMutableTreeNode current = root;
 
             // create folders in case the name contains path separators

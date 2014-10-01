@@ -61,13 +61,13 @@ public class AssetBundleUtils {
         ) {
             long current = 0;
             long total = 0;
-            for (EntryInfo entry : assetBundle.getEntries()) {
+            for (BundleEntryInfo entry : assetBundle.getEntries()) {
                 total += entry.getLength();
             }
             
             progress.setLimit(total);
 
-            for (StreamedEntry entry : assetBundle) {
+            for (BundleEntryStreamed entry : assetBundle) {
                 if (progress.isCanceled()) {
                     break;
                 }
@@ -88,17 +88,17 @@ public class AssetBundleUtils {
         extract(file, outDir, new DummyProgress());
     }
     
-    public static List<BufferedEntry> buffer(AssetBundleReader reader, Progress progress) throws IOException {
+    public static List<BundleEntryBuffered> buffer(AssetBundleReader reader, Progress progress) throws IOException {
         long current = 0;
         long total = 0;
-        for (EntryInfo entry : reader.getEntries()) {
+        for (BundleEntryInfo entry : reader.getEntries()) {
             total += entry.getLength();
         }
 
         progress.setLimit(total);
 
-        List<BufferedEntry> entries = new ArrayList<>();
-        for (StreamedEntry entry : reader) {
+        List<BundleEntryBuffered> entries = new ArrayList<>();
+        for (BundleEntryStreamed entry : reader) {
             if (progress.isCanceled()) {
                 break;
             }
@@ -114,17 +114,17 @@ public class AssetBundleUtils {
         return entries;
     }
     
-    public static List<BufferedEntry> buffer(AssetBundleReader reader) throws IOException {
+    public static List<BundleEntryBuffered> buffer(AssetBundleReader reader) throws IOException {
         return buffer(reader, new DummyProgress());
     }
     
-    public static List<BufferedEntry> buffer(Path file, Progress progress) throws IOException {
+    public static List<BundleEntryBuffered> buffer(Path file, Progress progress) throws IOException {
         try (AssetBundleReader reader = new AssetBundleReader(file)) {
             return buffer(reader, progress);
         }
     }
     
-    public static List<BufferedEntry> buffer(Path file) throws IOException {
+    public static List<BundleEntryBuffered> buffer(Path file) throws IOException {
         return buffer(file, new DummyProgress());
     }
     

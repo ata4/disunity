@@ -19,7 +19,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class EntryInfo implements Struct {
+public class BundleEntryInfo implements Struct {
     
     private String name;
     private long offset;

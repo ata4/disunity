@@ -22,12 +22,12 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class StreamedEntry extends Entry {
+public class BundleEntryStreamed extends BundleEntry {
     
     private InputStream is;
-    private BufferedEntry buf;
+    private BundleEntryBuffered buf;
 
-    public StreamedEntry(EntryInfo info) {
+    public BundleEntryStreamed(BundleEntryInfo info) {
         super(info);
     }
 
@@ -39,9 +39,9 @@ public class StreamedEntry extends Entry {
         this.is = is;
     }
     
-    public BufferedEntry buffer() throws IOException {
+    public BundleEntryBuffered buffer() throws IOException {
         if (buf == null) {
-            buf = new BufferedEntry(info);
+            buf = new BundleEntryBuffered(info);
             if (info.getLength() < Integer.MAX_VALUE) {
                 ByteBuffer bb = ByteBufferUtils.allocate((int) info.getLength());
                 OutputStream os = new ByteBufferOutputStream(bb);
