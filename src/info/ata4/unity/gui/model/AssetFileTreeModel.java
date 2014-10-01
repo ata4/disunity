@@ -15,6 +15,7 @@ import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.assetbundle.StreamedEntry;
 import info.ata4.unity.rtti.FieldNode;
+import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.io.IOException;
@@ -138,6 +139,16 @@ public class AssetFileTreeModel extends DefaultTreeModel {
             
             root.add(treeNode);
         }
+    }
+    
+    public void addFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
+        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(fieldTypeNode);
+
+        for (FieldTypeNode childFieldNode : fieldTypeNode) {
+            addFieldTypeNode(treeNode, childFieldNode);
+        }
+
+        root.add(treeNode);
     }
     
     public boolean isObjectDataNodeUnloaded(DefaultMutableTreeNode node) {

@@ -12,6 +12,7 @@ package info.ata4.unity.gui.view;
 import info.ata4.unity.assetbundle.Entry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldType;
+import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.Color;
 import java.awt.Component;
@@ -77,6 +78,8 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
                 formatPath((Path) userObject);
             } else if (userObject instanceof FieldNode) {
                 formatFieldNode((FieldNode) userObject);
+            } else if (userObject instanceof FieldTypeNode) {
+                formatFieldTypeNode((FieldTypeNode) userObject);
             } else if (userObject instanceof ObjectData) {
                 formatObjectData((ObjectData) userObject);
             } else if (userObject instanceof Entry) {
@@ -97,50 +100,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     private void formatFieldNode(FieldNode node) {
         FieldType type = node.getType();
         
-        switch (type.getTypeName()) {
-            case "bool":
-                setIcon(boolIcon);
-                break;
-
-            case "SInt8":
-            case "UInt8":
-            case "char":
-                setIcon(byteIcon);
-                break;
-
-            case "SInt16":
-            case "short":
-            case "UInt16":
-            case "unsigned short":
-                setIcon(shortIcon);
-                break;
-
-            case "SInt32":
-            case "int":
-            case "UInt32":
-            case "unsigned int":
-                setIcon(intIcon);
-                break;
-
-            case "float":
-                setIcon(floatIcon);
-                break;
-
-            case "double":
-                setIcon(doubleIcon);
-                break;
-
-            case "string":
-                setIcon(stringIcon);
-                break;
-
-            case "TypelessData":
-                setIcon(binaryIcon);
-                break;
-
-            default:
-                setIcon(defaultIcon);
-        }
+        setIconForType(type);
         
         String text = textCache.get(node);
         
@@ -187,6 +147,85 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
         }
          
         setText(text);
+    }
+    
+    private void formatFieldTypeNode(FieldTypeNode node) {
+        FieldType type = node.getType();
+        
+        setIconForType(type);
+        
+        String text = textCache.get(node);
+        
+        if (text == null) {
+            String fieldName = type.getFieldName();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(type.getTypeName());
+
+            if (!fieldName.equals("Base")) {
+                sb.append(' ');
+                if (fieldName.contains(" ")) {
+                    sb.append('"');
+                    sb.append(fieldName);
+                    sb.append('"');
+                } else {
+                    sb.append(fieldName);
+                }
+            }
+            
+            text = sb.toString();
+            
+            textCache.put(node, text);
+        }
+        
+        setText(text);
+    }
+    
+    private void setIconForType(FieldType type) {
+        switch (type.getTypeName()) {
+            case "bool":
+                setIcon(boolIcon);
+                break;
+
+            case "SInt8":
+            case "UInt8":
+            case "char":
+                setIcon(byteIcon);
+                break;
+
+            case "SInt16":
+            case "short":
+            case "UInt16":
+            case "unsigned short":
+                setIcon(shortIcon);
+                break;
+
+            case "SInt32":
+            case "int":
+            case "UInt32":
+            case "unsigned int":
+                setIcon(intIcon);
+                break;
+
+            case "float":
+                setIcon(floatIcon);
+                break;
+
+            case "double":
+                setIcon(doubleIcon);
+                break;
+
+            case "string":
+                setIcon(stringIcon);
+                break;
+
+            case "TypelessData":
+                setIcon(binaryIcon);
+                break;
+
+            default:
+                setIcon(defaultIcon);
+        }
     }
     
     private void formatObjectData(ObjectData objectData) {

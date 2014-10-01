@@ -18,14 +18,21 @@ import info.ata4.unity.assetbundle.BufferedEntry;
 import info.ata4.unity.gui.model.AssetFileTreeModel;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.rtti.FieldNode;
+import info.ata4.unity.rtti.FieldTypeDatabase;
+import info.ata4.unity.rtti.FieldTypeMap;
+import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
+import info.ata4.unity.util.UnityVersion;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
@@ -34,6 +41,7 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -57,6 +65,30 @@ public class AssetFileTreeController {
     
     public void load(Path file) throws IOException {
         new AssetFileLoadTask(parent, file).execute();
+    }
+    
+    public void load(FieldTypeDatabase db) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(Paths.get("structdb.dat"));
+        model = new AssetFileTreeModel(root);
+        
+        Map<UnityVersion, DefaultMutableTreeNode> versionNodes = new TreeMap<>();
+
+        FieldTypeMap map = db.getFieldTypeMap();
+        for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
+            UnityVersion version = entry.getKey().getValue();
+            
+            if (!versionNodes.containsKey(version)) {
+                versionNodes.put(version, new DefaultMutableTreeNode(version));
+            }
+            
+            model.addFieldTypeNode(versionNodes.get(version), entry.getValue());
+        }
+        
+        for (DefaultMutableTreeNode node : versionNodes.values()) {
+            root.add(node);
+        }
+        
+        tree.setModel(model);
     }
     
     private void busyState() {
