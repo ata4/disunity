@@ -9,44 +9,25 @@
  */
 package info.ata4.unity.gui.control;
 
-import info.ata4.io.util.ObjectToString;
-import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.assetbundle.BundleEntryBuffered;
-import info.ata4.unity.assetbundle.BundleEntry;
-import info.ata4.unity.gui.model.AssetFileTreeModel;
+import info.ata4.unity.gui.model.AssetBundleFileNode;
+import info.ata4.unity.gui.model.AssetFileNode;
+import info.ata4.unity.gui.model.FieldTypeDatabaseNode;
+import info.ata4.unity.gui.model.LazyLoadingTreeNode;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
-import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldTypeDatabase;
-import info.ata4.unity.rtti.FieldTypeMap;
-import info.ata4.unity.rtti.FieldTypeNode;
-import info.ata4.unity.rtti.ObjectData;
-import info.ata4.unity.util.UnityVersion;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
-import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeWillExpandListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -54,12 +35,9 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class AssetFileTreeController {
     
-    private static final Logger L = LogUtils.getLogger();
-
     private final Component parent;
     private final JTree tree;
     private final JTextPane text;
-    private AssetFileTreeModel model;
 
     public AssetFileTreeController(Component parent, JTree tree, JTextPane text) {
         this.parent = parent;
@@ -67,7 +45,6 @@ public class AssetFileTreeController {
         this.text = text;
         
         tree.setCellRenderer(new AssetFileTreeCellRenderer());
-        tree.addTreeWillExpandListener(new TreeWillExpandListenerImpl());
         tree.addMouseListener(new MouseAdapterImpl());
         tree.addTreeSelectionListener(new TreeSelectionListenerImpl());
     }
@@ -77,35 +54,7 @@ public class AssetFileTreeController {
     }
     
     public void load(FieldTypeDatabase db) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(Paths.get("structdb.dat"));
-        model = new AssetFileTreeModel(root);
-        
-        Map<UnityVersion, DefaultMutableTreeNode> versionNodes = new TreeMap<>();
-
-        FieldTypeMap map = db.getFieldTypeMap();
-        for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
-            UnityVersion version = entry.getKey().getValue();
-            
-            if (!versionNodes.containsKey(version)) {
-                versionNodes.put(version, new DefaultMutableTreeNode(version));
-            }
-            
-            model.addFieldTypeNode(versionNodes.get(version), entry.getValue());
-        }
-        
-        for (DefaultMutableTreeNode node : versionNodes.values()) {
-            root.add(node);
-        }
-        
-        tree.setModel(model);
-    }
-    
-    private void busyState() {
-        parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    }
-    
-    private void idleState() {
-        parent.setCursor(Cursor.getDefaultCursor());
+        tree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode(db)));
     }
     
     private class TreeSelectionListenerImpl implements TreeSelectionListener {
@@ -119,82 +68,6 @@ public class AssetFileTreeController {
             }
             
             Object obj = e.getNewLeadSelectionPath().getLastPathComponent();
-            
-            if (!(obj instanceof DefaultMutableTreeNode)) {
-                return;
-            }
-            
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj;
-            
-            Object userObj = node.getUserObject();
-            if (userObj instanceof FieldNode) {
-                FieldNode fieldNode = (FieldNode) userObj;
-                text.setText(ObjectToString.toString(fieldNode.getType()));
-            } else if (userObj instanceof FieldTypeNode) {
-                FieldTypeNode fieldTypeNode = (FieldTypeNode) userObj;
-                text.setText(ObjectToString.toString(fieldTypeNode.getType()));
-            } else if (userObj instanceof BundleEntry) {
-                BundleEntry entry = (BundleEntry) userObj;
-                text.setText(ObjectToString.toString(entry.getInfo()));
-            } else if (userObj instanceof ObjectData) {
-                ObjectData objData = (ObjectData) userObj;
-                text.setText(ObjectToString.toString(objData.getPath()));
-            }
-        }
-    }
-    
-    private class TreeWillExpandListenerImpl implements TreeWillExpandListener {
-    
-        @Override
-        public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-            Object obj = event.getPath().getLastPathComponent();
-            if (!(obj instanceof DefaultMutableTreeNode)) {
-                return;
-            }
-
-            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) obj;
-
-            Object userObj = treeNode.getUserObject();
-            if (model.isAssetBundleEntryNodeUnloaded(treeNode)) {
-                BundleEntryBuffered entry = (BundleEntryBuffered) userObj;
-
-                // clear node
-                treeNode.removeAllChildren();
-
-                // load the asset
-                L.log(Level.FINE, "Lazy-loading asset for entry {0}", entry);
-
-                try {
-                    busyState();
-                    AssetFile asset = new AssetFile();
-                    asset.load(entry.getReader());
-                    model.addAssetNodes(treeNode, asset);
-                } catch (IOException ex) {
-                    L.log(Level.WARNING, "Can't load asset", ex);
-                    treeNode.add(new DefaultMutableTreeNode(ex));
-                } finally {
-                    idleState();
-                }
-
-                model.setAssetBundleEntryNodeLoaded(treeNode);
-            } else if (model.isObjectDataNodeUnloaded(treeNode)) {
-                ObjectData objectData = (ObjectData) userObj;
-                ObjectPath objectPath = objectData.getPath();
-                FieldNode fieldNode = objectData.getInstance();
-
-                L.log(Level.FINE, "Lazy-loading object {0}", objectPath);
-
-                treeNode.removeAllChildren();
-                for (FieldNode childFieldNode : fieldNode) {
-                    model.addFieldNode(treeNode, childFieldNode);
-                }
-
-                model.setObjectDataNodeLoaded(treeNode);
-            }
-        }
-
-        @Override
-        public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
         }
     }
     
@@ -243,30 +116,21 @@ public class AssetFileTreeController {
 
         @Override
         protected Void doInBackground() throws Exception {
-            busyState();
-            
             tree.setModel(null);
             
-            try {
-                DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
-                model = new AssetFileTreeModel(root);
+            LazyLoadingTreeNode node;
 
-                if (AssetBundleUtils.isAssetBundle(file)) {
-                    List<BundleEntryBuffered> entries = AssetBundleUtils.buffer(file, progress);
-
-                    model.addAssetBundleNodes(root, entries);
-                } else {
-                    AssetFile asset = new AssetFile();
-                    asset.load(file);
-
-                    model.addAssetNodes(root, asset);
-                }
-
-                tree.setModel(model);
-            } finally {
-                idleState();
+            if (AssetBundleUtils.isAssetBundle(file)) {
+                node = new AssetBundleFileNode(tree, file);
+            } else {
+                node = new AssetFileNode(tree, file);
             }
-            
+
+            node.setProgress(progress);
+            node.load();
+
+            tree.setModel(new DefaultTreeModel(node));
+
             return null;
         }
         
