@@ -12,6 +12,8 @@ package info.ata4.unity.assetbundle;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.DataRandomAccess;
+import info.ata4.io.buffer.ByteBufferOutputStream;
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.unity.gui.util.progress.DummyProgress;
 import info.ata4.unity.gui.util.progress.Progress;
 import java.io.BufferedInputStream;
@@ -19,6 +21,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Asset bundle file utility class.
@@ -102,16 +106,37 @@ public class AssetBundleUtils {
             if (progress.isCanceled()) {
                 break;
             }
+            
+            BundleEntryInfo info = entry.getInfo();
 
-            progress.setLabel(entry.getInfo().getName());
+            progress.setLabel(info.getName());
 
-            entries.add(entry.buffer());
+            entries.add(buffer(entry));
 
-            current += entry.getInfo().getLength();
+            current += info.getLength();
             progress.update(current);
         }
 
         return entries;
+    }
+    
+    public static BundleEntryBuffered buffer(BundleEntryStreamed entry) throws IOException {
+        BundleEntryInfo info = entry.getInfo();
+        BundleEntryBuffered entryBuf = new BundleEntryBuffered(info);
+        
+        if (info.getLength() < Integer.MAX_VALUE) {
+            ByteBuffer bb = ByteBufferUtils.allocate((int) info.getLength());
+            OutputStream os = new ByteBufferOutputStream(bb);
+            IOUtils.copyLarge(entry.getInputStream(), os);
+            bb.flip();
+
+            entryBuf.setRandomAccess(DataRandomAccess.newRandomAccess(bb));
+        } else {
+            // TODO: create temporary file
+            throw new IllegalArgumentException("Entry is too large for buffering");
+        }
+        
+        return entryBuf;
     }
     
     public static List<BundleEntryBuffered> buffer(AssetBundleReader reader) throws IOException {
