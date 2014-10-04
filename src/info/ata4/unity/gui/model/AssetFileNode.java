@@ -128,7 +128,7 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
     }
     
     private void addTypes(AssetFile asset) {
-        if (asset.getTypeTree().getFields().isEmpty()) {
+        if (asset.isStandalone()) {
             return;
         }
         

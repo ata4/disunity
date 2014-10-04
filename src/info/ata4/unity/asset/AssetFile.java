@@ -45,6 +45,7 @@ public class AssetFile extends FileHandler {
     
     private List<ObjectData> objects;
     private DataInputReader audioData;
+    private boolean standalone;
 
     @Override
     public void load(Path file) throws IOException {
@@ -111,6 +112,7 @@ public class AssetFile extends FileHandler {
         if (typeTree.getFields().isEmpty()) {
             L.info("Standalone asset file detected, using structure from database");
             FieldTypeDatabase.getInstance().fill(this);
+            standalone = true;
         }
         
         // read object data
@@ -150,6 +152,14 @@ public class AssetFile extends FileHandler {
     
     public List<Reference> getReferences() {
         return refTable.getReferences();
+    }
+
+    public boolean isStandalone() {
+        return standalone;
+    }
+
+    public void setStandalone(boolean standalone) {
+        this.standalone = standalone;
     }
     
     public Set<Integer> getClassIDs() {
