@@ -14,9 +14,11 @@ import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
+import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeTree;
 import info.ata4.unity.rtti.ObjectData;
+import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -46,6 +48,7 @@ public class AssetFile extends FileHandler {
     private List<ObjectData> objects;
     private DataInputReader audioData;
     private boolean standalone;
+    private BundleEntryBuffered sourceBundleEntry;
 
     @Override
     public void load(Path file) throws IOException {
@@ -89,6 +92,11 @@ public class AssetFile extends FileHandler {
         }
         
         load(in);
+    }
+    
+    public void load(BundleEntryBuffered entry) throws IOException {
+        sourceBundleEntry = entry;
+        load(entry.getReader());
     }
     
     @Override
@@ -160,6 +168,10 @@ public class AssetFile extends FileHandler {
 
     public void setStandalone(boolean standalone) {
         this.standalone = standalone;
+    }
+
+    public BundleEntryBuffered getSourceBundleEntry() {
+        return sourceBundleEntry;
     }
     
     public Set<Integer> getClassIDs() {

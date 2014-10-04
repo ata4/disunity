@@ -199,7 +199,7 @@ public class FieldTypeDatabase {
         FieldTypeTree typeTree = asset.getTypeTree();
         Set<Integer> classIDs = asset.getClassIDs();
         
-//        fixRevision(asset, typeTree);
+        fixRevision(asset, typeTree);
         
         if (typeTree.getEngineVersion() == null) {
             L.warning("Revision = null");
@@ -223,7 +223,7 @@ public class FieldTypeDatabase {
             return 0;
         }
         
-//        fixRevision(asset, typeTree);
+        fixRevision(asset, typeTree);
         
         if (typeTree.getEngineVersion() == null) {
             L.warning("Revision = null");
@@ -276,11 +276,11 @@ public class FieldTypeDatabase {
         }
     }
 
-//    private void fixRevision(AssetFile asset, FieldTypeTree typeTree) {
-//        // older file formats don't contain the revision in the header, try to
-//        // get it from the asset bundle header instead
-//        if (typeTree.getEngineVersion() == null && asset.getSourceBundle() != null) {
-//            typeTree.setEngineVersion(asset.getSourceBundle().getEngineVersion());
-//        }
-//    }
+    private void fixRevision(AssetFile asset, FieldTypeTree typeTree) {
+        // older file formats don't contain the revision in the header, try to
+        // get it from the asset bundle header instead
+        if (typeTree.getEngineVersion() == null && asset.getSourceBundleEntry() != null) {
+            typeTree.setEngineVersion(asset.getSourceBundleEntry().getSourceBundleHeader().getUnityRevision());
+        }
+    }
 }

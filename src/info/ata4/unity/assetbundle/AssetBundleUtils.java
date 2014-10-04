@@ -123,6 +123,7 @@ public class AssetBundleUtils {
     public static BundleEntryBuffered buffer(BundleEntryStreamed entry) throws IOException {
         BundleEntryInfo info = entry.getInfo();
         BundleEntryBuffered entryBuf = new BundleEntryBuffered(info);
+        entryBuf.setSourceBundleHeader(entry.getSourceBundleHeader());
         
         if (info.getLength() < Integer.MAX_VALUE) {
             ByteBuffer bb = ByteBufferUtils.allocate((int) info.getLength());

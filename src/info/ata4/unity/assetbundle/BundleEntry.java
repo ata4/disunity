@@ -17,12 +17,22 @@ public class BundleEntry {
     
     protected final BundleEntryInfo info;
     
+    private AssetBundleHeader sourceBundleHeader;
+    
     public BundleEntry(BundleEntryInfo info) {
         this.info = info;
     }
     
     public BundleEntryInfo getInfo() {
         return info;
+    }
+
+    public AssetBundleHeader getSourceBundleHeader() {
+        return sourceBundleHeader;
+    }
+
+    public void setSourceBundleHeader(AssetBundleHeader sourceBundleHeader) {
+        this.sourceBundleHeader = sourceBundleHeader;
     }
 
     @Override

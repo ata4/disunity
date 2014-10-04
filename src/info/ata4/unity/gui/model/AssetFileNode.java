@@ -72,7 +72,7 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
             if (file != null) {
                 asset.load(file);
             } else {
-                asset.load(bundleEntry.getReader());
+                asset.load(bundleEntry);
             }
             
             header = asset.getHeader();

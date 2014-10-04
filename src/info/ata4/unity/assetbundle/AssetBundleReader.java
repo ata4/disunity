@@ -141,6 +141,7 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
             
             BundleEntryStreamed entry = new BundleEntryStreamed(info);
             entry.setInputStream(new BoundedInputStream(inData.getSocket().getInputStream(), info.getLength()));
+            entry.setSourceBundleHeader(header);
             return entry;
         }
 
