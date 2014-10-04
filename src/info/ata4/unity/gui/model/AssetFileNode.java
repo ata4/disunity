@@ -13,7 +13,10 @@ import info.ata4.io.Struct;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetHeader;
+import info.ata4.unity.asset.Reference;
 import info.ata4.unity.assetbundle.BundleEntryBuffered;
+import info.ata4.unity.gui.util.FieldNodeUtils;
+import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.io.IOException;
@@ -74,30 +77,68 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
             
             header = asset.getHeader();
             
-            Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
-            for (ObjectData objectData : asset.getObjects()) {
-                try {
-                    String fieldNodeType = objectData.getTypeTree().getType().getTypeName();
-
-                    if (!nodeCategories.containsKey(fieldNodeType)) {
-                        DefaultMutableTreeNode nodeCategory = new DefaultMutableTreeNode(fieldNodeType);
-                        nodeCategories.put(fieldNodeType, nodeCategory);
-                    }
-
-                    nodeCategories.get(fieldNodeType).add(new ObjectDataNode(tree, objectData));
-                } catch (RuntimeTypeException ex) {
-                    L.log(Level.WARNING, "Can't deserialize object " + objectData, ex);
-                    add(new DefaultMutableTreeNode(ex));
-                }
-            }
-
-            for (DefaultMutableTreeNode treeNode : nodeCategories.values()) {
-                add(treeNode);
-            }
+            addTypes(asset);
+            addObjects(asset);
+            addReferences(asset);
         } catch (IOException ex) {
             L.log(Level.WARNING, "Can't load asset data", ex);
             add(new DefaultMutableTreeNode(ex));
         }
+    }
+    
+    private void addObjects(AssetFile asset) {
+        Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
+        for (ObjectData objectData : asset.getObjects()) {
+            try {
+                String fieldNodeType = objectData.getTypeTree().getType().getTypeName();
+
+                if (!nodeCategories.containsKey(fieldNodeType)) {
+                    DefaultMutableTreeNode nodeCategory = new DefaultMutableTreeNode(fieldNodeType);
+                    nodeCategories.put(fieldNodeType, nodeCategory);
+                }
+
+                nodeCategories.get(fieldNodeType).add(new ObjectDataNode(tree, objectData));
+            } catch (RuntimeTypeException ex) {
+                L.log(Level.WARNING, "Can't deserialize object " + objectData, ex);
+                add(new DefaultMutableTreeNode(ex));
+            }
+        }
+
+        DefaultMutableTreeNode objectNode = new DefaultMutableTreeNode("Objects");
+
+        for (DefaultMutableTreeNode treeNode : nodeCategories.values()) {
+            objectNode.add(treeNode);
+        }
+
+        add(objectNode);
+    }
+    
+    private void addReferences(AssetFile asset) {
+        if (asset.getReferences().isEmpty()) {
+            return;
+        }
+        
+        DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("References");
+        
+        for (Reference ref : asset.getReferences()) {
+            refNode.add(new StructMutableTreeNode(ref));
+        }
+        
+        add(refNode);
+    }
+    
+    private void addTypes(AssetFile asset) {
+        if (asset.getTypeTree().getFields().isEmpty()) {
+            return;
+        }
+        
+        DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
+        
+        for (FieldTypeNode fieldNode : asset.getTypeTree().getFields().values()) {
+            FieldNodeUtils.convertFieldTypeNode(typeNode, fieldNode);
+        }
+ 
+        add(typeNode);
     }
 
     @Override

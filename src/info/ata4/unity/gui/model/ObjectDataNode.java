@@ -10,6 +10,7 @@
 package info.ata4.unity.gui.model;
 
 import info.ata4.io.Struct;
+import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
@@ -36,42 +37,13 @@ public class ObjectDataNode extends LazyLoadingTreeNode implements StructNode {
             FieldNode fieldNode = objectData.getInstance();
 
             for (FieldNode childFieldNode : fieldNode) {
-                addFieldNode(this, childFieldNode);
+                FieldNodeUtils.convertFieldNode(this, childFieldNode);
             }
         } catch (RuntimeTypeException ex) {
             add(new DefaultMutableTreeNode(ex));
         }
     }
     
-    private void addFieldNode(DefaultMutableTreeNode root, FieldNode fieldNode) {
-        Object fieldValue = fieldNode.getValue();
-        
-        if (fieldValue instanceof FieldNode) {
-            addFieldNode(root, (FieldNode) fieldValue);
-            return;
-        } 
-        
-        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldNode, fieldNode.getType());
-        
-        if (fieldValue instanceof List) {
-            List fieldList = (List) fieldValue;
-
-            for (Object item : fieldList) {
-                if (item instanceof FieldNode) {
-                    addFieldNode(treeNode, (FieldNode) item);
-                } else {
-                    treeNode.add(new DefaultMutableTreeNode(item));
-                }
-            }
-        }
-        
-        for (FieldNode childFieldNode : fieldNode) {
-            addFieldNode(treeNode, childFieldNode);
-        }
-
-        root.add(treeNode);
-    }
-
     @Override
     public void getStructs(List<Struct> list) {
         list.add(objectData.getPath());

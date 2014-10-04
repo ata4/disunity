@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.gui.model;
 
+import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeMap;
 import info.ata4.unity.rtti.FieldTypeNode;
@@ -38,21 +39,11 @@ public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
                 versionNodes.put(version, new DefaultMutableTreeNode(version));
             }
             
-            addFieldTypeNode(versionNodes.get(version), entry.getValue());
+            FieldNodeUtils.convertFieldTypeNode(versionNodes.get(version), entry.getValue());
         }
         
         for (DefaultMutableTreeNode node : versionNodes.values()) {
             add(node);
         }
-    }
-    
-    private void addFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
-        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldTypeNode, fieldTypeNode.getType());
-
-        for (FieldTypeNode childFieldNode : fieldTypeNode) {
-            addFieldTypeNode(treeNode, childFieldNode);
-        }
-
-        root.add(treeNode);
     }
 }
