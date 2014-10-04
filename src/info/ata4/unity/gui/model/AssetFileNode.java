@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.gui.model;
 
-import info.ata4.io.util.ObjectToString;
+import info.ata4.io.Struct;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.AssetHeader;
@@ -18,6 +18,7 @@ import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -29,7 +30,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileNode extends LazyLoadingTreeNode {
+public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
     
     private static final Logger L = LogUtils.getLogger();
     
@@ -98,5 +99,14 @@ public class AssetFileNode extends LazyLoadingTreeNode {
             add(new DefaultMutableTreeNode(ex));
         }
     }
-    
+
+    @Override
+    public void getStructs(List<Struct> list) {
+        if (bundleEntry != null) {
+            list.add(bundleEntry.getInfo());
+        }
+        
+        list.add(header);
+    }
+
 }

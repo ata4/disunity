@@ -46,8 +46,8 @@ public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
         }
     }
     
-    public void addFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
-        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(fieldTypeNode);
+    private void addFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
+        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldTypeNode, fieldTypeNode.getType());
 
         for (FieldTypeNode childFieldNode : fieldTypeNode) {
             addFieldTypeNode(treeNode, childFieldNode);

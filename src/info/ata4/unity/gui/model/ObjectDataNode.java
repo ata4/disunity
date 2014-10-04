@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.gui.model;
 
+import info.ata4.io.Struct;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
@@ -20,7 +21,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectDataNode extends LazyLoadingTreeNode {
+public class ObjectDataNode extends LazyLoadingTreeNode implements StructNode {
     
     private final ObjectData objectData;
 
@@ -44,12 +45,15 @@ public class ObjectDataNode extends LazyLoadingTreeNode {
     
     private void addFieldNode(DefaultMutableTreeNode root, FieldNode fieldNode) {
         Object fieldValue = fieldNode.getValue();
-        DefaultMutableTreeNode treeNode = null;
         
         if (fieldValue instanceof FieldNode) {
             addFieldNode(root, (FieldNode) fieldValue);
-        } else if (fieldValue instanceof List) {
-            treeNode = new DefaultMutableTreeNode(fieldNode);
+            return;
+        } 
+        
+        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldNode, fieldNode.getType());
+        
+        if (fieldValue instanceof List) {
             List fieldList = (List) fieldValue;
 
             for (Object item : fieldList) {
@@ -59,17 +63,18 @@ public class ObjectDataNode extends LazyLoadingTreeNode {
                     treeNode.add(new DefaultMutableTreeNode(item));
                 }
             }
-        } else {
-            treeNode = new DefaultMutableTreeNode(fieldNode);
         }
         
-        if (treeNode != null) {
-            for (FieldNode childFieldNode : fieldNode) {
-                addFieldNode(treeNode, childFieldNode);
-            }
-            
-            root.add(treeNode);
+        for (FieldNode childFieldNode : fieldNode) {
+            addFieldNode(treeNode, childFieldNode);
         }
+
+        root.add(treeNode);
+    }
+
+    @Override
+    public void getStructs(List<Struct> list) {
+        list.add(objectData.getPath());
     }
     
 }

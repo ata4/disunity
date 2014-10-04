@@ -16,6 +16,7 @@ import info.ata4.unity.gui.model.FieldTypeDatabaseNode;
 import info.ata4.unity.gui.model.LazyLoadingTreeNode;
 import info.ata4.unity.gui.util.progress.ProgressTask;
 import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
+import info.ata4.unity.gui.view.AssetFileTreeNodeInfo;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -24,8 +25,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -37,16 +36,14 @@ public class AssetFileTreeController {
     
     private final Component parent;
     private final JTree tree;
-    private final JTextPane text;
 
     public AssetFileTreeController(Component parent, JTree tree, JTextPane text) {
         this.parent = parent;
         this.tree = tree;
-        this.text = text;
         
         tree.setCellRenderer(new AssetFileTreeCellRenderer());
         tree.addMouseListener(new MouseAdapterImpl());
-        tree.addTreeSelectionListener(new TreeSelectionListenerImpl());
+        tree.addTreeSelectionListener(new AssetFileTreeNodeInfo(text));
     }
     
     public void load(Path file) throws IOException {
@@ -55,20 +52,6 @@ public class AssetFileTreeController {
     
     public void load(FieldTypeDatabase db) {
         tree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode(db)));
-    }
-    
-    private class TreeSelectionListenerImpl implements TreeSelectionListener {
-
-        @Override
-        public void valueChanged(TreeSelectionEvent e) {
-            text.setText(null);
-            
-            if (e.getNewLeadSelectionPath() == null) {
-                return;
-            }
-            
-            Object obj = e.getNewLeadSelectionPath().getLastPathComponent();
-        }
     }
     
     private class MouseAdapterImpl extends MouseAdapter {

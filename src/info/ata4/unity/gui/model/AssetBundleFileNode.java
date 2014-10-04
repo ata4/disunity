@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.gui.model;
 
+import info.ata4.io.Struct;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
@@ -16,6 +17,7 @@ import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
@@ -26,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundleFileNode extends LazyLoadingTreeNode {
+public class AssetBundleFileNode extends LazyLoadingTreeNode implements StructNode {
     
     private static final Logger L = LogUtils.getLogger();
     
@@ -78,12 +80,17 @@ public class AssetBundleFileNode extends LazyLoadingTreeNode {
                 if (entry.getInfo().isAsset()) {
                     current.add(new AssetFileNode(tree, entry));
                 } else {
-                    current.add(new DefaultMutableTreeNode(entry));
+                    current.add(new StructMutableTreeNode(entry, entry.getInfo()));
                 }
             }
         } catch (IOException ex) {
             L.log(Level.WARNING, "Can't load asset bundle file " + file, ex);
             add(new DefaultMutableTreeNode(ex));
         }
-    }    
+    }
+
+    @Override
+    public void getStructs(List<Struct> list) {
+        list.add(header);
+    }
 }
