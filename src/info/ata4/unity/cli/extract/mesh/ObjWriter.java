@@ -36,6 +36,7 @@ class ObjWriter extends MeshWriter {
     @Override
     public void write(MeshData meshData) throws IOException {
         Mesh mesh = meshData.getMesh();
+        String meshName = mesh.getName();
         
         vns = meshData.getNormals();
         vts = meshData.getUV1();
@@ -44,8 +45,8 @@ class ObjWriter extends MeshWriter {
         if (vts.isEmpty()) {
             vts = meshData.getUV2();
         }
-        
-        try (PrintStream ps_ = handler.getPrintStream(mesh.name, "obj")) {
+
+        try (PrintStream ps_ = handler.getPrintStream(meshName, "obj")) {
             ps = ps_;
         
             writeComment("Created by " + DisUnity.getSignature());
@@ -66,17 +67,17 @@ class ObjWriter extends MeshWriter {
             }
 
             writeLine();
-            writeObject(mesh.name);
+            writeObject(meshName);
             writeSmooth(1);
 
-            final int subMeshCount = mesh.subMeshes.size();
+            final int subMeshCount = mesh.getSubMeshes().size();
             final int vertsPerFace = 3;
             for (int i = 0; i < subMeshCount; i++) {
                 // write sub-meshes as materials
                 if (subMeshCount == 1) {
-                    writeUsemtl(mesh.name);
+                    writeUsemtl(meshName);
                 } else {
-                    writeUsemtl(String.format("%s_%d", mesh.name, i));
+                    writeUsemtl(String.format("%s_%d", meshName, i));
                 }
                 
                 // write sub-mesh triangles

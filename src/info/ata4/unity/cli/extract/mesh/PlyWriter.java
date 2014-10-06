@@ -36,6 +36,8 @@ class PlyWriter extends MeshWriter {
     @Override
     void write(MeshData meshData) throws IOException {
         Mesh mesh = meshData.getMesh();
+        String meshName = mesh.getName();
+        List<SubMesh> subMeshes = mesh.getSubMeshes();
 
         List<Vector3f> vertices = meshData.getVertices();
         List<Vector3f> normals = meshData.getNormals();
@@ -45,13 +47,13 @@ class PlyWriter extends MeshWriter {
         
         // PLY can't have more than one mesh per file, so write one file per
         // sub-mesh
-        final int subMeshCount = mesh.subMeshes.size();
+        final int subMeshCount = subMeshes.size();
         final int vertsPerFace = 3;
         for (int i = 0; i < subMeshCount; i++) {
-            SubMesh subMesh = mesh.subMeshes.get(i);
+            SubMesh subMesh = subMeshes.get(i);
             
             // use prefix if there's more than one submesh
-            String name = mesh.name;
+            String name = meshName;
             if (subMeshCount > 1) {
                 name = String.format("%s_%d", name, i);
             }
@@ -62,8 +64,8 @@ class PlyWriter extends MeshWriter {
                 // write sub-mesh triangles
                 List<Integer> subMeshTriangles = meshData.getTriangles().get(i);
                 
-                final int firstVertex = subMesh.firstVertex.intValue();
-                final int vertexCount = subMesh.vertexCount.intValue();
+                final int firstVertex = subMesh.getFirstVertex().intValue();
+                final int vertexCount = subMesh.getVertexCount().intValue();
                 final int faceCount = subMeshTriangles.size() / vertsPerFace;
 
                 // write header

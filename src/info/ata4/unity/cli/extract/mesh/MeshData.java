@@ -19,6 +19,7 @@ import info.ata4.unity.engine.Mesh;
 import info.ata4.unity.engine.PackedBitVector;
 import info.ata4.unity.engine.StreamInfo;
 import info.ata4.unity.engine.SubMesh;
+import info.ata4.unity.engine.VertexData;
 import info.ata4.unity.engine.struct.Color32;
 import info.ata4.unity.engine.struct.Vector2f;
 import info.ata4.unity.engine.struct.Vector3f;
@@ -62,7 +63,7 @@ class MeshData {
     MeshData(Mesh mesh) throws IOException {
         this.mesh = mesh;
         
-        if (mesh.meshCompression == 0) {
+        if (mesh.getMeshCompression() == 0) {
             readVertexBuffer();
             readIndexBuffer();
         } else {
@@ -107,16 +108,18 @@ class MeshData {
     }
     
     private int[] readPackedBits(PackedBitVector pbv) throws IOException {
+        int numItems = pbv.getNumItems().intValue();
+        int bitSize = pbv.getBitSize();
+        
         // don't waste time on empty vectors
-        if (pbv.numItems == 0 || pbv.bitSize == 0) {
+        if (numItems == 0 || bitSize == 0) {
             return new int[]{};
         }
         
         // the values are packed with a variable bit length
-        BitInputStream bis = new BitInputStream(new ByteBufferInputStream(pbv.data));
-        bis.setBitLength(pbv.bitSize);
+        BitInputStream bis = new BitInputStream(new ByteBufferInputStream(pbv.getData()));
+        bis.setBitLength(bitSize);
         
-        int numItems = pbv.numItems.intValue();
         int[] items = new int[numItems];
         for (int i = 0; i < items.length; i++) {
             items[i] = bis.read();
@@ -126,8 +129,11 @@ class MeshData {
     }
     
     private float[] readPackedFloats(PackedBitVector pbv) throws IOException {
+        int numItems = pbv.getNumItems().intValue();
+        int bitSize = pbv.getBitSize();
+        
         // don't waste time on empty vectors
-        if (pbv.numItems == 0 || pbv.bitSize == 0) {
+        if (numItems == 0 || bitSize == 0) {
             return new float[]{};
         }
         
@@ -136,9 +142,9 @@ class MeshData {
         int[] items = readPackedBits(pbv);
         float[] floats = new float[items.length];
         
-        int maxValue = (1 << pbv.bitSize) - 1;
-        float range = pbv.range / maxValue;
-        float start = pbv.start;
+        int maxValue = (1 << bitSize) - 1;
+        float range = pbv.getRange() / maxValue;
+        float start = pbv.getStart();
 
         for (int i = 0; i < floats.length; i++) {
             floats[i] = items[i] * range + start;
@@ -165,9 +171,9 @@ class MeshData {
         
         float[] floats = new float[signs.length * 3]; // 3 elements per vertex
         
-        int maxValue = (1 << pbv.bitSize) - 1;
-        float range = pbv.range / maxValue;
-        float start = pbv.start;
+        int maxValue = (1 << pbv.getBitSize()) - 1;
+        float range = pbv.getRange() / maxValue;
+        float start = pbv.getStart();
 
         for (int i = 0; i < floats.length / 3; i++) {
             float x = items[i * 2] * range + start;
@@ -186,30 +192,33 @@ class MeshData {
     }
 
     private void readVertexBuffer() throws IOException {
+        VertexData vertexData = mesh.getVertexData();
+        
         // get vertex buffer
-        ByteBuffer vertexBuffer = mesh.vertexData.dataSize;
+        ByteBuffer vertexBuffer = vertexData.getDataSize();
         vertexBuffer.order(ByteOrder.LITTLE_ENDIAN);
         
         L.log(Level.FINE, "Vertex buffer size: {0}", vertexBuffer.capacity());
 
         DataInputReader in = DataInputReader.newReader(vertexBuffer);
 
-        List<StreamInfo> streams = mesh.vertexData.streams;
-        List<ChannelInfo> channels = mesh.vertexData.channels;
+        List<StreamInfo> streams = vertexData.getStreams();
+        List<ChannelInfo> channels = vertexData.getChannels();
         
         for (StreamInfo stream : streams) {
             // skip empty channels
-            if (stream.channelMask.longValue() == 0) {
+            int channelMask = stream.getChannelMask().intValue();
+            if (channelMask == 0) {
                 continue;
             }
 
-            vertexBuffer.position(stream.offset.intValue());
+            vertexBuffer.position(stream.getOffset().intValue());
 
             // read vertex data from each vertex and channel
-            for (int i = 0; i < mesh.vertexData.vertexCount; i++) {
+            for (int i = 0; i < vertexData.getVertexCount(); i++) {
                 for (int j = 0; j < CHANNEL_COUNT; j++) {
                     // skip unselected channels
-                    if ((stream.channelMask.longValue() & 1 << j) == 0) {
+                    if ((channelMask & 1 << j) == 0) {
                         continue;
                     }
                     
@@ -219,7 +228,7 @@ class MeshData {
                     // channels may not be available in older versions
                     if (!channels.isEmpty()) {
                         channel = channels.get(j);
-                        half = channel.format == 1;
+                        half = channel.getFormat() == 1;
                     }
 
                     switch (j) {
@@ -235,7 +244,7 @@ class MeshData {
                             vn.setHalf(half);
                             vn.read(in);
                             normals.add(vn);
-                            if (half && channel != null && channel.dimension == 4) {
+                            if (half && channel != null && channel.getDimension() == 4) {
                                 in.skipBytes(2); // padding?
                             }
                             break;
@@ -267,26 +276,27 @@ class MeshData {
                     }
                 }
                 
-                in.align(stream.stride.intValue());
+                in.align(stream.getStride().intValue());
             }
         }
     }
 
     private void readIndexBuffer() throws IOException {
-        mesh.indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        DataInputReader in = DataInputReader.newReader(mesh.indexBuffer);
+        ByteBuffer indexBuffer = mesh.getIndexBuffer();
+        indexBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        DataInputReader in = DataInputReader.newReader(indexBuffer);
 
-        for (SubMesh subMesh : mesh.subMeshes) {
+        for (SubMesh subMesh : mesh.getSubMeshes()) {
             List<Integer> subMeshIndices = new ArrayList<>();
             List<Integer> subMeshTriangles = new ArrayList<>();
             
-            in.position(subMesh.firstByte.longValue());
-            for (long j = 0; j < subMesh.indexCount.longValue(); j++) {
+            in.position(subMesh.getFirstByte().longValue());
+            for (long j = 0; j < subMesh.getIndexCount().longValue(); j++) {
                 subMeshIndices.add(in.readUnsignedShort());
             }
             
             // read triangle strips if topology/isTriStrip is not zero
-            if (subMesh.topology.longValue() == 0) {
+            if (subMesh.getTopology().longValue() == 0) {
                 // use indices as is
                 subMeshTriangles.addAll(subMeshIndices);
             } else {
@@ -330,9 +340,9 @@ class MeshData {
     }
 
     private void readCompressedMesh() throws IOException {
-        CompressedMesh cmesh = mesh.compressedMesh;
+        CompressedMesh cmesh = mesh.getCompressedMesh();
 
-        float[] vertexFloats = readPackedFloats(cmesh.vertices);
+        float[] vertexFloats = readPackedFloats(cmesh.getVertices());
         for (int i = 0; i < vertexFloats.length / 3; i++) {
             Vector3f v = new Vector3f();
             v.x = vertexFloats[i * 3];
@@ -341,7 +351,7 @@ class MeshData {
             vertices.add(v);
         }
 
-        float[] normalFloats = readPackedNormals(cmesh.normals, cmesh.normalSigns);
+        float[] normalFloats = readPackedNormals(cmesh.getNormals(), cmesh.getNormalSigns());
         for (int i = 0; i < normalFloats.length / 3; i++) {
             Vector3f vn = new Vector3f();
             vn.x = normalFloats[i * 3];
@@ -350,7 +360,7 @@ class MeshData {
             normals.add(vn);
         }
 
-        float[] uvFloats = readPackedFloats(cmesh.UV);
+        float[] uvFloats = readPackedFloats(cmesh.getUV());
         for (int i = 0; i < uvFloats.length / 2; i++) {
             Vector2f vt = new Vector2f();
             vt.x = uvFloats[i * 2];
@@ -362,7 +372,7 @@ class MeshData {
             }
         }
 
-        int[] colorInts = readPackedBits(cmesh.colors);
+        int[] colorInts = readPackedBits(cmesh.getColors());
         for (int i = 0; i < colorInts.length; i++) {
             Color32 c = new Color32();
             c.fromInt(colorInts[i]);
@@ -370,13 +380,13 @@ class MeshData {
         }
         
         // TODO: works for triangulated meshes only!
-        int[] triangleInts = readPackedBits(cmesh.triangles);
-        for (SubMesh subMesh : mesh.subMeshes) {
+        int[] triangleInts = readPackedBits(cmesh.getTriangles());
+        for (SubMesh subMesh : mesh.getSubMeshes()) {
             List<Integer> subMeshIndices = new ArrayList<>();
             List<Integer> subMeshTriangles = new ArrayList<>();
             
-            final int vertOfs = subMesh.firstVertex.intValue();
-            final int vertCount = subMesh.vertexCount.intValue();
+            final int vertOfs = subMesh.getFirstVertex().intValue();
+            final int vertCount = subMesh.getVertexCount().intValue();
             for (int j = vertOfs; j < vertCount; j++) {
                 subMeshTriangles.add(triangleInts[j]);
                 subMeshIndices.add(triangleInts[j]);
