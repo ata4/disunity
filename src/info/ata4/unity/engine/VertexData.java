@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,42 +29,60 @@ import java.util.List;
 //    StreamInfo m_Streams[2]
 //    StreamInfo m_Streams[3]
 //    TypelessData m_DataSize
-public class VertexData {
-    
-    public final Long currentChannels;
-    public final Long vertexCount;
-    public final List<ChannelInfo> channels;
-    public final List<StreamInfo> streams;
-    public final ByteBuffer dataSize;
 
-    public VertexData(UnityObject obj) {
-        currentChannels = obj.getValue("m_CurrentChannels");
-        vertexCount = obj.getValue("m_VertexCount");
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class VertexData extends UnityObject {
+
+    public VertexData(FieldNode node) {
+        super(node);
+    }
+
+    public Long getCurrentChannels() {
+        return node.getChildValue("m_CurrentChannels");
+    }
+
+    public Long getVertexCount() {
+        return node.getChildValue("m_VertexCount");
+    }
+
+    public List<ChannelInfo> getChannels() {
+        FieldNode channels = node.getChild("m_Channels");
+        List<ChannelInfo> channelsList = new ArrayList<>();
         
-        List<UnityObject> channelObjects = obj.getValue("m_Channels");
-        channels = new ArrayList<>();
-        if (channelObjects != null) {
-            for (UnityObject channelObject : channelObjects) {
-                channels.add(new ChannelInfo(channelObject));
+        if (channels != null) {
+            for (FieldNode channel : channels) {
+                channelsList.add(new ChannelInfo(channel));
             }
         }
         
-        List<UnityObject> streamObjects = obj.getValue("m_Streams");
-        streams = new ArrayList<>();
-        if (streamObjects != null) {
-            for (UnityObject streamObject : streamObjects) {
-                streams.add(new StreamInfo(streamObject));
+        return channelsList;
+    }
+
+    public List<StreamInfo> getStreams() {        
+        FieldNode streams = node.getChild("m_Streams");
+        List<StreamInfo> streamsList = new ArrayList<>();
+        
+        if (streams != null) {
+            for (FieldNode stream : streams) {
+                streamsList.add(new StreamInfo(stream));
             }
         } else {
+            // older format with array indices as field names
             for (int i = 0; i < 4; i++) {
-                StreamInfo streamInfo = obj.getObject("m_Streams[" + i + "]", StreamInfo.class);
-                if (streamInfo != null) {
-                    streams.add(streamInfo);
+                FieldNode stream = node.getChild("m_Streams[" + i + "]");
+                if (stream != null) {
+                    streamsList.add(new StreamInfo(stream));
                 }
             }
         }
         
-        dataSize = obj.getValue("m_DataSize");
+        return streamsList;
     }
-    
+
+    public ByteBuffer getDataSize() {
+        return node.getChildValue("m_DataSize");
+    }
 }

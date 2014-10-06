@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 
 // CompressedMesh
 //   PackedBitVector m_Vertices
@@ -23,32 +23,59 @@ import info.ata4.unity.serdes.UnityObject;
 //   PackedBitVector m_BoneIndices
 //   PackedBitVector m_Triangles
 //   PackedBitVector m_Colors
-public class CompressedMesh {
-    
-    public final PackedBitVector vertices;
-    public final PackedBitVector UV;
-    public final PackedBitVector bindPoses;
-    public final PackedBitVector normals;
-    public final PackedBitVector tangents;
-    public final PackedBitVector weights;
-    public final PackedBitVector normalSigns;
-    public final PackedBitVector tangentSigns;
-    public final PackedBitVector boneIndices;
-    public final PackedBitVector triangles;
-    public final PackedBitVector colors;
 
-    public CompressedMesh(UnityObject obj) {
-        vertices = obj.getObject("m_Vertices", PackedBitVector.class);
-        UV = obj.getObject("m_UV", PackedBitVector.class);
-        bindPoses = obj.getObject("m_BindPoses", PackedBitVector.class);
-        normals = obj.getObject("m_Normals", PackedBitVector.class);
-        tangents = obj.getObject("m_Tangents", PackedBitVector.class);
-        weights = obj.getObject("m_Weights", PackedBitVector.class);
-        normalSigns = obj.getObject("m_NormalSigns", PackedBitVector.class);
-        tangentSigns = obj.getObject("m_TangentSigns", PackedBitVector.class);
-        boneIndices = obj.getObject("m_BoneIndices", PackedBitVector.class);
-        triangles = obj.getObject("m_Triangles", PackedBitVector.class);
-        colors = obj.getObject("m_Colors", PackedBitVector.class);
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class CompressedMesh extends UnityObject {
+
+    public CompressedMesh(FieldNode node) {
+        super(node);
+    }
+    
+    public PackedBitVector getVertices() {
+        return new PackedBitVector(node.getChild("m_Vertices"));
+    }
+
+    public PackedBitVector getUV() {
+        return new PackedBitVector(node.getChild("m_UV"));
+    }
+
+    public PackedBitVector getBindPoses() {
+        return new PackedBitVector(node.getChild("m_BindPoses"));
+    }
+
+    public PackedBitVector getNormals() {
+        return new PackedBitVector(node.getChild("m_Normals"));
+    }
+
+    public PackedBitVector getTangents() {
+        return new PackedBitVector(node.getChild("m_Tangents"));
+    }
+
+    public PackedBitVector getWeights() {
+        return new PackedBitVector(node.getChild("m_Weights"));
+    }
+
+    public PackedBitVector getNormalSigns() {
+        return new PackedBitVector(node.getChild("m_NormalSigns"));
+    }
+
+    public PackedBitVector getTangentSigns() {
+        return new PackedBitVector(node.getChild("m_TangentSigns"));
+    }
+
+    public PackedBitVector getBoneIndices() {
+        return new PackedBitVector(node.getChild("m_BoneIndices"));
+    }
+
+    public PackedBitVector getTriangles() {
+        return new PackedBitVector(node.getChild("m_Triangles"));
+    }
+
+    public PackedBitVector getColors() {
+        return new PackedBitVector(node.getChild("m_Colors"));
     }
     
 }

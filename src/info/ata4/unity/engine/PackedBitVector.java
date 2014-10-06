@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
 
 // PackedBitVector
@@ -18,20 +18,35 @@ import java.nio.ByteBuffer;
 //   float m_Start
 //   vector m_Data
 //   UInt8 m_BitSize
-public class PackedBitVector {
-    
-    public final Long numItems;
-    public final Float range;
-    public final Float start;
-    public final ByteBuffer data;
-    public final Integer bitSize;
 
-    public PackedBitVector(UnityObject obj) {
-        numItems = obj.getValue("m_NumItems");
-        range = obj.getValue("m_Range");
-        start = obj.getValue("m_Start");
-        data = obj.getValue("m_Data");
-        bitSize = obj.getValue("m_BitSize");
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class PackedBitVector extends UnityObject {
+
+    public PackedBitVector(FieldNode node) {
+        super(node);
+    }
+
+    public Long getNumItems() {
+        return node.getChildValue("m_NumItems");
+    }
+    
+    public Float getRange() {
+        return node.getChildValue("m_Range");
+    }
+    
+    public Float getStart() {
+        return node.getChildValue("m_Start");
+    }
+    
+    public ByteBuffer getData() {
+        return node.getChildValue("m_Data");
+    }
+    
+    public Integer getBitSize() {
+        return node.getChildValue("m_BitSize");
     }
     
 }

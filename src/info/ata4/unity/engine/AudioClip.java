@@ -10,26 +10,29 @@
 package info.ata4.unity.engine;
 
 import info.ata4.unity.engine.enums.AudioType;
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AudioClip {
-    
-    public final String name;
-    public final ByteBuffer audioBuffer;
-    public final Integer stream;
-    public final AudioType type;
+public class AudioClip extends UnityObject {
 
-    public AudioClip(UnityObject obj) {
-        name = obj.getValue("m_Name");
-        audioBuffer = obj.getValue("m_AudioData");
-        stream = obj.getValue("m_Stream");
-        Integer typeInt = obj.getValue("m_Type");
-        type = AudioType.fromOrdinal(typeInt);
+    public AudioClip(FieldNode node) {
+        super(node);
+    }
+    
+    public ByteBuffer getAudioBuffer() {
+        return node.getChildValue("m_AudioData");
+    }
+    
+    public Integer getStream() {
+        return node.getChildValue("m_Stream");
+    }
+    
+    public AudioType getType() {
+        return AudioType.fromOrdinal(node.<Integer>getChildValue("m_Type"));
     }
     
 }

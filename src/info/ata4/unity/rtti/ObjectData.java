@@ -64,7 +64,7 @@ public class ObjectData {
     }
     
     public String getName() {
-        String name = getInstance().getField("m_Name");
+        String name = getInstance().getChildValue("m_Name");
 
         if (name == null || name.isEmpty()) {
             name = String.format("Object %d", getPath().getPathID());

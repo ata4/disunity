@@ -39,25 +39,31 @@ public class FieldNode extends TreeNode<FieldNode> {
     public void setValue(Object value) {
         this.value = value;
     }
-
-    public <T> T getField(String name) {
+    
+    public FieldNode getChild(String name) {
         for (FieldNode child : children) {
             if (child.getType().getFieldName().equals(name)) {
-                return (T) child.getValue();
+                return child;
             }
         }
-        
         return null;
     }
-    
-    public boolean setField(String name, Object value) {
-        for (FieldNode child : children) {
-            if (child.getType().getFieldName().equals(name)) {
-                child.setValue(value);
-                return true;
-            }
+
+    public <T> T getChildValue(String name) {
+        FieldNode child = getChild(name);
+        if (child == null) {
+            return null;
         }
-        
-        return false;
+        return (T) child.getValue();
+    }
+    
+    public boolean setChildValue(String name, Object value) {
+        FieldNode child = getChild(name);
+        if (child == null) {
+            return false;
+        } else {
+            child.setValue(value);
+            return true;
+        }
     }
 }

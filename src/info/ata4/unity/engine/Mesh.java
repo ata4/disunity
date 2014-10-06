@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,26 +45,40 @@ import java.util.List;
 //   AABB m_LocalAABB
 //   int m_MeshUsageFlags
 
-public class Mesh {
-    
-    public final String name;
-    public final ByteBuffer indexBuffer;
-    public final Integer meshCompression;
-    public final VertexData vertexData;
-    public final List<SubMesh> subMeshes;
-    public final CompressedMesh compressedMesh;
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class Mesh extends UnityObject {
 
-    public Mesh(UnityObject obj) {
-        name = obj.getValue("m_Name");
-        indexBuffer = obj.getValue("m_IndexBuffer");
-        meshCompression = obj.getValue("m_MeshCompression");
-        vertexData = obj.getObject("m_VertexData", VertexData.class);
-        List<UnityObject> subMeshObjects = obj.getValue("m_SubMeshes");
-        subMeshes = new ArrayList<>();
-        for (UnityObject subMeshObject : subMeshObjects) {
-            subMeshes.add(new SubMesh(subMeshObject));
-        }
-        compressedMesh = obj.getObject("m_CompressedMesh", CompressedMesh.class);
+    public Mesh(FieldNode node) {
+        super(node);
     }
-    
+
+    public ByteBuffer getIndexBuffer() {
+        return node.getChildValue("m_IndexBuffer");
+    }
+
+    public Integer getMeshCompression() {
+        return node.getChildValue("m_MeshCompression");
+    }
+
+    public VertexData getVertexData() {
+        return new VertexData(node.getChild("m_VertexData"));
+    }
+
+    public List<SubMesh> getSubMeshes() {
+        FieldNode subMeshes = node.getChild("m_SubMeshes");
+        List<SubMesh> subMeshesList = new ArrayList<>();
+        
+        for (FieldNode subMesh : subMeshes) {
+            subMeshesList.add(new SubMesh(subMesh));
+        }
+        
+        return subMeshesList;
+    }
+
+    public CompressedMesh getCompressedMesh() {
+        return new CompressedMesh(node.getChild("m_CompressedMesh"));
+    }
 }

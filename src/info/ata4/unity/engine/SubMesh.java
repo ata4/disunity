@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 
 // SubMesh (Unity 4)
 //   unsigned int firstByte
@@ -28,27 +28,33 @@ import info.ata4.unity.serdes.UnityObject;
 //   UInt32 vertexCount
 //   AABB localAABB
 
-public class SubMesh {
-    
-    public final Number firstByte;
-    public final Number indexCount;
-    public final Number topology;
-    public final Number firstVertex;
-    public final Number vertexCount;
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class SubMesh extends UnityObject {
 
-    public SubMesh(UnityObject obj) {
-        firstByte = obj.getValue("firstByte");
-        indexCount = obj.getValue("indexCount");
-        
-        // use legacy field "isTriStrip" if "topology" is not available
-        if (obj.hasValue("topology")) {
-            topology = obj.getValue("topology");
-        } else {
-            topology = obj.getValue("isTriStrip");
-        }
-        
-        firstVertex = obj.getValue("firstVertex");
-        vertexCount = obj.getValue("vertexCount");
+    public SubMesh(FieldNode node) {
+        super(node);
     }
     
+    public Number getFirstByte() {
+        return node.getChildValue("firstByte");
+    }
+    
+    public Number getIndexCount() {
+        return node.getChildValue("indexCount");
+    }
+    
+    public Number getTopology() {
+        return node.getChildValue("topology");
+    }
+    
+    public Number getFirstVertex() {
+        return node.getChildValue("firstVertex");
+    }
+    
+    public Number getVertexCount() {
+        return node.getChildValue("vertexCount");
+    }
 }

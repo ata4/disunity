@@ -18,7 +18,6 @@ import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeTree;
 import info.ata4.unity.rtti.ObjectData;
-import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;

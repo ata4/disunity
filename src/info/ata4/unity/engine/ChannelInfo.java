@@ -9,29 +9,41 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 
 // ChannelInfo
 //   UInt8 stream
 //   UInt8 offset
 //   UInt8 format
 //   UInt8 dimension
-public class ChannelInfo {
-    
-    // Index into m_Streams
-    public final Integer stream;
-    // Vertex chunk offset
-    public final Integer offset;
-    // 0 = full precision, 1 = half precision
-    public final Integer format;
-    // Number of fields?
-    public final Integer dimension;
 
-    public ChannelInfo(UnityObject obj) {
-        stream = obj.getValue("stream");
-        offset = obj.getValue("offset");
-        format = obj.getValue("format");
-        dimension = obj.getValue("dimension");
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class ChannelInfo extends UnityObject {
+
+    public ChannelInfo(FieldNode node) {
+        super(node);
+    }
+
+    // Index into m_Streams
+    public Integer getStream() {
+        return node.getChildValue("stream");
     }
     
+    // Vertex chunk offset
+    public Integer getOffset() {
+        return node.getChildValue("offset");
+    }
+    
+    // 0 = full precision, 1 = half precision
+    public Integer getFormat() {
+        return node.getChildValue("format");
+    }
+    
+    // Number of fields?
+    public Integer getDimension() {
+        return node.getChildValue("dimension");
+    }
 }

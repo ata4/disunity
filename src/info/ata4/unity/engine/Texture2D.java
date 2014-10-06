@@ -10,47 +10,65 @@
 package info.ata4.unity.engine;
 
 import info.ata4.unity.engine.enums.TextureFormat;
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Texture2D {
-    
-    public String name;
-    public Integer width;
-    public Integer height;
-    public Integer completeImageSize;
-    public Integer textureFormatOrd;
-    public TextureFormat textureFormat;
-    public Boolean mipMap;
-    public Boolean isReadable;
-    public Boolean readAllowed;
-    public Integer imageCount;
-    public Integer textureDimension;
-    public Integer lightmapFormat;
-    public Integer colorSpace;
-    public ByteBuffer imageBuffer;
+public class Texture2D extends UnityObject {
 
-    public Texture2D(UnityObject obj) {
-        name = obj.getValue("m_Name");
-        width = obj.getValue("m_Width");
-        height = obj.getValue("m_Height");
-        completeImageSize = obj.getValue("m_CompleteImageSize");
-        textureFormatOrd = obj.getValue("m_TextureFormat");
-        textureFormat = TextureFormat.fromOrdinal(textureFormatOrd);
-        mipMap = obj.getValue("m_MipMap");
-        isReadable = obj.getValue("m_IsReadable");
-        readAllowed = obj.getValue("m_ReadAllowed");
-        imageCount = obj.getValue("m_ImageCount");
-        textureDimension = obj.getValue("m_TextureDimension");
-        lightmapFormat = obj.getValue("m_LightmapFormat");
-        colorSpace = obj.getValue("m_ColorSpace");
-        imageBuffer = obj.getValue("image data");
-        imageBuffer.order(ByteOrder.LITTLE_ENDIAN);
+    public Texture2D(FieldNode node) {
+        super(node);
+    }
+
+    public Integer getWidth() {
+        return node.getChildValue("m_Width");
+    }
+
+    public Integer getHeight() {
+        return node.getChildValue("m_Height");
+    }
+
+    public Integer getCompleteImageSize() {
+        return node.getChildValue("m_CompleteImageSize");
+    }
+
+    public TextureFormat getTextureFormat() {
+        return TextureFormat.fromOrdinal(node.<Integer>getChildValue("m_TextureFormat"));
+    }
+
+    public Boolean getMipMap() {
+        return node.getChildValue("m_MipMap");
+    }
+
+    public Boolean getIsReadable() {
+        return node.getChildValue("m_IsReadable");
+    }
+
+    public Boolean getReadAllowed() {
+        return node.getChildValue("m_ReadAllowed");
+    }
+
+    public Integer getImageCount() {
+        return node.getChildValue("m_ImageCount");
+    }
+
+    public Integer getTextureDimension() {
+        return node.getChildValue("m_TextureDimension");
+    }
+
+    public Integer getLightmapFormat() {
+        return node.getChildValue("m_LightmapFormat");
+    }
+
+    public Integer getColorSpace() {
+        return node.getChildValue("m_ColorSpace");
+    }
+
+    public ByteBuffer getImageData() {
+        return node.getChildValue("image data");
     }
     
 }

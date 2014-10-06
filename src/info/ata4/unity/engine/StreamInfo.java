@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.serdes.UnityObject;
-
+import info.ata4.unity.rtti.FieldNode;
+        
 // StreamInfo (Unity 4)
 //   unsigned int channelMask
 //   unsigned int offset
@@ -24,22 +24,37 @@ import info.ata4.unity.serdes.UnityObject;
 //   UInt32 stride
 //   UInt32 align
 
-public class StreamInfo {
-    
-    public final Number channelMask;
-    public final Number offset;
-    public final Number stride;
-    public final Number dividerOp;
-    public final Number frequency;
-    public final Number align;
+/**
+ *
+ * @author Nico Bergemann <barracuda415 at yahoo.de>
+ */
+public class StreamInfo extends UnityObject {
 
-    public StreamInfo(UnityObject obj) {
-        channelMask = obj.getValue("channelMask");
-        offset = obj.getValue("offset");
-        stride = obj.getValue("stride");
-        dividerOp = obj.getValue("dividerOp");
-        frequency = obj.getValue("frequency");
-        align = obj.getValue("align");
+    public StreamInfo(FieldNode node) {
+        super(node);
     }
     
+    public Number getChannelMask() {
+        return node.getChildValue("channelMask");
+    }
+    
+    public Number getOffset() {
+        return node.getChildValue("offset");
+    }
+    
+    public Number getStride() {
+        return node.getChildValue("stride");
+    }
+    
+    public Number getDividerOp() {
+        return node.getChildValue("dividerOp");
+    }
+    
+    public Number getFrequency() {
+        return node.getChildValue("frequency");
+    }
+    
+    public Number getAlign() {
+        return node.getChildValue("align");
+    }
 }
