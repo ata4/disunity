@@ -9,8 +9,10 @@
  */
 package info.ata4.unity.cli.extract;
 
+import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.engine.MovieTexture;
+import info.ata4.unity.rtti.ObjectData;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
@@ -20,17 +22,34 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class MovieTextureHandler extends AssetExtractHandler {
+public class MovieTextureHandler extends AbstractObjectExtractor {
     
     private static final Logger L = LogUtils.getLogger();
-
+    
+    public MovieTextureHandler() {
+        super("MovieTexture");
+    }
+    
     @Override
-    public void extract(UnityObject obj) throws IOException {
-        String name = obj.getValue("m_Name");
-        ByteBuffer movieBuffer = obj.getValue("m_MovieData");
+    public void process(ObjectData object) throws IOException {
+        MovieTexture mtex = new MovieTexture(object.getInstance());
+        String name = mtex.getName();
+        ByteBuffer movieData = mtex.getMovieData();
         
+        // skip empty buffers
+        if (ByteBufferUtils.isEmpty(movieData)) {
+            L.log(Level.WARNING, "Movie texture clip {0} is empty", name);
+            return;
+        }
+        
+        String fourCC;
+        byte[] fourCCRaw = new byte[4];
         String ext;
-        String fourCC = new String(movieBuffer.array(), 0, 4);
+        
+        movieData.rewind();
+        movieData.get(fourCCRaw);
+        
+        fourCC = new String(fourCCRaw, "ASCII");
         
         switch (fourCC) {
             case "OggS":
@@ -42,8 +61,6 @@ public class MovieTextureHandler extends AssetExtractHandler {
                 L.log(Level.WARNING, "Unrecognized movie fourCC \"{0}\"", fourCC);
         }
         
-        setOutputFileName(name);
-        setOutputFileExtension(ext);
-        writeData(movieBuffer);
+        files.add(new MutableFileHandle(name, ext, movieData));
     }
 }

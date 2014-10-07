@@ -13,10 +13,9 @@ import info.ata4.unity.engine.Texture2D;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.asset.struct.ObjectPath;
 import info.ata4.unity.engine.enums.TextureFormat;
 import static info.ata4.unity.engine.enums.TextureFormat.*;
-import info.ata4.unity.serdes.UnityObject;
+import info.ata4.unity.rtti.ObjectData;
 import info.ata4.util.io.image.dds.DDSHeader;
 import info.ata4.util.io.image.dds.DDSPixelFormat;
 import info.ata4.util.io.image.ktx.KTXHeader;
@@ -31,11 +30,10 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class Texture2DHandler extends AssetExtractHandler {
+public class Texture2DHandler extends AbstractObjectExtractor {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private ObjectPath path;
     private Texture2D tex;
     private boolean tgaSaveMipMaps = true;
     
@@ -48,31 +46,27 @@ public class Texture2DHandler extends AssetExtractHandler {
     }
     
     @Override
-    public void extract(UnityObject obj) throws IOException {
-        this.path = path;
-
-        try {
-            // create Texture2D from serialized object
-            tex = new Texture2D(obj);
-        } catch (RuntimeException ex) {
-            L.log(Level.WARNING, "Deserialization error", ex);
+    public void process(ObjectData object) throws Exception {
+        tex = new Texture2D(object.getInstance());
+        String name = tex.getName();
+        TextureFormat format = tex.getTextureFormat();
+        
+        if (format == null) {
+            L.log(Level.WARNING, "Texture2D {0}: Unknown texture format {1}",
+                    new Object[] {name, tex.getTextureFormatInt()});
             return;
         }
         
-        if (tex.textureFormat == null) {
-            L.log(Level.WARNING, "Texture2D {0}: Unknown texture format {1}",
-                    new Object[] {tex.name, tex.textureFormatOrd});
-            return;
-        }
+        ByteBuffer imageData = tex.getImageData();
 
         // some textures (font textures?) don't have any image data, not sure why...
-        if (tex.imageBuffer.capacity() == 0) {
-            L.log(Level.WARNING, "Texture2D {0}: Empty image buffer", tex.name);
+        if (ByteBufferUtils.isEmpty(imageData)) {
+            L.log(Level.WARNING, "Texture2D {0}: Empty image buffer", name);
             return;
         }
         
         // choose a fitting container format
-        switch (tex.textureFormat) {
+        switch (format) {
             case Alpha8:
             case RGB24:
             case RGBA32:
@@ -108,7 +102,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                 
             default:
                 L.log(Level.WARNING, "Texture2D {0}: Unsupported texture format {1}",
-                        new Object[] {tex.name, tex.textureFormat});
+                        new Object[] {name, format});
         }
     }
     
@@ -120,12 +114,17 @@ public class Texture2DHandler extends AssetExtractHandler {
         return mipMapCount;
     }
     
-    private void extractDDS() throws IOException {
+    private void extractDDS() throws IOException {        
+        TextureFormat format = tex.getTextureFormat();
+        int width = tex.getWidth();
+        int height = tex.getHeight();
+        ByteBuffer imageData = tex.getImageData();
+        
         DDSHeader header = new DDSHeader();
-        header.dwWidth = tex.width;
-        header.dwHeight = tex.height;
+        header.dwWidth = width;
+        header.dwHeight = height;
 
-        switch (tex.textureFormat) {
+        switch (format) {
             case Alpha8:
                 header.ddspf.dwFlags = DDSPixelFormat.DDPF_ALPHA;
                 header.ddspf.dwABitMask = 0xff;
@@ -202,11 +201,11 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             default:
-                throw new IllegalStateException("Invalid texture format for DDS: " + tex.textureFormat);
+                throw new IllegalStateException("Invalid texture format for DDS: " + format);
         }
 
         // set mip map flags if required
-        if (tex.mipMap) {
+        if (tex.getMipMap()) {
             header.dwFlags |= DDSHeader.DDS_HEADER_FLAGS_MIPMAP;
             header.dwCaps |= DDSHeader.DDS_SURFACE_FLAGS_MIPMAP;
             header.dwMipMapCount = getMipMapCount(header.dwWidth, header.dwHeight);
@@ -217,16 +216,16 @@ public class Texture2DHandler extends AssetExtractHandler {
         if (header.ddspf.dwFourCC != 0) {
             header.dwPitchOrLinearSize = header.dwWidth * header.dwHeight;
             
-            if (tex.textureFormat == TextureFormat.DXT1) {
+            if (format == TextureFormat.DXT1) {
                 header.dwPitchOrLinearSize /= 2;
             }
             
             header.ddspf.dwFlags |= DDSPixelFormat.DDPF_FOURCC;
         } else {
-            header.dwPitchOrLinearSize = (tex.width * tex.height * header.ddspf.dwRGBBitCount) / 8;
+            header.dwPitchOrLinearSize = (width * height * header.ddspf.dwRGBBitCount) / 8;
         }
         
-        ByteBuffer bbTex = ByteBuffer.allocateDirect(DDSHeader.SIZE + tex.imageBuffer.capacity());
+        ByteBuffer bbTex = ByteBufferUtils.allocate(DDSHeader.SIZE + imageData.capacity());
         bbTex.order(ByteOrder.LITTLE_ENDIAN);
         
         // write header
@@ -234,43 +233,48 @@ public class Texture2DHandler extends AssetExtractHandler {
         header.write(out);
         
         // write data
-        bbTex.put(tex.imageBuffer);
+        bbTex.put(imageData);
         
         bbTex.rewind();
-        
-        setOutputFileName(tex.name);
-        setOutputFileExtension("dds");
-        writeData(bbTex);
+
+        files.add(new MutableFileHandle(tex.getName(), "dds", bbTex));
     }
 
     private void extractPKM() throws IOException {
+        int width = tex.getWidth();
+        int height = tex.getHeight();
+        ByteBuffer imageData = tex.getImageData();
+        
         // texWidth and texHeight are width and height rounded up to multiple of 4.
-        int texWidth = ((tex.width - 1) | 3) + 1;
-        int texHeight = ((tex.height - 1) | 3) + 1;
+        int texWidth = ((width - 1) | 3) + 1;
+        int texHeight = ((height - 1) | 3) + 1;
 
-        ByteBuffer res = ByteBuffer.allocateDirect(16 + tex.imageBuffer.capacity());
+        ByteBuffer res = ByteBuffer.allocateDirect(16 + imageData.capacity());
         res.order(ByteOrder.BIG_ENDIAN);
 
         res.putLong(0x504b4d2031300000L); // PKM 10\0\0
 
         res.putShort((short) texWidth);
         res.putShort((short) texHeight);
-        res.putShort(tex.width.shortValue());
-        res.putShort(tex.height.shortValue());
+        res.putShort((short) width);
+        res.putShort((short) height);
 
-        res.put(tex.imageBuffer);
-
-        res.rewind();
-
-        setOutputFileName(tex.name);
-        setOutputFileExtension("pkm");
-        writeData(res);
+        res.put(imageData);
+        res.rewind(); 
+        
+        files.add(new MutableFileHandle(tex.getName(), "pkm", res));
     }
 
     private void extractTGA() throws IOException {
+        TextureFormat format = tex.getTextureFormat();
+        int width = tex.getWidth();
+        int height = tex.getHeight();
+        ByteBuffer imageData = tex.getImageData();
+        String name = tex.getName();
+        
         TGAHeader header = new TGAHeader();
         
-        switch (tex.textureFormat) {
+        switch (format) {
             case Alpha8:
                 header.imageType = 3;
                 header.pixelDepth = 8;
@@ -292,22 +296,25 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
 
             default:
-                throw new IllegalStateException("Invalid texture format for TGA: " + tex.textureFormat);
+                throw new IllegalStateException("Invalid texture format for TGA: " + format);
         }
         
         convertToRGBA32();
         
-        ByteBuffer bb = tex.imageBuffer;
+        ByteBuffer bb = imageData;
 
+        boolean mipMap = tex.getMipMap();
         int mipMapCount = 1;
         
-        if (tex.mipMap) {
-            mipMapCount = getMipMapCount(tex.width, tex.height);
+        if (mipMap) {
+            mipMapCount = getMipMapCount(width, height);
         }
         
-        for (int i = 0; i < tex.imageCount; i++) {
-            header.imageWidth = tex.width;
-            header.imageHeight = tex.height;
+        int imageCount = tex.getImageCount();
+        
+        for (int i = 0; i < imageCount; i++) {
+            header.imageWidth = width;
+            header.imageHeight = height;
             
             for (int j = 0; j < mipMapCount; j++) {
                 int imageSize = header.imageWidth * header.imageHeight * header.pixelDepth / 8;
@@ -330,19 +337,22 @@ public class Texture2DHandler extends AssetExtractHandler {
                     // write file
                     bbTga.rewind();
 
-                    String fileName = tex.name;
+                    String fileName = name;
 
-                    if (tex.imageCount > 1) {
+                    if (imageCount > 1) {
                         fileName += "_" + i;
                     }
 
-                    if (tex.mipMap && tgaSaveMipMaps) {
+                    if (mipMap && tgaSaveMipMaps) {
                         fileName += "_mip_" + j;
                     }
 
-                    setOutputFileName(fileName);
-                    setOutputFileExtension("tga");
-                    writeData(bbTga);
+                    MutableFileHandle file = new MutableFileHandle();
+                    file.setName(fileName);
+                    file.setExtension("tga");
+                    file.setData(bbTga);
+
+                    files.add(file);
                 } else {
                     bb.position(bb.position() + imageSize);
                 }
@@ -360,19 +370,19 @@ public class Texture2DHandler extends AssetExtractHandler {
         assert !bb.hasRemaining();
     }
     
-    private void convertToRGBA32() {
-        ByteBuffer imageBuffer = tex.imageBuffer;
-        TextureFormat tf = tex.textureFormat;
+    private ByteBuffer convertToRGBA32() {
+        ByteBuffer imageData = tex.getImageData();
+        TextureFormat format = tex.getTextureFormat();
         
-        if (tf == RGBA32 || tf == ARGB32) {
+        if (format == RGBA32 || format == ARGB32) {
             // convert ARGB and RGBA directly by swapping the bytes to get BGRA
             byte[] pixelOld = new byte[4];
             byte[] pixelNew = new byte[4];
-            for (int i = 0; i < imageBuffer.capacity() / 4; i++) {
-                imageBuffer.mark();
-                imageBuffer.get(pixelOld);
+            for (int i = 0; i < imageData.capacity() / 4; i++) {
+                imageData.mark();
+                imageData.get(pixelOld);
                 
-                if (tf == ARGB32) {
+                if (format == ARGB32) {
                     // ARGB -> BGRA
                     pixelNew[0] = pixelOld[3];
                     pixelNew[1] = pixelOld[2];
@@ -386,37 +396,37 @@ public class Texture2DHandler extends AssetExtractHandler {
                     pixelNew[3] = pixelOld[3];
                 }
                 
-                imageBuffer.reset();
-                imageBuffer.put(pixelNew);
+                imageData.reset();
+                imageData.put(pixelNew);
             }
 
-            imageBuffer.rewind();
-        } if (tf == RGB24) {
+            imageData.rewind();
+        } if (format == RGB24) {
             // convert RGB directly to BGR
             byte[] pixelOld = new byte[3];
             byte[] pixelNew = new byte[3];
-            for (int i = 0; i < imageBuffer.capacity() / 3; i++) {
-                imageBuffer.mark();
-                imageBuffer.get(pixelOld);
+            for (int i = 0; i < imageData.capacity() / 3; i++) {
+                imageData.mark();
+                imageData.get(pixelOld);
                 
                 pixelNew[0] = pixelOld[2];
                 pixelNew[1] = pixelOld[1];
                 pixelNew[2] = pixelOld[0];
                 
-                imageBuffer.reset();
-                imageBuffer.put(pixelNew);
+                imageData.reset();
+                imageData.put(pixelNew);
             }
 
-            imageBuffer.rewind();
-        } else if (tf == ARGB4444 || tf == RGBA4444) {
+            imageData.rewind();
+        } else if (format == ARGB4444 || format == RGBA4444) {
             // convert 16 bit RGBA/ARGB to 32 bit BGRA
-            int newImageSize = imageBuffer.capacity() * 2;
+            int newImageSize = imageData.capacity() * 2;
             ByteBuffer imageBufferNew = ByteBuffer.allocateDirect(newImageSize);
             
             byte[] pixelOld = new byte[4];
             byte[] pixelNew = new byte[4];
-            for (int i = 0; i < imageBuffer.capacity() / 2; i++) {
-                int pixelOldShort = imageBuffer.getShort();
+            for (int i = 0; i < imageData.capacity() / 2; i++) {
+                int pixelOldShort = imageData.getShort();
                 
                 pixelOld[0] = (byte) ((pixelOldShort & 0xf000) >> 12);
                 pixelOld[1] = (byte) ((pixelOldShort & 0x0f00) >> 8);
@@ -429,7 +439,7 @@ public class Texture2DHandler extends AssetExtractHandler {
                 pixelOld[2] <<= 4;
                 pixelOld[3] <<= 4;
                 
-                if (tf == ARGB4444) {
+                if (format == ARGB4444) {
                     // ARBG -> BGRA
                     pixelNew[0] = pixelOld[3];
                     pixelNew[1] = pixelOld[2];
@@ -446,19 +456,19 @@ public class Texture2DHandler extends AssetExtractHandler {
                 imageBufferNew.put(pixelNew);
             }
             
-            assert !imageBuffer.hasRemaining();
+            assert !imageData.hasRemaining();
             assert !imageBufferNew.hasRemaining();
             
             imageBufferNew.rewind();
-            imageBuffer = imageBufferNew;
-        } else if (tf == RGB565) {
+            imageData = imageBufferNew;
+        } else if (format == RGB565) {
             // convert 16 bit RGB to 24 bit
-            int newImageSize = (imageBuffer.capacity() / 2) * 3;
+            int newImageSize = (imageData.capacity() / 2) * 3;
             ByteBuffer imageBufferNew = ByteBuffer.allocateDirect(newImageSize);
             
             byte[] pixel = new byte[3];
-            for (int i = 0; i < imageBuffer.capacity() / 2; i++) {
-                short pixelOld = imageBuffer.getShort();
+            for (int i = 0; i < imageData.capacity() / 2; i++) {
+                short pixelOld = imageData.getShort();
 
                 pixel[0] = (byte) ((pixelOld & 0xf800) >> 11);
                 pixel[1] = (byte) ((pixelOld & 0x07e0) >> 5);
@@ -472,28 +482,31 @@ public class Texture2DHandler extends AssetExtractHandler {
                 imageBufferNew.put(pixel);
             }
             
-            assert !imageBuffer.hasRemaining();
+            assert !imageData.hasRemaining();
             assert !imageBufferNew.hasRemaining();
             
             imageBufferNew.rewind();
-            imageBuffer = imageBufferNew;
+            imageData = imageBufferNew;
         }
         
-        tex.imageBuffer = imageBuffer;
+        return imageData;
     }
     
     private void extractKTX() throws IOException {
+        ByteBuffer imageData = tex.getImageData();
+        TextureFormat format = tex.getTextureFormat();
+        
         KTXHeader header = new KTXHeader();
         header.swap = true;
         header.glTypeSize = 1;
-        header.pixelWidth = tex.width;
-        header.pixelHeight = tex.height;
+        header.pixelWidth = tex.getWidth();
+        header.pixelHeight = tex.getHeight();
         header.pixelDepth = 0;
-        header.numberOfFaces = tex.imageCount;
-        header.numberOfMipmapLevels = tex.mipMap ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
+        header.numberOfFaces = tex.getImageCount();
+        header.numberOfMipmapLevels = tex.getMipMap() ? getMipMapCount(header.pixelWidth, header.pixelHeight) : 1;
         int bpp;
         
-        switch (tex.textureFormat) {
+        switch (tex.getTextureFormat()) {
             case PVRTC_RGB2:
                 header.glInternalFormat = KTXHeader.GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
                 header.glBaseInternalFormat = KTXHeader.GL_RGB;
@@ -579,11 +592,11 @@ public class Texture2DHandler extends AssetExtractHandler {
                 break;
                 
             default:
-                throw new IllegalStateException("Invalid texture format for KTX: " + tex.textureFormat);
+                throw new IllegalStateException("Invalid texture format for KTX: " + format);
         }
         
         // header + raw image data + mip map image sizes
-        int imageSizeTotal = KTXHeader.SIZE + tex.imageBuffer.capacity() + header.numberOfMipmapLevels * 4;
+        int imageSizeTotal = KTXHeader.SIZE + imageData.capacity() + header.numberOfMipmapLevels * 4;
         ByteBuffer bb = ByteBuffer.allocateDirect(imageSizeTotal);
         
         // write header
@@ -598,7 +611,7 @@ public class Texture2DHandler extends AssetExtractHandler {
             
             // get mip map image data
             int mipMapSize = (mipMapWidth * mipMapHeight * bpp) / 8;
-            ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(tex.imageBuffer, mipMapOffset, mipMapSize);
+            ByteBuffer mipMapBuffer = ByteBufferUtils.getSlice(imageData, mipMapOffset, mipMapSize);
 
             // write image data
             bb.put(mipMapBuffer);
@@ -612,9 +625,7 @@ public class Texture2DHandler extends AssetExtractHandler {
         // write file
         bb.rewind();
 
-        setOutputFileName(tex.name);
-        setOutputFileExtension("ktx");
-        writeData(bb);
+        files.add(new MutableFileHandle(tex.getName(), "ktx", bb));
     }
     
 }

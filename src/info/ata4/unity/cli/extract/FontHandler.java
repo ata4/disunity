@@ -9,25 +9,31 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.serdes.UnityObject;
-import java.io.IOException;
+import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.unity.engine.Font;
+import info.ata4.unity.rtti.ObjectData;
 import java.nio.ByteBuffer;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FontHandler extends AssetExtractHandler {
+public class FontHandler extends AbstractObjectExtractor {
     
+    public FontHandler() {
+        super("Font");
+    }
+
     @Override
-    public void extract(UnityObject obj) throws IOException {
-        String name = obj.getValue("m_Name");
-        ByteBuffer fontBuffer = obj.getValue("m_FontData");
-        if (fontBuffer != null && fontBuffer.capacity() > 0) {
-            setOutputFileName(name);
-            // TODO: detect OpenType fonts and use "otf" in these cases
-            setOutputFileExtension("ttf");
-            writeData(fontBuffer);
+    public void process(ObjectData object) {
+        Font font = new Font(object.getInstance());
+        ByteBuffer fontData = font.getFontData();
+
+        if (ByteBufferUtils.isEmpty(fontData)) {
+            // don't write log message, this seems to be quite common
+            return;
         }
+        
+        files.add(new MutableFileHandle(font.getName(), "ttf", fontData));
     }
 }

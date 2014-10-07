@@ -9,26 +9,31 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.serdes.UnityObject;
-import info.ata4.unity.serdes.UnityString;
-import java.io.IOException;
+import info.ata4.unity.engine.TextAsset;
+import info.ata4.unity.rtti.ObjectData;
+import java.nio.ByteBuffer;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TextAssetHandler extends AssetExtractHandler {
+public class TextAssetHandler extends AbstractObjectExtractor {
+    
+    private final String ext;
     
     public TextAssetHandler(String ext) {
-        setOutputFileExtension(ext);
+        super("TextAsset");
+        this.ext = ext;
     }
 
     @Override
-    public void extract(UnityObject obj) throws IOException {
-        String name = obj.getValue("m_Name");
-        UnityString script = obj.getValue("m_Script", false);
+    public void process(ObjectData object) throws Exception {
+        TextAsset text = new TextAsset(object.getInstance());
+        String name = text.getName();
+        String script = text.getScript();
         
-        setOutputFileName(name);
-        writeData(script.getRaw());
+        ByteBuffer scriptData = ByteBuffer.wrap(script.getBytes("UTF-8"));
+        
+        files.add(new MutableFileHandle(name, ext, scriptData));
     }
 }

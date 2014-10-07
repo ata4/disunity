@@ -1,5 +1,5 @@
 /*
- ** 2014 July 10
+ ** 2014 October 06
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,7 +9,6 @@
  */
 package info.ata4.unity.engine;
 
-import info.ata4.unity.engine.enums.AudioType;
 import info.ata4.unity.rtti.FieldNode;
 import java.nio.ByteBuffer;
 
@@ -17,22 +16,13 @@ import java.nio.ByteBuffer;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AudioClip extends UnityObject {
+public class Font extends UnityObject {
 
-    public AudioClip(FieldNode node) {
+    public Font(FieldNode node) {
         super(node);
     }
     
-    public ByteBuffer getAudioData() {
-        return node.getChildValue("m_AudioData");
+    public ByteBuffer getFontData() {
+        return node.getChildValue("m_FontData");
     }
-    
-    public Integer getStream() {
-        return node.getChildValue("m_Stream");
-    }
-    
-    public AudioType getType() {
-        return AudioType.fromOrdinal(node.<Integer>getChildValue("m_Type"));
-    }
-    
 }

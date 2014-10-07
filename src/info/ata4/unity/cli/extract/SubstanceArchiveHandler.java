@@ -9,26 +9,37 @@
  */
 package info.ata4.unity.cli.extract;
 
-import info.ata4.unity.serdes.UnityObject;
-import java.io.IOException;
+import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.log.LogUtils;
+import info.ata4.unity.engine.SubstanceArchive;
+import info.ata4.unity.rtti.ObjectData;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class SubstanceArchiveHandler extends AssetExtractHandler {
-
+public class SubstanceArchiveHandler extends AbstractObjectExtractor {
+    
+    private static final Logger L = LogUtils.getLogger();
+    
     public SubstanceArchiveHandler() {
-        setOutputFileExtension("sbsar");
+        super("SubstanceArchive");
     }
 
     @Override
-    public void extract(UnityObject obj) throws IOException {
-        String name = obj.getValue("m_Name");
-        ByteBuffer packageBuffer = obj.getValue("m_PackageData");
+    public void process(ObjectData object) throws Exception {
+        SubstanceArchive subarc = new SubstanceArchive(object.getInstance());
+        String name = subarc.getName();
+        ByteBuffer packageData = subarc.getPackageData();
         
-        setOutputFileName(name);
-        writeData(packageBuffer);
+        if (ByteBufferUtils.isEmpty(packageData)) {
+            L.log(Level.WARNING, "Substance archive {0} is empty", name);
+            return;
+        }
+ 
+        files.add(new MutableFileHandle(name, "sbsar", packageData));
     }
 }

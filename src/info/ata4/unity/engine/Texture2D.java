@@ -34,9 +34,13 @@ public class Texture2D extends UnityObject {
     public Integer getCompleteImageSize() {
         return node.getChildValue("m_CompleteImageSize");
     }
+    
+    public Integer getTextureFormatInt() {
+        return node.getChildValue("m_TextureFormat");
+    }
 
     public TextureFormat getTextureFormat() {
-        return TextureFormat.fromOrdinal(node.<Integer>getChildValue("m_TextureFormat"));
+        return TextureFormat.fromOrdinal(getTextureFormatInt());
     }
 
     public Boolean getMipMap() {
