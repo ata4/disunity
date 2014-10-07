@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract.mesh;
+package info.ata4.unity.extract.mesh;
 
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.engine.Mesh;

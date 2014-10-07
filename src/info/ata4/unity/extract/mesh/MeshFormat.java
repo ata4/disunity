@@ -1,5 +1,5 @@
 /*
- ** 2014 October 06
+ ** 2014 July 10
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -7,19 +7,12 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract;
-
-import java.nio.ByteBuffer;
+package info.ata4.unity.extract.mesh;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public interface FileHandle {
-    
-    String getName();
-    
-    String getExtension();
-    
-    ByteBuffer getData();
+public enum MeshFormat {
+    OBJ, PLY
 }

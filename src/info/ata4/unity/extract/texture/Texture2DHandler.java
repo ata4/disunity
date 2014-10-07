@@ -7,19 +7,21 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract;
+package info.ata4.unity.extract.texture;
 
 import info.ata4.unity.engine.Texture2D;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.engine.enums.TextureFormat;
+import info.ata4.unity.extract.AbstractObjectExtractor;
+import info.ata4.unity.extract.MutableFileHandle;
 import static info.ata4.unity.engine.enums.TextureFormat.*;
 import info.ata4.unity.rtti.ObjectData;
-import info.ata4.util.io.image.dds.DDSHeader;
-import info.ata4.util.io.image.dds.DDSPixelFormat;
-import info.ata4.util.io.image.ktx.KTXHeader;
-import info.ata4.util.io.image.tga.TGAHeader;
+import info.ata4.unity.extract.texture.struct.dds.DDSHeader;
+import info.ata4.unity.extract.texture.struct.dds.DDSPixelFormat;
+import info.ata4.unity.extract.texture.struct.ktx.KTXHeader;
+import info.ata4.unity.extract.texture.struct.tga.TGAHeader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

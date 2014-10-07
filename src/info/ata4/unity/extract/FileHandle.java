@@ -7,21 +7,19 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.cli.extract;
+package info.ata4.unity.extract;
 
-import info.ata4.unity.rtti.ObjectData;
-import java.util.List;
-import java.util.Set;
+import java.nio.ByteBuffer;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public interface ObjectExtractor {
+public interface FileHandle {
     
-    Set<String> getClassNames();
+    String getName();
     
-    void process(ObjectData object) throws Exception;
+    String getExtension();
     
-    List<FileHandle> getFiles();
+    ByteBuffer getData();
 }
