@@ -21,8 +21,8 @@ public class TextAssetHandler extends AbstractObjectExtractor {
     
     private final String ext;
     
-    public TextAssetHandler(String ext) {
-        super("TextAsset");
+    public TextAssetHandler(String className, String ext) {
+        super(className);
         this.ext = ext;
     }
 
@@ -30,10 +30,8 @@ public class TextAssetHandler extends AbstractObjectExtractor {
     public void process(ObjectData object) throws Exception {
         TextAsset text = new TextAsset(object.getInstance());
         String name = text.getName();
-        String script = text.getScript();
-        
-        ByteBuffer scriptData = ByteBuffer.wrap(script.getBytes("UTF-8"));
-        
+        ByteBuffer scriptData = text.getScriptRaw();
+
         files.add(new MutableFileHandle(name, ext, scriptData));
     }
 }
