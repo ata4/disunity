@@ -24,7 +24,7 @@ public class AudioClip extends UnityObject {
     }
     
     public ByteBuffer getAudioData() {
-        return node.getChildValue("m_AudioData");
+        return node.getChildArray("m_AudioData");
     }
     
     public Integer getStream() {

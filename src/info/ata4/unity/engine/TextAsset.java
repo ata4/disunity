@@ -10,6 +10,7 @@
 package info.ata4.unity.engine;
 
 import info.ata4.unity.rtti.FieldNode;
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -23,5 +24,9 @@ public class TextAsset extends UnityObject {
     
     public String getScript() {
         return node.getChildValue("m_Script");
+    }
+    
+    public ByteBuffer getScriptRaw() {
+        return node.getChildArray("m_Script");
     }
 }

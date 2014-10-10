@@ -83,6 +83,6 @@ public class VertexData extends UnityObject {
     }
 
     public ByteBuffer getDataSize() {
-        return node.getChildValue("m_DataSize");
+        return node.getChildArray("m_DataSize");
     }
 }

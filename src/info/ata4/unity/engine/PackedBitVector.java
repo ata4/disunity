@@ -42,7 +42,7 @@ public class PackedBitVector extends UnityObject {
     }
     
     public ByteBuffer getData() {
-        return node.getChildValue("m_Data");
+        return node.getChildArray("m_Data");
     }
     
     public Integer getBitSize() {

@@ -56,7 +56,7 @@ public class Mesh extends UnityObject {
     }
 
     public ByteBuffer getIndexBuffer() {
-        return node.getChildValue("m_IndexBuffer");
+        return node.getChildArray("m_IndexBuffer");
     }
 
     public Integer getMeshCompression() {

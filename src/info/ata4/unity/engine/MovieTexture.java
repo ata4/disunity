@@ -23,6 +23,6 @@ public class MovieTexture extends UnityObject {
     }
     
     public ByteBuffer getMovieData() {
-        return node.getChildValue("m_MovieData");
+        return node.getChildArray("m_MovieData");
     }
 }

@@ -23,6 +23,6 @@ public class Font extends UnityObject {
     }
     
     public ByteBuffer getFontData() {
-        return node.getChildValue("m_FontData");
+        return node.getChildArray("m_FontData");
     }
 }

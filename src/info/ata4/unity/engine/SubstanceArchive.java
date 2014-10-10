@@ -23,7 +23,7 @@ public class SubstanceArchive extends UnityObject {
     }
     
     public ByteBuffer getPackageData() {
-        return node.getChildValue("m_PackageData");
+        return node.getChildArray("m_PackageData");
     }
     
 }

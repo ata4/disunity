@@ -72,7 +72,7 @@ public class Texture2D extends UnityObject {
     }
 
     public ByteBuffer getImageData() {
-        return node.getChildValue("image data");
+        return node.getChildArray("image data");
     }
     
 }
