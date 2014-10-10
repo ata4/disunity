@@ -56,7 +56,7 @@ public class FieldNode extends TreeNode<FieldNode> {
         }
         return (T) child.getValue();
     }
-    
+        
     public boolean setChildValue(String name, Object value) {
         FieldNode child = getChild(name);
         if (child == null) {
@@ -65,5 +65,13 @@ public class FieldNode extends TreeNode<FieldNode> {
             child.setValue(value);
             return true;
         }
+    }
+    
+    public <T> T getChildArray(String name) {
+        return getChild(name).getChild("Array").getChildValue("data");
+    }
+    
+    public void setChildArray(String name, Object value) {
+        getChild(name).getChild("Array").setChildValue("data", value);
     }
 }

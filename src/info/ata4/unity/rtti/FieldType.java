@@ -98,27 +98,27 @@ public class FieldType implements Struct {
         this.index = index;
     }
 
-    public int getArrayFlag() {
-        return isArray;
+    public boolean getIsArray() {
+        return isArray == 1;
     }
 
-    public void setArrayFlag(int arrayFlag) {
-        this.isArray = arrayFlag;
+    public void setIsArray(boolean isArray) {
+        this.isArray = isArray ? 1 : 0;
     }
 
-    public int getFlags1() {
+    public int getVersion() {
         return version;
     }
 
-    public void setFlags1(int flags1) {
+    public void setVersion(int flags1) {
         this.version = flags1;
     }
 
-    public int getFlags2() {
+    public int getMetaFlag() {
         return metaFlag;
     }
 
-    public void setFlags2(int flags2) {
+    public void setMetaFlag(int flags2) {
         this.metaFlag = flags2;
     }
     

@@ -15,7 +15,6 @@ import info.ata4.unity.asset.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -109,178 +108,168 @@ public class ObjectData {
     private FieldNode readObject(DataInputReader in, FieldTypeNode typeNode) throws IOException {
         FieldNode fieldNode = new FieldNode(typeNode);
         
-        for (FieldTypeNode childTypeNode : typeNode) {
-            FieldNode childFieldNode = new FieldNode(childTypeNode);
-            
-            long pos = 0;
-            if (DEBUG) {
-                pos = in.position();
-            }
-            
-            childFieldNode.setValue(readValue(in, childTypeNode));
-
-            if (childFieldNode.getType().isForceAlign()) {
-                in.align(ALIGNMENT);
-            }
-
-            if (DEBUG) {
-                long bytes = in.position() - pos;
-                FieldType type = childFieldNode.getType();
-                System.out.printf("0x%x: %s %s = %s, bytes: %d, flags: 0x%x 0x%x\n",
-                        pos, type.getTypeName(), type.getFieldName(), childFieldNode.getValue(), bytes, type.getFlags1(), type.getFlags2());
-            }
-            
-            fieldNode.add(childFieldNode);
+        FieldType type = typeNode.getType();
+        
+        // if the type has no children, it has a primitve value
+        if (typeNode.isEmpty()) {
+            fieldNode.setValue(readPrimitiveValue(in, type, -1));
         }
+        
+        // read object fields
+        for (FieldTypeNode childTypeNode : typeNode) {
+            FieldType childType = childTypeNode.getType();
+            
+            // Check if the current node is an array and if the current field is
+            // "data". In that case, "data" needs to be read "size" times.
+            if (type.getIsArray() && childType.getFieldName().equals("data")) {
+                int size = fieldNode.getChildValue("size");
+                
+                FieldNode childFieldNode = new FieldNode(childTypeNode);
 
+                // if the child type has no children, it has a primitve array
+                if (childTypeNode.isEmpty()) {
+                    childFieldNode.setValue(readPrimitiveValue(in, childType, size));
+                } else {
+                    // read list of object nodes
+                    List<FieldNode> childFieldNodes = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        childFieldNodes.add(readObject(in, childTypeNode));
+                    }
+                    childFieldNode.setValue(childFieldNodes);
+                }
+                
+                fieldNode.add(childFieldNode);
+            } else {
+                fieldNode.add(readObject(in, childTypeNode));
+            }
+        }
+        
+        // convert byte buffers to string instances in "string" fields for convenience
+        if (fieldNode.getType().getTypeName().equals("string")) {
+            // strings use "char" arrays, so it should be wrapped in a ByteBuffer
+            ByteBuffer buf = fieldNode.getChild("Array").getChildValue("data");
+            fieldNode.setValue(new String(buf.array(), "UTF-8"));
+        }
+        
         return fieldNode;
     }
     
-    private Object readValue(DataInputReader in, FieldTypeNode typeNode) throws IOException, RuntimeTypeException {
-        FieldType fieldType = typeNode.getType();
-        if (!typeNode.isEmpty()) {
-            switch (fieldType.getTypeName()) {
-                // convert char arrays to string objects
-                case "string":
-                    return readString(in, typeNode);
-
-                // arrays need a special treatment
-                case "Array":
-                case "TypelessData":
-                    return readArray(in, typeNode);
-                    
-                default:
-                    return readObject(in, typeNode);
+    private Object readPrimitiveValue(DataInputReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+        long pos = 0;
+        if (DEBUG) {
+            pos = in.position();
+        }
+        
+        Object value;
+        if (size == -1) {
+            value = readPrimitive(in, type);
+            if (type.isForceAlign()) {
+                 in.align(ALIGNMENT);
             }
         } else {
-            switch (fieldType.getTypeName()) {
-                // 1 byte
-                case "bool":
-                    return in.readBoolean();
+            value = readPrimitiveArray(in, type, size);
+            // arrays always need to be aligned
+            in.align(ALIGNMENT);
+        }
+        
+        if (DEBUG) {
+            long bytes = in.position() - pos;
+            System.out.printf("0x%x: %s %s = %s, b: %d, v: %d, f: 0x%x, s: %d\n",
+                    pos, type.getTypeName(), type.getFieldName(), value, bytes,
+                    type.getVersion(), type.getMetaFlag(), size);
+        }
+        
+        return value;
+    }
+    
+    private Object readPrimitive(DataInputReader in, FieldType type) throws IOException, RuntimeTypeException {
+        switch (type.getTypeName()) {
+            // 1 byte
+            case "bool":
+                return in.readBoolean();
 
-                case "SInt8":
-                    return in.readByte();
+            case "SInt8":
+                return in.readByte();
 
-                case "UInt8":
-                case "char":
-                    return in.readUnsignedByte();
+            case "UInt8":
+            case "char":
+                return in.readUnsignedByte();
 
-                // 2 bytes
-                case "SInt16":
-                case "short":
-                    return in.readShort();
+            // 2 bytes
+            case "SInt16":
+            case "short":
+                return in.readShort();
 
-                case "UInt16":
-                case "unsigned short":
-                    return in.readUnsignedShort();
+            case "UInt16":
+            case "unsigned short":
+                return in.readUnsignedShort();
 
-                // 4 bytes
-                case "SInt32":
-                case "int":
-                    return in.readInt();
+            // 4 bytes
+            case "SInt32":
+            case "int":
+                return in.readInt();
 
-                case "UInt32":
-                case "unsigned int":
-                    return in.readUnsignedInt();
+            case "UInt32":
+            case "unsigned int":
+                return in.readUnsignedInt();
 
-                case "float":
-                    return in.readFloat();
+            case "float":
+                return in.readFloat();
 
-                // 8 bytes
-                case "SInt64":
-                case "long":
-                    return in.readLong();
+            // 8 bytes
+            case "SInt64":
+            case "long":
+                return in.readLong();
 
-                case "UInt64":
-                case "unsigned long":
-                    return in.readUnsignedLong();
+            case "UInt64":
+            case "unsigned long":
+                return in.readUnsignedLong();
 
-                case "double":
-                    return in.readDouble();
+            case "double":
+                return in.readDouble();
 
-                default:
-                    throw new RuntimeTypeException("Unknown primitive type: " + fieldType.getTypeName());
-            }
+            default:
+                throw new RuntimeTypeException("Unknown primitive type: " + type.getTypeName());
         }
     }
     
-    private FieldNode readArray(DataInputReader in, FieldTypeNode typeNode) throws IOException, RuntimeTypeException {
-        // there should be exactly two fields in an array object: size and data
-        if (typeNode.size() != 2) {
-            throw new RuntimeTypeException("Unexpected number of array fields: " + typeNode.size());
-        }
-        
-        Iterator<FieldTypeNode> iter = typeNode.iterator();
-        FieldTypeNode nodeSize = iter.next();
-        FieldTypeNode nodeData = iter.next();
-        
-        FieldType typeSize = nodeSize.getType();
-        FieldType typeData = nodeData.getType();
-        
-        // check name of the two array fields
-        if (!typeSize.getFieldName().equals("size")) {
-            throw new RuntimeTypeException("Unexpected array size field: " + typeSize);
-        }
-        
-        if (!typeData.getFieldName().equals("data")) {
-            throw new RuntimeTypeException("Unexpected array data field: " + typeData);
-        }
-        
-        // read the size field
-        int size = (int) readValue(in, nodeSize);
-        
-        FieldNode value = new FieldNode(typeNode);
-        
-        switch (typeData.getTypeName()) {
+    private Object readPrimitiveArray(DataInputReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+        switch (type.getTypeName()) {
             // read byte arrays natively and wrap them as ByteBuffers,
             // which is much faster and more efficient than a list of wrappped
             // Byte/Integer objects
             case "SInt8":
             case "UInt8":
                 ByteBuffer buf = ByteBufferUtils.allocate(size);
-                
+
                 // NOTE: AudioClips "fake" the size of m_AudioData when the stream is
                 // stored in a separate file. The array contains just an offset integer
                 // in that case, so pay attention to the bytes remaining in the buffer
                 // as well to avoid EOFExceptions.
                 // TODO: is there a flag for this behavior?
                 buf.limit(Math.min(size, (int) in.remaining()));
-                
+
                 in.readBuffer(buf);
                 in.align(ALIGNMENT);
-                
+
                 buf.clear();
-                
-                value.setValue(buf);
-                break;
-                
+                return buf;
+
             // always wrap char arrays so array() is available on the buffer, which
             // is required to convert them to Java strings in readString()
             case "char":
                 byte[] raw = new byte[size];
                 in.readFully(raw, 0, size);
                 in.align(ALIGNMENT);
-                value.setValue(ByteBuffer.wrap(raw));
-                break;
-                
-            // read a list of objects
+                return ByteBuffer.wrap(raw);
+
+            // read a list of primitive objects
             default:
                 List list = new ArrayList(size);
                 for (int i = 0; i < size; i++) {
-                    list.add(readValue(in, nodeData));
+                    list.add(readPrimitive(in, type));
                 }
-                value.setValue(list);
+                return list;
         }
-        
-        return value;
-    }
-    
-    private String readString(DataInputReader in, FieldTypeNode typeNode) throws IOException {
-        FieldNode array = readArray(in, typeNode.iterator().next());
-        
-        // strings use "char" arrays, so it should be wrapped in a ByteBuffer
-        ByteBuffer buf = (ByteBuffer) array.getValue();
-        
-        return new String(buf.array(), "UTF-8");
     }
 }
