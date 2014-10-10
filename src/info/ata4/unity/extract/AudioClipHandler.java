@@ -61,8 +61,14 @@ public class AudioClipHandler extends AbstractObjectExtractor {
     public void process(ObjectData object) throws IOException {
         AudioClip audio = new AudioClip(object.getInstance());
         String name = audio.getName();
-
+        
         ByteBuffer audioData = audio.getAudioData();
+        
+        // skip empty buffers
+        if (ByteBufferUtils.isEmpty(audioData)) {
+            L.log(Level.WARNING, "Audio clip {0} is empty", name);
+            return;
+        }
 
         // load audio buffer from external buffer if stream is set to 2
         if (audio.getStream() == 2) {
@@ -84,12 +90,6 @@ public class AudioClipHandler extends AbstractObjectExtractor {
             
             audioDataAux.position(offset);
             audioDataAux.readBuffer(audioData);
-        }
-
-        // skip empty buffers
-        if (ByteBufferUtils.isEmpty(audioData)) {
-            L.log(Level.WARNING, "Audio clip {0} is empty", name);
-            return;
         }
 
         String ext = null;
