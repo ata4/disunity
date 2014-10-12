@@ -44,6 +44,7 @@ public class AssetFileTreeController {
         tree.setCellRenderer(new AssetFileTreeCellRenderer());
         tree.addMouseListener(new MouseAdapterImpl());
         tree.addTreeSelectionListener(new AssetFileTreeNodeInfo(text));
+        tree.setModel(null);
     }
     
     public void load(Path file) throws IOException {
