@@ -349,12 +349,7 @@ public class Texture2DHandler extends AbstractObjectExtractor {
                         fileName += "_mip_" + j;
                     }
 
-                    MutableFileHandle file = new MutableFileHandle();
-                    file.setName(fileName);
-                    file.setExtension("tga");
-                    file.setData(bbTga);
-
-                    files.add(file);
+                    files.add(new MutableFileHandle(fileName, "tga", bbTga));
                 } else {
                     bb.position(bb.position() + imageSize);
                 }
