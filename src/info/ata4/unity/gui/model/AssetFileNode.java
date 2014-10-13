@@ -77,7 +77,9 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
             
             header = asset.getHeader();
             
-            addTypes(asset);
+            if (!asset.isStandalone()) {
+                addTypes(asset);
+            }
             addObjects(asset);
             addReferences(asset);
         } catch (IOException ex) {
