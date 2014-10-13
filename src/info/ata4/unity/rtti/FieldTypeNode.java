@@ -12,14 +12,14 @@ package info.ata4.unity.rtti;
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.Struct;
-import info.ata4.util.collection.TreeNode;
+import info.ata4.util.collection.Node;
 import java.io.IOException;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeNode extends TreeNode<FieldTypeNode> implements Struct {
+public class FieldTypeNode extends Node<FieldTypeNode> implements Struct {
     
     private FieldType type = new FieldType();
 

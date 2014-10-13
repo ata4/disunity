@@ -9,13 +9,13 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.util.collection.TreeNode;
+import info.ata4.util.collection.Node;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldNode extends TreeNode<FieldNode> {
+public class FieldNode extends Node<FieldNode> {
     
     private FieldType type;
     private Object value;    

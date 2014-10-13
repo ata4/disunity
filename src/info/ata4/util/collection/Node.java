@@ -19,7 +19,7 @@ import java.util.List;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @param <T>
  */
-public abstract class TreeNode<T extends TreeNode> implements Collection<T> {
+public abstract class Node<T extends Node> implements Collection<T> {
     
     protected T parent;
     protected final List<T> children = new ArrayList<>();
@@ -32,7 +32,7 @@ public abstract class TreeNode<T extends TreeNode> implements Collection<T> {
         this.parent = parent;
     }
     
-    private void setChildrenParent(Collection<T> col, TreeNode parent) {
+    private void setChildrenParent(Collection<T> col, Node parent) {
         for (T child : col) {
             child.setParent(parent);
         }
@@ -77,8 +77,8 @@ public abstract class TreeNode<T extends TreeNode> implements Collection<T> {
     @Override
     public boolean remove(Object o) {
         boolean r = children.remove(o);
-        if (r && o instanceof TreeNode) {
-            ((TreeNode) o).setParent(null);
+        if (r && o instanceof Node) {
+            ((Node) o).setParent(null);
         }
         return r;
     }
