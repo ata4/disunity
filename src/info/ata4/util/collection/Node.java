@@ -55,7 +55,7 @@ public abstract class Node<T extends Node> implements Collection<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return children.iterator();
+        return new IteratorImpl(children.iterator());
     }
 
     @Override
@@ -123,5 +123,34 @@ public abstract class Node<T extends Node> implements Collection<T> {
     public void clear() {
         setChildrenParent(children, null);
         children.clear();
+    }
+    
+    private class IteratorImpl implements Iterator<T> {
+        
+        private final Iterator<T> proxy;
+        private T current;
+        
+        private IteratorImpl(Iterator<T> proxy) {
+            this.proxy = proxy;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return proxy.hasNext();
+        }
+
+        @Override
+        public T next() {
+            current = proxy.next();
+            return current;
+        }
+
+        @Override
+        public void remove() {
+            proxy.remove();
+            if (current != null) {
+                current.setParent(null);
+            }
+        }
     }
 }
