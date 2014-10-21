@@ -120,7 +120,7 @@ public class ObjectData {
         FieldType type = typeNode.getType();
         
         // if the type has no children, it has a primitve value
-        if (typeNode.isEmpty()) {
+        if (typeNode.isEmpty() && type.getSize() > 0) {
             fieldNode.setValue(readPrimitiveValue(in, type, -1));
         }
         
