@@ -13,6 +13,7 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -197,7 +199,6 @@ public class FieldTypeDatabase {
     
     public void fill(AssetFile asset) {
         FieldTypeTree typeTree = asset.getTypeTree();
-        Set<Integer> classIDs = asset.getClassIDs();
         
         fixRevision(asset, typeTree);
         
@@ -206,6 +207,7 @@ public class FieldTypeDatabase {
             return;
         }
         
+        Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
         for (Integer classID : classIDs) {
             FieldTypeNode ft = ftm.get(classID, typeTree.getEngineVersion(), false);
             if (ft != null) {
@@ -216,7 +218,6 @@ public class FieldTypeDatabase {
     
     public int learn(AssetFile asset) {
         FieldTypeTree typeTree = asset.getTypeTree();
-        Set<Integer> classIDs = asset.getClassIDs();
         
         if (typeTree.getFields().isEmpty()) {
             L.info("No type tree available");
@@ -233,6 +234,7 @@ public class FieldTypeDatabase {
         int learnedNew = 0;
         
         // merge the TypeTree map with the database field map
+        Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
         for (Integer classID : classIDs) {
             FieldTypeNode fieldType = typeTree.getFields().get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
@@ -282,5 +284,15 @@ public class FieldTypeDatabase {
         if (typeTree.getEngineVersion() == null && asset.getSourceBundleEntry() != null) {
             typeTree.setEngineVersion(asset.getSourceBundleEntry().getSourceBundleHeader().getUnityRevision());
         }
+    }
+
+    private Set<Integer> getClassIDs(List<ObjectPath> paths) {
+        Set<Integer> classIDs = new TreeSet<>();
+        
+        for (ObjectPath path : paths) {
+            classIDs.add(path.getClassID());
+        }
+        
+        return classIDs;
     }
 }

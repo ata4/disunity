@@ -24,8 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
@@ -171,18 +169,12 @@ public class AssetFile extends FileHandler {
     public BundleEntryBuffered getSourceBundleEntry() {
         return sourceBundleEntry;
     }
-    
-    public Set<Integer> getClassIDs() {
-        Set<Integer> classIDs = new TreeSet<>();
-        
-        for (ObjectPath path : objTable.getPaths()) {
-            classIDs.add(path.getClassID());
-        }
-        
-        return classIDs;
-    }
 
     public List<ObjectData> getObjects() {
         return objects;
+    }
+
+    public List<ObjectPath> getObjectPaths() {
+        return objTable.getPaths();
     }
 }
