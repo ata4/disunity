@@ -45,7 +45,7 @@ public class AssetFile extends FileHandler {
     private final ReferenceTable refTable = new ReferenceTable();
     
     private List<ObjectData> objects;
-    private DataInputReader audioData;
+    private ByteBuffer audioBuf;
     private boolean standalone;
     private BundleEntryBuffered sourceBundleEntry;
 
@@ -82,12 +82,10 @@ public class AssetFile extends FileHandler {
             in = DataInputReader.newMappedReader(file);
         }
         
-        // load audio stream if existing
+        // load audio buffer if existing
         Path audioStreamFile = file.resolveSibling(fileName + ".resS");
         if (Files.exists(audioStreamFile)) {
-            audioData = DataInputReader.newMappedReader(audioStreamFile);
-        } else {
-            audioData = null;
+            audioBuf = ByteBufferUtils.openReadOnly(audioStreamFile);
         }
         
         load(in);
@@ -138,6 +136,7 @@ public class AssetFile extends FileHandler {
             ObjectData data = new ObjectData();
             data.setPath(path);
             data.setBuffer(buf);
+            data.setSoundBuffer(audioBuf);
             data.setTypeTree(typeTree.getFields().get(path.getTypeID()));
             
             objects.add(data);
@@ -185,9 +184,5 @@ public class AssetFile extends FileHandler {
 
     public List<ObjectData> getObjects() {
         return objects;
-    }
-
-    public DataInputReader getAudioData() {
-        return audioData;
     }
 }

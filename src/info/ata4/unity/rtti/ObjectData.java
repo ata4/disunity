@@ -28,6 +28,7 @@ public class ObjectData {
     
     private ObjectPath path;
     private ByteBuffer buffer;
+    private ByteBuffer soundBuffer;
     private FieldTypeNode typeTree;
     private FieldNode instance;
 
@@ -52,6 +53,14 @@ public class ObjectData {
     
     public void setBuffer(ByteBuffer buffer) {
         this.buffer = buffer;
+    }
+    
+    public ByteBuffer getSoundBuffer() {
+        return soundBuffer;
+    }
+    
+    public void setSoundBuffer(ByteBuffer soundBuffer) {
+        this.soundBuffer = soundBuffer;
     }
     
     public FieldTypeNode getTypeTree() {
@@ -240,17 +249,27 @@ public class ObjectData {
             // Byte/Integer objects
             case "SInt8":
             case "UInt8":
-                ByteBuffer buf = ByteBufferUtils.allocate(size);
-
+                ByteBuffer buf;
+                
                 // NOTE: AudioClips "fake" the size of m_AudioData when the stream is
                 // stored in a separate file. The array contains just an offset integer
                 // in that case, so pay attention to the bytes remaining in the buffer
                 // as well to avoid EOFExceptions.
-                // TODO: is there a flag for this behavior?
-                buf.limit(Math.min(size, (int) in.remaining()));
-
-                in.readBuffer(buf);
-                in.align(ALIGNMENT);
+                long remaining = in.remaining();
+                if (size > remaining && remaining == 4) {
+                    int offset = in.readInt();
+                    // create empty sound buffer in case the .resS file doesn't
+                    // exist
+                    if (soundBuffer != null) {
+                        buf = ByteBufferUtils.getSlice(soundBuffer, offset, size);
+                    } else {
+                        buf = ByteBufferUtils.allocate(size);
+                    }
+                } else {
+                    buf = ByteBufferUtils.allocate(size);
+                    in.readBuffer(buf);
+                    in.align(ALIGNMENT);
+                }
 
                 buf.clear();
                 return buf;
