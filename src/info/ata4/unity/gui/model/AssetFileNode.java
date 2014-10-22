@@ -22,10 +22,6 @@ import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -142,10 +138,10 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
         }
         
         DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
-        Set<FieldTypeNode> fieldNodes = new TreeSet<>(new FieldTypeNodeComparator());
-        fieldNodes.addAll(asset.getTypeTree().getFields().values());
+        Set<FieldTypeNode> fieldTypeNodes = new TreeSet<>(new FieldTypeNodeComparator());
+        fieldTypeNodes.addAll(asset.getTypeTree().getFields().values());
         
-        for (FieldTypeNode fieldNode : fieldNodes) {
+        for (FieldTypeNode fieldNode : fieldTypeNodes) {
             FieldNodeUtils.convertFieldTypeNode(typeNode, fieldNode);
         }
  
