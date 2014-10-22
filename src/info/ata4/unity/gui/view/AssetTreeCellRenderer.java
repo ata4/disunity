@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
+public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private static Icon createIcon(String file) {
         try {
@@ -61,7 +61,7 @@ public class AssetFileTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private final Map<Object, String> textCache = new HashMap<>();
 
-    public AssetFileTreeCellRenderer() {
+    public AssetTreeCellRenderer() {
         setOpenIcon(openIconCustom);
         setClosedIcon(closedIconCustom);
         setLeafIcon(fileIcon);

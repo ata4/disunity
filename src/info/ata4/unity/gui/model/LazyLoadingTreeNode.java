@@ -73,7 +73,7 @@ public abstract class LazyLoadingTreeNode extends DefaultMutableTreeNode impleme
             return;
         }
         
-        L.log(Level.FINE, "Loading " + getUserObject());
+        L.log(Level.FINE, "Loading {0}", getUserObject());
         
         try {
             tree.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));

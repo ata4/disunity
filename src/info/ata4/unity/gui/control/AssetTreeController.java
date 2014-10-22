@@ -15,8 +15,8 @@ import info.ata4.unity.gui.model.AssetFileNode;
 import info.ata4.unity.gui.model.FieldTypeDatabaseNode;
 import info.ata4.unity.gui.model.LazyLoadingTreeNode;
 import info.ata4.unity.gui.util.progress.ProgressTask;
-import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
-import info.ata4.unity.gui.view.AssetFileTreeNodeInfo;
+import info.ata4.unity.gui.view.AssetTreeCellRenderer;
+import info.ata4.unity.gui.view.AssetTreeNodeInfo;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -32,18 +32,18 @@ import javax.swing.tree.TreePath;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreeController {
+public class AssetTreeController {
     
     private final Component parent;
     private final JTree tree;
 
-    public AssetFileTreeController(Component parent, JTree tree, JTextPane text) {
+    public AssetTreeController(Component parent, JTree tree, JTextPane text) {
         this.parent = parent;
         this.tree = tree;
         
-        tree.setCellRenderer(new AssetFileTreeCellRenderer());
+        tree.setCellRenderer(new AssetTreeCellRenderer());
         tree.addMouseListener(new MouseAdapterImpl());
-        tree.addTreeSelectionListener(new AssetFileTreeNodeInfo(text));
+        tree.addTreeSelectionListener(new AssetTreeNodeInfo(text));
         tree.setModel(null);
     }
     
@@ -78,7 +78,7 @@ public class AssetFileTreeController {
                     return;
                 }
 
-                AssetFileTreePopup popup = new AssetFileTreePopup(selRow, selPath);
+                AssetTreePopupMenu popup = new AssetTreePopupMenu(selRow, selPath);
                 if (popup.getComponentCount() > 0) {
                     popup.show(ev.getComponent(), ev.getX(), ev.getY());
                 }

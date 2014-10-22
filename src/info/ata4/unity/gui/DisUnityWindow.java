@@ -11,10 +11,10 @@ package info.ata4.unity.gui;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.gui.control.AssetFileTreeController;
+import info.ata4.unity.gui.control.AssetTreeController;
 import info.ata4.unity.gui.util.DialogUtils;
 import info.ata4.unity.gui.util.FileExtensionFilter;
-import info.ata4.unity.gui.view.AssetFileTreeCellRenderer;
+import info.ata4.unity.gui.view.AssetTreeCellRenderer;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,7 +31,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
     private static final Logger L = LogUtils.getLogger();
     
     private Path filePrevious;
-    private AssetFileTreeController treeCtl;
+    private AssetTreeController treeCtl;
     
     /**
      * Creates new form DisUnityWindow
@@ -47,7 +47,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
         openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
         
-        treeCtl = new AssetFileTreeController(this, dataTree, dataText);
+        treeCtl = new AssetTreeController(this, dataTree, dataText);
     }
     
     public void loadFile(Path file) {

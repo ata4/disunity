@@ -34,9 +34,9 @@ import javax.swing.tree.TreePath;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreePopup extends JPopupMenu {
+public class AssetTreePopupMenu extends JPopupMenu {
 
-    public AssetFileTreePopup(int selRow, TreePath selPath) {
+    public AssetTreePopupMenu(int selRow, TreePath selPath) {
         Object lastComponent = selPath.getLastPathComponent();
         if (!(lastComponent instanceof DefaultMutableTreeNode)) {
             return;

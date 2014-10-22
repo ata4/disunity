@@ -22,11 +22,11 @@ import javax.swing.event.TreeSelectionListener;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileTreeNodeInfo implements TreeSelectionListener {
+public class AssetTreeNodeInfo implements TreeSelectionListener {
     
     private final JTextPane textPane;
 
-    public AssetFileTreeNodeInfo(JTextPane text) {
+    public AssetTreeNodeInfo(JTextPane text) {
         this.textPane = text;
     }
 
