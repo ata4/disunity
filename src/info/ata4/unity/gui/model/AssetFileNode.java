@@ -17,13 +17,20 @@ import info.ata4.unity.asset.Reference;
 import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeNode;
+import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
@@ -135,8 +142,10 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
         }
         
         DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
+        Set<FieldTypeNode> fieldNodes = new TreeSet<>(new FieldTypeNodeComparator());
+        fieldNodes.addAll(asset.getTypeTree().getFields().values());
         
-        for (FieldTypeNode fieldNode : asset.getTypeTree().getFields().values()) {
+        for (FieldTypeNode fieldNode : fieldNodes) {
             FieldNodeUtils.convertFieldTypeNode(typeNode, fieldNode);
         }
  

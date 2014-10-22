@@ -13,10 +13,13 @@ import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeMap;
 import info.ata4.unity.rtti.FieldTypeNode;
+import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.util.UnityVersion;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -29,21 +32,30 @@ public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
     public FieldTypeDatabaseNode(FieldTypeDatabase db) {
         super(Paths.get("structdb.dat"));
         
-        Map<UnityVersion, DefaultMutableTreeNode> versionNodes = new TreeMap<>();
+        // first step: create a mapping between all versions and their sets of
+        // field type nodes
+        Map<UnityVersion, Set<FieldTypeNode>> versionNodes = new TreeMap<>();
 
         FieldTypeMap map = db.getFieldTypeMap();
         for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
             UnityVersion version = entry.getKey().getValue();
             
             if (!versionNodes.containsKey(version)) {
-                versionNodes.put(version, new DefaultMutableTreeNode(version));
+                versionNodes.put(version, new TreeSet<>(new FieldTypeNodeComparator()));
             }
             
-            FieldNodeUtils.convertFieldTypeNode(versionNodes.get(version), entry.getValue());
+            versionNodes.get(version).add(entry.getValue());
         }
         
-        for (DefaultMutableTreeNode node : versionNodes.values()) {
-            add(node);
+        // second step: convert the map to a node structure
+        for (Map.Entry<UnityVersion, Set<FieldTypeNode>> entry : versionNodes.entrySet()) {
+            DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(entry.getKey());
+            
+            for (FieldTypeNode typeNode : entry.getValue()) {
+                FieldNodeUtils.convertFieldTypeNode(treeNode, typeNode);
+            }
+            
+            add(treeNode);
         }
     }
 }
