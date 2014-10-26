@@ -9,18 +9,19 @@
  */
 package info.ata4.unity.gui;
 
-import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import info.ata4.unity.gui.control.AssetTreeController;
-import info.ata4.unity.gui.util.DialogUtils;
+import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.gui.control.AssetTreePopupMenuListener;
+import info.ata4.unity.gui.model.AssetFileNode;
+import info.ata4.unity.gui.model.FieldTypeDatabaseNode;
+import info.ata4.unity.gui.util.DialogBuilder;
 import info.ata4.unity.gui.util.FileExtensionFilter;
 import info.ata4.unity.gui.view.AssetTreeCellRenderer;
 import info.ata4.unity.rtti.FieldTypeDatabase;
-import java.io.IOException;
+import java.io.File;
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -28,10 +29,7 @@ import javax.swing.JFileChooser;
  */
 public class DisUnityWindow extends javax.swing.JFrame {
     
-    private static final Logger L = LogUtils.getLogger();
-    
-    private Path filePrevious;
-    private AssetTreeController treeCtl;
+    private File file;
     
     /**
      * Creates new form DisUnityWindow
@@ -42,25 +40,23 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }
     
     private void initComponentsCustom() {
-        // add custom filters
-        openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity scene", "unity"));
-        openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
-        openFileChooser.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
-        
-        treeCtl = new AssetTreeController(this, dataTree, dataText);
+        dataTree.setCellRenderer(new AssetTreeCellRenderer());
+        dataTree.addMouseListener(new AssetTreePopupMenuListener(dataTree));
     }
     
-    public void loadFile(Path file) {
-        filePrevious = file;
-        
+    public void openFile(Path file) {
         try {
-            treeCtl.load(file);
-        } catch (IOException ex) {
-            DialogUtils.exception(ex, "Error loading file " + file.getFileName());
-            L.log(Level.WARNING, "Can't load file", ex);
+            AssetFile asset = new AssetFile();
+            asset.load(file);
+
+            dataTree.setModel(new DefaultTreeModel(new AssetFileNode(dataTree, asset)));
+            
+            this.file = file.toFile(); // for the file chooser
         } catch (Exception ex) {
-            DialogUtils.exception(ex, "Error loading file " + file.getFileName());
-            L.log(Level.WARNING, "Can't set tree model", ex);
+            new DialogBuilder(this)
+                    .exception(ex)
+                    .withMessage("Can't open " + file.getFileName())
+                    .show();
         }
     }
 
@@ -73,12 +69,8 @@ public class DisUnityWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        openFileChooser = new javax.swing.JFileChooser();
-        dataSplitPane = new javax.swing.JSplitPane();
         dataTreeScrollPane = new javax.swing.JScrollPane();
         dataTree = new javax.swing.JTree();
-        dataTextScrollPane = new javax.swing.JScrollPane();
-        dataText = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -93,17 +85,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(DisUnity.getSignature());
 
-        dataSplitPane.setDividerLocation(300);
-
         dataTreeScrollPane.setViewportView(dataTree);
-
-        dataSplitPane.setLeftComponent(dataTreeScrollPane);
-
-        dataText.setEditable(false);
-        dataText.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-        dataTextScrollPane.setViewportView(dataText);
-
-        dataSplitPane.setRightComponent(dataTextScrollPane);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -168,14 +150,14 @@ public class DisUnityWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
+                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                .addComponent(dataTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -187,27 +169,24 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        if (filePrevious != null) {
-            openFileChooser.setSelectedFile(filePrevious.toFile());
-        }
-        int result = openFileChooser.showOpenDialog(this);
+        JFileChooser fc = new JFileChooser(file);
+        fc.addChoosableFileFilter(new FileExtensionFilter("Unity scene", "unity"));
+        fc.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
+        
+        int result = fc.showOpenDialog(this);
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
         
-        Path file = openFileChooser.getSelectedFile().toPath();
-        loadFile(file);
+        openFile(fc.getSelectedFile().toPath());
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void openTypeDatabaseItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTypeDatabaseItemActionPerformed
-        treeCtl.load(FieldTypeDatabase.getInstance());
+        dataTree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode(FieldTypeDatabase.getInstance())));
     }//GEN-LAST:event_openTypeDatabaseItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JSplitPane dataSplitPane;
-    private javax.swing.JTextPane dataText;
-    private javax.swing.JScrollPane dataTextScrollPane;
     private javax.swing.JTree dataTree;
     private javax.swing.JScrollPane dataTreeScrollPane;
     private javax.swing.JMenuItem exitMenuItem;
@@ -215,7 +194,6 @@ public class DisUnityWindow extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JFileChooser openFileChooser;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem openTypeDatabaseItem;
     private javax.swing.JMenuItem saveAsMenuItem;

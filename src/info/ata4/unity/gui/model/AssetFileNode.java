@@ -36,59 +36,23 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
+public class AssetFileNode extends DefaultMutableTreeNode {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private final Path file;
-    private final BundleEntryBuffered bundleEntry;
-    private AssetHeader header;
+    private final JTree tree;
     
-    public AssetFileNode(JTree tree, Path file) {
-        super(tree, file);
-        this.file = file;
-        this.bundleEntry = null;
-    }
-
-    public AssetFileNode(JTree tree, BundleEntryBuffered bundleEntry) {
-        super(tree, bundleEntry);
-        this.file = null;
-        this.bundleEntry = bundleEntry;
-    }
-
-    public Path getFile() {
-        return file;
-    }
-
-    public BundleEntryBuffered getBundleEntry() {
-        return bundleEntry;
-    }
-    
-    public AssetHeader getHeader() {
-        return header;
-    }
-
-    @Override
-    protected void doLoad() {
-        try {
-            AssetFile asset = new AssetFile();
-            if (file != null) {
-                asset.load(file);
-            } else {
-                asset.load(bundleEntry);
-            }
-            
-            header = asset.getHeader();
-            
-            if (!asset.isStandalone()) {
-                addTypes(asset);
-            }
-            addObjects(asset);
-            addReferences(asset);
-        } catch (IOException ex) {
-            L.log(Level.WARNING, "Can't load asset data", ex);
-            add(new DefaultMutableTreeNode(ex));
+    public AssetFileNode(JTree tree, AssetFile assetFile) {
+        super(assetFile);
+        
+        this.tree = tree;
+        
+        if (!assetFile.isStandalone()) {
+            addTypes(assetFile);
         }
+        
+        addObjects(assetFile);
+        addReferences(assetFile);
     }
     
     private void addObjects(AssetFile asset) {
@@ -126,7 +90,7 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
         DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("References");
         
         for (Reference ref : asset.getReferences()) {
-            refNode.add(new StructMutableTreeNode(ref));
+            refNode.add(new DefaultMutableTreeNode(ref));
         }
         
         add(refNode);
@@ -147,14 +111,4 @@ public class AssetFileNode extends LazyLoadingTreeNode implements StructNode {
  
         add(typeNode);
     }
-
-    @Override
-    public void getStructs(List<Struct> list) {
-        if (bundleEntry != null) {
-            list.add(bundleEntry.getInfo());
-        }
-        
-        list.add(header);
-    }
-
 }

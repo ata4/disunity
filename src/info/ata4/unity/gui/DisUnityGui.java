@@ -40,7 +40,7 @@ public class DisUnityGui {
         gui.setVisible(true);
         
         if (args.length > 0) {
-            gui.loadFile(Paths.get(args[0]));
+            gui.openFile(Paths.get(args[0]));
         }
     }
 }

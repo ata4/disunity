@@ -9,7 +9,6 @@
  */
 package info.ata4.unity.gui.util;
 
-import info.ata4.unity.gui.model.StructMutableTreeNode;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldTypeNode;
 import java.util.List;
@@ -25,7 +24,7 @@ public class FieldNodeUtils {
     }
     
     public static void convertFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
-        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldTypeNode, fieldTypeNode.getType());
+        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(fieldTypeNode);
 
         for (FieldTypeNode childFieldNode : fieldTypeNode) {
             convertFieldTypeNode(treeNode, childFieldNode);
@@ -42,7 +41,7 @@ public class FieldNodeUtils {
             return;
         } 
         
-        DefaultMutableTreeNode treeNode = new StructMutableTreeNode(fieldNode, fieldNode.getType());
+        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(fieldNode);
         
         if (fieldValue instanceof List) {
             List fieldList = (List) fieldValue;

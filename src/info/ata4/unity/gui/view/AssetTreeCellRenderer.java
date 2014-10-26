@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.gui.view;
 
+import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.Reference;
-import info.ata4.unity.assetbundle.BundleEntry;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.FieldType;
 import info.ata4.unity.rtti.FieldTypeNode;
@@ -28,7 +28,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -75,16 +74,14 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
             DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) value;
             Object userObject = treeNode.getUserObject();
             
-            if (userObject instanceof Path) {
-                formatPath((Path) userObject);
+            if (userObject instanceof AssetFile) {
+                formatPath(((AssetFile) userObject).getSourceFile());
             } else if (userObject instanceof FieldNode) {
                 formatFieldNode((FieldNode) userObject);
             } else if (userObject instanceof FieldTypeNode) {
                 formatFieldTypeNode((FieldTypeNode) userObject);
             } else if (userObject instanceof ObjectData) {
                 formatObjectData((ObjectData) userObject);
-            } else if (userObject instanceof BundleEntry) {
-                formatAssetBundleEntry((BundleEntry) userObject);
             } else if (userObject instanceof Reference) {
                 formatReference((Reference) userObject);
             } else if (userObject instanceof Exception) {
@@ -240,10 +237,6 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
         }
 
         setText(text);
-    }
-
-    private void formatAssetBundleEntry(BundleEntry entry) {
-        setText(FilenameUtils.getName(entry.getInfo().getName()));
     }
     
     private void formatReference(Reference reference) {

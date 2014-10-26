@@ -10,19 +10,14 @@
 package info.ata4.unity.gui.control;
 
 import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.assetbundle.BundleEntryBuffered;
-import info.ata4.unity.gui.util.DialogUtils;
-import info.ata4.unity.gui.util.progress.ProgressTask;
+import info.ata4.unity.gui.util.DialogBuilder;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -52,28 +47,6 @@ public class AssetTreePopupMenu extends JPopupMenu {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     extractByteBuffer(objectData.getBuffer(), objectData.getName());
-                }
-            });
-            add(item);
-        } else if (userObject instanceof Path) {
-            final Path file = (Path) userObject;
-            if (AssetBundleUtils.isAssetBundle(file)) {
-                JMenuItem item = new JMenuItem("Extract asset bundle");
-                item.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        extractAssetBundle(file);
-                    }
-                });
-                add(item);
-            }
-        } else if (userObject instanceof BundleEntryBuffered) {
-            final BundleEntryBuffered entry = (BundleEntryBuffered) userObject;
-            JMenuItem item = new JMenuItem("Extract file");
-            item.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    extractAssetBundleEntry(entry);
                 }
             });
             add(item);
@@ -109,58 +82,10 @@ public class AssetTreePopupMenu extends JPopupMenu {
         try {
             ByteBufferUtils.save(file, bb);
         } catch (IOException ex) {
-            DialogUtils.exception(ex, "Error saving file " + file.getFileName());
-        }
-    }
-    
-    private void extractAssetBundle(Path file) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(file.getParent().toFile());
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        
-        int result = fileChooser.showSaveDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        
-        Path dir = fileChooser.getSelectedFile().toPath();
-        
-        new AssetBundleExtractTask(this, file, dir).execute();
-    }
-    
-    private void extractAssetBundleEntry(BundleEntryBuffered entry) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setSelectedFile(new File(entry.getInfo().getName()));
-        
-        int result = fileChooser.showSaveDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        
-        Path file = fileChooser.getSelectedFile().toPath();
-        
-        try {
-            Files.copy(entry.getReader().getSocket().getInputStream(), file);
-        } catch (IOException ex) {
-            DialogUtils.exception(ex, "Error saving file " + file.getFileName());
-        }
-    }
-    
-    private class AssetBundleExtractTask extends ProgressTask<Void, Void> {
-
-        private final Path file;
-        private final Path dir;
-
-        private AssetBundleExtractTask(Component parent, Path file, Path dir) {
-            super(parent, "Extracting asset bundle", "");
-            this.file = file;
-            this.dir = dir;
-        }
-
-        @Override
-        protected Void doInBackground() throws Exception {
-            AssetBundleUtils.extract(file, dir, progress);
-            return null;
+            new DialogBuilder(this)
+                    .exception(ex)
+                    .withMessage("Error saving file " + file.getFileName())
+                    .show();
         }
     }
 }

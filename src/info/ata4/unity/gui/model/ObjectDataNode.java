@@ -9,12 +9,10 @@
  */
 package info.ata4.unity.gui.model;
 
-import info.ata4.io.Struct;
 import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
-import java.util.List;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -22,7 +20,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectDataNode extends LazyLoadingTreeNode implements StructNode {
+public class ObjectDataNode extends LazyLoadingTreeNode {
     
     private final ObjectData objectData;
 
@@ -43,10 +41,4 @@ public class ObjectDataNode extends LazyLoadingTreeNode implements StructNode {
             add(new DefaultMutableTreeNode(ex));
         }
     }
-    
-    @Override
-    public void getStructs(List<Struct> list) {
-        list.add(objectData.getPath());
-    }
-    
 }
