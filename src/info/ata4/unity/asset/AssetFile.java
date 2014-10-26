@@ -98,7 +98,7 @@ public class AssetFile extends FileHandler {
     public void load(DataInputReader in) throws IOException {
         // read header    
         in.readStruct(header);
-        in.setSwap(true);
+        in.setSwap(header.getEndianness() == 0);
 
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
