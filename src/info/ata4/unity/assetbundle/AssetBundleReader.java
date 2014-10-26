@@ -82,7 +82,7 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
         return header;
     }
     
-    public List<BundleEntryInfo> getEntries() throws IOException {
+    public List<BundleEntryInfo> getEntries() {
         return Collections.unmodifiableList(entries);
     }
 
