@@ -85,6 +85,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(DisUnity.getSignature());
 
+        dataTree.setModel(null);
         dataTreeScrollPane.setViewportView(dataTree);
 
         fileMenu.setMnemonic('f');
