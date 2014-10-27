@@ -38,8 +38,8 @@ public class AssetHeader implements Struct {
     private int dataOffset;
     
     // byte order of the serialized data
-    // 0 = big endian
-    // 1 = little endian (presumably)
+    // 0 = little endian
+    // 1 = big endian (presumably)
     private byte endianness;
     
     // unused
