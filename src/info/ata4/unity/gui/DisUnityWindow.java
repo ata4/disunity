@@ -11,17 +11,27 @@ package info.ata4.unity.gui;
 
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.unity.gui.control.AssetTreePopupMenuListener;
 import info.ata4.unity.gui.model.AssetFileNode;
 import info.ata4.unity.gui.model.FieldTypeDatabaseNode;
 import info.ata4.unity.gui.util.DialogBuilder;
 import info.ata4.unity.gui.util.FileExtensionFilter;
+import info.ata4.unity.gui.util.progress.Progress;
+import info.ata4.unity.gui.util.progress.ProgressMonitorWrapper;
 import info.ata4.unity.gui.view.AssetTreeCellRenderer;
 import info.ata4.unity.rtti.FieldTypeDatabase;
+import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import javax.swing.JFileChooser;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
+import javax.swing.plaf.FileChooserUI;
 import javax.swing.tree.DefaultTreeModel;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -79,6 +89,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         openTypeDatabaseItem = new javax.swing.JMenuItem();
+        extractAssetBundleMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -131,6 +142,14 @@ public class DisUnityWindow extends javax.swing.JFrame {
             }
         });
         jMenu1.add(openTypeDatabaseItem);
+
+        extractAssetBundleMenuItem.setText("Extract asset bundle");
+        extractAssetBundleMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                extractAssetBundleMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(extractAssetBundleMenuItem);
 
         menuBar.add(jMenu1);
 
@@ -186,11 +205,70 @@ public class DisUnityWindow extends javax.swing.JFrame {
         dataTree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode(FieldTypeDatabase.getInstance())));
     }//GEN-LAST:event_openTypeDatabaseItemActionPerformed
 
+    private void extractAssetBundleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extractAssetBundleMenuItemActionPerformed
+        JFileChooser fc = new JFileChooser(file);
+        fc.setDialogTitle("Select asset bundle file");
+        fc.setFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
+        
+        int result = fc.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        final File bundleFile = fc.getSelectedFile();
+        
+        fc = new JFileChooser(bundleFile);
+        fc.setDialogTitle("Select output directory");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        // suggested file names don't work with DIRECTORIES_ONLY file choosers,
+        // use reflection to call setFileName() as a workaround
+        try {
+            FileChooserUI fcUi = fc.getUI();
+            Class<? extends FileChooserUI> fcClass = fcUi.getClass();
+            Method setFileName = fcClass.getMethod("setFileName", String.class);
+            setFileName.invoke(fcUi, FilenameUtils.getBaseName(bundleFile.getName()));
+        } catch (Exception ex) {
+            // not important, continue without suggested name
+        }
+
+        result = fc.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        final File outputDir = fc.getSelectedFile();
+        
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                Component parent = DisUnityWindow.this;
+                ProgressMonitor monitor = new ProgressMonitor(parent, "Extracting " + bundleFile, null, 0, 0);
+                monitor.setMillisToDecideToPopup(0);
+                monitor.setMillisToPopup(0);
+                
+                Progress progress = new ProgressMonitorWrapper(monitor);
+                
+                try {
+                    AssetBundleUtils.extract(bundleFile.toPath(), outputDir.toPath(), progress);
+                } catch (IOException ex) {
+                    new DialogBuilder(parent)
+                            .exception(ex)
+                            .withMessage("Can't extract file " + bundleFile)
+                            .show();
+                }
+                
+                return null;
+            }
+        }.execute();
+    }//GEN-LAST:event_extractAssetBundleMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JTree dataTree;
     private javax.swing.JScrollPane dataTreeScrollPane;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem extractAssetBundleMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu jMenu1;
