@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -43,8 +45,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FieldTypeDatabase {
     
     private static final Logger L = LogUtils.getLogger();
-    private static final int VERSION = 1;
-    private static final String FILENAME = "structdb.dat";
+    
+    public static final int VERSION = 1;
+    public static final String FILENAME = "structdb.dat";
     
     private static FieldTypeDatabase instance;
 
@@ -55,7 +58,7 @@ public class FieldTypeDatabase {
         return instance;
     }
     
-    private FieldTypeMap ftm = new FieldTypeMap();
+    private HashMap<Pair<Integer, UnityVersion>, FieldTypeNode> nodeMap = new HashMap<>();
     private int learned;
     
     private FieldTypeDatabase() {
@@ -66,8 +69,8 @@ public class FieldTypeDatabase {
         return learned;
     }
     
-    public FieldTypeMap getFieldTypeMap() {
-        return ftm;
+    public Map<Pair<Integer, UnityVersion>, FieldTypeNode> getFieldTypeMap() {
+        return Collections.unmodifiableMap(nodeMap);
     }
     
     private void load() {
@@ -132,7 +135,7 @@ public class FieldTypeDatabase {
                 UnityVersion version = versions.get(revisionIndex);
                 FieldTypeNode fieldNode = fieldNodes.get(index);
 
-                ftm.add(classID, version, fieldNode);
+                addNode(classID, version, fieldNode);
             }
         } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't read type database", ex);
@@ -151,7 +154,7 @@ public class FieldTypeDatabase {
             out.writeInt(VERSION);
 
             // write field node table
-            Set<FieldTypeNode> fieldNodes = new HashSet<>(ftm.values());
+            Set<FieldTypeNode> fieldNodes = new HashSet<>(nodeMap.values());
             Map<FieldTypeNode, Integer> fieldNodeMap = new HashMap<>();
 
             out.writeInt(fieldNodes.size());
@@ -166,7 +169,7 @@ public class FieldTypeDatabase {
             Set<UnityVersion> versions = new HashSet<>();
             Map<UnityVersion, Integer> versionMap = new HashMap<>();
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : nodeMap.entrySet()) {
                 versions.add(entry.getKey().getRight());
             }
 
@@ -179,9 +182,9 @@ public class FieldTypeDatabase {
             }
 
             // write mapping data
-            out.writeInt(ftm.entrySet().size());
+            out.writeInt(nodeMap.entrySet().size());
 
-            for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : ftm.entrySet()) {
+            for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : nodeMap.entrySet()) {
                 index = fieldNodeMap.get(entry.getValue());
                 Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
 
@@ -200,16 +203,14 @@ public class FieldTypeDatabase {
     public void fill(AssetFile asset) {
         FieldTypeTree typeTree = asset.getTypeTree();
         
-        fixRevision(asset, typeTree);
-        
         if (typeTree.getEngineVersion() == null) {
-            L.warning("Revision = null");
+            L.warning("engineVersion = null");
             return;
         }
         
         Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
         for (Integer classID : classIDs) {
-            FieldTypeNode ft = ftm.get(classID, typeTree.getEngineVersion(), false);
+            FieldTypeNode ft = getNode(classID, typeTree.getEngineVersion(), false);
             if (ft != null) {
                 typeTree.getFields().put(classID, ft);
             }
@@ -224,10 +225,8 @@ public class FieldTypeDatabase {
             return 0;
         }
         
-        fixRevision(asset, typeTree);
-        
         if (typeTree.getEngineVersion() == null) {
-            L.warning("Revision = null");
+            L.warning("engineVersion = null");
             return 0;
         }
         
@@ -243,12 +242,12 @@ public class FieldTypeDatabase {
                 continue;
             }
             
-            FieldTypeNode fieldTypeMapped = ftm.get(classID, typeTree.getEngineVersion());
+            FieldTypeNode fieldTypeMapped = getNode(classID, typeTree.getEngineVersion());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                ftm.add(classID, typeTree.getEngineVersion(), fieldTypeMapped);
+                addNode(classID, typeTree.getEngineVersion(), fieldTypeMapped);
                 learnedNew++;
             }
 
@@ -277,13 +276,66 @@ public class FieldTypeDatabase {
             learned = 0;
         }
     }
+    
+    public FieldTypeNode getNode(int classID, UnityVersion revision) {
+        return getNode(classID, revision, true);
+    }
 
-    private void fixRevision(AssetFile asset, FieldTypeTree typeTree) {
-        // older file formats don't contain the revision in the header, try to
-        // get it from the asset bundle header instead
-        if (typeTree.getEngineVersion() == null && asset.getSourceBundleEntry() != null) {
-            typeTree.setEngineVersion(asset.getSourceBundleEntry().getSourceBundleHeader().getUnityRevision());
+    public FieldTypeNode getNode(int classID, UnityVersion version, boolean strict) {
+        FieldTypeNode fieldNode = nodeMap.get(new ImmutablePair<>(classID, version));
+
+        // if set to strict, only return exact matches or null
+        if (fieldNode != null || strict) {
+            return fieldNode;
         }
+
+        FieldTypeNode fieldNodeB = null;
+        UnityVersion versionB = null;
+
+        FieldTypeNode fieldNodeC = null;
+        UnityVersion versionC = null;
+
+        for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : nodeMap.entrySet()) {
+            Pair<Integer, UnityVersion> fieldNodeKey = entry.getKey();
+            if (fieldNodeKey.getLeft() == classID) {
+                FieldTypeNode fieldNodeEntry = entry.getValue();
+                UnityVersion revisionEntry = fieldNodeKey.getRight();
+
+                if (revisionEntry.getMajor() == version.getMajor()) {
+                    if (revisionEntry.getMinor() == version.getMinor()) {
+                        // if major and minor versions match, it will probably work
+                        return fieldNodeEntry;
+                    } else {
+                        // suboptimal choice
+                        fieldNodeB = fieldNodeEntry;
+                        versionB = revisionEntry;
+                    }
+                }
+
+                // worst choice
+                fieldNodeC = fieldNodeEntry;
+                versionC = revisionEntry;
+            }
+        }
+
+        // return less perfect match
+        if (fieldNodeB != null) {
+            L.log(Level.WARNING, "Unprecise match for ClassID {0} (required: {1}, available: {2})", new Object[]{classID, version, versionB});
+            return fieldNodeB;
+        }
+
+        // return field node from any revision as the very last resort
+        if (fieldNodeC != null) {
+            L.log(Level.WARNING, "Bad match for ClassID {0} (required: {1}, available: {2})", new Object[]{classID, version, versionC});
+            return fieldNodeC;
+        }
+
+        // no matches at all
+        return null;
+    }
+
+    public void addNode(int classID, UnityVersion revision, FieldTypeNode fieldNode) {
+        nodeMap.put(new ImmutablePair<>(classID, revision), fieldNode);
     }
 
     private Set<Integer> getClassIDs(List<ObjectPath> paths) {

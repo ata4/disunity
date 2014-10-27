@@ -11,7 +11,6 @@ package info.ata4.unity.gui.model;
 
 import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
-import info.ata4.unity.rtti.FieldTypeMap;
 import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.util.UnityVersion;
@@ -30,13 +29,13 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
 
     public FieldTypeDatabaseNode(FieldTypeDatabase db) {
-        super(Paths.get("structdb.dat"));
+        super(Paths.get(FieldTypeDatabase.FILENAME));
         
         // first step: create a mapping between all versions and their sets of
         // field type nodes
         Map<UnityVersion, Set<FieldTypeNode>> versionNodes = new TreeMap<>();
 
-        FieldTypeMap map = db.getFieldTypeMap();
+        Map<Pair<Integer, UnityVersion>, FieldTypeNode> map = db.getFieldTypeMap();
         for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
             UnityVersion version = entry.getKey().getValue();
             

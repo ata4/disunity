@@ -13,9 +13,8 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.log.LogUtils;
-import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.rtti.FieldTypeDatabase;
+import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeTree;
 import info.ata4.unity.rtti.ObjectData;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 
@@ -35,8 +33,6 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class AssetFile extends FileHandler {
     
-    private static final Logger L = LogUtils.getLogger();
-
     private final AssetHeader header = new AssetHeader();
     private final FieldTypeTree typeTree = new FieldTypeTree();
     private final ObjectPathTable objTable = new ObjectPathTable();
@@ -44,8 +40,6 @@ public class AssetFile extends FileHandler {
     
     private List<ObjectData> objects;
     private ByteBuffer audioBuf;
-    private boolean standalone;
-    private BundleEntryBuffered sourceBundleEntry;
 
     @Override
     public void load(Path file) throws IOException {
@@ -89,11 +83,6 @@ public class AssetFile extends FileHandler {
         load(in);
     }
     
-    public void load(BundleEntryBuffered entry) throws IOException {
-        sourceBundleEntry = entry;
-        load(entry.getReader());
-    }
-    
     @Override
     public void load(DataInputReader in) throws IOException {
         // read header    
@@ -110,14 +99,7 @@ public class AssetFile extends FileHandler {
         in.readStruct(typeTree);
         in.readStruct(objTable);
         in.readStruct(refTable);
-        
-        // try to get struct from database if the embedded one is empty
-        if (typeTree.getFields().isEmpty()) {
-            L.info("Standalone asset file detected, using structure from database");
-            FieldTypeDatabase.getInstance().fill(this);
-            standalone = true;
-        }
-        
+
         // read object data
         objects = new ArrayList<>();
         
@@ -130,12 +112,20 @@ public class AssetFile extends FileHandler {
 
             in.position(header.getDataOffset() + path.getOffset());
             in.readBuffer(buf);
+            
+            // try to get type node from database if the embedded one is empty
+            FieldTypeNode typeNode;
+            if (!typeTree.getFields().isEmpty()) {
+                typeNode = typeTree.getFields().get(path.getTypeID());
+            } else {
+                typeNode = FieldTypeDatabase.getInstance().getNode(path.getTypeID(), typeTree.getEngineVersion());
+            }
            
             ObjectData data = new ObjectData();
             data.setPath(path);
             data.setBuffer(buf);
             data.setSoundBuffer(audioBuf);
-            data.setTypeTree(typeTree.getFields().get(path.getTypeID()));
+            data.setTypeTree(typeNode);
             
             objects.add(data);
         }
@@ -159,15 +149,11 @@ public class AssetFile extends FileHandler {
     }
 
     public boolean isStandalone() {
-        return standalone;
+        return typeTree.getFields().isEmpty();
     }
-
-    public void setStandalone(boolean standalone) {
-        this.standalone = standalone;
-    }
-
-    public BundleEntryBuffered getSourceBundleEntry() {
-        return sourceBundleEntry;
+    
+    public void setStandalone() {
+        typeTree.getFields().clear();
     }
 
     public List<ObjectData> getObjects() {

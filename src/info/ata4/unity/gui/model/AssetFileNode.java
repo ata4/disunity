@@ -9,20 +9,14 @@
  */
 package info.ata4.unity.gui.model;
 
-import info.ata4.io.Struct;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.AssetHeader;
 import info.ata4.unity.asset.Reference;
-import info.ata4.unity.assetbundle.BundleEntryBuffered;
 import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
