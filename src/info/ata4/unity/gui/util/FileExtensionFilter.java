@@ -12,6 +12,7 @@ package info.ata4.unity.gui.util;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.swing.filechooser.FileFilter;
 import org.apache.commons.io.FilenameUtils;
@@ -32,12 +33,26 @@ public class FileExtensionFilter extends FileFilter {
 
     @Override
     public boolean accept(File f) {
-        return exts.contains(FilenameUtils.getExtension(f.getName()));
+        return f.isDirectory() || exts.contains(FilenameUtils.getExtension(f.getName()));
     }
 
     @Override
     public String getDescription() {
-        return desc;
+        StringBuilder sb = new StringBuilder(desc);
+        sb.append(" (");
+        
+        Iterator<String> iter = exts.iterator();
+        while (iter.hasNext()) {
+            sb.append("*.");
+            sb.append(iter.next());
+            if (iter.hasNext()) {
+                sb.append(";");
+            }
+        }
+        
+        sb.append(")");
+        
+        return sb.toString();
     }
     
 }
