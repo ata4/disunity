@@ -31,6 +31,8 @@ import java.util.List;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Asset bundle file utility class.
@@ -65,24 +67,24 @@ public class AssetBundleUtils {
         ) {
             long current = 0;
             long total = 0;
-            for (BundleEntryInfo entry : assetBundle.getEntries()) {
-                total += entry.getLength();
+            for (AssetBundleEntryInfo entry : assetBundle.getEntries()) {
+                total += entry.getSize();
             }
             
             progress.setLimit(total);
 
-            for (BundleEntryStreamed entry : assetBundle) {
+            for (AssetBundleEntry entry : assetBundle) {
                 if (progress.isCanceled()) {
                     break;
                 }
                 
-                progress.setLabel(entry.getInfo().getName());
+                progress.setLabel(entry.getName());
                 
-                Path entryFile = outDir.resolve(entry.getInfo().getName());
+                Path entryFile = outDir.resolve(entry.getName());
                 Files.createDirectories(entryFile.getParent());
                 Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
                 
-                current += entry.getInfo().getLength();
+                current += entry.getSize();
                 progress.update(current);
             }
         }
@@ -92,65 +94,58 @@ public class AssetBundleUtils {
         extract(file, outDir, new DummyProgress());
     }
     
-    public static List<BundleEntryBuffered> buffer(AssetBundleReader reader, Progress progress) throws IOException {
+    public static List<Pair<String, DataRandomAccess>> buffer(AssetBundleReader reader, Progress progress) throws IOException {
         long current = 0;
         long total = 0;
-        for (BundleEntryInfo entry : reader.getEntries()) {
-            total += entry.getLength();
+        for (AssetBundleEntryInfo entry : reader.getEntries()) {
+            total += entry.getSize();
         }
 
         progress.setLimit(total);
+        
+        List<Pair<String, DataRandomAccess>> entries = new ArrayList<>();
 
-        List<BundleEntryBuffered> entries = new ArrayList<>();
-        for (BundleEntryStreamed entry : reader) {
+        for (AssetBundleEntry entry : reader) {
             if (progress.isCanceled()) {
                 break;
             }
-            
-            BundleEntryInfo info = entry.getInfo();
 
-            progress.setLabel(info.getName());
+            progress.setLabel(entry.getName());
 
-            entries.add(buffer(entry));
+            entries.add(new ImmutablePair<>(entry.getName(), buffer(entry)));
 
-            current += info.getLength();
+            current += entry.getSize();
             progress.update(current);
         }
 
         return entries;
     }
     
-    public static BundleEntryBuffered buffer(BundleEntryStreamed entry) throws IOException {
-        BundleEntryInfo info = entry.getInfo();
-        BundleEntryBuffered entryBuf = new BundleEntryBuffered(info);
-        entryBuf.setSourceBundleHeader(entry.getSourceBundleHeader());
-        
-        if (info.getLength() < Integer.MAX_VALUE) {
-            ByteBuffer bb = ByteBufferUtils.allocate((int) info.getLength());
+    public static DataRandomAccess buffer(AssetBundleEntry entry) throws IOException {
+        if (entry.getSize() < Integer.MAX_VALUE) {
+            ByteBuffer bb = ByteBufferUtils.allocate((int) entry.getSize());
             OutputStream os = new ByteBufferOutputStream(bb);
             IOUtils.copyLarge(entry.getInputStream(), os);
             bb.flip();
 
-            entryBuf.setRandomAccess(DataRandomAccess.newRandomAccess(bb));
+            return DataRandomAccess.newRandomAccess(bb);
         } else {
             // TODO: create temporary file
             throw new IllegalArgumentException("Entry is too large for buffering");
         }
-        
-        return entryBuf;
     }
     
-    public static List<BundleEntryBuffered> buffer(AssetBundleReader reader) throws IOException {
+    public static List<Pair<String, DataRandomAccess>> buffer(AssetBundleReader reader) throws IOException {
         return buffer(reader, new DummyProgress());
     }
     
-    public static List<BundleEntryBuffered> buffer(Path file, Progress progress) throws IOException {
+    public static List<Pair<String, DataRandomAccess>> buffer(Path file, Progress progress) throws IOException {
         try (AssetBundleReader reader = new AssetBundleReader(file)) {
             return buffer(reader, progress);
         }
     }
     
-    public static List<BundleEntryBuffered> buffer(Path file) throws IOException {
+    public static List<Pair<String, DataRandomAccess>> buffer(Path file) throws IOException {
         return buffer(file, new DummyProgress());
     }
     

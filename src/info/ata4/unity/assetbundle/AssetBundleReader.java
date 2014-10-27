@@ -29,11 +29,11 @@ import org.apache.commons.io.input.CountingInputStream;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreamed> {
+public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> {
     
     private final DataInputReader in;
     private final AssetBundleHeader header = new AssetBundleHeader();
-    private final List<BundleEntryInfo> entries = new ArrayList<>();
+    private final List<AssetBundleEntryInfo> entries = new ArrayList<>();
     
     private DataInputReader inData;
 
@@ -50,7 +50,7 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
         
         int files = inData.readInt();
         for (int i = 0; i < files; i++) {
-            BundleEntryInfo entry = new BundleEntryInfo();
+            AssetBundleEntryInfo entry = new AssetBundleEntryInfo();
             entry.read(inData);
             entries.add(entry);
         }
@@ -82,7 +82,7 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
         return header;
     }
     
-    public List<BundleEntryInfo> getEntries() {
+    public List<AssetBundleEntryInfo> getEntries() {
         return Collections.unmodifiableList(entries);
     }
 
@@ -93,14 +93,14 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
     }
 
     @Override
-    public Iterator<BundleEntryStreamed> iterator() {
+    public Iterator<AssetBundleEntry> iterator() {
         return new EntryIterator();
     }
     
-    private class EntryComparator implements Comparator<BundleEntryInfo> {
+    private class EntryComparator implements Comparator<AssetBundleEntryInfo> {
 
         @Override
-        public int compare(BundleEntryInfo o1, BundleEntryInfo o2) {
+        public int compare(AssetBundleEntryInfo o1, AssetBundleEntryInfo o2) {
             long ofs1 = o1.getOffset();
             long ofs2 = o2.getOffset();
 
@@ -114,9 +114,9 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
         }
     }
     
-    private class EntryIterator implements Iterator<BundleEntryStreamed> {
+    private class EntryIterator implements Iterator<AssetBundleEntry> {
         
-        private final Iterator<BundleEntryInfo> iterator = entries.iterator();
+        private final Iterator<AssetBundleEntryInfo> iterator = entries.iterator();
 
         @Override
         public boolean hasNext() {
@@ -124,8 +124,8 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
         }
 
         @Override
-        public BundleEntryStreamed next() {
-            BundleEntryInfo info = iterator.next();
+        public AssetBundleEntry next() {
+            AssetBundleEntryInfo info = iterator.next();
             
             try {                
                 // recreate data reader if the offset is behind
@@ -139,10 +139,9 @@ public class AssetBundleReader implements Closeable, Iterable<BundleEntryStreame
                 throw new RuntimeException(ex);
             }
             
-            BundleEntryStreamed entry = new BundleEntryStreamed(info);
-            entry.setInputStream(new BoundedInputStream(inData.getSocket().getInputStream(), info.getLength()));
-            entry.setSourceBundleHeader(header);
-            return entry;
+            InputStream is = new BoundedInputStream(inData.getSocket().getInputStream(), info.getSize());
+            
+            return new AssetBundleEntry(info.getName(), info.getSize(), is);
         }
 
         @Override

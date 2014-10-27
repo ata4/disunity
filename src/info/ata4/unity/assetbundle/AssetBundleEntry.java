@@ -15,19 +15,32 @@ import java.io.InputStream;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleEntryStreamed extends BundleEntry {
+public class AssetBundleEntry {
     
-    private InputStream is;
+    private final String name;
+    private final long size;
+    private final InputStream is;
 
-    public BundleEntryStreamed(BundleEntryInfo info) {
-        super(info);
+    public AssetBundleEntry(String name, long size, InputStream is) {
+        this.name = name;
+        this.size = size;
+        this.is = is;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public long getSize() {
+        return size;
     }
 
     public InputStream getInputStream() {
         return is;
     }
 
-    public void setInputStream(InputStream is) {
-        this.is = is;
+    @Override
+    public String toString() {
+        return name;
     }
 }

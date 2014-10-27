@@ -19,11 +19,11 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class BundleEntryInfo implements Struct {
+public class AssetBundleEntryInfo implements Struct {
     
     private String name;
     private long offset;
-    private long length;
+    private long size;
 
     public String getName() {
         return name;
@@ -41,12 +41,12 @@ public class BundleEntryInfo implements Struct {
         this.offset = offset;
     }
 
-    public long getLength() {
-        return length;
+    public long getSize() {
+        return size;
     }
 
-    public void setLength(long length) {
-        this.length = length;
+    public void setSize(long size) {
+        this.size = size;
     }
     
     public boolean isAsset() {
@@ -58,14 +58,14 @@ public class BundleEntryInfo implements Struct {
     public void read(DataInputReader in) throws IOException {
         name = in.readStringNull();
         offset = in.readUnsignedInt();
-        length = in.readUnsignedInt();
+        size = in.readUnsignedInt();
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
         out.writeStringNull(name);
         out.writeUnsignedInt(offset);
-        out.writeUnsignedInt(length);
+        out.writeUnsignedInt(size);
     }
 
     @Override
