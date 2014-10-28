@@ -79,7 +79,8 @@ public class FieldTypeDatabase {
         // read database file, external or internal otherwise
         InputStream is;
         try {
-            Path dbFile = Paths.get(FILENAME);
+            Path jarFile = Paths.get(FieldTypeDatabase.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            Path dbFile = jarFile.resolveSibling(FILENAME);
             String dbPath = "/resources/" + FILENAME;
 
             if (Files.exists(dbFile)) {
