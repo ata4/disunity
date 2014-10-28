@@ -13,16 +13,21 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
+import info.ata4.io.util.ObjectToString;
+import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeTree;
 import info.ata4.unity.rtti.ObjectData;
+import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 
@@ -33,6 +38,8 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class AssetFile extends FileHandler {
     
+    private static final Logger L = LogUtils.getLogger();
+    
     private final AssetHeader header = new AssetHeader();
     private final FieldTypeTree typeTree = new FieldTypeTree();
     private final ObjectPathTable objTable = new ObjectPathTable();
@@ -40,6 +47,13 @@ public class AssetFile extends FileHandler {
     
     private List<ObjectData> objects;
     private ByteBuffer audioBuf;
+    
+    private final DataBlock headerBlock = new DataBlock();
+    private final DataBlock metadataBlock = new DataBlock();
+    private final DataBlock typeTreeBlock = new DataBlock();
+    private final DataBlock objTableBlock = new DataBlock();
+    private final DataBlock refTableBlock = new DataBlock();
+    private final DataBlock objDataBlock = new DataBlock();
 
     @Override
     public void load(Path file) throws IOException {
@@ -52,6 +66,8 @@ public class AssetFile extends FileHandler {
         
         // join split asset files before loading
         if (fileExt.startsWith("split")) {
+            L.fine("Found split asset file");
+            
             fileName = FilenameUtils.removeExtension(fileName);
             List<Path> parts = new ArrayList<>();
             int splitIndex = 0;
@@ -63,6 +79,9 @@ public class AssetFile extends FileHandler {
                 if (Files.notExists(part)) {
                     break;
                 }
+                
+                L.log(Level.FINE, "Adding splinter {0}", part.getFileName());
+                
                 splitIndex++;
                 parts.add(part);
             }
@@ -77,6 +96,7 @@ public class AssetFile extends FileHandler {
         // load audio buffer if existing
         Path audioStreamFile = file.resolveSibling(fileName + ".resS");
         if (Files.exists(audioStreamFile)) {
+            L.log(Level.FINE, "Found sound stream file {0}", audioStreamFile.getFileName());
             audioBuf = ByteBufferUtils.openReadOnly(audioStreamFile);
         }
         
@@ -85,9 +105,18 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void load(DataInputReader in) throws IOException {
-        // read header    
+        // read header
+        headerBlock.setOffset(0);
         in.readStruct(header);
         in.setSwap(header.getEndianness() == 0);
+        headerBlock.setEndOffset(in.position());
+        
+        L.log(Level.FINER, "headerBlock: {0}", headerBlock);
+        
+        metadataBlock.setOffset(in.position());
+        metadataBlock.setLength(header.getMetadataSize());
+        
+        L.log(Level.FINER, "metadataBlock: {0}", metadataBlock);
 
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
@@ -95,10 +124,38 @@ public class AssetFile extends FileHandler {
         }
         
         // read structure data
+        typeTreeBlock.setOffset(in.position());
         typeTree.setFormat(header.getVersion());
         in.readStruct(typeTree);
+        typeTreeBlock.setEndOffset(in.position());
+        
+        L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
+
+        objTableBlock.setOffset(in.position());
         in.readStruct(objTable);
+        objTableBlock.setEndOffset(in.position());
+        
+        L.log(Level.FINER, "objTableBlock: {0}", objTableBlock);
+
+        refTableBlock.setOffset(in.position());
         in.readStruct(refTable);
+        refTableBlock.setEndOffset(in.position());
+        
+        L.log(Level.FINER, "refTableBlock: {0}", refTableBlock);
+        
+        objDataBlock.setOffset(header.getDataOffset());
+        objDataBlock.setEndOffset(in.size());
+        
+        L.log(Level.FINER, "objDataBlock: {0}", objDataBlock);
+        
+        // sanity check for the data blocks
+        assert typeTreeBlock.isInside(metadataBlock);
+        assert objTableBlock.isInside(metadataBlock);
+        assert refTableBlock.isInside(metadataBlock);
+        
+        assert !headerBlock.isIntersecting(metadataBlock);
+        assert !metadataBlock.isIntersecting(objDataBlock);
+        assert !objDataBlock.isIntersecting(headerBlock);
 
         // read object data
         objects = new ArrayList<>();
