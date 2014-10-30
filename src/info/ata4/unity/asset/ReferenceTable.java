@@ -21,11 +21,10 @@ import java.util.List;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ReferenceTable implements Struct, Iterable<Reference> {
+public class ReferenceTable extends AssetStruct implements Iterable<Reference> {
 
     private final List<Reference> refs = new ArrayList<>();
-    private byte unknown;
-    
+
     public List<Reference> getReferences() {
         return refs;
     }
@@ -33,10 +32,9 @@ public class ReferenceTable implements Struct, Iterable<Reference> {
     @Override
     public void read(DataInputReader in) throws IOException {
         int entries = in.readInt();
-        unknown = in.readByte();
-        
         for (int i = 0; i < entries; i++) {
             Reference ref = new Reference();
+            ref.setAssetVersion(assetVersion);
             ref.read(in);
             refs.add(ref);
         }
@@ -46,9 +44,9 @@ public class ReferenceTable implements Struct, Iterable<Reference> {
     public void write(DataOutputWriter out) throws IOException {
         int entries = refs.size();
         out.writeInt(entries);
-        out.writeByte(unknown); 
 
         for (Reference ref : refs) {
+            ref.setAssetVersion(assetVersion);
             ref.write(out);
         }
     }

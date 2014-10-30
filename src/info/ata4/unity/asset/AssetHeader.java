@@ -27,8 +27,8 @@ public class AssetHeader implements Struct {
     // size of the whole asset file
     private int fileSize;
     
-    // 5 = 2.0
-    // 6 = 2.6
+    // 5 = ??? - 2.0
+    // 6 = 2.1 - 2.6
     // 7 = ???
     // 8 = 3.1 - 3.4
     // 9 = 3.5 - 4.x
@@ -37,9 +37,7 @@ public class AssetHeader implements Struct {
     // offset to the serialized data
     private int dataOffset;
     
-    // byte order of the serialized data
-    // 0 = little endian
-    // 1 = big endian (presumably)
+    // byte order of the serialized data?
     private byte endianness;
     
     // unused

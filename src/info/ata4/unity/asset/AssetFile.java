@@ -13,7 +13,6 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.util.ObjectToString;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.FieldTypeNode;
@@ -49,11 +48,9 @@ public class AssetFile extends FileHandler {
     private ByteBuffer audioBuf;
     
     private final DataBlock headerBlock = new DataBlock();
-    private final DataBlock metadataBlock = new DataBlock();
     private final DataBlock typeTreeBlock = new DataBlock();
     private final DataBlock objTableBlock = new DataBlock();
     private final DataBlock refTableBlock = new DataBlock();
-    private final DataBlock objDataBlock = new DataBlock();
 
     @Override
     public void load(Path file) throws IOException {
@@ -108,15 +105,10 @@ public class AssetFile extends FileHandler {
         // read header
         headerBlock.setOffset(0);
         in.readStruct(header);
-        in.setSwap(header.getEndianness() == 0);
+        in.setSwap(true);
         headerBlock.setEndOffset(in.position());
         
         L.log(Level.FINER, "headerBlock: {0}", headerBlock);
-        
-        metadataBlock.setOffset(in.position());
-        metadataBlock.setLength(header.getMetadataSize());
-        
-        L.log(Level.FINER, "metadataBlock: {0}", metadataBlock);
 
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
@@ -125,7 +117,8 @@ public class AssetFile extends FileHandler {
         
         // read structure data
         typeTreeBlock.setOffset(in.position());
-        typeTree.setFormat(header.getVersion());
+        L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
+        typeTree.setAssetVersion(header.getVersion());
         in.readStruct(typeTree);
         typeTreeBlock.setEndOffset(in.position());
         
@@ -138,24 +131,21 @@ public class AssetFile extends FileHandler {
         L.log(Level.FINER, "objTableBlock: {0}", objTableBlock);
 
         refTableBlock.setOffset(in.position());
+        refTable.setAssetVersion(header.getVersion());
         in.readStruct(refTable);
         refTableBlock.setEndOffset(in.position());
         
         L.log(Level.FINER, "refTableBlock: {0}", refTableBlock);
         
-        objDataBlock.setOffset(header.getDataOffset());
-        objDataBlock.setEndOffset(in.size());
-        
-        L.log(Level.FINER, "objDataBlock: {0}", objDataBlock);
-        
         // sanity check for the data blocks
-        assert typeTreeBlock.isInside(metadataBlock);
-        assert objTableBlock.isInside(metadataBlock);
-        assert refTableBlock.isInside(metadataBlock);
+        assert !headerBlock.isIntersecting(typeTreeBlock);
+        assert !headerBlock.isIntersecting(objTableBlock);
+        assert !headerBlock.isIntersecting(refTableBlock);
         
-        assert !headerBlock.isIntersecting(metadataBlock);
-        assert !metadataBlock.isIntersecting(objDataBlock);
-        assert !objDataBlock.isIntersecting(headerBlock);
+        assert !typeTreeBlock.isIntersecting(objTableBlock);
+        assert !typeTreeBlock.isIntersecting(refTableBlock);
+        
+        assert !objTableBlock.isIntersecting(refTableBlock);
 
         // read object data
         objects = new ArrayList<>();

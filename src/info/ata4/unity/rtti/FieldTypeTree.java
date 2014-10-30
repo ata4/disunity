@@ -11,7 +11,7 @@ package info.ata4.unity.rtti;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
-import info.ata4.io.Struct;
+import info.ata4.unity.asset.AssetStruct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -23,12 +23,11 @@ import java.util.Objects;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeTree implements Struct {
+public class FieldTypeTree extends AssetStruct {
 
     private final Map<Integer, FieldTypeNode> typeMap = new LinkedHashMap<>();
     private UnityVersion engineVersion;
     private int treeVersion;
-    private int treeFormat;
 
     public Map<Integer, FieldTypeNode> getFields() {
         return typeMap;
@@ -49,25 +48,17 @@ public class FieldTypeTree implements Struct {
     public void setVersion(int version) {
         this.treeVersion = version;
     }
-    
-    public int getFormat() {
-        return treeFormat;
-    }
-
-    public void setFormat(int format) {
-        this.treeFormat = format;
-    }
 
     @Override
     public void read(DataInputReader in) throws IOException {
         // revision/version for newer formats
-        if (treeFormat >= 7) {
+        if (assetVersion >= 7) {
             engineVersion = new UnityVersion(in.readStringNull(255));
             treeVersion = in.readInt();
         }
         
         // older formats use big endian
-        if (treeFormat <= 5) {
+        if (assetVersion <= 5) {
             in.setSwap(false);
         }
         
@@ -82,7 +73,7 @@ public class FieldTypeTree implements Struct {
         }
         
         // padding
-        if (treeFormat >= 7) {
+        if (assetVersion >= 7) {
             in.readInt();
         }
     }
@@ -90,13 +81,13 @@ public class FieldTypeTree implements Struct {
     @Override
     public void write(DataOutputWriter out) throws IOException {
         // revision/version for newer formats
-        if (treeFormat >= 7) {
+        if (assetVersion >= 7) {
             out.writeStringNull(engineVersion.toString());
             out.writeInt(treeVersion);
         }
         
         // older formats use big endian
-        if (treeFormat <= 5) {
+        if (assetVersion <= 5) {
             out.setSwap(false);
         }
         
@@ -116,7 +107,7 @@ public class FieldTypeTree implements Struct {
         }
         
         // padding
-        if (treeFormat >= 7) {
+        if (assetVersion >= 7) {
             out.writeInt(0);
         }
     }
@@ -139,7 +130,7 @@ public class FieldTypeTree implements Struct {
         if (this.treeVersion != other.treeVersion) {
             return false;
         }
-        if (this.treeFormat != other.treeFormat) {
+        if (this.assetVersion != other.assetVersion) {
             return false;
         }
         return true;
@@ -151,7 +142,7 @@ public class FieldTypeTree implements Struct {
         hash = 29 * hash + Objects.hashCode(this.typeMap);
         hash = 29 * hash + Objects.hashCode(this.engineVersion);
         hash = 29 * hash + this.treeVersion;
-        hash = 29 * hash + this.treeFormat;
+        hash = 29 * hash + this.assetVersion;
         return hash;
     }
 }

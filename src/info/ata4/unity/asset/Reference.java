@@ -11,7 +11,6 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
-import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -20,7 +19,10 @@ import java.util.UUID;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity FileIdentifier 
  */
-public class Reference implements Struct {
+public class Reference extends AssetStruct {
+    
+    // Path to the asset file? Unused in asset format >= 7.
+    private String assetPath;
     
     // Globally unique identifier of the referred asset. Unity displays these
     // as simple 16 byte hex strings with each byte swapped, but they can also
@@ -30,14 +32,15 @@ public class Reference implements Struct {
     // Path to the asset file. Only used if "type" is 0.
     private String filePath;
     
-    // Path to the asset file? Unused in asset format >= 7.
-    private String assetPath;
-    
     // Reference type. Possible values are probably 0 to 3.
     private int type;
-
+    
     @Override
     public void read(DataInputReader in) throws IOException {
+        if (assetVersion > 5) {
+            assetPath = in.readStringNull();
+        }
+        
         // read GUID as big-endian
         boolean swap = in.isSwap();
         in.setSwap(false);
@@ -48,11 +51,14 @@ public class Reference implements Struct {
         guid = new UUID(guidMost, guidLeast);
         type = in.readInt();
         filePath = in.readStringNull();
-        assetPath = in.readStringNull();
     }
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
+        if (assetVersion > 5) {
+            out.writeStringNull(assetPath);
+        }
+        
         // write GUID as big-endian
         boolean swap = out.isSwap();
         out.setSwap(false);
@@ -62,7 +68,6 @@ public class Reference implements Struct {
         
         out.writeInt(type);
         out.writeStringNull(filePath);
-        out.writeStringNull(assetPath);
     }
 
     public UUID getGUID() {
