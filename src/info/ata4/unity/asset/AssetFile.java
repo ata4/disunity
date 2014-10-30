@@ -151,10 +151,6 @@ public class AssetFile extends FileHandler {
         objects = new ArrayList<>();
         
         for (ObjectPath path : objTable.getPaths()) {
-            if (path.getTypeID() < 0) {
-                continue;
-            }
-            
             ByteBuffer buf = ByteBufferUtils.allocate(path.getLength());
 
             in.position(header.getDataOffset() + path.getOffset());
