@@ -209,28 +209,18 @@ public class DisUnityWindow extends javax.swing.JFrame {
         JFileChooser fc = new JFileChooser(file);
         fc.setDialogTitle("Select asset bundle file");
         fc.setFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
+        fc.setMultiSelectionEnabled(true);
         
         int result = fc.showOpenDialog(this);
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
         
-        final File bundleFile = fc.getSelectedFile();
-        
-        fc = new JFileChooser(bundleFile);
+        final File[] bundleFiles = fc.getSelectedFiles();
+
+        fc = new JFileChooser(bundleFiles[bundleFiles.length - 1]);
         fc.setDialogTitle("Select output directory");
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        
-        // suggested file names don't work with DIRECTORIES_ONLY file choosers,
-        // use reflection to call setFileName() as a workaround
-        try {
-            FileChooserUI fcUi = fc.getUI();
-            Class<? extends FileChooserUI> fcClass = fcUi.getClass();
-            Method setFileName = fcClass.getMethod("setFileName", String.class);
-            setFileName.invoke(fcUi, FilenameUtils.getBaseName(bundleFile.getName()));
-        } catch (Exception ex) {
-            // not important, continue without suggested name
-        }
 
         result = fc.showOpenDialog(this);
         if (result != JFileChooser.APPROVE_OPTION) {
@@ -243,21 +233,28 @@ public class DisUnityWindow extends javax.swing.JFrame {
             @Override
             protected Void doInBackground() throws Exception {
                 Component parent = DisUnityWindow.this;
-                ProgressMonitor monitor = new ProgressMonitor(parent, "Extracting " + bundleFile, null, 0, 0);
-                monitor.setMillisToDecideToPopup(0);
-                monitor.setMillisToPopup(0);
                 
-                Progress progress = new ProgressMonitorWrapper(monitor);
-                
-                try {
-                    AssetBundleUtils.extract(bundleFile.toPath(), outputDir.toPath(), progress);
-                } catch (IOException ex) {
-                    new DialogBuilder(parent)
-                            .exception(ex)
-                            .withMessage("Can't extract file " + bundleFile)
-                            .show();
+                for (File bundleFile : bundleFiles) {                    
+                    ProgressMonitor monitor = new ProgressMonitor(parent, "Extracting " + bundleFile, null, 0, 0);
+                    monitor.setMillisToDecideToPopup(0);
+                    monitor.setMillisToPopup(0);
+
+                    Progress progress = new ProgressMonitorWrapper(monitor);
+                    
+                    String bundleName = FilenameUtils.removeExtension(bundleFile.getName());
+                    Path bundlePath = bundleFile.toPath();
+                    Path outputPath = outputDir.toPath().resolve(bundleName);
+
+                    try {
+                        AssetBundleUtils.extract(bundlePath, outputPath, progress);
+                    } catch (IOException ex) {
+                        new DialogBuilder(parent)
+                                .exception(ex)
+                                .withMessage("Can't extract file " + bundleFile)
+                                .show();
+                    }
                 }
-                
+
                 return null;
             }
         }.execute();
