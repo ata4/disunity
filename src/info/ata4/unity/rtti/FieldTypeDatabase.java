@@ -13,6 +13,8 @@ import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.FieldTypeTree;
 import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
@@ -204,14 +206,14 @@ public class FieldTypeDatabase {
     public void fill(AssetFile asset) {
         FieldTypeTree typeTree = asset.getTypeTree();
         
-        if (typeTree.getEngineVersion() == null) {
+        if (typeTree.getUnityRevision() == null) {
             L.warning("engineVersion = null");
             return;
         }
         
         Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
         for (Integer classID : classIDs) {
-            FieldTypeNode ft = getNode(classID, typeTree.getEngineVersion(), false);
+            FieldTypeNode ft = getNode(classID, typeTree.getUnityRevision(), false);
             if (ft != null) {
                 typeTree.getFields().put(classID, ft);
             }
@@ -226,7 +228,7 @@ public class FieldTypeDatabase {
             return 0;
         }
         
-        if (typeTree.getEngineVersion() == null) {
+        if (typeTree.getUnityRevision() == null) {
             L.warning("engineVersion = null");
             return 0;
         }
@@ -243,12 +245,12 @@ public class FieldTypeDatabase {
                 continue;
             }
             
-            FieldTypeNode fieldTypeMapped = getNode(classID, typeTree.getEngineVersion());
+            FieldTypeNode fieldTypeMapped = getNode(classID, typeTree.getUnityRevision());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                addNode(classID, typeTree.getEngineVersion(), fieldTypeMapped);
+                addNode(classID, typeTree.getUnityRevision(), fieldTypeMapped);
                 learnedNew++;
             }
 

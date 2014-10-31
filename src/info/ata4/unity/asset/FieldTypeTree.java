@@ -7,11 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.rtti;
+package info.ata4.unity.asset;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
-import info.ata4.unity.asset.AssetStruct;
+import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -23,22 +23,27 @@ import java.util.Objects;
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeTree extends AssetStruct {
+public class FieldTypeTree implements Struct {
 
     private final Map<Integer, FieldTypeNode> typeMap = new LinkedHashMap<>();
-    private UnityVersion engineVersion;
+    private final AssetVersionInfo versionInfo;
+    private UnityVersion unityRevision;
     private int treeVersion;
+    
+    public FieldTypeTree(AssetVersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
+    }
 
     public Map<Integer, FieldTypeNode> getFields() {
         return typeMap;
     }
     
-    public UnityVersion getEngineVersion() {
-        return engineVersion;
+    public UnityVersion getUnityRevision() {
+        return unityRevision;
     }
 
-    public void setEngineVersion(UnityVersion engineVersion) {
-        this.engineVersion = engineVersion;
+    public void setUnityRevision(UnityVersion unityRevision) {
+        this.unityRevision = unityRevision;
     }
 
     public int getVersion() {
@@ -52,15 +57,12 @@ public class FieldTypeTree extends AssetStruct {
     @Override
     public void read(DataInputReader in) throws IOException {
         // revision/version for newer formats
-        if (assetVersion >= 7) {
-            engineVersion = new UnityVersion(in.readStringNull(255));
+        if (versionInfo.getAssetVersion() >= 7) {
+            unityRevision = new UnityVersion(in.readStringNull(255));
             treeVersion = in.readInt();
         }
         
-        // older formats use big endian
-        if (assetVersion <= 5) {
-            in.setSwap(false);
-        }
+        in.setSwap(versionInfo.swapRequired());
         
         int fields = in.readInt();
         for (int i = 0; i < fields; i++) {
@@ -73,7 +75,7 @@ public class FieldTypeTree extends AssetStruct {
         }
         
         // padding
-        if (assetVersion >= 7) {
+        if (versionInfo.getAssetVersion() >= 7) {
             in.readInt();
         }
     }
@@ -81,15 +83,12 @@ public class FieldTypeTree extends AssetStruct {
     @Override
     public void write(DataOutputWriter out) throws IOException {
         // revision/version for newer formats
-        if (assetVersion >= 7) {
-            out.writeStringNull(engineVersion.toString());
+        if (versionInfo.getAssetVersion() >= 7) {
+            out.writeStringNull(unityRevision.toString());
             out.writeInt(treeVersion);
         }
         
-        // older formats use big endian
-        if (assetVersion <= 5) {
-            out.setSwap(false);
-        }
+        out.setSwap(versionInfo.swapRequired());
         
         if (typeMap.isEmpty()) {
             int fields = typeMap.size();
@@ -107,7 +106,7 @@ public class FieldTypeTree extends AssetStruct {
         }
         
         // padding
-        if (assetVersion >= 7) {
+        if (versionInfo.getAssetVersion() >= 7) {
             out.writeInt(0);
         }
     }
@@ -124,13 +123,10 @@ public class FieldTypeTree extends AssetStruct {
         if (!Objects.equals(this.typeMap, other.typeMap)) {
             return false;
         }
-        if (!Objects.equals(this.engineVersion, other.engineVersion)) {
+        if (!Objects.equals(this.unityRevision, other.unityRevision)) {
             return false;
         }
         if (this.treeVersion != other.treeVersion) {
-            return false;
-        }
-        if (this.assetVersion != other.assetVersion) {
             return false;
         }
         return true;
@@ -140,9 +136,8 @@ public class FieldTypeTree extends AssetStruct {
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + Objects.hashCode(this.typeMap);
-        hash = 29 * hash + Objects.hashCode(this.engineVersion);
+        hash = 29 * hash + Objects.hashCode(this.unityRevision);
         hash = 29 * hash + this.treeVersion;
-        hash = 29 * hash + this.assetVersion;
         return hash;
     }
 }

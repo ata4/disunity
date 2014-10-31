@@ -21,9 +21,14 @@ import java.util.List;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ReferenceTable extends AssetStruct implements Iterable<Reference> {
+public class ReferenceTable implements Struct, Iterable<Reference> {
 
+    private final AssetVersionInfo versionInfo;
     private final List<Reference> refs = new ArrayList<>();
+    
+    public ReferenceTable(AssetVersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
+    }
 
     public List<Reference> getReferences() {
         return refs;
@@ -34,7 +39,7 @@ public class ReferenceTable extends AssetStruct implements Iterable<Reference> {
         int entries = in.readInt();
         for (int i = 0; i < entries; i++) {
             Reference ref = new Reference();
-            ref.setAssetVersion(assetVersion);
+            ref.setVersionInfo(versionInfo);
             ref.read(in);
             refs.add(ref);
         }
@@ -46,7 +51,7 @@ public class ReferenceTable extends AssetStruct implements Iterable<Reference> {
         out.writeInt(entries);
 
         for (Reference ref : refs) {
-            ref.setAssetVersion(assetVersion);
+            ref.setVersionInfo(versionInfo);
             ref.write(out);
         }
     }

@@ -21,18 +21,13 @@ import java.io.IOException;
  */
 public class AssetHeader implements Struct {
     
+    private final AssetVersionInfo versionInfo;
+    
     // size of the structure data
     private int metadataSize;
     
     // size of the whole asset file
     private int fileSize;
-    
-    // 5 = ??? - 2.0
-    // 6 = 2.1 - 2.6
-    // 7 = ???
-    // 8 = 3.1 - 3.4
-    // 9 = 3.5 - 4.x
-    private int version;
     
     // offset to the serialized data
     private int dataOffset;
@@ -42,12 +37,16 @@ public class AssetHeader implements Struct {
     
     // unused
     private final byte[] reserved = new byte[3];
+    
+    public AssetHeader(AssetVersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
+    }
 
     @Override
     public void read(DataInputReader in) throws IOException {
         metadataSize = in.readInt();
         fileSize = in.readInt();
-        version = in.readInt();
+        versionInfo.setAssetVersion(in.readInt());
         dataOffset = in.readInt();
         endianness = in.readByte();
         in.readFully(reserved);
@@ -57,7 +56,7 @@ public class AssetHeader implements Struct {
     public void write(DataOutputWriter out) throws IOException {
         out.writeInt(metadataSize);
         out.writeInt(fileSize);
-        out.writeInt(version);
+        out.writeInt(versionInfo.getAssetVersion());
         out.writeInt(dataOffset);
         out.writeByte(endianness);
         out.write(reserved);
@@ -80,11 +79,11 @@ public class AssetHeader implements Struct {
     }
 
     public int getVersion() {
-        return version;
+        return versionInfo.getAssetVersion();
     }
 
     public void setVersion(int version) {
-        this.version = version;
+        versionInfo.setAssetVersion(version);
     }
 
     public int getDataOffset() {

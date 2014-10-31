@@ -9,6 +9,7 @@
  */
 package info.ata4.unity.rtti;
 
+import info.ata4.unity.asset.FieldTypeNode;
 import java.util.Comparator;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Comparator;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class FieldTypeNodeComparator implements Comparator<FieldTypeNode> {
+    
     @Override
     public int compare(FieldTypeNode o1, FieldTypeNode o2) {
         return o1.getType().getTypeName().compareTo(o2.getType().getTypeName());

@@ -15,8 +15,6 @@ import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
-import info.ata4.unity.rtti.FieldTypeNode;
-import info.ata4.unity.rtti.FieldTypeTree;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
@@ -39,10 +37,11 @@ public class AssetFile extends FileHandler {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private final AssetHeader header = new AssetHeader();
-    private final FieldTypeTree typeTree = new FieldTypeTree();
+    private final AssetVersionInfo versionInfo = new AssetVersionInfo();
+    private final AssetHeader header = new AssetHeader(versionInfo);
+    private final FieldTypeTree typeTree = new FieldTypeTree(versionInfo);
     private final ObjectPathTable objTable = new ObjectPathTable();
-    private final ReferenceTable refTable = new ReferenceTable();
+    private final ReferenceTable refTable = new ReferenceTable(versionInfo);
     
     private List<ObjectData> objects;
     private ByteBuffer audioBuf;
@@ -109,7 +108,7 @@ public class AssetFile extends FileHandler {
         headerBlock.setEndOffset(in.position());
         
         L.log(Level.FINER, "headerBlock: {0}", headerBlock);
-
+        
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
             in.position(header.getFileSize() - header.getMetadataSize() + 1);
@@ -118,7 +117,6 @@ public class AssetFile extends FileHandler {
         // read structure data
         typeTreeBlock.setOffset(in.position());
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
-        typeTree.setAssetVersion(header.getVersion());
         in.readStruct(typeTree);
         typeTreeBlock.setEndOffset(in.position());
         
@@ -131,7 +129,6 @@ public class AssetFile extends FileHandler {
         L.log(Level.FINER, "objTableBlock: {0}", objTableBlock);
 
         refTableBlock.setOffset(in.position());
-        refTable.setAssetVersion(header.getVersion());
         in.readStruct(refTable);
         refTableBlock.setEndOffset(in.position());
         
@@ -161,7 +158,17 @@ public class AssetFile extends FileHandler {
             if (!typeTree.getFields().isEmpty()) {
                 typeNode = typeTree.getFields().get(path.getTypeID());
             } else {
-                typeNode = FieldTypeDatabase.getInstance().getNode(path.getTypeID(), typeTree.getEngineVersion());
+                typeNode = FieldTypeDatabase.getInstance().getNode(path.getTypeID(), typeTree.getUnityRevision());
+            }
+            
+            // in some cases, e.g. standalone MonoBehaviours, the type tree is not
+            // available
+            if (typeNode == null) {
+                // log a warning if it's not a MonoBehaviour
+                if (path.getClassID() != 114) {
+                    L.log(Level.WARNING, "Skipped {0} with no type tree", path);
+                }
+                continue;
             }
            
             ObjectData data = new ObjectData();
@@ -169,6 +176,7 @@ public class AssetFile extends FileHandler {
             data.setBuffer(buf);
             data.setSoundBuffer(audioBuf);
             data.setTypeTree(typeNode);
+            data.setVersionInfo(versionInfo);
             
             objects.add(data);
         }
@@ -205,5 +213,9 @@ public class AssetFile extends FileHandler {
 
     public List<ObjectPath> getObjectPaths() {
         return objTable.getPaths();
+    }
+
+    public AssetVersionInfo getVersionInfo() {
+        return versionInfo;
     }
 }

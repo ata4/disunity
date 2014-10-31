@@ -10,7 +10,7 @@
 package info.ata4.unity.gui.util;
 
 import info.ata4.unity.rtti.FieldNode;
-import info.ata4.unity.rtti.FieldTypeNode;
+import info.ata4.unity.asset.FieldTypeNode;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 

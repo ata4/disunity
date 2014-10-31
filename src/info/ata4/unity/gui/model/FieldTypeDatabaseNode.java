@@ -11,7 +11,7 @@ package info.ata4.unity.gui.model;
 
 import info.ata4.unity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
-import info.ata4.unity.rtti.FieldTypeNode;
+import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.util.UnityVersion;
 import java.nio.file.Paths;

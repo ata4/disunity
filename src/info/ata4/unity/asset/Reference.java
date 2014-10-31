@@ -11,6 +11,7 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.DataOutputWriter;
+import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -19,7 +20,9 @@ import java.util.UUID;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity FileIdentifier 
  */
-public class Reference extends AssetStruct {
+public class Reference implements Struct {
+    
+    private AssetVersionInfo versionInfo;
     
     // Path to the asset file? Unused in asset format >= 7.
     private String assetPath;
@@ -37,7 +40,7 @@ public class Reference extends AssetStruct {
     
     @Override
     public void read(DataInputReader in) throws IOException {
-        if (assetVersion > 5) {
+        if (versionInfo.getAssetVersion() > 5) {
             assetPath = in.readStringNull();
         }
         
@@ -55,7 +58,7 @@ public class Reference extends AssetStruct {
 
     @Override
     public void write(DataOutputWriter out) throws IOException {
-        if (assetVersion > 5) {
+        if (versionInfo.getAssetVersion() > 5) {
             out.writeStringNull(assetPath);
         }
         
@@ -100,5 +103,9 @@ public class Reference extends AssetStruct {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    void setVersionInfo(AssetVersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
     }
 }

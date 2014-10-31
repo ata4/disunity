@@ -11,6 +11,9 @@ package info.ata4.unity.rtti;
 
 import info.ata4.io.DataInputReader;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.unity.asset.AssetVersionInfo;
+import info.ata4.unity.asset.FieldType;
+import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectPath;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -26,6 +29,7 @@ public class ObjectData {
     private static final boolean DEBUG = false;
     private static final int ALIGNMENT = 4;
     
+    private AssetVersionInfo versionInfo;
     private ObjectPath path;
     private ByteBuffer buffer;
     private ByteBuffer soundBuffer;
@@ -38,6 +42,14 @@ public class ObjectData {
 
     public void setPath(ObjectPath path) {
         this.path = path;
+    }
+    
+    public AssetVersionInfo getVersionInfo() {
+        return versionInfo;
+    }
+
+    public void setVersionInfo(AssetVersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
     }
 
     public ByteBuffer getBuffer() {
@@ -102,7 +114,7 @@ public class ObjectData {
     
     private void deserialize() throws IOException {
         DataInputReader in = DataInputReader.newReader(buffer);
-        in.setSwap(true);
+        in.setSwap(versionInfo.swapRequired());
         in.position(0);
         
         // read object
@@ -177,8 +189,10 @@ public class ObjectData {
             }
         } else {
             value = readPrimitiveArray(in, type, size);
-            // arrays always need to be aligned
-            in.align(ALIGNMENT);
+            if (versionInfo.getAssetVersion() > 5) {
+                // arrays always need to be aligned in newer versions
+                in.align(ALIGNMENT);
+            }
         }
         
         if (DEBUG) {
@@ -268,7 +282,6 @@ public class ObjectData {
                 } else {
                     buf = ByteBufferUtils.allocate(size);
                     in.readBuffer(buf);
-                    in.align(ALIGNMENT);
                 }
 
                 buf.clear();
@@ -279,7 +292,6 @@ public class ObjectData {
             case "char":
                 byte[] raw = new byte[size];
                 in.readFully(raw, 0, size);
-                in.align(ALIGNMENT);
                 return ByteBuffer.wrap(raw);
 
             // read a list of primitive objects

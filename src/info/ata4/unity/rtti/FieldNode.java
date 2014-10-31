@@ -9,6 +9,8 @@
  */
 package info.ata4.unity.rtti;
 
+import info.ata4.unity.asset.FieldType;
+import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.util.collection.Node;
 
 /**
