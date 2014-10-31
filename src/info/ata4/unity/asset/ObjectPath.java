@@ -48,6 +48,8 @@ public class ObjectPath implements Struct {
         typeID = in.readInt();
         classID = in.readShort();
         isDestroyed = in.readShort();
+        
+        assert typeID == classID || (classID == 114 && typeID < 0);
     }
 
     @Override
