@@ -20,11 +20,11 @@ public class AssetVersionInfo {
     private UnityVersion unityVersion;
     private UnityVersion unityRevision;
     
-    // 5 = ??? - 2.0
+    // 5 = 1.2 - 2.0
     // 6 = 2.1 - 2.6
-    // 7 = ???
     // 8 = 3.1 - 3.4
-    // 9 = 3.5 - 4.x
+    // 9 = 3.5 - 4.5
+    // 14 = 5.0
     private int assetVersion;
 
     public UnityVersion getUnityVersion() {
