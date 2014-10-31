@@ -116,7 +116,6 @@ public class AssetFile extends FileHandler {
         
         // read structure data
         typeTreeBlock.setOffset(in.position());
-        L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
         in.readStruct(typeTree);
         typeTreeBlock.setEndOffset(in.position());
         
