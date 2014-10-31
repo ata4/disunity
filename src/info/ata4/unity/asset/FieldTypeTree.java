@@ -27,7 +27,7 @@ public class FieldTypeTree implements Struct {
 
     private final Map<Integer, FieldTypeNode> typeMap = new LinkedHashMap<>();
     private final AssetVersionInfo versionInfo;
-    private UnityVersion unityRevision;
+
     private int treeVersion;
     
     public FieldTypeTree(AssetVersionInfo versionInfo) {
@@ -39,11 +39,11 @@ public class FieldTypeTree implements Struct {
     }
     
     public UnityVersion getUnityRevision() {
-        return unityRevision;
+        return versionInfo.getUnityRevision();
     }
 
     public void setUnityRevision(UnityVersion unityRevision) {
-        this.unityRevision = unityRevision;
+        versionInfo.setUnityRevision(unityRevision);
     }
 
     public int getVersion() {
@@ -58,7 +58,7 @@ public class FieldTypeTree implements Struct {
     public void read(DataInputReader in) throws IOException {
         // revision/version for newer formats
         if (versionInfo.getAssetVersion() >= 7) {
-            unityRevision = new UnityVersion(in.readStringNull(255));
+            versionInfo.setUnityRevision(new UnityVersion(in.readStringNull(255)));
             treeVersion = in.readInt();
         }
         
@@ -84,7 +84,7 @@ public class FieldTypeTree implements Struct {
     public void write(DataOutputWriter out) throws IOException {
         // revision/version for newer formats
         if (versionInfo.getAssetVersion() >= 7) {
-            out.writeStringNull(unityRevision.toString());
+            out.writeStringNull(versionInfo.getUnityRevision().toString());
             out.writeInt(treeVersion);
         }
         
@@ -123,7 +123,7 @@ public class FieldTypeTree implements Struct {
         if (!Objects.equals(this.typeMap, other.typeMap)) {
             return false;
         }
-        if (!Objects.equals(this.unityRevision, other.unityRevision)) {
+        if (!Objects.equals(this.versionInfo.getUnityRevision(), other.versionInfo.getUnityRevision())) {
             return false;
         }
         if (this.treeVersion != other.treeVersion) {
@@ -136,7 +136,7 @@ public class FieldTypeTree implements Struct {
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + Objects.hashCode(this.typeMap);
-        hash = 29 * hash + Objects.hashCode(this.unityRevision);
+        hash = 29 * hash + Objects.hashCode(this.versionInfo.getUnityRevision());
         hash = 29 * hash + this.treeVersion;
         return hash;
     }
