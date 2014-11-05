@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  * Fluent interface for dialog boxes.
@@ -106,6 +107,9 @@ public class DialogBuilder {
             } else {
                 exMsg = ex.getMessage();
             }
+            
+            // wrap long messages
+            exMsg = WordUtils.wrap(exMsg, 50);
             
             if (StringUtils.isBlank(msg)) {
                 msg = exMsg;
