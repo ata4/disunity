@@ -7,5 +7,9 @@
 /dist/
 /releases/
 
+# ignore maven builds/repo
+/target/
+/maven-repo/
+
 # other
 /private/
