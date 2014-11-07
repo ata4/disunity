@@ -1,6 +1,6 @@
 [submodule "lib/ioutils"]
 	path = lib/ioutils
-	url = git@github.com:ata4/ioutils.git
+	url = https://github.com/ata4/ioutils
 [submodule "lib/lzmajio"]
 	path = lib/lzmajio
-	url = git@github.com:ata4/lzmajio
+	url = https://github.com/ata4/lzmajio
