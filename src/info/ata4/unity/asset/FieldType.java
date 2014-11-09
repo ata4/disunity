@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.Objects;
@@ -128,7 +128,7 @@ public class FieldType implements Struct {
     }
     
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         type = in.readStringNull(256);
         name = in.readStringNull(256);
         size = in.readInt();
@@ -139,7 +139,7 @@ public class FieldType implements Struct {
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         out.writeStringNull(type);
         out.writeStringNull(name);
         out.writeInt(size);

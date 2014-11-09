@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ObjectPathTable implements Struct {
     }
     
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         int entries = in.readInt();
 
         for (int i = 0; i < entries; i++) {
@@ -40,7 +40,7 @@ public class ObjectPathTable implements Struct {
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         int entries = paths.size();
         out.writeInt(entries);
 

@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class Reference implements Struct {
     private int type;
     
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         if (versionInfo.getAssetVersion() > 5) {
             assetPath = in.readStringNull();
         }
@@ -57,7 +57,7 @@ public class Reference implements Struct {
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         if (versionInfo.getAssetVersion() > 5) {
             out.writeStringNull(assetPath);
         }

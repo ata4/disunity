@@ -9,8 +9,9 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.io.DataInputReader;
+import info.ata4.io.DataReader;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.io.socket.Sockets;
 import info.ata4.unity.asset.AssetVersionInfo;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
@@ -113,7 +114,7 @@ public class ObjectData {
     }
     
     private void deserialize() throws IOException {
-        DataInputReader in = DataInputReader.newReader(buffer);
+        DataReader in = new DataReader(Sockets.forByteBuffer(buffer));
         in.setSwap(versionInfo.swapRequired());
         in.position(0);
         
@@ -126,7 +127,7 @@ public class ObjectData {
         }
     }
     
-    private FieldNode readObject(DataInputReader in, FieldTypeNode typeNode) throws IOException {
+    private FieldNode readObject(DataReader in, FieldTypeNode typeNode) throws IOException {
         FieldNode fieldNode = new FieldNode(typeNode);
         
         FieldType type = typeNode.getType();
@@ -175,7 +176,7 @@ public class ObjectData {
         return fieldNode;
     }
     
-    private Object readPrimitiveValue(DataInputReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+    private Object readPrimitiveValue(DataReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
         long pos = 0;
         if (DEBUG) {
             pos = in.position();
@@ -205,7 +206,7 @@ public class ObjectData {
         return value;
     }
     
-    private Object readPrimitive(DataInputReader in, FieldType type) throws IOException, RuntimeTypeException {
+    private Object readPrimitive(DataReader in, FieldType type) throws IOException, RuntimeTypeException {
         switch (type.getTypeName()) {
             // 1 byte
             case "bool":
@@ -256,7 +257,7 @@ public class ObjectData {
         }
     }
     
-    private Object readPrimitiveArray(DataInputReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+    private Object readPrimitiveArray(DataReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
         switch (type.getTypeName()) {
             // read byte arrays natively and wrap them as ByteBuffers,
             // which is much faster and more efficient than a list of wrappped

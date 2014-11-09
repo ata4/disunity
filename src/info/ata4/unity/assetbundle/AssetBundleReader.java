@@ -9,7 +9,9 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.DataInputReader;
+import info.ata4.io.DataReader;
+import info.ata4.io.socket.IOSocket;
+import info.ata4.io.socket.Sockets;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,14 +33,14 @@ import org.apache.commons.io.input.CountingInputStream;
  */
 public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> {
     
-    private final DataInputReader in;
+    private final DataReader in;
     private final AssetBundleHeader header = new AssetBundleHeader();
     private final List<AssetBundleEntryInfo> entries = new ArrayList<>();
     
-    private DataInputReader inData;
+    private DataReader inData;
 
     public AssetBundleReader(Path file) throws AssetBundleException, IOException {
-        in = DataInputReader.newReader(file);
+        in = new DataReader(Sockets.forFileRead(file));
         in.readStruct(header);
 
         // check signature
@@ -75,7 +77,9 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             is = new LzmaInputStream(new BufferedInputStream(is));
         }
         
-        inData = DataInputReader.newReader(new CountingInputStream(is));
+        IOSocket socket = Sockets.forInputStream(new CountingInputStream(is));
+        
+        inData = new DataReader(socket);
     }
 
     public AssetBundleHeader getHeader() {

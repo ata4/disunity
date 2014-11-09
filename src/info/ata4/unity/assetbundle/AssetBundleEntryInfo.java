@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
 import org.apache.commons.io.FilenameUtils;
@@ -55,14 +55,14 @@ public class AssetBundleEntryInfo implements Struct {
     }
 
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         name = in.readStringNull();
         offset = in.readUnsignedInt();
         size = in.readUnsignedInt();
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         out.writeStringNull(name);
         out.writeUnsignedInt(offset);
         out.writeUnsignedInt(size);

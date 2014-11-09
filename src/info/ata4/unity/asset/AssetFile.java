@@ -9,10 +9,12 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
+import info.ata4.io.socket.IOSocket;
+import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.ObjectData;
@@ -58,7 +60,7 @@ public class AssetFile extends FileHandler {
         String fileName = file.getFileName().toString();
         String fileExt = FilenameUtils.getExtension(fileName);
         
-        DataInputReader in;
+        IOSocket socket;
         
         // join split asset files before loading
         if (fileExt.startsWith("split")) {
@@ -83,10 +85,10 @@ public class AssetFile extends FileHandler {
             }
             
             // load all parts to one byte buffer
-            in = DataInputReader.newReader(ByteBufferUtils.load(parts));
+            socket = Sockets.forByteBuffer(ByteBufferUtils.load(parts));
         } else {
             // map single file to memory
-            in = DataInputReader.newMappedReader(file);
+            socket = Sockets.forFileMemoryMapped(file);
         }
         
         // load audio buffer if existing
@@ -96,11 +98,13 @@ public class AssetFile extends FileHandler {
             audioBuf = ByteBufferUtils.openReadOnly(audioStreamFile);
         }
         
-        load(in);
+        load(socket);
     }
     
     @Override
-    public void load(DataInputReader in) throws IOException {
+    public void load(IOSocket socket) throws IOException {
+        DataReader in = new DataReader(socket);
+        
         // read header
         headerBlock.setOffset(0);
         in.readStruct(header);
@@ -182,7 +186,7 @@ public class AssetFile extends FileHandler {
     }
     
     @Override
-    public void save(DataOutputWriter in) throws IOException {
+    public void save(IOSocket socket) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

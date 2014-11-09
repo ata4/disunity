@@ -9,11 +9,13 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.DataRandomAccess;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.buffer.ByteBufferUtils;
+import info.ata4.io.socket.IOSocket;
+import info.ata4.io.socket.Sockets;
 import info.ata4.unity.gui.util.progress.DummyProgress;
 import info.ata4.unity.gui.util.progress.Progress;
 import java.io.BufferedInputStream;
@@ -94,7 +96,7 @@ public class AssetBundleUtils {
         extract(file, outDir, new DummyProgress());
     }
     
-    public static List<Pair<String, DataRandomAccess>> buffer(AssetBundleReader reader, Progress progress) throws IOException {
+    public static List<Pair<String, IOSocket>> buffer(AssetBundleReader reader, Progress progress) throws IOException {
         long current = 0;
         long total = 0;
         for (AssetBundleEntryInfo entry : reader.getEntries()) {
@@ -103,7 +105,7 @@ public class AssetBundleUtils {
 
         progress.setLimit(total);
         
-        List<Pair<String, DataRandomAccess>> entries = new ArrayList<>();
+        List<Pair<String, IOSocket>> entries = new ArrayList<>();
 
         for (AssetBundleEntry entry : reader) {
             if (progress.isCanceled()) {
@@ -121,44 +123,46 @@ public class AssetBundleUtils {
         return entries;
     }
     
-    public static DataRandomAccess buffer(AssetBundleEntry entry) throws IOException {
+    public static IOSocket buffer(AssetBundleEntry entry) throws IOException {
         if (entry.getSize() < Integer.MAX_VALUE) {
             ByteBuffer bb = ByteBufferUtils.allocate((int) entry.getSize());
             OutputStream os = new ByteBufferOutputStream(bb);
             IOUtils.copyLarge(entry.getInputStream(), os);
             bb.flip();
 
-            return DataRandomAccess.newRandomAccess(bb);
+            return Sockets.forByteBuffer(bb);
         } else {
             // TODO: create temporary file
             throw new IllegalArgumentException("Entry is too large for buffering");
         }
     }
     
-    public static List<Pair<String, DataRandomAccess>> buffer(AssetBundleReader reader) throws IOException {
+    public static List<Pair<String, IOSocket>> buffer(AssetBundleReader reader) throws IOException {
         return buffer(reader, new DummyProgress());
     }
     
-    public static List<Pair<String, DataRandomAccess>> buffer(Path file, Progress progress) throws IOException {
+    public static List<Pair<String, IOSocket>> buffer(Path file, Progress progress) throws IOException {
         try (AssetBundleReader reader = new AssetBundleReader(file)) {
             return buffer(reader, progress);
         }
     }
     
-    public static List<Pair<String, DataRandomAccess>> buffer(Path file) throws IOException {
+    public static List<Pair<String, IOSocket>> buffer(Path file) throws IOException {
         return buffer(file, new DummyProgress());
     }
     
     public static void compress(Path inFile, Path outFile) throws IOException {
         try (
-            DataInputReader in = DataInputReader.newReader(inFile);
-            DataRandomAccess out = DataRandomAccess.newRandomAccess(outFile, CREATE, READ, WRITE, TRUNCATE_EXISTING);
+            IOSocket inSocket = Sockets.forFileBufferedRead(inFile);
+            IOSocket outSocket = Sockets.forFileRandomAccess(inFile, CREATE, READ, WRITE, TRUNCATE_EXISTING);
         ) {
-            compress(in, out);
+            compress(inSocket, outSocket);
         }
     }
     
-    private static void compress(DataInputReader in, DataRandomAccess out) throws IOException {
+    private static void compress(IOSocket inSocket, IOSocket outSocket) throws IOException {
+        DataReader in = new DataReader(inSocket);
+        
         AssetBundleHeader tmpHeader = new AssetBundleHeader();
         in.readStruct(tmpHeader);
 
@@ -173,6 +177,7 @@ public class AssetBundleUtils {
 
         tmpHeader.setCompressed(true);
 
+        DataRandomAccess out = new DataRandomAccess(outSocket);
         out.writeStruct(tmpHeader);
 
         compressData(in, out.getWriter());
@@ -184,7 +189,7 @@ public class AssetBundleUtils {
         out.writeStruct(tmpHeader);
     }
     
-    private static void compressData(DataInputReader in, DataOutputWriter out) throws IOException {
+    private static void compressData(DataReader in, DataWriter out) throws IOException {
         int lc = 3;
         int lp = 0;
         int pb = 2;
@@ -217,14 +222,16 @@ public class AssetBundleUtils {
 
     public static void uncompress(Path inFile, Path outFile) throws IOException {
         try (
-            DataInputReader in = DataInputReader.newBufferedReader(inFile);
-            DataOutputWriter out = DataOutputWriter.newBufferedWriter(outFile);
+            IOSocket inSocket = Sockets.forFileBufferedRead(inFile);
+            IOSocket outSocket = Sockets.forFileBufferedWrite(inFile);
         ) {
-            uncompress(in, out);
+            uncompress(inSocket, outSocket);
         }
     }
     
-    public static void uncompress(DataInputReader in, DataOutputWriter out) throws IOException {
+    public static void uncompress(IOSocket inSocket, IOSocket outSocket) throws IOException {
+        DataReader in = new DataReader(inSocket);
+        
         AssetBundleHeader tmpHeader = new AssetBundleHeader();
         in.readStruct(tmpHeader);
 
@@ -239,13 +246,14 @@ public class AssetBundleUtils {
 
         tmpHeader.setCompressed(false);
 
+        DataWriter out = new DataWriter(outSocket);
         out.writeStruct(tmpHeader);
 
         in.setSwap(true);
         uncompressData(in, out);
     }
     
-    private static void uncompressData(DataInputReader in, DataOutputWriter out) throws IOException {
+    private static void uncompressData(DataReader in, DataWriter out) throws IOException {
         boolean swap = in.isSwap();
         
         in.setSwap(true);

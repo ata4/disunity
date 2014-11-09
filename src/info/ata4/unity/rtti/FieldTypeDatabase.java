@@ -9,8 +9,10 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
+import info.ata4.io.socket.IOSocket;
+import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.FieldTypeNode;
@@ -99,8 +101,8 @@ public class FieldTypeDatabase {
             return;
         }
 
-        try (BufferedInputStream bis = new BufferedInputStream(is)) {
-            DataInputReader in = DataInputReader.newReader(bis);
+        try (IOSocket socket = Sockets.forInputStream(new BufferedInputStream(is))) {
+            DataReader in = new DataReader(socket);
 
             // read header
             int dbVersion = in.readInt();
@@ -149,9 +151,9 @@ public class FieldTypeDatabase {
         L.info("Saving type database");
         
         // write database file
-        File dbFile = new File(FILENAME);
-        try (BufferedOutputStream bos = new BufferedOutputStream(FileUtils.openOutputStream(dbFile))) {
-            DataOutputWriter out = DataOutputWriter.newWriter(bos);
+        Path dbFile = Paths.get(FILENAME);
+        try (IOSocket socket = Sockets.forFileBufferedWrite(dbFile)) {
+            DataWriter out = new DataWriter(socket);
             
             // write header
             out.writeInt(VERSION);

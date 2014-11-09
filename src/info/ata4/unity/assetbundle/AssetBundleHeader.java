@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class AssetBundleHeader implements Struct {
     private int unknown;
     
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         signature = in.readStringNull();
         streamVersion = in.readInt();
         unityVersion = new UnityVersion(in.readStringNull());
@@ -99,7 +99,7 @@ public class AssetBundleHeader implements Struct {
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         out.writeStringNull(signature);
         out.writeInt(streamVersion);
         out.writeStringNull(unityVersion.toString());

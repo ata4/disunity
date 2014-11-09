@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.io.DataInputReader;
-import info.ata4.io.DataOutputWriter;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class ObjectPath implements Struct {
     private short isDestroyed;
 
     @Override
-    public void read(DataInputReader in) throws IOException {
+    public void read(DataReader in) throws IOException {
         pathID = in.readInt();
         offset = in.readInt();
         length = in.readInt();
@@ -53,7 +53,7 @@ public class ObjectPath implements Struct {
     }
 
     @Override
-    public void write(DataOutputWriter out) throws IOException {
+    public void write(DataWriter out) throws IOException {
         out.writeInt(pathID);
         out.writeInt(offset);
         out.writeInt(length);
