@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.control;
+package info.ata4.disunity.gui.control;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

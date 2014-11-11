@@ -7,11 +7,11 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.model;
+package info.ata4.disunity.gui.model;
 
 import info.ata4.log.LogUtils;
-import info.ata4.unity.gui.util.progress.DummyProgress;
-import info.ata4.unity.gui.util.progress.Progress;
+import info.ata4.util.progress.DummyProgress;
+import info.ata4.util.progress.Progress;
 import java.awt.Cursor;
 import java.util.logging.Level;
 import java.util.logging.Logger;

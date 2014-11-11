@@ -7,7 +7,7 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.util;
+package info.ata4.disunity.gui.util;
 
 import java.io.File;
 import java.util.Arrays;

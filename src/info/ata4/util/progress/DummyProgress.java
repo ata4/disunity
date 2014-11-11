@@ -7,19 +7,29 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.util.progress;
+package info.ata4.util.progress;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public interface Progress {
-    
-    void setLabel(String label);
-    
-    void setLimit(long limit);
+public class DummyProgress implements Progress {
 
-    void update(long current);
+    @Override
+    public void setLimit(long limit) {
+    }
 
-    boolean isCanceled();
+    @Override
+    public void setLabel(String label) {
+    }
+
+    @Override
+    public void update(long current) {
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
+    
 }

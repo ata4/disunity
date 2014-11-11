@@ -7,12 +7,12 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.model;
+package info.ata4.disunity.gui.model;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.Reference;
-import info.ata4.unity.gui.util.FieldNodeUtils;
+import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.rtti.ObjectData;

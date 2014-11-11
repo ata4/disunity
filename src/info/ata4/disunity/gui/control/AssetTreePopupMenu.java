@@ -7,10 +7,10 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.gui.control;
+package info.ata4.disunity.gui.control;
 
 import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.unity.gui.util.DialogBuilder;
+import info.ata4.disunity.gui.util.DialogBuilder;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.event.ActionEvent;
