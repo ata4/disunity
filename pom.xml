@@ -18,6 +18,14 @@
   <build>
     <sourceDirectory>src/</sourceDirectory>
 
+    <!-- Specify resource directory -->
+    <resources>
+      <resource>
+        <directory>src/resources</directory>
+        <targetPath>resources</targetPath>
+      </resource>
+    </resources>
+
     <plugins>
       <!-- Take care of MANIFEST.MF -->
       <plugin>
