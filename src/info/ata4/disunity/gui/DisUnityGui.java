@@ -10,7 +10,7 @@
 package info.ata4.disunity.gui;
 
 import info.ata4.log.LogUtils;
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -40,7 +40,7 @@ public class DisUnityGui {
         gui.setVisible(true);
         
         if (args.length > 0) {
-            gui.openFile(Paths.get(args[0]));
+            gui.openFile(new File(args[0]));
         }
     }
 }

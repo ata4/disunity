@@ -9,27 +9,26 @@
  */
 package info.ata4.disunity.gui;
 
-import info.ata4.unity.DisUnity;
-import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.disunity.gui.control.AssetTreePopupMenuListener;
 import info.ata4.disunity.gui.model.AssetFileNode;
 import info.ata4.disunity.gui.model.FieldTypeDatabaseNode;
 import info.ata4.disunity.gui.util.DialogBuilder;
+import info.ata4.disunity.gui.util.DialogBuilder.ReturnType;
 import info.ata4.disunity.gui.util.FileExtensionFilter;
+import info.ata4.disunity.gui.view.AssetTreeCellRenderer;
+import info.ata4.unity.DisUnity;
+import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.assetbundle.AssetBundleUtils;
+import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.util.progress.Progress;
 import info.ata4.util.progress.ProgressMonitorWrapper;
-import info.ata4.disunity.gui.view.AssetTreeCellRenderer;
-import info.ata4.unity.rtti.FieldTypeDatabase;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import javax.swing.JFileChooser;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
-import javax.swing.plaf.FileChooserUI;
 import javax.swing.tree.DefaultTreeModel;
 import org.apache.commons.io.FilenameUtils;
 
@@ -54,20 +53,115 @@ public class DisUnityWindow extends javax.swing.JFrame {
         dataTree.addMouseListener(new AssetTreePopupMenuListener(dataTree));
     }
     
-    public void openFile(Path file) {
+    public void openFile(File file) {
         try {
+            if (AssetBundleUtils.isAssetBundle(file.toPath())) {
+                ReturnType result = new DialogBuilder()
+                        .question()
+                        .withYesNo()
+                        .withTitle("Extract asset bundle")
+                        .withMessage("The selected file is an asset bundle and "
+                                + "first needs to be extracted to open its asset files.\n"
+                                + "Do you want to extract it now?")
+                        .show();
+                
+                if (result == ReturnType.YES) {
+                    extractAssetBundles(true, file);
+                }
+                
+                return;
+            }
+            
             AssetFile asset = new AssetFile();
-            asset.load(file);
+            asset.load(file.toPath());
 
             dataTree.setModel(new DefaultTreeModel(new AssetFileNode(dataTree, asset)));
             
-            this.file = file.toFile(); // for the file chooser
+            this.file = file; // for the file chooser
         } catch (Exception ex) {
             new DialogBuilder(this)
                     .exception(ex)
-                    .withMessage("Can't open " + file.getFileName())
+                    .withMessage("Can't open " + file.getName())
                     .show();
         }
+    }
+    
+    private void chooseAssetFile(File currentDirectory) {
+        JFileChooser fc = new JFileChooser(currentDirectory);
+        fc.addChoosableFileFilter(new FileExtensionFilter("Unity scene", "unity"));
+        fc.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
+        
+        int result = fc.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        openFile(fc.getSelectedFile());
+    }
+    
+    private void chooseAssetBundles(File currentDirectory) {
+        JFileChooser fc = new JFileChooser(currentDirectory);
+        fc.setDialogTitle("Select asset bundle file");
+        fc.setFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
+        fc.setMultiSelectionEnabled(true);
+        
+        int result = fc.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        extractAssetBundles(false, fc.getSelectedFiles());
+    }
+    
+    private void extractAssetBundles(final boolean openAssetFileChooser, final File ... bundleFiles) {
+        JFileChooser fc = new JFileChooser(bundleFiles[bundleFiles.length - 1]);
+        fc.setDialogTitle("Select output directory");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fc.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        
+        final File outputDir = fc.getSelectedFile();
+        
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                Component parent = DisUnityWindow.this;
+                
+                Path lastOutputPath = null;
+                
+                for (File bundleFile : bundleFiles) {                    
+                    ProgressMonitor monitor = new ProgressMonitor(parent, "Extracting " + bundleFile, null, 0, 0);
+                    monitor.setMillisToDecideToPopup(0);
+                    monitor.setMillisToPopup(0);
+
+                    Progress progress = new ProgressMonitorWrapper(monitor);
+                    
+                    String bundleName = FilenameUtils.removeExtension(bundleFile.getName());
+                    Path bundlePath = bundleFile.toPath();
+                    Path outputPath = outputDir.toPath().resolve(bundleName);
+                    
+                    lastOutputPath = outputPath;
+
+                    try {
+                        AssetBundleUtils.extract(bundlePath, outputPath, progress);
+                    } catch (IOException ex) {
+                        new DialogBuilder(parent)
+                                .exception(ex)
+                                .withMessage("Can't extract file " + bundleFile)
+                                .show();
+                    }
+                }
+                
+                if (openAssetFileChooser && lastOutputPath != null) {
+                    chooseAssetFile(lastOutputPath.toFile());
+                }
+
+                return null;
+            }
+        }.execute();
     }
 
     /**
@@ -189,16 +283,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        JFileChooser fc = new JFileChooser(file);
-        fc.addChoosableFileFilter(new FileExtensionFilter("Unity scene", "unity"));
-        fc.addChoosableFileFilter(new FileExtensionFilter("Unity asset", "asset", "assets", "sharedAssets"));
-        
-        int result = fc.showOpenDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        
-        openFile(fc.getSelectedFile().toPath());
+        chooseAssetFile(file);
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void openTypeDatabaseItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTypeDatabaseItemActionPerformed
@@ -206,58 +291,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_openTypeDatabaseItemActionPerformed
 
     private void extractAssetBundleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extractAssetBundleMenuItemActionPerformed
-        JFileChooser fc = new JFileChooser(file);
-        fc.setDialogTitle("Select asset bundle file");
-        fc.setFileFilter(new FileExtensionFilter("Unity asset bundle", "unity3d"));
-        fc.setMultiSelectionEnabled(true);
-        
-        int result = fc.showOpenDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        
-        final File[] bundleFiles = fc.getSelectedFiles();
-
-        fc = new JFileChooser(bundleFiles[bundleFiles.length - 1]);
-        fc.setDialogTitle("Select output directory");
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-        result = fc.showOpenDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        
-        final File outputDir = fc.getSelectedFile();
-        
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                Component parent = DisUnityWindow.this;
-                
-                for (File bundleFile : bundleFiles) {                    
-                    ProgressMonitor monitor = new ProgressMonitor(parent, "Extracting " + bundleFile, null, 0, 0);
-                    monitor.setMillisToDecideToPopup(0);
-                    monitor.setMillisToPopup(0);
-
-                    Progress progress = new ProgressMonitorWrapper(monitor);
-                    
-                    String bundleName = FilenameUtils.removeExtension(bundleFile.getName());
-                    Path bundlePath = bundleFile.toPath();
-                    Path outputPath = outputDir.toPath().resolve(bundleName);
-
-                    try {
-                        AssetBundleUtils.extract(bundlePath, outputPath, progress);
-                    } catch (IOException ex) {
-                        new DialogBuilder(parent)
-                                .exception(ex)
-                                .withMessage("Can't extract file " + bundleFile)
-                                .show();
-                    }
-                }
-
-                return null;
-            }
-        }.execute();
+        chooseAssetBundles(file);
     }//GEN-LAST:event_extractAssetBundleMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,7 +27,7 @@ public class DialogBuilder {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private enum Type {
+    private enum MessageType {
         
         ERROR(JOptionPane.ERROR_MESSAGE),
         INFORMATION(JOptionPane.INFORMATION_MESSAGE),
@@ -37,7 +37,7 @@ public class DialogBuilder {
         
         private final int numeric;
         
-        private Type(int numeric) {
+        private MessageType(int numeric) {
             this.numeric = numeric;
         }
 
@@ -46,8 +46,56 @@ public class DialogBuilder {
         }
     }
     
+    private enum OptionType {
+        
+        DEFAULT(JOptionPane.DEFAULT_OPTION),
+        YES_NO(JOptionPane.YES_NO_OPTION),
+        YES_NO_CANCEL(JOptionPane.YES_NO_CANCEL_OPTION),
+        OK_CANCEL(JOptionPane.OK_CANCEL_OPTION);
+        
+        private final int numeric;
+        
+        private OptionType(int numeric) {
+            this.numeric = numeric;
+        }
+
+        public int getNumeric() {
+            return numeric;
+        }
+    }
+    
+    public enum ReturnType {
+        
+        YES(JOptionPane.YES_OPTION),
+        NO(JOptionPane.NO_OPTION),
+        CANCEL(JOptionPane.CANCEL_OPTION),
+        OK(JOptionPane.OK_OPTION),
+        CLOSED(JOptionPane.CLOSED_OPTION);
+        
+        private final int numeric;
+        
+        private ReturnType(int numeric) {
+            this.numeric = numeric;
+        }
+        
+        public int getNumeric() {
+            return numeric;
+        }
+
+        public static ReturnType fromNumeric(int numeric) {
+            for (ReturnType returnType : values()) {
+                if (returnType.getNumeric() == numeric) {
+                    return returnType;
+                }
+            }
+            
+            throw new IllegalArgumentException("Wrong numeric type");
+        }
+    }
+    
     private final Component parent;
-    private Type type = Type.PLAIN;
+    private MessageType messageType = MessageType.PLAIN;
+    private OptionType optionType = OptionType.DEFAULT;
     private String title;
     private String message;
     private Exception ex;
@@ -61,29 +109,44 @@ public class DialogBuilder {
     }
     
     public DialogBuilder error() {
-        type = Type.ERROR;
+        messageType = MessageType.ERROR;
         return this;
     }
     
     public DialogBuilder info() {
-        type = Type.INFORMATION;
+        messageType = MessageType.INFORMATION;
         return this;
     }
     
     public DialogBuilder question() {
-        type = Type.QUESTION;
+        messageType = MessageType.QUESTION;
         return this;
     }
     
     public DialogBuilder plain() {
-        type = Type.PLAIN;
+        messageType = MessageType.PLAIN;
         return this;
     }
     
     public DialogBuilder exception(Exception ex) {
         this.title = "Error";
-        this.type = Type.ERROR;
+        this.messageType = MessageType.ERROR;
         this.ex = ex;
+        return this;
+    }
+    
+    public DialogBuilder withYesNo() {
+        optionType = OptionType.YES_NO;
+        return this;
+    }
+    
+    public DialogBuilder withYesNoCancel() {
+        optionType = OptionType.YES_NO_CANCEL;
+        return this;
+    }
+    
+    public DialogBuilder withOkCancel() {
+        optionType = OptionType.OK_CANCEL;
         return this;
     }
     
@@ -97,7 +160,7 @@ public class DialogBuilder {
         return this;
     }
     
-    public void show() {
+    public ReturnType show() {
         String msg = message;
         
         if (ex != null) {
@@ -120,6 +183,12 @@ public class DialogBuilder {
             L.log(Level.WARNING, msg, ex);
         }
         
-        JOptionPane.showMessageDialog(parent, msg, title, type.getNumeric());
+        if (messageType == MessageType.QUESTION) {
+            int value = JOptionPane.showConfirmDialog(parent, msg, title, optionType.getNumeric(), messageType.getNumeric());
+            return ReturnType.fromNumeric(value);
+        } else {
+            JOptionPane.showMessageDialog(parent, msg, title, messageType.getNumeric());
+            return ReturnType.OK;
+        }
     }
 }
