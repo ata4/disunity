@@ -55,6 +55,8 @@ public class DisUnityWindow extends javax.swing.JFrame {
     
     public void openFile(File file) {
         try {
+            // check if the file is an asset bundle, these can't be opened or edited
+            // directly and need to be extracted
             if (AssetBundleUtils.isAssetBundle(file.toPath())) {
                 ReturnType result = new DialogBuilder()
                         .question()
@@ -155,6 +157,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
                     }
                 }
                 
+                // open file chooser in the last directory if requested
                 if (openAssetFileChooser && lastOutputPath != null) {
                     chooseAssetFile(lastOutputPath.toFile());
                 }
