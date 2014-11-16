@@ -225,6 +225,18 @@ public class AssetBundle extends FileHandler {
         return codecsSave;
     }
 
+    public String getSignature() {
+        return header.getSignature();
+    }
+
+    public void setSignatureRaw() {
+        header.setSignature(AssetBundleHeader.SIGNATURE_RAW);
+    }
+
+    public void setSignatureWeb() {
+        header.setSignature(AssetBundleHeader.SIGNATURE_WEB);
+    }
+
     public int getFormat() {
         return header.getFormat();
     }
