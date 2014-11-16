@@ -173,7 +173,18 @@ public class AssetBundle extends FileHandler {
             bbData = LzmaBufferUtils.encode(bbData);
             dataSizeC = bbData.limit();
         }
-        
+
+        // Mess with offset map before calculating header size
+        List<Pair<Integer, Integer>> offsetMap = header.getOffsetMap();
+        offsetMap.clear();
+
+        // TODO: Original asset bundles have ascending lengths for each asset
+        // file. The exact calculation of these values is not yet known, so use
+        // the maximum size for each entry for now to avoid crashes.
+        for (int i = 0; i < assets; i++) {
+            offsetMap.add(new ImmutablePair<>(dataSizeC, dataSizeU));
+        }
+
         // configure header
         int headerSize = header.getSize();
         int bundleSize = headerSize + dataSizeC;
@@ -183,17 +194,7 @@ public class AssetBundle extends FileHandler {
         header.setFileSize2(bundleSize);
         header.setUnknown1(assets);
         header.setUnknown2(bundleHeaderSize);
-        
-        List<Pair<Integer, Integer>> offsetMap = header.getOffsetMap();
-        offsetMap.clear();
-        
-        // TODO: Original asset bundles have ascending lengths for each asset
-        // file. The exact calculation of these values is not yet known, so use
-        // the maximum size for each entry for now to avoid crashes.
-        for (int i = 0; i < assets; i++) {
-            offsetMap.add(new ImmutablePair<>(dataSizeC, dataSizeU));
-        }
-        
+
         // create bundle buffer
         ByteBuffer bb = ByteBuffer.allocateDirect(bundleSize);
         out = DataOutputWriter.newWriter(bb);
