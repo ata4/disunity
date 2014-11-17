@@ -37,6 +37,10 @@ public abstract class FileCommand extends Command {
     
     protected abstract void processFile(Path file) throws IOException;
     
+    protected List<Path> getFiles() {
+        return files;
+    }
+
     protected void processDirectory(Path dir) throws IOException {
         boolean allowDirs = getOptions().isRecursive();
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir)) {

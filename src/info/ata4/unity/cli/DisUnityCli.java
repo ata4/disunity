@@ -13,6 +13,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
+import info.ata4.unity.cli.cmd.BundleCmd;
 import info.ata4.unity.cli.cmd.BundleExtractCmd;
 import info.ata4.unity.cli.cmd.BundleInjectCmd;
 import info.ata4.unity.cli.cmd.BundleListCmd;
@@ -66,6 +67,7 @@ public class DisUnityCli implements Runnable {
         jc.addCommand(new SplitCmd());
         
         // bundle commands
+        jc.addCommand(new BundleCmd());
         jc.addCommand(new BundleExtractCmd());
         jc.addCommand(new BundleInjectCmd());
         jc.addCommand(new BundleListCmd(out));
