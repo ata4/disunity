@@ -15,6 +15,7 @@ import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
+import info.ata4.io.util.ObjectToString;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.ObjectData;
@@ -103,21 +104,36 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void load(IOSocket socket) throws IOException {
+        if (socket.getProperties().isStreaming()) {
+            throw new IOException("Random access is required");
+        }
+        
         DataReader in = new DataReader(socket);
         
-        // read header
-        headerBlock.setOffset(0);
-        in.readStruct(header);
+        loadHeader(in);
+
+        // read as little endian from now on
         in.setSwap(true);
-        headerBlock.setEndOffset(in.position());
-        
-        L.log(Level.FINER, "headerBlock: {0}", headerBlock);
         
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
             in.position(header.getFileSize() - header.getMetadataSize() + 1);
         }
         
+        loadMetadata(in);
+        loadObjects(in);
+        checkBlocks();
+    }
+    
+    private void loadHeader(DataReader in) throws IOException {
+        headerBlock.setOffset(0);
+        in.readStruct(header);
+        headerBlock.setEndOffset(in.position());
+        
+        L.log(Level.FINER, "headerBlock: {0}", headerBlock);
+    }
+    
+    private void loadMetadata(DataReader in) throws IOException {
         // read structure data
         typeTreeBlock.setOffset(in.position());
         in.readStruct(typeTree);
@@ -136,22 +152,13 @@ public class AssetFile extends FileHandler {
         refTableBlock.setEndOffset(in.position());
         
         L.log(Level.FINER, "refTableBlock: {0}", refTableBlock);
-        
-        // sanity check for the data blocks
-        assert !headerBlock.isIntersecting(typeTreeBlock);
-        assert !headerBlock.isIntersecting(objTableBlock);
-        assert !headerBlock.isIntersecting(refTableBlock);
-        
-        assert !typeTreeBlock.isIntersecting(objTableBlock);
-        assert !typeTreeBlock.isIntersecting(refTableBlock);
-        
-        assert !objTableBlock.isIntersecting(refTableBlock);
-
-        // read object data
+    }
+    
+    private void loadObjects(DataReader in) throws IOException {
         objects = new ArrayList<>();
         
         for (ObjectPath path : objTable.getPaths()) {
-            ByteBuffer buf = ByteBufferUtils.allocate(path.getLength());
+            ByteBuffer buf = ByteBufferUtils.allocate((int) path.getLength());
 
             in.position(header.getDataOffset() + path.getOffset());
             in.readBuffer(buf);
@@ -187,7 +194,105 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void save(IOSocket socket) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (socket.getProperties().isStreaming()) {
+            throw new IOException("Random access is required");
+        }
+        
+        DataWriter out = new DataWriter(socket);
+        
+        saveHeader(out);
+        
+        // write as little endian from now on
+        out.setSwap(true);
+        
+        // older formats store the object data before the structure data
+        if (header.getVersion() < 9) {
+            header.setDataOffset(0);
+            
+            saveObjects(out);
+            saveMetadata(out);
+        } else {
+            saveMetadata(out);
+            
+            out.align(4096);
+            header.setDataOffset(out.position());
+            
+            saveObjects(out);
+            
+            // write updated path table
+            out.position(objTableBlock.getOffset());
+            out.writeStruct(objTable);
+        }
+        
+        // update header
+        header.setFileSize(out.size());
+        header.setMetadataSize(typeTreeBlock.getLength()
+                + objTableBlock.getLength()
+                + refTableBlock.getLength()
+                + 1);
+        
+        // write updated header
+        out.setSwap(false);
+        out.position(headerBlock.getOffset());
+        out.writeStruct(header);
+             
+        checkBlocks();
+    }
+    
+    private void saveHeader(DataWriter out) throws IOException {
+        headerBlock.setOffset(0);
+        out.writeStruct(header);
+        headerBlock.setEndOffset(out.position());
+        
+        L.log(Level.FINER, "headerBlock: {0}", headerBlock);
+    }
+    
+    private void saveMetadata(DataWriter out) throws IOException {
+        // read structure data
+        typeTreeBlock.setOffset(out.position());
+        out.writeStruct(typeTree);
+        typeTreeBlock.setEndOffset(out.position());
+
+        L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
+
+        objTableBlock.setOffset(out.position());
+        out.writeStruct(objTable);
+        objTableBlock.setEndOffset(out.position());
+
+        L.log(Level.FINER, "objTableBlock: {0}", objTableBlock);
+
+        refTableBlock.setOffset(out.position());
+        out.writeStruct(refTable);
+        refTableBlock.setEndOffset(out.position());
+        
+        L.log(Level.FINER, "refTableBlock: {0}", refTableBlock);
+    }
+    
+    private void saveObjects(DataWriter out) throws IOException {
+        for (ObjectData data : objects) {            
+            ByteBuffer bb = data.getBuffer();
+            bb.rewind();
+            
+            out.align(8);
+            
+            ObjectPath path = data.getPath();            
+            path.setOffset(out.position() - header.getDataOffset());
+            path.setLength(bb.remaining());
+
+            out.writeBuffer(bb);
+        }
+    }
+    
+    private void checkBlocks() {
+        // sanity check for the data blocks
+        assert !headerBlock.isIntersecting(typeTreeBlock);
+        assert !headerBlock.isIntersecting(objTableBlock);
+        assert !headerBlock.isIntersecting(refTableBlock);
+        
+        assert !typeTreeBlock.isIntersecting(objTableBlock);
+        assert !typeTreeBlock.isIntersecting(refTableBlock);
+        
+        assert !objTableBlock.isIntersecting(refTableBlock);
     }
 
     public AssetHeader getHeader() {
