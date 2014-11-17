@@ -24,13 +24,13 @@ public class AssetHeader implements Struct {
     private final AssetVersionInfo versionInfo;
     
     // size of the structure data
-    private int metadataSize;
+    private long metadataSize;
     
     // size of the whole asset file
-    private int fileSize;
+    private long fileSize;
     
     // offset to the serialized data
-    private int dataOffset;
+    private long dataOffset;
     
     // byte order of the serialized data?
     private byte endianness;
@@ -45,36 +45,36 @@ public class AssetHeader implements Struct {
     @Override
     public void read(DataReader in) throws IOException {
         metadataSize = in.readInt();
-        fileSize = in.readInt();
+        fileSize = in.readUnsignedInt();
         versionInfo.setAssetVersion(in.readInt());
-        dataOffset = in.readInt();
+        dataOffset = in.readUnsignedInt();
         endianness = in.readByte();
         in.readFully(reserved);
     }
 
     @Override
     public void write(DataWriter out) throws IOException {
-        out.writeInt(metadataSize);
-        out.writeInt(fileSize);
+        out.writeUnsignedInt(metadataSize);
+        out.writeUnsignedInt(fileSize);
         out.writeInt(versionInfo.getAssetVersion());
-        out.writeInt(dataOffset);
+        out.writeUnsignedInt(dataOffset);
         out.writeByte(endianness);
         out.write(reserved);
     }
 
-    public int getMetadataSize() {
+    public long getMetadataSize() {
         return metadataSize;
     }
 
-    public void setMetadataSize(int metadataSize) {
+    public void setMetadataSize(long metadataSize) {
         this.metadataSize = metadataSize;
     }
 
-    public int getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(int fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -86,11 +86,11 @@ public class AssetHeader implements Struct {
         versionInfo.setAssetVersion(version);
     }
 
-    public int getDataOffset() {
+    public long getDataOffset() {
         return dataOffset;
     }
 
-    public void setDataOffset(int dataOffset) {
+    public void setDataOffset(long dataOffset) {
         this.dataOffset = dataOffset;
     }
 
