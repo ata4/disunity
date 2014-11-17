@@ -26,10 +26,10 @@ public class ObjectPath implements Struct {
     private int pathID;
     
     // Object data offset
-    private int offset;
+    private long offset;
     
     // Object data size
-    private int length;
+    private long length;
     
     // Type ID, equal to classID if it's not a MonoBehaviour
     private int typeID;
@@ -43,8 +43,8 @@ public class ObjectPath implements Struct {
     @Override
     public void read(DataReader in) throws IOException {
         pathID = in.readInt();
-        offset = in.readInt();
-        length = in.readInt();
+        offset = in.readUnsignedInt();
+        length = in.readUnsignedInt();
         typeID = in.readInt();
         classID = in.readShort();
         isDestroyed = in.readShort();
@@ -55,8 +55,8 @@ public class ObjectPath implements Struct {
     @Override
     public void write(DataWriter out) throws IOException {
         out.writeInt(pathID);
-        out.writeInt(offset);
-        out.writeInt(length);
+        out.writeUnsignedInt(offset);
+        out.writeUnsignedInt(length);
         out.writeInt(typeID);
         out.writeShort(classID);
         out.writeShort(isDestroyed);
@@ -70,19 +70,19 @@ public class ObjectPath implements Struct {
         this.pathID = pathID;
     }
 
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public void setOffset(long offset) {
         this.offset = offset;
     }
 
-    public int getLength() {
+    public long getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(long length) {
         this.length = length;
     }
     
