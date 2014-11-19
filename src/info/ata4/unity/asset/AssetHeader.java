@@ -48,8 +48,10 @@ public class AssetHeader implements Struct {
         fileSize = in.readUnsignedInt();
         versionInfo.setAssetVersion(in.readInt());
         dataOffset = in.readUnsignedInt();
-        endianness = in.readByte();
-        in.readFully(reserved);
+        if (versionInfo.getAssetVersion() >= 9) {
+            endianness = in.readByte();
+            in.readFully(reserved);
+        }
     }
 
     @Override
@@ -58,8 +60,10 @@ public class AssetHeader implements Struct {
         out.writeUnsignedInt(fileSize);
         out.writeInt(versionInfo.getAssetVersion());
         out.writeUnsignedInt(dataOffset);
-        out.writeByte(endianness);
-        out.write(reserved);
+        if (versionInfo.getAssetVersion() >= 9) {
+            out.writeByte(endianness);
+            out.write(reserved);
+        }
     }
 
     public long getMetadataSize() {
