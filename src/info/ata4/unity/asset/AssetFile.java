@@ -53,6 +53,7 @@ public class AssetFile extends FileHandler {
     private final DataBlock typeTreeBlock = new DataBlock();
     private final DataBlock objTableBlock = new DataBlock();
     private final DataBlock refTableBlock = new DataBlock();
+    private final DataBlock objDataBlock = new DataBlock();
 
     @Override
     public void load(Path file) throws IOException {
@@ -157,10 +158,18 @@ public class AssetFile extends FileHandler {
     private void loadObjects(DataReader in) throws IOException {
         objects = new ArrayList<>();
         
+        long ofsMin = Long.MAX_VALUE;
+        long ofsMax = Long.MIN_VALUE;
+        
         for (ObjectPath path : objTable.getPaths()) {
             ByteBuffer buf = ByteBufferUtils.allocate((int) path.getLength());
-
-            in.position(header.getDataOffset() + path.getOffset());
+            
+            long ofs = header.getDataOffset() + path.getOffset();
+            
+            ofsMin = Math.min(ofsMin, ofs);
+            ofsMax = Math.max(ofsMax, ofs + path.getLength());
+            
+            in.position(ofs);
             in.readBuffer(buf);
             
             // try to get type node from database if the embedded one is empty
@@ -171,14 +180,10 @@ public class AssetFile extends FileHandler {
                 typeNode = FieldTypeDatabase.getInstance().getNode(path.getTypeID(), typeTree.getUnityRevision());
             }
             
-            // in some cases, e.g. standalone MonoBehaviours, the type tree is not
-            // available
-            if (typeNode == null) {
-                // log a warning if it's not a MonoBehaviour
-                if (path.getClassID() != 114) {
-                    L.log(Level.WARNING, "Skipped {0} with no type tree", path);
-                }
-                continue;
+            // in some cases, e.g. standalone MonoBehaviours, the type tree is
+            // generally not available
+            if (typeNode == null && path.getClassID() != 114) {
+                L.log(Level.WARNING, "Skipped {0} with no type tree", path);
             }
            
             ObjectData data = new ObjectData();
@@ -190,6 +195,11 @@ public class AssetFile extends FileHandler {
             
             objects.add(data);
         }
+        
+        objDataBlock.setOffset(ofsMin);
+        objDataBlock.setEndOffset(ofsMax);
+        
+        L.log(Level.FINER, "objDataBlock: {0}", objDataBlock);
     }
     
     @Override
@@ -210,11 +220,14 @@ public class AssetFile extends FileHandler {
             header.setDataOffset(0);
             
             saveObjects(out);
+            out.write(0);
+            
             saveMetadata(out);
+            out.write(0);
         } else {
             saveMetadata(out);
             
-            out.align(4096);
+            out.align(16);
             header.setDataOffset(out.position());
             
             saveObjects(out);
@@ -226,10 +239,14 @@ public class AssetFile extends FileHandler {
         
         // update header
         header.setFileSize(out.size());
+        
+        // FIXME: the metadata size is slightly off in comparison to original files
+        int metadataOffset = header.getVersion() < 9 ? 2 : 1;
+        
         header.setMetadataSize(typeTreeBlock.getLength()
                 + objTableBlock.getLength()
                 + refTableBlock.getLength()
-                + 1);
+                + metadataOffset);
         
         // write updated header
         out.setSwap(false);
@@ -248,7 +265,6 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveMetadata(DataWriter out) throws IOException {
-        // read structure data
         typeTreeBlock.setOffset(out.position());
         out.writeStruct(typeTree);
         typeTreeBlock.setEndOffset(out.position());
@@ -269,11 +285,17 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveObjects(DataWriter out) throws IOException {
+        long ofsMin = Long.MAX_VALUE;
+        long ofsMax = Long.MIN_VALUE;
+        
         for (ObjectData data : objects) {            
             ByteBuffer bb = data.getBuffer();
             bb.rewind();
             
             out.align(8);
+            
+            ofsMin = Math.min(ofsMin, out.position());
+            ofsMax = Math.max(ofsMax, out.position() + bb.remaining());
             
             ObjectPath path = data.getPath();            
             path.setOffset(out.position() - header.getDataOffset());
@@ -281,6 +303,11 @@ public class AssetFile extends FileHandler {
 
             out.writeBuffer(bb);
         }
+        
+        objDataBlock.setOffset(ofsMin);
+        objDataBlock.setEndOffset(ofsMax);
+        
+        L.log(Level.FINER, "objDataBlock: {0}", objDataBlock);
     }
     
     private void checkBlocks() {
@@ -288,11 +315,16 @@ public class AssetFile extends FileHandler {
         assert !headerBlock.isIntersecting(typeTreeBlock);
         assert !headerBlock.isIntersecting(objTableBlock);
         assert !headerBlock.isIntersecting(refTableBlock);
+        assert !headerBlock.isIntersecting(objDataBlock);
         
         assert !typeTreeBlock.isIntersecting(objTableBlock);
         assert !typeTreeBlock.isIntersecting(refTableBlock);
+        assert !typeTreeBlock.isIntersecting(objDataBlock);
         
         assert !objTableBlock.isIntersecting(refTableBlock);
+        assert !objTableBlock.isIntersecting(objDataBlock);
+        
+        assert !objDataBlock.isIntersecting(refTableBlock);
     }
 
     public AssetHeader getHeader() {
