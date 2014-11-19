@@ -90,19 +90,15 @@ public class FieldTypeTree implements Struct {
         
         out.setSwap(versionInfo.swapRequired());
         
-        if (typeMap.isEmpty()) {
-            int fields = typeMap.size();
-            out.writeInt(fields);
+        int fields = typeMap.size();
+        out.writeInt(fields);
 
-            for (Map.Entry<Integer, FieldTypeNode> entry : typeMap.entrySet()) {
-                int classID = entry.getKey();
-                out.writeInt(classID);
-                
-                FieldTypeNode node = entry.getValue();
-                node.write(out);
-            }
-        } else {
-            out.writeInt(0);
+        for (Map.Entry<Integer, FieldTypeNode> entry : typeMap.entrySet()) {
+            int classID = entry.getKey();
+            out.writeInt(classID);
+
+            FieldTypeNode node = entry.getValue();
+            node.write(out);
         }
         
         // padding
