@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import static java.nio.file.StandardOpenOption.READ;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -90,8 +91,7 @@ public class AssetFile extends FileHandler {
             // load all parts to one byte buffer
             socket = Sockets.forByteBuffer(ByteBufferUtils.load(parts));
         } else {
-            // map single file to memory
-            socket = Sockets.forFileMemoryMapped(file);
+            socket = Sockets.forFile(file, READ);
         }
         
         // load audio buffer if existing

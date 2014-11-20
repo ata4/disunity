@@ -17,6 +17,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import static java.nio.file.StandardOpenOption.READ;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +41,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     private DataReader inData;
 
     public AssetBundleReader(Path file) throws AssetBundleException, IOException {
-        in = new DataReader(Sockets.forFileRead(file));
+        in = new DataReader(Sockets.forFile(file, READ));
         in.readStruct(header);
 
         // check signature

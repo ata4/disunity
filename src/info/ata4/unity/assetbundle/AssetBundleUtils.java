@@ -154,7 +154,7 @@ public class AssetBundleUtils {
     public static void compress(Path inFile, Path outFile) throws IOException {
         try (
             IOSocket inSocket = Sockets.forFileBufferedRead(inFile);
-            IOSocket outSocket = Sockets.forFileRandomAccess(inFile, CREATE, READ, WRITE, TRUNCATE_EXISTING);
+            IOSocket outSocket = Sockets.forFile(inFile, CREATE, READ, WRITE, TRUNCATE_EXISTING);
         ) {
             compress(inSocket, outSocket);
         }
