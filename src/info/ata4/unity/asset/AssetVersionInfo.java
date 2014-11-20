@@ -53,10 +53,6 @@ public class AssetVersionInfo {
     
     public boolean swapRequired() {
         // older formats use big endian
-        if (assetVersion <= 5) {
-            return false;
-        } else {
-            return true;
-        }
+        return assetVersion > 5;
     }
 }
