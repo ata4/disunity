@@ -15,7 +15,6 @@ import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
-import info.ata4.io.util.ObjectToString;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.ObjectData;
@@ -39,6 +38,8 @@ import org.apache.commons.io.FilenameUtils;
 public class AssetFile extends FileHandler {
     
     private static final Logger L = LogUtils.getLogger();
+    
+    private static final int METADATA_PADDING = 4096;
     
     private final AssetVersionInfo versionInfo = new AssetVersionInfo();
     private final AssetHeader header = new AssetHeader(versionInfo);
@@ -226,6 +227,12 @@ public class AssetFile extends FileHandler {
             out.write(0);
         } else {
             saveMetadata(out);
+            
+            // original files have a minimum padding of 4096 bytes after the
+            // metadata
+            if (out.position() < METADATA_PADDING) {
+                out.align(METADATA_PADDING);
+            }
             
             out.align(16);
             header.setDataOffset(out.position());
