@@ -136,13 +136,15 @@ public class AssetFile extends FileHandler {
     }
     
     private void loadMetadata(DataReader in) throws IOException {
+        in.setSwap(versionInfo.swapRequired());
+        
         // read structure data
         typeTreeBlock.setOffset(in.position());
         in.readStruct(typeTree);
         typeTreeBlock.setEndOffset(in.position());
         
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
-
+        
         objTableBlock.setOffset(in.position());
         in.readStruct(objTable);
         objTableBlock.setEndOffset(in.position());
@@ -272,6 +274,8 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveMetadata(DataWriter out) throws IOException {
+        out.setSwap(versionInfo.swapRequired());
+        
         typeTreeBlock.setOffset(out.position());
         out.writeStruct(typeTree);
         typeTreeBlock.setEndOffset(out.position());

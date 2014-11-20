@@ -62,8 +62,6 @@ public class FieldTypeTree implements Struct {
             treeVersion = in.readInt();
         }
         
-        in.setSwap(versionInfo.swapRequired());
-        
         int fields = in.readInt();
         for (int i = 0; i < fields; i++) {
             int classID = in.readInt();
@@ -87,8 +85,6 @@ public class FieldTypeTree implements Struct {
             out.writeStringNull(versionInfo.getUnityRevision().toString());
             out.writeInt(treeVersion);
         }
-        
-        out.setSwap(versionInfo.swapRequired());
         
         int fields = typeMap.size();
         out.writeInt(fields);
