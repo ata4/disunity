@@ -9,7 +9,9 @@
  */
 package info.ata4.unity.assetbundle.codec;
 
-import info.ata4.io.DataRandomAccess;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataWriter;
+import info.ata4.io.socket.IOSocket;
 import java.io.IOException;
 import javax.xml.bind.DatatypeConverter;
 
@@ -28,35 +30,40 @@ public class XianjianCodec implements AssetBundleCodec {
     }
 
     @Override
-    public boolean isEncoded(DataRandomAccess ra) throws IOException {
-        ra.position(1 << 5);
-        int b1 = ra.readByte();
+    public boolean isEncoded(IOSocket socket) throws IOException {
+        DataReader in = new DataReader(socket);
         
-        ra.position(1 << 6);
-        int b2 = ra.readByte();
+        in.position(1 << 5);
+        int b1 = in.readByte();
+        
+        in.position(1 << 6);
+        int b2 = in.readByte();
         
         return b1 == KEY[5] && b2 == KEY[6];
     }
     
-    private void code(DataRandomAccess ra) throws IOException {
-        for (int exp = 5; 1 << exp < ra.size(); exp++) {
+    private void code(IOSocket socket) throws IOException {
+        DataReader in = new DataReader(socket);
+        DataWriter out = new DataWriter(socket);
+        
+        for (int exp = 5; 1 << exp < in.size(); exp++) {
             int offset = 1 << exp;
-            ra.position(offset);
-            int b = ra.readByte();
+            in.position(offset);
+            int b = in.readByte();
             b ^= KEY[exp % KEY.length];
-            ra.position(offset);
-            ra.writeByte(b);
+            out.position(offset);
+            out.writeByte(b);
         }
     }
 
     @Override
-    public void encode(DataRandomAccess ra) throws IOException {
-        code(ra);
+    public void encode(IOSocket socket) throws IOException {
+        code(socket);
     }
 
     @Override
-    public void decode(DataRandomAccess ra) throws IOException {
-        code(ra);
+    public void decode(IOSocket socket) throws IOException {
+        code(socket);
     }
     
 }

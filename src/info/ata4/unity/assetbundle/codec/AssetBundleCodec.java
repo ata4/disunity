@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.assetbundle.codec;
 
-import info.ata4.io.DataRandomAccess;
+import info.ata4.io.socket.IOSocket;
 import java.io.IOException;
 
 /**
@@ -21,9 +21,9 @@ public interface AssetBundleCodec {
 
     public String getName();
 
-    public boolean isEncoded(DataRandomAccess ra) throws IOException;
+    public boolean isEncoded(IOSocket socket) throws IOException;
 
-    public void encode(DataRandomAccess ra) throws IOException;
+    public void encode(IOSocket socket) throws IOException;
 
-    public void decode(DataRandomAccess ra) throws IOException;
+    public void decode(IOSocket socket) throws IOException;
 }
