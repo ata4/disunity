@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import net.contrapunctus.lzma.LzmaInputStream;
 import org.apache.commons.io.input.BoundedInputStream;
-import org.apache.commons.io.input.CountingInputStream;
 
 /**
  * Streaming reader for Unity asset bundles.
@@ -78,9 +77,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             is = new LzmaInputStream(new BufferedInputStream(is));
         }
         
-        IOSocket socket = Sockets.forInputStream(new CountingInputStream(is));
-        
-        inData = new DataReader(socket);
+        inData = new DataReader(Sockets.forInputStream(is));
     }
 
     public AssetBundleHeader getHeader() {

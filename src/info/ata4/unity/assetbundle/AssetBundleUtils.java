@@ -11,7 +11,6 @@ package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.DataRandomAccess;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.socket.IOSocket;
@@ -177,10 +176,10 @@ public class AssetBundleUtils {
 
         tmpHeader.setCompressed(true);
 
-        DataRandomAccess out = new DataRandomAccess(outSocket);
+        DataWriter out = new DataWriter(outSocket);
         out.writeStruct(tmpHeader);
 
-        compressData(in, out.getWriter());
+        compressData(in, out);
 
         // write header again with fixed file size
         out.position(0);
