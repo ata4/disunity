@@ -359,7 +359,17 @@ public class AssetFile extends FileHandler {
     }
 
     public List<ObjectData> getObjects() {
-        return objects;
+        List<ObjectData> objectsCopy = new ArrayList<>();
+        
+        for (ObjectData object : objects) {
+            // objects without a type tree are unreadabe in most cases, so skip
+            // these
+            if (object.getTypeTree() != null) {
+                objectsCopy.add(object);
+            }
+        }
+        
+        return objectsCopy;
     }
 
     public List<ObjectPath> getObjectPaths() {
