@@ -180,7 +180,8 @@ public class AssetFile extends FileHandler {
             if (!typeTree.getFields().isEmpty()) {
                 typeNode = typeTree.getFields().get(path.getTypeID());
             } else {
-                typeNode = FieldTypeDatabase.getInstance().getNode(path.getTypeID(), typeTree.getUnityRevision());
+                typeNode = FieldTypeDatabase.getInstance()
+                        .getNode(path.getTypeID(), typeTree.getUnityRevision(), false);
             }
             
             // in some cases, e.g. standalone MonoBehaviours, the type tree is
@@ -371,7 +372,7 @@ public class AssetFile extends FileHandler {
         
         return objectsCopy;
     }
-
+    
     public List<ObjectPath> getObjectPaths() {
         return objTable.getPaths();
     }
