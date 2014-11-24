@@ -10,7 +10,6 @@
 package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataReader;
-import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
@@ -68,7 +67,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             inData.close();
         }
         
-        in.position(header.getDataOffset());
+        in.position(header.getHeaderSize());
         
         InputStream is = in.getSocket().getInputStream();
         

@@ -146,11 +146,11 @@ public class AssetBundleHeader implements Struct {
         this.signature = signature;
     }
 
-    public int getFormat() {
+    public int getStreamVersion() {
         return streamVersion;
     }
 
-    public void setFormat(byte format) {
+    public void setStreamVersion(byte format) {
         this.streamVersion = format;
     }
 
@@ -170,11 +170,11 @@ public class AssetBundleHeader implements Struct {
         this.unityRevision = revision;
     }
 
-    public int getDataOffset() {
+    public int getHeaderSize() {
         return headerSize;
     }
 
-    public void setDataOffset(int dataOffset) {
+    public void setHeaderSize(int dataOffset) {
         this.headerSize = dataOffset;
     }
     
