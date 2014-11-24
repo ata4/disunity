@@ -149,7 +149,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
 
                     try {
                         AssetBundleUtils.extract(bundlePath, outputPath, progress);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         new DialogBuilder(parent)
                                 .exception(ex)
                                 .withMessage("Can't extract file " + bundleFile)
