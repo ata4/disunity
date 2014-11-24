@@ -40,7 +40,10 @@ public class FieldType implements Struct {
     // set to 1 if "type" is "Array" or "TypelessData"
     private int isArray;
     
-    // observed values: 1-5, 8
+    // type version, starts with 1 and is incremented when the type
+    // information is updated in a new Unity release
+    //
+    // equal to serializedVersion in YAML format files
     private int version;
     
     // field flags
