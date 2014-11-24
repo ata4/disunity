@@ -21,8 +21,6 @@ import info.ata4.unity.asset.ObjectPath;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -38,7 +36,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -152,7 +149,7 @@ public class FieldTypeDatabase {
         
         // write database file
         Path dbFile = Paths.get(FILENAME);
-        try (IOSocket socket = Sockets.forFileBufferedWrite(dbFile)) {
+        try (IOSocket socket = Sockets.forBufferedWriteFile(dbFile)) {
             DataWriter out = new DataWriter(socket);
             
             // write header
