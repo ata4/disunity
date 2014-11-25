@@ -12,7 +12,6 @@ package info.ata4.disunity.gui.model;
 import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.asset.FieldTypeNode;
-import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.util.UnityVersion;
 import java.nio.file.Paths;
 import java.util.Map;

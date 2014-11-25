@@ -14,7 +14,6 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.Reference;
 import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.unity.asset.FieldTypeNode;
-import info.ata4.unity.rtti.FieldTypeNodeComparator;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.util.Map;
