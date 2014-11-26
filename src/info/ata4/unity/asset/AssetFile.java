@@ -25,7 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.READ;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
@@ -56,10 +58,19 @@ public class AssetFile extends FileHandler {
     private final DataBlock objTableBlock = new DataBlock();
     private final DataBlock refTableBlock = new DataBlock();
     private final DataBlock objDataBlock = new DataBlock();
-
+    
     @Override
     public void load(Path file) throws IOException {
+        load(file, null);
+    }
+
+    private void load(Path file, Map<Path, AssetFile> childAssets) throws IOException {
         sourceFile = file;
+        
+        if (childAssets == null) {
+            childAssets = new HashMap<>();
+        }
+        childAssets.put(file, this);
         
         String fileName = file.getFileName().toString();
         String fileExt = FilenameUtils.getExtension(fileName);
@@ -102,6 +113,28 @@ public class AssetFile extends FileHandler {
         }
         
         load(socket);
+        
+        for (Reference ref : getReferences()) {
+            String filePath = ref.getFilePath();
+            
+            if (filePath == null || filePath.isEmpty()) {
+                continue;
+            }
+            
+            filePath = filePath.replace("library/", "resources/");
+            
+            Path refFile = file.resolveSibling(filePath);
+            if (Files.exists(refFile)) {
+                AssetFile childAsset = childAssets.get(refFile);
+                
+                if (childAsset == null) {
+                    childAsset = new AssetFile();
+                    childAsset.load(refFile, childAssets);
+                }
+                
+                ref.setAssetFile(childAsset);
+            }
+        }
     }
     
     @Override

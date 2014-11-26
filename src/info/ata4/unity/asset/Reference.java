@@ -24,7 +24,7 @@ public class Reference implements Struct {
     
     private AssetVersionInfo versionInfo;
     
-    // Path to the asset file? Unused in asset format >= 7.
+    // Path to the asset file? Unused in asset format <= 5.
     private String assetPath;
     
     // Globally unique identifier of the referred asset. Unity displays these
@@ -37,6 +37,8 @@ public class Reference implements Struct {
     
     // Reference type. Possible values are probably 0 to 3.
     private int type;
+    
+    private AssetFile asset;
     
     @Override
     public void read(DataReader in) throws IOException {
@@ -107,5 +109,13 @@ public class Reference implements Struct {
 
     void setVersionInfo(AssetVersionInfo versionInfo) {
         this.versionInfo = versionInfo;
+    }
+
+    public AssetFile getAssetFile() {
+        return asset;
+    }
+
+    void setAssetFile(AssetFile asset) {
+        this.asset = asset;
     }
 }
