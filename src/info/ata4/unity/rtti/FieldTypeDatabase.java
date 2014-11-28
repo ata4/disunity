@@ -15,9 +15,9 @@ import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
+import info.ata4.unity.asset.AssetVersionInfo;
 import info.ata4.unity.asset.FieldTypeNode;
-import info.ata4.unity.asset.FieldTypeTree;
-import info.ata4.unity.asset.ObjectPath;
+import info.ata4.unity.asset.ObjectInfo;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -203,53 +204,55 @@ public class FieldTypeDatabase {
     }
     
     public void fill(AssetFile asset) {
-        FieldTypeTree typeTree = asset.getTypeTree();
+        AssetVersionInfo versionInfo = asset.getVersionInfo();
         
-        if (typeTree.getUnityRevision() == null) {
-            L.warning("engineVersion = null");
+        if (versionInfo.getUnityRevision() == null) {
+            L.warning("unityRevision = null");
             return;
         }
         
-        Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
+        Set<Integer> classIDs = getClassIDs(asset.getObjectInfoMap().values());
         for (Integer classID : classIDs) {
-            FieldTypeNode ft = getNode(classID, typeTree.getUnityRevision(), false);
-            if (ft != null) {
-                typeTree.getFields().put(classID, ft);
+            FieldTypeNode typeNode = getNode(classID, versionInfo.getUnityRevision(), false);
+            if (typeNode != null) {
+                asset.getTypeTree().put(classID, typeNode);
             }
         }
     }
     
     public int learn(AssetFile asset) {
-        FieldTypeTree typeTree = asset.getTypeTree();
+        Map<Integer, FieldTypeNode> typeTree = asset.getTypeTree();
         
-        if (typeTree.getFields().isEmpty()) {
-            L.info("No type tree available");
+        if (typeTree.isEmpty()) {
+            L.warning("Empty type tree");
             return 0;
         }
         
-        if (typeTree.getUnityRevision() == null) {
-            L.warning("engineVersion = null");
+        AssetVersionInfo versionInfo = asset.getVersionInfo();
+        
+        if (versionInfo.getUnityRevision() == null) {
+            L.warning("unityRevision = null");
             return 0;
         }
         
         int learnedNew = 0;
         
         // merge the TypeTree map with the database field map
-        Set<Integer> classIDs = getClassIDs(asset.getObjectPaths());
+        Set<Integer> classIDs = getClassIDs(asset.getObjectInfoMap().values());
         for (Integer classID : classIDs) {
-            FieldTypeNode fieldType = typeTree.getFields().get(classID);
+            FieldTypeNode fieldType = typeTree.get(classID);
             String fieldClassName = ClassID.getNameForID(classID);
 
             if (fieldType == null) {
                 continue;
             }
             
-            FieldTypeNode fieldTypeMapped = getNode(classID, typeTree.getUnityRevision());
+            FieldTypeNode fieldTypeMapped = getNode(classID, versionInfo.getUnityRevision());
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
                 L.log(Level.INFO, "New: {0} ({1})", new Object[]{classID, fieldClassName});
-                addNode(classID, typeTree.getUnityRevision(), fieldTypeMapped);
+                addNode(classID, versionInfo.getUnityRevision(), fieldTypeMapped);
                 learnedNew++;
             }
 
@@ -340,10 +343,10 @@ public class FieldTypeDatabase {
         nodeMap.put(new ImmutablePair<>(classID, revision), fieldNode);
     }
 
-    private Set<Integer> getClassIDs(List<ObjectPath> paths) {
+    private Set<Integer> getClassIDs(Collection<ObjectInfo> paths) {
         Set<Integer> classIDs = new TreeSet<>();
         
-        for (ObjectPath path : paths) {
+        for (ObjectInfo path : paths) {
             classIDs.add(path.getClassID());
         }
         

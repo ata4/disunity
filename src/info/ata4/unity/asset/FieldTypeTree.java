@@ -14,7 +14,6 @@ import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -25,27 +24,16 @@ import java.util.Map;
  */
 public class FieldTypeTree implements Struct {
 
-    private final Map<Integer, FieldTypeNode> typeMap = new LinkedHashMap<>();
     private final AssetVersionInfo versionInfo;
+    private final Map<Integer, FieldTypeNode> typeMap;
 
     private int attributes;
     
-    public FieldTypeTree(AssetVersionInfo versionInfo) {
+    public FieldTypeTree(Map<Integer, FieldTypeNode> typeMap, AssetVersionInfo versionInfo) {
+        this.typeMap = typeMap;
         this.versionInfo = versionInfo;
     }
-
-    public Map<Integer, FieldTypeNode> getFields() {
-        return typeMap;
-    }
     
-    public UnityVersion getUnityRevision() {
-        return versionInfo.getUnityRevision();
-    }
-
-    public void setUnityRevision(UnityVersion unityRevision) {
-        versionInfo.setUnityRevision(unityRevision);
-    }
-
     public int getAttributes() {
         return attributes;
     }

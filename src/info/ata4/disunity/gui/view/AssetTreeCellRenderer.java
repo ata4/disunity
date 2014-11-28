@@ -10,7 +10,7 @@
 package info.ata4.disunity.gui.view;
 
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.Reference;
+import info.ata4.unity.asset.FileIdentifier;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
@@ -82,8 +82,8 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
                 formatFieldTypeNode((FieldTypeNode) userObject);
             } else if (userObject instanceof ObjectData) {
                 formatObjectData((ObjectData) userObject);
-            } else if (userObject instanceof Reference) {
-                formatReference((Reference) userObject);
+            } else if (userObject instanceof FileIdentifier) {
+                formatReference((FileIdentifier) userObject);
             } else if (userObject instanceof Exception) {
                 formatException((Exception) userObject);
             }
@@ -239,7 +239,7 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
         setText(text);
     }
     
-    private void formatReference(Reference ref) {
+    private void formatReference(FileIdentifier ref) {
         String text;
         
         if (!StringUtils.isBlank(ref.getFilePath())) {

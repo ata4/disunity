@@ -9,13 +9,14 @@
  */
 package info.ata4.disunity.gui.model;
 
+import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.Reference;
-import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.FileIdentifier;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -45,7 +46,7 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         }
         
         addObjects(assetFile);
-        addReferences(assetFile);
+        addExternals(assetFile);
     }
     
     private void addObjects(AssetFile asset) {
@@ -75,15 +76,20 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         add(objectNode);
     }
     
-    private void addReferences(AssetFile asset) {
-        if (asset.getReferences().isEmpty()) {
+    private void addExternals(AssetFile asset) {
+        List<FileIdentifier> externals = asset.getExternals();
+        if (asset.getExternals().isEmpty()) {
             return;
         }
         
-        DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("References");
+        DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Externals");
         
-        for (Reference ref : asset.getReferences()) {
-            refNode.add(new DefaultMutableTreeNode(ref));
+        for (FileIdentifier external : externals) {
+            if (external.getAssetFile() != null) {
+                refNode.add(new AssetFileNode(tree, external.getAssetFile()));
+            } else {
+                refNode.add(new DefaultMutableTreeNode(external));
+            }
         }
         
         add(refNode);
@@ -96,7 +102,7 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         
         DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
         Set<FieldTypeNode> fieldTypeNodes = new TreeSet<>(new FieldTypeNodeComparator());
-        fieldTypeNodes.addAll(asset.getTypeTree().getFields().values());
+        fieldTypeNodes.addAll(asset.getTypeTree().values());
         
         for (FieldTypeNode fieldNode : fieldTypeNodes) {
             FieldNodeUtils.convertFieldTypeNode(typeNode, fieldNode);

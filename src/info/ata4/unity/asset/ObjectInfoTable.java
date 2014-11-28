@@ -13,19 +13,18 @@ import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectPathTable implements Struct {
+public class ObjectInfoTable implements Struct {
     
-    private final List<ObjectPath> paths = new ArrayList<>();
-    
-    public List<ObjectPath> getPaths() {
-        return paths;
+    private final Map<Integer, ObjectInfo> infoMap;
+
+    public ObjectInfoTable(Map<Integer, ObjectInfo> infoMap) {
+        this.infoMap = infoMap;
     }
     
     @Override
@@ -33,19 +32,25 @@ public class ObjectPathTable implements Struct {
         int entries = in.readInt();
 
         for (int i = 0; i < entries; i++) {
-            ObjectPath path = new ObjectPath();
-            path.read(in);
-            paths.add(path);
+            int pathID = in.readInt();
+            ObjectInfo info = new ObjectInfo();
+            
+            info.read(in);
+            infoMap.put(pathID, info);
         }
     }
 
     @Override
     public void write(DataWriter out) throws IOException {
-        int entries = paths.size();
+        int entries = infoMap.size();
         out.writeInt(entries);
 
-        for (ObjectPath path : paths) {
-            path.write(out);
+        for (Map.Entry<Integer, ObjectInfo> infoEntry : infoMap.entrySet()) {
+            int pathID = infoEntry.getKey();
+            ObjectInfo info = infoEntry.getValue();
+            
+            out.writeInt(pathID);
+            info.write(out);
         }
     }
 }

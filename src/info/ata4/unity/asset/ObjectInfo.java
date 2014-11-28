@@ -20,10 +20,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity SerializedFile::ObjectInfo
  */
-public class ObjectPath implements Struct {
-    
-    // Path ID, normally in sequence to the file position
-    private int pathID;
+public class ObjectInfo implements Struct {
     
     // Object data offset
     private long offset;
@@ -42,7 +39,6 @@ public class ObjectPath implements Struct {
 
     @Override
     public void read(DataReader in) throws IOException {
-        pathID = in.readInt();
         offset = in.readUnsignedInt();
         length = in.readUnsignedInt();
         typeID = in.readInt();
@@ -54,20 +50,11 @@ public class ObjectPath implements Struct {
 
     @Override
     public void write(DataWriter out) throws IOException {
-        out.writeInt(pathID);
         out.writeUnsignedInt(offset);
         out.writeUnsignedInt(length);
         out.writeInt(typeID);
         out.writeShort(classID);
         out.writeShort(isDestroyed);
-    }
-
-    public int getPathID() {
-        return pathID;
-    }
-
-    public void setPathID(int pathID) {
-        this.pathID = pathID;
     }
 
     public long getOffset() {
@@ -109,6 +96,6 @@ public class ObjectPath implements Struct {
     @Override
     public String toString() {
         String className = ClassID.getNameForID(getClassID(), true);
-        return String.format("Object #%d (ClassID: %d, Class: %s)", getPathID(), getClassID(), className);
+        return String.format("Class %d (%s)", getClassID(), className);
     }
 }
