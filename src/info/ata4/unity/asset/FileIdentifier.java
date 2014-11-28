@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 public class FileIdentifier implements Struct {
     
-    private AssetVersionInfo versionInfo;
+    private VersionInfo versionInfo;
     
     // Path to the asset file? Unused in asset format <= 5.
     private String assetPath;
@@ -107,7 +107,7 @@ public class FileIdentifier implements Struct {
         this.type = type;
     }
 
-    void setVersionInfo(AssetVersionInfo versionInfo) {
+    void setVersionInfo(VersionInfo versionInfo) {
         this.versionInfo = versionInfo;
     }
 

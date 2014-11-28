@@ -9,7 +9,7 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.unity.asset.AssetVersionInfo;
+import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectInfo;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 public class ObjectData {
     
     private final int id;
-    private AssetVersionInfo versionInfo;
+    private VersionInfo versionInfo;
     private ObjectSerializer serializer;
     private ObjectInfo info;
     private ByteBuffer buffer;
@@ -37,11 +37,11 @@ public class ObjectData {
         return id;
     }
     
-    public AssetVersionInfo getVersionInfo() {
+    public VersionInfo getVersionInfo() {
         return versionInfo;
     }
     
-    public void setVersionInfo(AssetVersionInfo versionInfo) {
+    public void setVersionInfo(VersionInfo versionInfo) {
         this.versionInfo = versionInfo;
     }
     

@@ -23,9 +23,9 @@ import java.util.List;
 public class FileIdentifierTable implements Struct, Iterable<FileIdentifier> {
 
     private final List<FileIdentifier> fileIDs;
-    private final AssetVersionInfo versionInfo;
+    private final VersionInfo versionInfo;
     
-    public FileIdentifierTable(List<FileIdentifier> fileIDs, AssetVersionInfo versionInfo) {
+    public FileIdentifierTable(List<FileIdentifier> fileIDs, VersionInfo versionInfo) {
         this.fileIDs = fileIDs;
         this.versionInfo = versionInfo;
     }

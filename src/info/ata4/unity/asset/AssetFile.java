@@ -53,7 +53,7 @@ public class AssetFile extends FileHandler {
     private final List<FileIdentifier> externals = new ArrayList<>();
     
     // struct fields
-    private final AssetVersionInfo versionInfo = new AssetVersionInfo();
+    private final VersionInfo versionInfo = new VersionInfo();
     private final AssetHeader header = new AssetHeader(versionInfo);
     private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(objectInfoMap);
     private final FieldTypeTree typeTreeStruct = new FieldTypeTree(typeTreeMap, versionInfo);
@@ -379,7 +379,7 @@ public class AssetFile extends FileHandler {
         assert !objectDataBlock.isIntersecting(externalsBlock);
     }
 
-    public AssetVersionInfo getVersionInfo() {
+    public VersionInfo getVersionInfo() {
         return versionInfo;
     }
 

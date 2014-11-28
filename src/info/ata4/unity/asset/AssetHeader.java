@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class AssetHeader implements Struct {
     
-    private final AssetVersionInfo versionInfo;
+    private final VersionInfo versionInfo;
     
     // size of the structure data
     private long metadataSize;
@@ -38,7 +38,7 @@ public class AssetHeader implements Struct {
     // unused
     private final byte[] reserved = new byte[3];
     
-    public AssetHeader(AssetVersionInfo versionInfo) {
+    public AssetHeader(VersionInfo versionInfo) {
         this.versionInfo = versionInfo;
     }
 

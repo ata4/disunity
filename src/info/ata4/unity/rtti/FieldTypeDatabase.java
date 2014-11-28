@@ -15,7 +15,7 @@ import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.AssetVersionInfo;
+import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectInfo;
 import info.ata4.unity.util.ClassID;
@@ -204,7 +204,7 @@ public class FieldTypeDatabase {
     }
     
     public void fill(AssetFile asset) {
-        AssetVersionInfo versionInfo = asset.getVersionInfo();
+        VersionInfo versionInfo = asset.getVersionInfo();
         
         if (versionInfo.getUnityRevision() == null) {
             L.warning("unityRevision = null");
@@ -228,7 +228,7 @@ public class FieldTypeDatabase {
             return 0;
         }
         
-        AssetVersionInfo versionInfo = asset.getVersionInfo();
+        VersionInfo versionInfo = asset.getVersionInfo();
         
         if (versionInfo.getUnityRevision() == null) {
             L.warning("unityRevision = null");

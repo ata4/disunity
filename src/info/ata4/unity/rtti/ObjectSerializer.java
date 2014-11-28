@@ -12,7 +12,7 @@ package info.ata4.unity.rtti;
 import info.ata4.io.DataReader;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.socket.Sockets;
-import info.ata4.unity.asset.AssetVersionInfo;
+import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class ObjectSerializer {
     private static final int ALIGNMENT = 4;
     
     private ByteBuffer soundData;
-    private AssetVersionInfo versionInfo;
+    private VersionInfo versionInfo;
     
     public ByteBuffer getSoundData() {
         return soundData;

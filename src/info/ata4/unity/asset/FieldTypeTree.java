@@ -24,12 +24,12 @@ import java.util.Map;
  */
 public class FieldTypeTree implements Struct {
 
-    private final AssetVersionInfo versionInfo;
+    private final VersionInfo versionInfo;
     private final Map<Integer, FieldTypeNode> typeMap;
 
     private int attributes;
     
-    public FieldTypeTree(Map<Integer, FieldTypeNode> typeMap, AssetVersionInfo versionInfo) {
+    public FieldTypeTree(Map<Integer, FieldTypeNode> typeMap, VersionInfo versionInfo) {
         this.typeMap = typeMap;
         this.versionInfo = versionInfo;
     }
