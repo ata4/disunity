@@ -239,15 +239,15 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
         setText(text);
     }
     
-    private void formatReference(Reference reference) {
-        String text = reference.getGUID().toString();
+    private void formatReference(Reference ref) {
+        String text;
         
-        if (!StringUtils.isBlank(reference.getFilePath())) {
-            text += ": " + reference.getFilePath();
-        }
-        
-        if (!StringUtils.isBlank(reference.getAssetPath())) {
-            text += " (" + reference.getAssetPath() + ")";
+        if (!StringUtils.isBlank(ref.getFilePath())) {
+            text = ref.getFilePath();
+        } else if (!StringUtils.isBlank(ref.getAssetPath())) {
+            text = ref.getAssetPath();
+        } else {
+            text = ref.getGUID().toString();
         }
         
         setText(text);
