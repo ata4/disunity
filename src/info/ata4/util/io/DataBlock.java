@@ -9,6 +9,9 @@
  */
 package info.ata4.util.io;
 
+import info.ata4.io.Positionable;
+import java.io.IOException;
+
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
@@ -48,6 +51,14 @@ public class DataBlock {
     
     public boolean isInside(DataBlock that) {
         return this.getOffset() >= that.getOffset() && this.getEndOffset() <= that.getEndOffset();
+    }
+    
+    public void markBegin(Positionable p) throws IOException {
+        setOffset(p.position());
+    }
+    
+    public void markEnd(Positionable p) throws IOException {
+        setEndOffset(p.position());
     }
     
     @Override

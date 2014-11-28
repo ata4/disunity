@@ -55,7 +55,7 @@ public class AssetFile extends FileHandler {
     // struct fields
     private final VersionInfo versionInfo = new VersionInfo();
     private final AssetHeader header = new AssetHeader(versionInfo);
-    private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(objectInfoMap);
+    private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(objectInfoMap, versionInfo);
     private final FieldTypeTree typeTreeStruct = new FieldTypeTree(typeTreeMap, versionInfo);
     private final FileIdentifierTable externalsStruct = new FileIdentifierTable(externals, versionInfo);
     
@@ -171,10 +171,9 @@ public class AssetFile extends FileHandler {
     }
     
     private void loadHeader(DataReader in) throws IOException {
-        headerBlock.setOffset(0);
+        headerBlock.markBegin(in);
         in.readStruct(header);
-        headerBlock.setEndOffset(in.position());
-        
+        headerBlock.markEnd(in);
         L.log(Level.FINER, "headerBlock: {0}", headerBlock);
     }
     
@@ -182,19 +181,19 @@ public class AssetFile extends FileHandler {
         in.setSwap(versionInfo.swapRequired());
         
         // read structure data
-        typeTreeBlock.setOffset(in.position());
+        typeTreeBlock.markBegin(in);
         in.readStruct(typeTreeStruct);
-        typeTreeBlock.setEndOffset(in.position());
+        typeTreeBlock.markEnd(in);
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
         
-        objectInfoBlock.setOffset(in.position());
+        objectInfoBlock.markBegin(in);
         in.readStruct(objectInfoStruct);
-        objectInfoBlock.setEndOffset(in.position());
+        objectInfoBlock.markEnd(in);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
 
-        externalsBlock.setOffset(in.position());
+        externalsBlock.markBegin(in);
         in.readStruct(externalsStruct);
-        externalsBlock.setEndOffset(in.position());
+        externalsBlock.markEnd(in);
         L.log(Level.FINER, "externalsBlock: {0}", externalsBlock);
     }
     
@@ -231,7 +230,7 @@ public class AssetFile extends FileHandler {
                 L.log(Level.WARNING, "Skipped {0} with no type tree", info);
             }
                        
-            ObjectData data = new ObjectData(id);
+            ObjectData data = new ObjectData(id, versionInfo);
             data.setInfo(info);
             data.setBuffer(buf);
             data.setTypeTree(typeNode);
@@ -245,8 +244,7 @@ public class AssetFile extends FileHandler {
         
         objectDataBlock.setOffset(ofsMin);
         objectDataBlock.setEndOffset(ofsMax);
-        
-        L.log(Level.FINER, "objDataBlock: {0}", objectDataBlock);
+        L.log(Level.FINER, "objectDataBlock: {0}", objectDataBlock);
     }
     
     @Override
@@ -310,29 +308,28 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveHeader(DataWriter out) throws IOException {
-        headerBlock.setOffset(0);
+        headerBlock.markBegin(out);
         out.writeStruct(header);
-        headerBlock.setEndOffset(out.position());
-        
+        headerBlock.markEnd(out);
         L.log(Level.FINER, "headerBlock: {0}", headerBlock);
     }
     
     private void saveMetadata(DataWriter out) throws IOException {
         out.setSwap(versionInfo.swapRequired());
         
-        typeTreeBlock.setOffset(out.position());
+        typeTreeBlock.markBegin(out);
         out.writeStruct(typeTreeStruct);
-        typeTreeBlock.setEndOffset(out.position());
+        typeTreeBlock.markEnd(out);
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
 
-        objectInfoBlock.setOffset(out.position());
+        objectInfoBlock.markBegin(out);
         out.writeStruct(objectInfoStruct);
-        objectInfoBlock.setEndOffset(out.position());
+        objectInfoBlock.markEnd(out);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
 
-        externalsBlock.setOffset(out.position());
+        externalsBlock.markBegin(out);
         out.writeStruct(externalsStruct);
-        externalsBlock.setEndOffset(out.position());
+        externalsBlock.markEnd(out);
         L.log(Level.FINER, "externalsBlock: {0}", externalsBlock);
     }
     
@@ -358,8 +355,7 @@ public class AssetFile extends FileHandler {
         
         objectDataBlock.setOffset(ofsMin);
         objectDataBlock.setEndOffset(ofsMax);
-        
-        L.log(Level.FINER, "objDataBlock: {0}", objectDataBlock);
+        L.log(Level.FINER, "objectDataBlock: {0}", objectDataBlock);
     }
     
     private void checkBlocks() {

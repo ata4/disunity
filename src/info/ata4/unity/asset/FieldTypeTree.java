@@ -22,16 +22,15 @@ import java.util.Map;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity RTTIClassHierarchyDescriptor, RTTIBaseClassDescriptor2
  */
-public class FieldTypeTree implements Struct {
+public class FieldTypeTree extends VersionInfoContainer implements Struct {
 
-    private final VersionInfo versionInfo;
     private final Map<Integer, FieldTypeNode> typeMap;
 
     private int attributes;
     
     public FieldTypeTree(Map<Integer, FieldTypeNode> typeMap, VersionInfo versionInfo) {
+        super(versionInfo);
         this.typeMap = typeMap;
-        this.versionInfo = versionInfo;
     }
     
     public int getAttributes() {

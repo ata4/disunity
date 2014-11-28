@@ -19,9 +19,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity SerializedFileHeader
  */
-public class AssetHeader implements Struct {
-    
-    private final VersionInfo versionInfo;
+public class AssetHeader extends VersionInfoContainer implements Struct {
     
     // size of the structure data
     private long metadataSize;
@@ -39,7 +37,7 @@ public class AssetHeader implements Struct {
     private final byte[] reserved = new byte[3];
     
     public AssetHeader(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
+        super(versionInfo);
     }
 
     @Override

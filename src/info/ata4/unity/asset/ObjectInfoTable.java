@@ -19,11 +19,12 @@ import java.util.Map;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectInfoTable implements Struct {
+public class ObjectInfoTable extends VersionInfoContainer implements Struct {
     
     private final Map<Integer, ObjectInfo> infoMap;
 
-    public ObjectInfoTable(Map<Integer, ObjectInfo> infoMap) {
+    public ObjectInfoTable(Map<Integer, ObjectInfo> infoMap, VersionInfo versionInfo) {
+        super(versionInfo);
         this.infoMap = infoMap;
     }
     

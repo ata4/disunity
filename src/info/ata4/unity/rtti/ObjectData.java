@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectInfo;
+import info.ata4.unity.asset.VersionInfo;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -22,15 +22,16 @@ import java.nio.ByteBuffer;
 public class ObjectData {
     
     private final int id;
-    private VersionInfo versionInfo;
+    private final VersionInfo versionInfo;
     private ObjectSerializer serializer;
     private ObjectInfo info;
     private ByteBuffer buffer;
     private FieldTypeNode typeTree;
     private FieldNode instance;
     
-    public ObjectData(int id) {
+    public ObjectData(int id, VersionInfo versionInfo) {
         this.id = id;
+        this.versionInfo = versionInfo;
     }
     
     public int getID() {
@@ -39,10 +40,6 @@ public class ObjectData {
     
     public VersionInfo getVersionInfo() {
         return versionInfo;
-    }
-    
-    public void setVersionInfo(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
     }
     
     public ObjectSerializer getSerializer() {

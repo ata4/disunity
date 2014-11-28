@@ -20,14 +20,13 @@ import java.util.List;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FileIdentifierTable implements Struct, Iterable<FileIdentifier> {
+public class FileIdentifierTable extends VersionInfoContainer implements Struct, Iterable<FileIdentifier> {
 
     private final List<FileIdentifier> fileIDs;
-    private final VersionInfo versionInfo;
     
     public FileIdentifierTable(List<FileIdentifier> fileIDs, VersionInfo versionInfo) {
+        super(versionInfo);
         this.fileIDs = fileIDs;
-        this.versionInfo = versionInfo;
     }
     
     @Override
