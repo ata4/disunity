@@ -16,19 +16,19 @@ import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Class that holds the runtime type information of an asset file.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity RTTIClassHierarchyDescriptor, RTTIBaseClassDescriptor2
  */
 public class FieldTypeTree implements Struct {
 
     private final Map<Integer, FieldTypeNode> typeMap = new LinkedHashMap<>();
     private final AssetVersionInfo versionInfo;
 
-    private int treeVersion;
+    private int attributes;
     
     public FieldTypeTree(AssetVersionInfo versionInfo) {
         this.versionInfo = versionInfo;
@@ -46,12 +46,12 @@ public class FieldTypeTree implements Struct {
         versionInfo.setUnityRevision(unityRevision);
     }
 
-    public int getVersion() {
-        return treeVersion;
+    public int getAttributes() {
+        return attributes;
     }
 
-    public void setVersion(int version) {
-        this.treeVersion = version;
+    public void setAttributes(int version) {
+        this.attributes = version;
     }
 
     @Override
@@ -59,11 +59,11 @@ public class FieldTypeTree implements Struct {
         // revision/version for newer formats
         if (versionInfo.getAssetVersion() >= 7) {
             versionInfo.setUnityRevision(new UnityVersion(in.readStringNull(255)));
-            treeVersion = in.readInt();
+            attributes = in.readInt();
         }
         
-        int fields = in.readInt();
-        for (int i = 0; i < fields; i++) {
+        int numBaseClasses = in.readInt();
+        for (int i = 0; i < numBaseClasses; i++) {
             int classID = in.readInt();
 
             FieldTypeNode node = new FieldTypeNode();
@@ -83,7 +83,7 @@ public class FieldTypeTree implements Struct {
         // revision/version for newer formats
         if (versionInfo.getAssetVersion() >= 7) {
             out.writeStringNull(versionInfo.getUnityRevision().toString());
-            out.writeInt(treeVersion);
+            out.writeInt(attributes);
         }
         
         int fields = typeMap.size();
@@ -101,35 +101,5 @@ public class FieldTypeTree implements Struct {
         if (versionInfo.getAssetVersion() >= 7) {
             out.writeInt(0);
         }
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final FieldTypeTree other = (FieldTypeTree) obj;
-        if (!Objects.equals(this.typeMap, other.typeMap)) {
-            return false;
-        }
-        if (!Objects.equals(this.versionInfo.getUnityRevision(), other.versionInfo.getUnityRevision())) {
-            return false;
-        }
-        if (this.treeVersion != other.treeVersion) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.typeMap);
-        hash = 29 * hash + Objects.hashCode(this.versionInfo.getUnityRevision());
-        hash = 29 * hash + this.treeVersion;
-        return hash;
     }
 }
