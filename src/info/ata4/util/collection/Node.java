@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -123,6 +124,26 @@ public abstract class Node<T extends Node> implements Collection<T> {
     public void clear() {
         setChildrenParent(children, null);
         children.clear();
+    }
+
+    @Override
+    public int hashCode() {
+        return children.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Node<?> other = (Node<?>) obj;
+        if (!Objects.equals(this.children, other.children)) {
+            return false;
+        }
+        return true;
     }
     
     private class IteratorImpl implements Iterator<T> {
