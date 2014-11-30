@@ -14,6 +14,7 @@ import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import info.ata4.util.collection.Node;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  *
@@ -53,4 +54,30 @@ public class FieldTypeNode extends Node<FieldTypeNode> implements Struct {
             child.write(out);
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 97 * hash + Objects.hashCode(this.type);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final FieldTypeNode other = (FieldTypeNode) obj;
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return true;
+    }
+
 }
