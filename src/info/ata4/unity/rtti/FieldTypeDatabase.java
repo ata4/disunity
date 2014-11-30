@@ -15,17 +15,21 @@ import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectInfo;
+import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -94,7 +98,7 @@ public class FieldTypeDatabase {
             if (is == null) {
                 throw new IOException("Type database file not found");
             }
-        } catch (Exception ex) {
+        } catch (URISyntaxException | IOException ex) {
             L.log(Level.SEVERE, "Can't open type database", ex);
             return;
         }
@@ -150,7 +154,7 @@ public class FieldTypeDatabase {
         
         // write database file
         Path dbFile = Paths.get(FILENAME);
-        try (IOSocket socket = Sockets.forBufferedWriteFile(dbFile)) {
+        try (IOSocket socket = Sockets.forBufferedWriteFile(dbFile, WRITE, CREATE, TRUNCATE_EXISTING)) {
             DataWriter out = new DataWriter(socket);
             
             // write header
@@ -247,7 +251,7 @@ public class FieldTypeDatabase {
                 continue;
             }
             
-            FieldTypeNode fieldTypeMapped = getNode(classID, versionInfo.getUnityRevision());
+            FieldTypeNode fieldTypeMapped = getNode(classID, versionInfo.getUnityRevision(), true);
 
             if (fieldTypeMapped == null) {
                 fieldTypeMapped = fieldType;
@@ -282,10 +286,6 @@ public class FieldTypeDatabase {
         }
     }
     
-    public FieldTypeNode getNode(int classID, UnityVersion revision) {
-        return getNode(classID, revision, true);
-    }
-
     public FieldTypeNode getNode(int classID, UnityVersion version, boolean strict) {
         FieldTypeNode fieldNode = nodeMap.get(new ImmutablePair<>(classID, version));
 
