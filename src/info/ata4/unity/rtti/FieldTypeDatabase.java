@@ -21,8 +21,10 @@ import info.ata4.unity.asset.VersionInfo;
 import info.ata4.unity.util.ClassID;
 import info.ata4.unity.util.UnityVersion;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,6 +43,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -60,49 +63,54 @@ public class FieldTypeDatabase {
     public static FieldTypeDatabase getInstance() {
         if (instance == null) {
             instance = new FieldTypeDatabase();
+            instance.load();
         }
         return instance;
     }
     
     private HashMap<Pair<Integer, UnityVersion>, FieldTypeNode> nodeMap = new HashMap<>();
-    private int learned;
+    private Path dbFile;
     
     private FieldTypeDatabase() {
-        load();
-    }
-    
-    public int getLearned() {
-        return learned;
+        // get database path based on the path to the current .jar file
+        try {
+            dbFile = Paths.get(FieldTypeDatabase.class.getProtectionDomain()
+                        .getCodeSource().getLocation().toURI()).resolveSibling(FILENAME);
+        } catch (URISyntaxException ex) {
+            L.log(Level.WARNING, "Can't resolve database path", ex);
+        }
     }
     
     public Map<Pair<Integer, UnityVersion>, FieldTypeNode> getFieldTypeMap() {
         return Collections.unmodifiableMap(nodeMap);
     }
     
-    private void load() {
+    public void load() {
         L.info("Loading type database");
         
         // read database file, external or internal otherwise
-        InputStream is;
+        InputStream is = null;
+        
         try {
-            Path jarFile = Paths.get(FieldTypeDatabase.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            Path dbFile = jarFile.resolveSibling(FILENAME);
-            String dbPath = "/resources/" + FILENAME;
-
-            if (Files.exists(dbFile)) {
+            if (dbFile != null && Files.exists(dbFile)) {
                 is = Files.newInputStream(dbFile);
             } else {
-                is = getClass().getResourceAsStream(dbPath);
+                is = getClass().getResourceAsStream("/resources/" + FILENAME);
             }
             
             if (is == null) {
                 throw new IOException("Type database file not found");
             }
-        } catch (URISyntaxException | IOException ex) {
+            
+            load(is);
+        } catch (IOException ex) {
             L.log(Level.SEVERE, "Can't open type database", ex);
-            return;
+        } finally {
+            IOUtils.closeQuietly(is);
         }
-
+    }
+    
+    public void load(InputStream is) {
         try (IOSocket socket = Sockets.forInputStream(new BufferedInputStream(is))) {
             DataReader in = new DataReader(socket);
 
@@ -149,12 +157,21 @@ public class FieldTypeDatabase {
         }
     }
     
-    private void save() {
+    public void save() {
         L.info("Saving type database");
         
+        try (
+            OutputStream os = Files.newOutputStream(dbFile, WRITE, CREATE, TRUNCATE_EXISTING)
+        ) {
+            save(os);
+        } catch (IOException ex) {
+            L.log(Level.SEVERE, "Can't open type database", ex);
+        }
+    }
+    
+    public void save(OutputStream os) {
         // write database file
-        Path dbFile = Paths.get(FILENAME);
-        try (IOSocket socket = Sockets.forBufferedWriteFile(dbFile, WRITE, CREATE, TRUNCATE_EXISTING)) {
+        try (IOSocket socket = Sockets.forOutputStream(new BufferedOutputStream(os))) {
             DataWriter out = new DataWriter(socket);
             
             // write header
@@ -273,17 +290,7 @@ public class FieldTypeDatabase {
             }
         }
         
-        learned += learnedNew;
-        
         return learnedNew;
-    }
-    
-    public void update() {
-        if (learned > 0) {
-            L.log(Level.INFO, "Adding {0} new type(s) to database", learned);
-            save();
-            learned = 0;
-        }
     }
     
     public FieldTypeNode getNode(int classID, UnityVersion version, boolean strict) {
