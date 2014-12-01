@@ -12,7 +12,6 @@ package info.ata4.unity.assetbundle;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferOutputStream;
-import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.util.progress.DummyProgress;
@@ -27,13 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
-import java.util.ArrayList;
-import java.util.List;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Asset bundle file utility class.
@@ -95,59 +90,26 @@ public class AssetBundleUtils {
         extract(file, outDir, new DummyProgress());
     }
     
-    public static List<Pair<String, IOSocket>> buffer(AssetBundleReader reader, Progress progress) throws IOException {
-        long current = 0;
-        long total = 0;
-        for (AssetBundleEntryInfo entry : reader.getEntries()) {
-            total += entry.getSize();
-        }
-
-        progress.setLimit(total);
+    public static IOSocket getSocketForEntry(AssetBundleEntry entry) throws IOException {
+        IOSocket socket;
         
-        List<Pair<String, IOSocket>> entries = new ArrayList<>();
-
-        for (AssetBundleEntry entry : reader) {
-            if (progress.isCanceled()) {
-                break;
-            }
-
-            progress.setLabel(entry.getName());
-
-            entries.add(new ImmutablePair<>(entry.getName(), buffer(entry)));
-
-            current += entry.getSize();
-            progress.update(current);
-        }
-
-        return entries;
-    }
-    
-    public static IOSocket buffer(AssetBundleEntry entry) throws IOException {
-        if (entry.getSize() < Integer.MAX_VALUE) {
-            ByteBuffer bb = ByteBufferUtils.allocate((int) entry.getSize());
-            OutputStream os = new ByteBufferOutputStream(bb);
-            IOUtils.copyLarge(entry.getInputStream(), os);
-            bb.flip();
-
-            return Sockets.forByteBuffer(bb);
+        // check if the entry is larger than 128 MiB
+        long size = entry.getSize();
+        if (size > 1 << 27) {
+            // copy entry to temporary file
+            Path tmpFile = Files.createTempFile("disunity", ".assets");
+            socket = Sockets.forFile(tmpFile, READ, WRITE, DELETE_ON_CLOSE);
+            IOUtils.copy(entry.getInputStream(), socket.getOutputStream());
+            socket.getPositionable().position(0);
         } else {
-            // TODO: create temporary file
-            throw new IllegalArgumentException("Entry is too large for buffering");
+            // copy entry to memory
+            ByteBuffer bb = ByteBuffer.allocateDirect((int) size);
+            IOUtils.copy(entry.getInputStream(), new ByteBufferOutputStream(bb));
+            bb.flip();
+            socket = Sockets.forByteBuffer(bb);
         }
-    }
-    
-    public static List<Pair<String, IOSocket>> buffer(AssetBundleReader reader) throws IOException {
-        return buffer(reader, new DummyProgress());
-    }
-    
-    public static List<Pair<String, IOSocket>> buffer(Path file, Progress progress) throws IOException {
-        try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            return buffer(reader, progress);
-        }
-    }
-    
-    public static List<Pair<String, IOSocket>> buffer(Path file) throws IOException {
-        return buffer(file, new DummyProgress());
+        
+        return socket;
     }
     
     public static void compress(Path inFile, Path outFile) throws IOException {
