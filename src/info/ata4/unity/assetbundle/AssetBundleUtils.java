@@ -21,11 +21,14 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
+import java.util.Properties;
 import lzma.LzmaDecoder;
 import lzma.LzmaEncoder;
 import org.apache.commons.io.IOUtils;
@@ -36,6 +39,8 @@ import org.apache.commons.io.IOUtils;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class AssetBundleUtils {
+    
+    private static final String PROPERTIES_FILE = "bundle.properties";
     
     private AssetBundleUtils() {
     }
@@ -82,6 +87,22 @@ public class AssetBundleUtils {
                 
                 current += entry.getSize();
                 progress.update(current);
+            }
+            
+            // create metadata file
+            AssetBundleHeader header = assetBundle.getHeader();
+            
+            Properties props = new Properties();
+            props.setProperty("compressed", String.valueOf(header.isCompressed()));
+            props.setProperty("streamVersion", String.valueOf(header.getStreamVersion()));
+            props.setProperty("unityVersion", header.getUnityVersion().toString());
+            props.setProperty("unityRevision", header.getUnityRevision().toString());
+            
+            Path propsFile = outDir.resolve(PROPERTIES_FILE);
+            
+            try (Writer out = Files.newBufferedWriter(propsFile,
+                    Charset.forName("US-ASCII"), WRITE, CREATE, TRUNCATE_EXISTING)) {
+                props.store(out, null);
             }
         }
     }
