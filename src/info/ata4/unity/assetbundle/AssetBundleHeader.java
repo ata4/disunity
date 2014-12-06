@@ -150,7 +150,7 @@ public class AssetBundleHeader implements Struct {
         return streamVersion;
     }
 
-    public void setStreamVersion(byte format) {
+    public void setStreamVersion(int format) {
         this.streamVersion = format;
     }
 
