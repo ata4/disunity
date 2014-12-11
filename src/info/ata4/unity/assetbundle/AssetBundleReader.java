@@ -13,7 +13,6 @@ import info.ata4.io.DataReader;
 import info.ata4.io.Positionable;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
-import info.ata4.io.util.ObjectToString;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -58,7 +57,6 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             AssetBundleEntryInfo entryInfo = new AssetBundleEntryInfo();
             entryInfo.read(inData);
             entryInfos.add(entryInfo);
-            System.out.println(ObjectToString.toString(entryInfo));
         }
         
         // sort entries by offset so that they're in the order in which they
