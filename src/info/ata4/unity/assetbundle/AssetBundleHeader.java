@@ -49,7 +49,7 @@ public class AssetBundleHeader implements Struct {
     
     // minimum number of bytes to read for streamed bundles,
     // equal to completeFileSize for normal bundles
-    private int minimumStreamedBytes;
+    private long minimumStreamedBytes;
     
     // offset to the bundle data or size of the bundle header
     private int headerSize;
@@ -59,14 +59,14 @@ public class AssetBundleHeader implements Struct {
     private int numberOfLevelsToDownload;
     
     // list of compressed and uncompressed offsets
-    private List<Pair<Integer, Integer>> levelByteEnd = new ArrayList<>();
+    private List<Pair<Long, Long>> levelByteEnd = new ArrayList<>();
     
     // equal to file size, sometimes equal to uncompressed data size without the header
-    private int completeFileSize;
+    private long completeFileSize;
     
     // offset to the first asset file within the data area? equals compressed
     // file size if completeFileSize contains the uncompressed data size
-    private int unknown;
+    private long dataHeaderSize;
     
     @Override
     public void read(DataReader in) throws IOException {
@@ -74,7 +74,7 @@ public class AssetBundleHeader implements Struct {
         streamVersion = in.readInt();
         unityVersion = new UnityVersion(in.readStringNull());
         unityRevision = new UnityVersion(in.readStringNull());
-        minimumStreamedBytes = in.readInt();
+        minimumStreamedBytes = in.readUnsignedInt();
         headerSize = in.readInt();
         
         numberOfLevelsToDownload = in.readInt();
@@ -83,16 +83,16 @@ public class AssetBundleHeader implements Struct {
         assert numberOfLevelsToDownload == numberOfLevels || numberOfLevelsToDownload == 1;
         
         for (int i = 0; i < numberOfLevels; i++) {
-            levelByteEnd.add(new ImmutablePair(in.readInt(), in.readInt()));
+            levelByteEnd.add(new ImmutablePair(in.readUnsignedInt(), in.readUnsignedInt()));
         }
         
         if (streamVersion >= 2) {
-            completeFileSize = in.readInt();
+            completeFileSize = in.readUnsignedInt();
             assert minimumStreamedBytes <= completeFileSize;
         }
         
         if (streamVersion >= 3) {
-            unknown = in.readInt();
+            dataHeaderSize = in.readUnsignedInt();
         }
         
         in.readByte();
@@ -104,23 +104,23 @@ public class AssetBundleHeader implements Struct {
         out.writeInt(streamVersion);
         out.writeStringNull(unityVersion.toString());
         out.writeStringNull(unityRevision.toString());
-        out.writeInt(minimumStreamedBytes);
+        out.writeUnsignedInt(minimumStreamedBytes);
         out.writeInt(headerSize);
         
         out.writeInt(numberOfLevelsToDownload);
         out.writeInt(levelByteEnd.size());
         
-        for (Pair<Integer, Integer> offset : levelByteEnd) {
-            out.writeInt(offset.getLeft());
-            out.writeInt(offset.getRight());
+        for (Pair<Long, Long> offset : levelByteEnd) {
+            out.writeUnsignedInt(offset.getLeft());
+            out.writeUnsignedInt(offset.getRight());
         }
         
         if (streamVersion >= 2) {
-            out.writeInt(completeFileSize);
+            out.writeUnsignedInt(completeFileSize);
         }
         
         if (streamVersion >= 3) {
-            out.writeInt(unknown);
+            out.writeUnsignedInt(dataHeaderSize);
         }
         
         out.writeByte(0);
@@ -178,7 +178,7 @@ public class AssetBundleHeader implements Struct {
         this.headerSize = dataOffset;
     }
     
-    public List<Pair<Integer, Integer>> getLevelOffsets() {
+    public List<Pair<Long, Long>> getLevelOffsets() {
         return levelByteEnd;
     }
 
@@ -190,19 +190,27 @@ public class AssetBundleHeader implements Struct {
         this.numberOfLevelsToDownload = numberOfLevels;
     }
 
-    public int getCompleteFileSize() {
+    public long getCompleteFileSize() {
         return completeFileSize;
     }
 
-    public void setCompleteFileSize(int completeFileSize) {
+    public void setCompleteFileSize(long completeFileSize) {
         this.completeFileSize = completeFileSize;
     }
 
-    public int getMinimumStreamedBytes() {
+    public long getMinimumStreamedBytes() {
         return minimumStreamedBytes;
     }
 
-    public void setMinimumStreamedBytes(int minimumStreamedBytes) {
+    public void setMinimumStreamedBytes(long minimumStreamedBytes) {
         this.minimumStreamedBytes = minimumStreamedBytes;
+    }
+
+    public long getDataHeaderSize() {
+        return dataHeaderSize;
+    }
+
+    public void setDataHeaderSize(long dataHeaderSize) {
+        this.dataHeaderSize = dataHeaderSize;
     }
 }

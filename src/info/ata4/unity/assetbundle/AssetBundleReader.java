@@ -10,7 +10,10 @@
 package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.Positionable;
+import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
+import info.ata4.io.util.ObjectToString;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -32,70 +35,92 @@ import org.apache.commons.io.input.BoundedInputStream;
  */
 public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> {
     
-    private final DataReader in;
     private final AssetBundleHeader header = new AssetBundleHeader();
-    private final List<AssetBundleEntryInfo> entries = new ArrayList<>();
+    private final List<AssetBundleEntry> entries = new ArrayList<>();
     
-    private DataReader inData;
+    private final DataReader in;
+    private IOSocket lzmaSocket;
 
     public AssetBundleReader(Path file) throws AssetBundleException, IOException {
         in = new DataReader(Sockets.forFile(file, READ));
-        in.readStruct(header);
+        header.read(in);
 
         // check signature
         if (!header.hasValidSignature()) {
             throw new AssetBundleException("Invalid signature");
         }
         
-        createDataReader();
-        
+        DataReader inData = new DataReader(getDataSocket(0));
         int files = inData.readInt();
+        List<AssetBundleEntryInfo> entryInfos = new ArrayList<>(files);
+        
         for (int i = 0; i < files; i++) {
-            AssetBundleEntryInfo entry = new AssetBundleEntryInfo();
-            entry.read(inData);
-            entries.add(entry);
+            AssetBundleEntryInfo entryInfo = new AssetBundleEntryInfo();
+            entryInfo.read(inData);
+            entryInfos.add(entryInfo);
+            System.out.println(ObjectToString.toString(entryInfo));
         }
         
-        // sort entries by offset, which is the order in which they appear in
-        // the file, which is required for streaming
-        Collections.sort(entries, new EntryComparator());
+        // sort entries by offset so that they're in the order in which they
+        // appear in the file, which is convenient for compressed bundles
+        Collections.sort(entryInfos, new EntryComparator());
+        
+        for (AssetBundleEntryInfo entryInfo : entryInfos) {
+            entries.add(new AssetBundleInternalEntry(this, entryInfo));
+        }
     }
     
-    private void createDataReader() throws IOException {
-        // close old reader
-        if (inData != null) {
-            inData.close();
-        }
-        
-        in.position(header.getHeaderSize());
-        
-        InputStream is = in.getSocket().getInputStream();
-        
-        // wrap around LZMA stream if the bundle is compressed
+    private IOSocket getDataSocket(long offset) throws IOException {
+        // use LZMA stream if the bundle is compressed
         if (header.isCompressed()) {
-            is = new LzmaInputStream(new BufferedInputStream(is));
+            // create initial socket if required
+            if (lzmaSocket == null) {
+                lzmaSocket = getLZMADataSocket();
+            }
+            
+            Positionable pos = lzmaSocket.getPositionable();
+            
+            // recreate socket if the offset is behind
+            if (pos.position() > offset) {
+                lzmaSocket.close();
+                lzmaSocket = getLZMADataSocket();
+            }
+            
+            pos.position(offset);
+            return lzmaSocket;
+        } else {
+            in.position(header.getHeaderSize() + offset);
+            return in.getSocket();
         }
-        
-        inData = new DataReader(Sockets.forInputStream(is));
+    }
+    
+    private IOSocket getLZMADataSocket() throws IOException {
+        in.position(header.getHeaderSize());
+        InputStream is = new LzmaInputStream(
+                new BufferedInputStream(in.getSocket().getInputStream()));
+        return Sockets.forInputStream(is);
+    }
+    
+    InputStream getInputStreamForEntry(AssetBundleEntryInfo info) throws IOException {
+        IOSocket socket = getDataSocket(info.getOffset());
+        return new BoundedInputStream(socket.getInputStream(), info.getSize());
     }
 
     public AssetBundleHeader getHeader() {
         return header;
     }
     
-    public List<AssetBundleEntryInfo> getEntries() {
-        return Collections.unmodifiableList(entries);
-    }
-
     @Override
     public void close() throws IOException {
-        inData.close();
+        if (lzmaSocket != null) {
+            lzmaSocket.close();
+        }
         in.close();
     }
 
     @Override
     public Iterator<AssetBundleEntry> iterator() {
-        return new EntryIterator();
+        return entries.iterator();
     }
     
     private class EntryComparator implements Comparator<AssetBundleEntryInfo> {
@@ -113,42 +138,5 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
                 return 0;
             }
         }
-    }
-    
-    private class EntryIterator implements Iterator<AssetBundleEntry> {
-        
-        private final Iterator<AssetBundleEntryInfo> iterator = entries.iterator();
-
-        @Override
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
-
-        @Override
-        public AssetBundleEntry next() {
-            AssetBundleEntryInfo info = iterator.next();
-            
-            try {                
-                // recreate data reader if the offset is behind
-                if (inData.position() > info.getOffset()) {
-                    createDataReader();
-                }
-                
-                // skip to next entry
-                inData.position(info.getOffset());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            
-            InputStream is = new BoundedInputStream(inData.getSocket().getInputStream(), info.getSize());
-            
-            return new AssetBundleEntry(info.getName(), info.getSize(), is);
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-        
     }
 }

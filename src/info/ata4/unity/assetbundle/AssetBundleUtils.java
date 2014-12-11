@@ -9,18 +9,13 @@
  */
 package info.ata4.unity.assetbundle;
 
-import info.ata4.io.DataReader;
-import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.util.progress.DummyProgress;
 import info.ata4.util.progress.Progress;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -29,8 +24,6 @@ import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
 import java.util.Properties;
-import lzma.LzmaDecoder;
-import lzma.LzmaEncoder;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -68,7 +61,7 @@ public class AssetBundleUtils {
         ) {
             long current = 0;
             long total = 0;
-            for (AssetBundleEntryInfo entry : assetBundle.getEntries()) {
+            for (AssetBundleEntry entry : assetBundle) {
                 total += entry.getSize();
             }
             
@@ -131,131 +124,5 @@ public class AssetBundleUtils {
         }
         
         return socket;
-    }
-    
-    public static void compress(Path inFile, Path outFile) throws IOException {
-        try (
-            IOSocket inSocket = Sockets.forBufferedReadFile(inFile);
-            IOSocket outSocket = Sockets.forFile(inFile, CREATE, READ, WRITE, TRUNCATE_EXISTING);
-        ) {
-            compress(inSocket, outSocket);
-        }
-    }
-    
-    private static void compress(IOSocket inSocket, IOSocket outSocket) throws IOException {
-        DataReader in = new DataReader(inSocket);
-        
-        AssetBundleHeader tmpHeader = new AssetBundleHeader();
-        in.readStruct(tmpHeader);
-
-        // check signature
-        if (!tmpHeader.hasValidSignature()) {
-            throw new AssetBundleException("Invalid signature");
-        }
-
-        if (tmpHeader.isCompressed()) {
-            throw new AssetBundleException("Asset bundle is already compressed");
-        }
-
-        tmpHeader.setCompressed(true);
-
-        DataWriter out = new DataWriter(outSocket);
-        out.writeStruct(tmpHeader);
-
-        compressData(in, out);
-
-        // write header again with fixed file size
-        out.position(0);
-        tmpHeader.setCompleteFileSize((int) out.size());
-        tmpHeader.setMinimumStreamedBytes((int) out.size());
-        out.writeStruct(tmpHeader);
-    }
-    
-    private static void compressData(DataReader in, DataWriter out) throws IOException {
-        int lc = 3;
-        int lp = 0;
-        int pb = 2;
-        int dictSize = 1 << 23;
-        
-        LzmaEncoder enc = new LzmaEncoder();
-        enc.setEndMarkerMode(true);
-        
-        if (!enc.setLcLpPb(lc, lp, pb)) {
-            throw new IOException("Invalid LZMA props");
-        }
-        
-        if (!enc.setDictionarySize(dictSize)) {
-            throw new IOException("Invalid dictionary size");
-        }
-        
-        boolean swap = out.isSwap();
-        out.setSwap(true);
-        out.write(enc.getCoderProperties());
-        out.writeLong(in.remaining());
-        out.setSwap(swap);
-
-        try (
-            InputStream is = new BufferedInputStream(in.getSocket().getInputStream());
-            OutputStream os = new BufferedOutputStream(out.getSocket().getOutputStream());
-        ) {
-            enc.code(is, os);
-        }
-    }
-
-    public static void uncompress(Path inFile, Path outFile) throws IOException {
-        try (
-            IOSocket inSocket = Sockets.forBufferedReadFile(inFile);
-            IOSocket outSocket = Sockets.forBufferedWriteFile(inFile);
-        ) {
-            uncompress(inSocket, outSocket);
-        }
-    }
-    
-    public static void uncompress(IOSocket inSocket, IOSocket outSocket) throws IOException {
-        DataReader in = new DataReader(inSocket);
-        
-        AssetBundleHeader tmpHeader = new AssetBundleHeader();
-        in.readStruct(tmpHeader);
-
-        // check signature
-        if (!tmpHeader.hasValidSignature()) {
-            throw new AssetBundleException("Invalid signature");
-        }
-
-        if (!tmpHeader.isCompressed()) {
-            throw new AssetBundleException("Asset bundle is not compressed");
-        }
-
-        tmpHeader.setCompressed(false);
-
-        DataWriter out = new DataWriter(outSocket);
-        out.writeStruct(tmpHeader);
-
-        in.setSwap(true);
-        uncompressData(in, out);
-    }
-    
-    private static void uncompressData(DataReader in, DataWriter out) throws IOException {
-        boolean swap = in.isSwap();
-        
-        in.setSwap(true);
-        byte[] lzmaProps = new byte[5];
-        in.readFully(lzmaProps);
-        long lzmaSize = in.readLong();
-        in.setSwap(swap);
-
-        LzmaDecoder dec = new LzmaDecoder();
-        if (!dec.setDecoderProperties(lzmaProps)) {
-            throw new IOException("Invalid LZMA props");
-        }
-
-        try (
-            InputStream is = new BufferedInputStream(in.getSocket().getInputStream());
-            OutputStream os = new BufferedOutputStream(out.getSocket().getOutputStream());
-        ) {
-            if (!dec.code(is, os, lzmaSize)) {
-                throw new IOException("LZMA decoding error");
-            }
-        }
     }
 }

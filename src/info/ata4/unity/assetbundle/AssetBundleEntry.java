@@ -9,38 +9,24 @@
  */
 package info.ata4.unity.assetbundle;
 
+import java.io.IOException;
 import java.io.InputStream;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class AssetBundleEntry {
+public abstract class AssetBundleEntry {
     
-    private final String name;
-    private final long size;
-    private final InputStream is;
-
-    public AssetBundleEntry(String name, long size, InputStream is) {
-        this.name = name;
-        this.size = size;
-        this.is = is;
-    }
+    public abstract String getName();
     
-    public String getName() {
-        return name;
-    }
+    public abstract long getSize();
+
+    public abstract InputStream getInputStream() throws IOException;
     
-    public long getSize() {
-        return size;
-    }
-
-    public InputStream getInputStream() {
-        return is;
-    }
-
-    @Override
-    public String toString() {
-        return name;
+    public boolean isLibrary() {
+        String ext = FilenameUtils.getExtension(getName());
+        return ext.equals("dll") || ext.equals("mdb");
     }
 }

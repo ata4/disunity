@@ -13,7 +13,6 @@ import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -49,11 +48,6 @@ public class AssetBundleEntryInfo implements Struct {
         this.size = size;
     }
     
-    public boolean isAsset() {
-        String ext = FilenameUtils.getExtension(getName());
-        return !ext.equals("dll") && !ext.equals("mdb");
-    }
-
     @Override
     public void read(DataReader in) throws IOException {
         name = in.readStringNull();
