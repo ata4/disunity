@@ -71,37 +71,20 @@ public class AssetBundleWriter {
 
             // write bundle data
             if (header.isCompressed()) {
-                // prepare LZMA encoder
-                int lc = 3;
-                int lp = 0;
-                int pb = 2;
-                int dictSize = 1 << 23;
-
-                LzmaEncoder enc = new LzmaEncoder();
-                enc.setEndMarkerMode(true);
-
-                if (!enc.setLcLpPb(lc, lp, pb)) {
-                    throw new IOException("Invalid LZMA props");
-                }
-
-                if (!enc.setDictionarySize(dictSize)) {
-                    throw new IOException("Invalid dictionary size");
-                }
-                
-                Path dataFile = Files.createTempFile(file.getParent(), "bundletmp", ".bin");
+                // write data to temporary file
+                Path dataFile = Files.createTempFile(file.getParent(), "compressedData", null);
                 try (DataWriter outData = new DataWriter(Sockets.forFile(dataFile,
                             CREATE, READ, WRITE, TRUNCATE_EXISTING, DELETE_ON_CLOSE))) {
-                    // write data to temporary file
                     writeData(outData);
                     
-                    boolean swap = out.isSwap();
-                    out.setSwap(true);
-                    out.write(enc.getCoderProperties());
-                    out.writeLong(outData.size());
-                    out.setSwap(swap);
+                    // create LZMA encoder and write header
+                    LzmaEncoder enc = createLzmaEncoder();
+                    out.write(enc.getCoderProperties()); // LZMA properties
+                    out.writeLong(outData.size()); // uncompressed size
 
-                    // stream the compressed bundle data to the bundle file
+                    // stream the temporary bundle data compressed to the bundle file
                     outData.position(0);
+                    
                     try (
                         InputStream is = new BufferedInputStream(outData.getSocket().getInputStream());
                         OutputStream os = new BufferedOutputStream(out.getSocket().getOutputStream());
@@ -114,6 +97,7 @@ public class AssetBundleWriter {
                     levelOffset.setLeft(out.size());
                 }
             } else {
+                // write data directly to file
                 writeData(out);
             }
             
@@ -174,5 +158,27 @@ public class AssetBundleWriter {
         for (AssetBundleEntryInfo entryInfo : entryInfos) {
             entryInfo.write(out);
         }
+    }
+    
+    private LzmaEncoder createLzmaEncoder() throws IOException {
+        // prepare LZMA encoder
+        int lc = 3;
+        int lp = 0;
+        int pb = 2;
+        int dictSize = 1 << 19;
+
+        LzmaEncoder enc = new LzmaEncoder();
+        enc.setEndMarkerMode(true);
+        enc.setNumFastBytes(273);
+
+        if (!enc.setLcLpPb(lc, lp, pb)) {
+            throw new IOException("Invalid LZMA props");
+        }
+
+        if (!enc.setDictionarySize(dictSize)) {
+            throw new IOException("Invalid dictionary size");
+        }
+
+        return enc;
     }
 }
