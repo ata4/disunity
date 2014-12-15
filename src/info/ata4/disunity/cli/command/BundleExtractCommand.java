@@ -1,5 +1,5 @@
 /*
- ** 2014 Dezember 02
+ ** 2014 December 02
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -17,7 +17,6 @@ import info.ata4.unity.assetbundle.AssetBundleUtils;
 import info.ata4.util.progress.Progress;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,17 +27,12 @@ import java.util.logging.Logger;
     commandNames = "bundle-extract",
     commandDescription = "Extracts files from asset bundles."
 )
-public class BundleExtractCommand extends FileCommand {
+public class BundleExtractCommand extends BundleFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
-
+    
     @Override
-    public void handleFile(Path file) throws IOException {
-        if (!AssetBundleUtils.isAssetBundle(file)) {
-            L.log(Level.SEVERE, "{0} is not an asset bundle file", file);
-            return;
-        }
-        
+    public void handleBundleFile(Path file) throws IOException {
         String fileName = PathUtils.getBaseName(file);
         Path outputDir = file.resolveSibling(fileName);
         Progress progress = new LogProgress(L);
