@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import lzma.LzmaEncoder;
+import info.ata4.io.lzma.LzmaEncoderProps;
+import net.contrapunctus.lzma.LzmaOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -77,19 +78,21 @@ public class AssetBundleWriter {
                             CREATE, READ, WRITE, TRUNCATE_EXISTING, DELETE_ON_CLOSE))) {
                     writeData(outData);
                     
-                    // create LZMA encoder and write header
-                    LzmaEncoder enc = createLzmaEncoder();
-                    out.write(enc.getCoderProperties()); // LZMA properties
-                    out.writeLong(outData.size()); // uncompressed size
+                    // configure LZMA encoder
+                    LzmaEncoderProps props = new LzmaEncoderProps();
+                    props.setDictionarySize(1 << 19);
+                    props.setNumFastBytes(273);
+                    props.setUncompressedSize(outData.size());
+                    props.setEndMarkerMode(true);
 
-                    // stream the temporary bundle data compressed to the bundle file
+                    // stream the temporary bundle data compressed into the bundle file
                     outData.position(0);
                     
                     try (
-                        InputStream is = new BufferedInputStream(outData.getSocket().getInputStream());
-                        OutputStream os = new BufferedOutputStream(out.getSocket().getOutputStream());
+                        InputStream is = outData.getSocket().getInputStream();
+                        OutputStream os = new LzmaOutputStream(out.getSocket().getOutputStream(), props);
                     ) {
-                        enc.code(is, os);
+                        IOUtils.copy(is, os);
                     }
                 }
                 
@@ -158,27 +161,5 @@ public class AssetBundleWriter {
         for (AssetBundleEntryInfo entryInfo : entryInfos) {
             entryInfo.write(out);
         }
-    }
-    
-    private LzmaEncoder createLzmaEncoder() throws IOException {
-        // prepare LZMA encoder
-        int lc = 3;
-        int lp = 0;
-        int pb = 2;
-        int dictSize = 1 << 19;
-
-        LzmaEncoder enc = new LzmaEncoder();
-        enc.setEndMarkerMode(true);
-        enc.setNumFastBytes(273);
-
-        if (!enc.setLcLpPb(lc, lp, pb)) {
-            throw new IOException("Invalid LZMA props");
-        }
-
-        if (!enc.setDictionarySize(dictSize)) {
-            throw new IOException("Invalid dictionary size");
-        }
-
-        return enc;
     }
 }
