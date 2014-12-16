@@ -11,7 +11,6 @@ package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataWriter;
 import info.ata4.io.socket.Sockets;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +72,7 @@ public class AssetBundleWriter {
             // write bundle data
             if (header.isCompressed()) {
                 // write data to temporary file
-                Path dataFile = Files.createTempFile(file.getParent(), "compressedData", null);
+                Path dataFile = Files.createTempFile(file.getParent(), "uncompressedData", null);
                 try (DataWriter outData = new DataWriter(Sockets.forFile(dataFile,
                             CREATE, READ, WRITE, TRUNCATE_EXISTING, DELETE_ON_CLOSE))) {
                     writeData(outData);
@@ -84,13 +83,14 @@ public class AssetBundleWriter {
                     props.setNumFastBytes(273);
                     props.setUncompressedSize(outData.size());
                     props.setEndMarkerMode(true);
-
+                    
                     // stream the temporary bundle data compressed into the bundle file
                     outData.position(0);
                     
                     try (
                         InputStream is = outData.getSocket().getInputStream();
-                        OutputStream os = new LzmaOutputStream(out.getSocket().getOutputStream(), props);
+                        OutputStream os = new LzmaOutputStream(new BufferedOutputStream(
+                                out.getSocket().getOutputStream()), props);
                     ) {
                         IOUtils.copy(is, os);
                     }
