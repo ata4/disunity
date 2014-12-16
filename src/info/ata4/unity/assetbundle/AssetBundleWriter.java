@@ -79,8 +79,8 @@ public class AssetBundleWriter {
                     
                     // configure LZMA encoder
                     LzmaEncoderProps props = new LzmaEncoderProps();
-                    props.setDictionarySize(1 << 19);
-                    props.setNumFastBytes(273);
+                    props.setDictionarySize(1 << 23); // 8 MiB
+                    props.setNumFastBytes(273); // maximum
                     props.setUncompressedSize(outData.size());
                     props.setEndMarkerMode(true);
                     
