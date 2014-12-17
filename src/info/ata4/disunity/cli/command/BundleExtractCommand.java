@@ -31,14 +31,14 @@ import java.util.logging.Logger;
 )
 public class BundleExtractCommand extends SingleFileCommand {
     
+    private static final Logger L = LogUtils.getLogger();
+    
     @Parameter(
         names = {"-o", "--output"},
         description = "Output directory",
         converter = PathConverter.class
     )
     private Path outputDir;
-    
-    private static final Logger L = LogUtils.getLogger();
     
     @Override
     public void handleFile(Path file) throws IOException {
