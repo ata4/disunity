@@ -15,6 +15,7 @@ import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.rtti.ObjectData;
+import info.ata4.util.io.FileUtilsExt;
 import java.awt.Color;
 import java.awt.Component;
 import java.nio.ByteBuffer;
@@ -134,7 +135,7 @@ public class AssetTreeCellRenderer extends DefaultTreeCellRenderer {
                         sb.append('"');
                     } else if (value instanceof ByteBuffer) {
                         ByteBuffer buf = (ByteBuffer) value;
-                        sb.append(FileUtils.byteCountToDisplaySize(buf.capacity()));
+                        sb.append(FileUtilsExt.formatByteCount(buf.capacity()));
                     } else {
                         sb.append(value);
                     }
