@@ -30,13 +30,13 @@ public class DisUnityOptions {
         description = "Show more verbose log output."
     )
     private boolean verbose;
-    
-    @Parameter(
-        names = {"-r", "--recursive"},
-        description = "Find all matching files recursively in all subdirectories"
-    )
-    private boolean recursive;
 
+    @Parameter(
+        names = { "-f", "--output-format" },
+        description = "Set output text format."
+    )
+    private OutputFormat outputFormat;
+    
     public boolean isHelp() {
         return help;
     }
@@ -45,7 +45,7 @@ public class DisUnityOptions {
         return verbose;
     }
 
-    public boolean isRecursive() {
-        return recursive;
+    public OutputFormat getOutputFormat() {
+        return outputFormat;
     }
 }

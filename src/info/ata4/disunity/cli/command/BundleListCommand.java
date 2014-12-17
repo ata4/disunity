@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -39,21 +41,48 @@ public class BundleListCommand extends BundleFileCommand {
     @Override
     public void handleBundleFile(Path file) throws IOException {
         try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            out.print(StringUtils.rightPad("Path", PAD_NAME));
-            out.print(" | ");
-            out.print(StringUtils.leftPad("Size", PAD_SIZE));
-            out.println();
-            out.print(StringUtils.repeat("-", PAD_NAME));
-            out.print(" | ");
-            out.print(StringUtils.repeat("-", PAD_SIZE));
-            out.println();
-            
-            for (AssetBundleEntry entry : reader) {
-                out.print(StringUtils.rightPad(entry.getName(), PAD_NAME));
-                out.print(" | ");
-                out.print(StringUtils.leftPad(String.valueOf(entry.getSize()), PAD_SIZE));
-                out.println();
+            switch (getOptions().getOutputFormat()) {                    
+                case JSON:
+                    printJSON(reader, file);
+                    break;
+                    
+                default:
+                    printText(reader);
             }
         }
+    }
+    
+    private void printText(AssetBundleReader reader) {
+        out.print(StringUtils.rightPad("Path", PAD_NAME));
+        out.print(" | ");
+        out.print(StringUtils.leftPad("Size", PAD_SIZE));
+        out.println();
+        out.print(StringUtils.repeat("-", PAD_NAME));
+        out.print(" | ");
+        out.print(StringUtils.repeat("-", PAD_SIZE));
+        out.println();
+
+        for (AssetBundleEntry entry : reader) {
+            out.print(StringUtils.rightPad(entry.getName(), PAD_NAME));
+            out.print(" | ");
+            out.print(StringUtils.leftPad(String.valueOf(entry.getSize()), PAD_SIZE));
+            out.println();
+        }
+    }
+    
+    private void printJSON(AssetBundleReader reader, Path file) {
+        JSONObject root = new JSONObject();
+        root.put("file", file);
+        
+        JSONArray entriesJson = new JSONArray();
+        for (AssetBundleEntry entry : reader) {
+            JSONObject entryJson = new JSONObject();
+            entryJson.put("name", entry.getName());
+            entryJson.put("size", entry.getSize());
+            entriesJson.put(entryJson);
+        }
+        root.put("entries", entriesJson);
+        
+        out.println(root.toString(2));
     }
 }

@@ -7,9 +7,8 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.disunity.cli;
+package info.ata4.util.progress;
 
-import info.ata4.util.progress.Progress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

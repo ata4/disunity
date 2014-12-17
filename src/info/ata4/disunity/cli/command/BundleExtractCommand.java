@@ -11,7 +11,7 @@ package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import info.ata4.disunity.cli.LogProgress;
+import info.ata4.util.progress.LogProgress;
 import info.ata4.disunity.cli.converters.PathConverter;
 import info.ata4.io.util.PathUtils;
 import info.ata4.log.LogUtils;

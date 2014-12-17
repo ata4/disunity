@@ -64,8 +64,6 @@ public class DisUnityCli implements Runnable {
     }
     
     public void parse(String[] args) {
-        L.info(DisUnity.getSignature());
-        
         jc.parse(args);
         
         // display usage
@@ -77,6 +75,14 @@ public class DisUnityCli implements Runnable {
         if (opts.isVerbose()) {
             LogUtils.configure(Level.ALL);
         }
+        
+        // only print warnings and errors to stderr if the stdout format is not
+        // plain text
+        if (opts.getOutputFormat() != OutputFormat.PLAINTEXT) {
+            LogUtils.configure(Level.WARNING);
+        }
+        
+        L.info(DisUnity.getSignature());
     }
 
     @Override
