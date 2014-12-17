@@ -86,7 +86,7 @@ public class FieldTypeDatabase {
     }
     
     public void load() {
-        L.info("Loading type database");
+        L.fine("Loading type database");
         
         // read database file, external or internal otherwise
         InputStream is = null;
@@ -158,7 +158,7 @@ public class FieldTypeDatabase {
     }
     
     public void save() {
-        L.info("Saving type database");
+        L.fine("Saving type database");
         
         try (
             OutputStream os = Files.newOutputStream(dbFile, WRITE, CREATE, TRUNCATE_EXISTING)
