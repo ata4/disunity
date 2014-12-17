@@ -10,12 +10,14 @@
 package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.Parameters;
+import info.ata4.disunity.cli.util.TablePrinter;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.assetbundle.AssetBundleReader;
+import info.ata4.util.io.FileUtilsExt;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.file.Path;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,9 +30,6 @@ import org.json.JSONObject;
     commandDescription = "Lists files contained in asset bundles."
 )
 public class BundleListCommand extends BundleFileCommand {
-    
-    private static final int PAD_NAME = 64;
-    private static final int PAD_SIZE = 10;
     
     private final PrintStream out;
     
@@ -53,21 +52,15 @@ public class BundleListCommand extends BundleFileCommand {
     }
     
     private void printText(AssetBundleReader reader) {
-        out.print(StringUtils.rightPad("Path", PAD_NAME));
-        out.print(" | ");
-        out.print(StringUtils.leftPad("Size", PAD_SIZE));
-        out.println();
-        out.print(StringUtils.repeat("-", PAD_NAME));
-        out.print(" | ");
-        out.print(StringUtils.repeat("-", PAD_SIZE));
-        out.println();
+        TablePrinter tbl = new TablePrinter(2);
+        tbl.setColumAlignment(1, 1);
+        tbl.addRow("Name", "Size");
 
         for (AssetBundleEntry entry : reader) {
-            out.print(StringUtils.rightPad(entry.getName(), PAD_NAME));
-            out.print(" | ");
-            out.print(StringUtils.leftPad(String.valueOf(entry.getSize()), PAD_SIZE));
-            out.println();
+            tbl.addRow(entry.getName(), FileUtilsExt.formatByteCount(entry.getSize()));
         }
+        
+        tbl.print(new PrintWriter(out));
     }
     
     private void printJSON(AssetBundleReader reader, Path file) {
