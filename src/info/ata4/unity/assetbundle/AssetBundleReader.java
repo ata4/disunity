@@ -115,6 +115,10 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
         }
         in.close();
     }
+    
+    public List<AssetBundleEntry> getEntries() {
+        return Collections.unmodifiableList(entries);
+    }
 
     @Override
     public Iterator<AssetBundleEntry> iterator() {

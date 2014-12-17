@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
+import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,27 +65,22 @@ public class AssetBundleUtils {
         try(
             AssetBundleReader assetBundle = new AssetBundleReader(file)
         ) {
-            long current = 0;
-            long total = 0;
-            for (AssetBundleEntry entry : assetBundle) {
-                total += entry.getSize();
-            }
-            
-            progress.setLimit(total);
+            List<AssetBundleEntry> entries = assetBundle.getEntries();
+            progress.setLimit(entries.size());
 
-            for (AssetBundleEntry entry : assetBundle) {
+            for (int i = 0; i < entries.size(); i++) {
                 if (progress.isCanceled()) {
                     break;
                 }
                 
+                AssetBundleEntry entry = entries.get(i);
                 progress.setLabel(entry.getName());
                 
                 Path entryFile = outDir.resolve(entry.getName());
                 Files.createDirectories(entryFile.getParent());
                 Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
                 
-                current += entry.getSize();
-                progress.update(current);
+                progress.update(i);
             }
             
             String bundleName = outDir.getFileName().toString();
