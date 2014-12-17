@@ -12,10 +12,13 @@ package info.ata4.unity.assetbundle;
 import info.ata4.io.buffer.ByteBufferOutputStream;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
+import info.ata4.io.util.PathUtils;
+import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.progress.DummyProgress;
 import info.ata4.util.progress.Progress;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -23,8 +26,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.*;
 import static java.nio.file.StandardOpenOption.*;
-import java.util.Properties;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * Asset bundle file utility class.
@@ -33,7 +38,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class AssetBundleUtils {
     
-    private static final String PROPERTIES_FILE = "bundle.properties";
+    private static final Charset PROP_CHARSET = Charset.forName("US-ASCII");
     
     private AssetBundleUtils() {
     }
@@ -82,26 +87,21 @@ public class AssetBundleUtils {
                 progress.update(current);
             }
             
-            // create metadata file
-            AssetBundleHeader header = assetBundle.getHeader();
+            String bundleName = outDir.getFileName().toString();
+            Path propsFile = outDir.getParent().resolve(bundleName + ".json");
             
-            Properties props = new Properties();
-            props.setProperty("compressed", String.valueOf(header.isCompressed()));
-            props.setProperty("streamVersion", String.valueOf(header.getStreamVersion()));
-            props.setProperty("unityVersion", header.getUnityVersion().toString());
-            props.setProperty("unityRevision", header.getUnityRevision().toString());
-            
-            Path propsFile = outDir.resolve(PROPERTIES_FILE);
-            
-            try (Writer out = Files.newBufferedWriter(propsFile,
-                    Charset.forName("US-ASCII"), WRITE, CREATE, TRUNCATE_EXISTING)) {
-                props.store(out, null);
-            }
+            writePropertiesFile(propsFile, assetBundle);
         }
     }
     
     public static void extract(Path file, Path outDir) throws IOException {
         extract(file, outDir, new DummyProgress());
+    }
+    
+    public static void build(Path propsFile, Path bundleFile) throws IOException {
+        AssetBundleWriter assetBundle = new AssetBundleWriter();
+        readPropertiesFile(propsFile, assetBundle);
+        assetBundle.write(bundleFile);
     }
     
     public static IOSocket getSocketForEntry(AssetBundleEntry entry) throws IOException {
@@ -111,7 +111,7 @@ public class AssetBundleUtils {
         long size = entry.getSize();
         if (size > 1 << 27) {
             // copy entry to temporary file
-            Path tmpFile = Files.createTempFile("disunity", ".assets");
+            Path tmpFile = Files.createTempFile("disunity", null);
             socket = Sockets.forFile(tmpFile, READ, WRITE, DELETE_ON_CLOSE);
             IOUtils.copy(entry.getInputStream(), socket.getOutputStream());
             socket.getPositionable().position(0);
@@ -124,5 +124,52 @@ public class AssetBundleUtils {
         }
         
         return socket;
+    }
+    
+    private static void writePropertiesFile(Path propsFile, AssetBundleReader assetBundle) throws IOException {
+        AssetBundleHeader header = assetBundle.getHeader();
+
+        JSONObject props = new JSONObject();
+        props.put("compressed", header.isCompressed());
+        props.put("streamVersion", header.getStreamVersion());
+        props.put("unityVersion", header.getUnityVersion().toString());
+        props.put("unityRevision", header.getUnityRevision().toString());
+
+        JSONArray files = new JSONArray();
+        for (AssetBundleEntry entry : assetBundle) {
+            files.put(entry.getName());
+        }
+        props.put("files", files);
+
+        try (Writer out = Files.newBufferedWriter(propsFile,
+                PROP_CHARSET, WRITE, CREATE, TRUNCATE_EXISTING)) {
+            props.write(out, 2);
+        }
+    }
+    
+    private static void readPropertiesFile(Path propsFile, AssetBundleWriter assetBundle) throws IOException {
+        JSONObject props;
+        
+        try (Reader in = Files.newBufferedReader(propsFile, PROP_CHARSET)) {
+            props = new JSONObject(new JSONTokener(in));
+        }
+        
+        AssetBundleHeader header = assetBundle.getHeader();
+        
+        header.setCompressed(props.getBoolean("compressed"));
+        header.setStreamVersion(props.getInt("streamVersion"));
+        header.setUnityVersion(new UnityVersion(props.getString("unityVersion")));
+        header.setUnityRevision(new UnityVersion(props.getString("unityRevision")));
+        
+        JSONArray files = props.getJSONArray("files");
+        
+        String bundleName = PathUtils.getBaseName(propsFile);
+        Path bundleDir = propsFile.resolveSibling(bundleName);
+        
+        for (int i = 0; i < files.length(); i++) {
+            String name = files.getString(i);
+            Path file = bundleDir.resolve(name);
+            assetBundle.addEntry(new AssetBundleExternalEntry(name, file));
+        }
     }
 }

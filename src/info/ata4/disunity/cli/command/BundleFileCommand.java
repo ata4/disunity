@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class BundleFileCommand extends FileCommand {
+public abstract class BundleFileCommand extends MultiFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
 

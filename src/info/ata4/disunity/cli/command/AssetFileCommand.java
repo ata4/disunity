@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class AssetFileCommand extends FileCommand {
+public abstract class AssetFileCommand extends MultiFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
 

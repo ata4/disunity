@@ -1,5 +1,5 @@
 /*
- ** 2014 December 02
+ ** 2014 December 16
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -11,44 +11,35 @@ package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import info.ata4.disunity.cli.LogProgress;
 import info.ata4.disunity.cli.converters.PathConverter;
 import info.ata4.io.util.PathUtils;
-import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.util.progress.Progress;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @Parameters(
-    commandNames = "bundle-extract",
-    commandDescription = "Extracts files from asset bundles."
+    commandNames = "bundle-build",
+    commandDescription = "Builds an asset bundle from a .json property file."
 )
-public class BundleExtractCommand extends SingleFileCommand {
+public class BundleBuildCommand extends SingleFileCommand {
     
     @Parameter(
         names = {"-o", "--output"},
-        description = "Output directory",
+        description = "Asset bundle output file",
         converter = PathConverter.class
     )
-    private Path outputDir;
-    
-    private static final Logger L = LogUtils.getLogger();
-    
+    private Path outFile;
+
     @Override
     public void handleFile(Path file) throws IOException {
-        if (outputDir == null) {
+        if (outFile == null) {
             String fileName = PathUtils.getBaseName(file);
-            outputDir = file.resolveSibling(fileName);
+            outFile = file.getParent().resolve(fileName);
         }
-        
-        Progress progress = new LogProgress(L);
-
-        AssetBundleUtils.extract(file, outputDir, progress);
+        AssetBundleUtils.build(file, outFile);
     }
 }
