@@ -21,10 +21,10 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @Parameters(
-    commandNames = "rtti-learn",
-    commandDescription = "Copies new run-time type information from the selected asset files to the local database."
+    commandNames = "learn",
+    commandDescription = "Copies new run-time type information to the local database."
 )
-public class RTTILearnCommand extends AssetFileCommand {
+public class LearnCommand extends AssetFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
     

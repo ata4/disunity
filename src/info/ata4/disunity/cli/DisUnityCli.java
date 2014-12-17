@@ -16,7 +16,7 @@ import info.ata4.disunity.cli.command.BundleExtractCommand;
 import info.ata4.disunity.cli.command.BundleInfoCommand;
 import info.ata4.disunity.cli.command.BundleListCommand;
 import info.ata4.disunity.cli.command.Command;
-import info.ata4.disunity.cli.command.RTTILearnCommand;
+import info.ata4.disunity.cli.command.LearnCommand;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import java.io.PrintStream;
@@ -50,7 +50,7 @@ public class DisUnityCli implements Runnable {
 //        jc.addCommand(new ExtractStructCmd());
 //        jc.addCommand(new InfoCmd(out));
 //        jc.addCommand(new StatsCmd(out));
-        jc.addCommand(new RTTILearnCommand());
+        jc.addCommand(new LearnCommand());
 //        jc.addCommand(new ListCmd(out));
 //        jc.addCommand(new SplitCmd());
 //        
