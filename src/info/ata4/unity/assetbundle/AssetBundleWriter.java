@@ -59,9 +59,9 @@ public class AssetBundleWriter {
             }
         }
 
-        header.getLevelOffsets().clear();
-        header.getLevelOffsets().addAll(levelOffsetMap.values());
-        header.setNumberOfLevels(levelOffsetMap.size());
+        header.getLevelByteEnd().clear();
+        header.getLevelByteEnd().addAll(levelOffsetMap.values());
+        header.setNumberOfLevelsToDownload(levelOffsetMap.size());
         
         try (DataWriter out = new DataWriter(Sockets.forFile(file,
                 CREATE, WRITE, TRUNCATE_EXISTING))) {

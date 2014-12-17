@@ -178,16 +178,20 @@ public class AssetBundleHeader implements Struct {
         this.headerSize = dataOffset;
     }
     
-    public List<Pair<Long, Long>> getLevelOffsets() {
+    public List<Pair<Long, Long>> getLevelByteEnd() {
         return levelByteEnd;
     }
-
+    
     public int getNumberOfLevels() {
+        return levelByteEnd.size();
+    }
+
+    public int getNumberOfLevelsToDownload() {
         return numberOfLevelsToDownload;
     }
 
-    public void setNumberOfLevels(int numberOfLevels) {
-        this.numberOfLevelsToDownload = numberOfLevels;
+    public void setNumberOfLevelsToDownload(int numberOfLevelsToDownload) {
+        this.numberOfLevelsToDownload = numberOfLevelsToDownload;
     }
 
     public long getCompleteFileSize() {
