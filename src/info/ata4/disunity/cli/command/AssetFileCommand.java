@@ -52,7 +52,7 @@ public abstract class AssetFileCommand extends MultiFileCommand {
         String name = assetBundleEntry.getName();
 
         // skip libraries
-        if (name.endsWith(".dll") || name.endsWith(".mdb")) {
+        if (assetBundleEntry.isLibrary()) {
             return;
         }
         
