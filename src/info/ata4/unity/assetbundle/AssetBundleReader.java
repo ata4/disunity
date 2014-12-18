@@ -36,6 +36,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     
     private final AssetBundleHeader header = new AssetBundleHeader();
     private final List<AssetBundleEntry> entries = new ArrayList<>();
+    private final List<AssetBundleEntryInfo> entryInfos = new ArrayList<>();
     
     private final DataReader in;
     private IOSocket lzmaSocket;
@@ -51,8 +52,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
         
         DataReader inData = new DataReader(getDataSocket(0));
         int files = inData.readInt();
-        List<AssetBundleEntryInfo> entryInfos = new ArrayList<>(files);
-        
+
         for (int i = 0; i < files; i++) {
             AssetBundleEntryInfo entryInfo = new AssetBundleEntryInfo();
             entryInfo.read(inData);
@@ -108,12 +108,8 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
         return header;
     }
     
-    @Override
-    public void close() throws IOException {
-        if (lzmaSocket != null) {
-            lzmaSocket.close();
-        }
-        in.close();
+    public List<AssetBundleEntryInfo> getEntryInfos() {
+        return Collections.unmodifiableList(entryInfos);
     }
     
     public List<AssetBundleEntry> getEntries() {
@@ -123,6 +119,14 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     @Override
     public Iterator<AssetBundleEntry> iterator() {
         return entries.iterator();
+    }
+    
+    @Override
+    public void close() throws IOException {
+        if (lzmaSocket != null) {
+            lzmaSocket.close();
+        }
+        in.close();
     }
     
     private class EntryComparator implements Comparator<AssetBundleEntryInfo> {

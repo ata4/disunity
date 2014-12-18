@@ -11,11 +11,14 @@ package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.Parameters;
 import info.ata4.disunity.cli.util.TablePrinter;
+import info.ata4.unity.assetbundle.AssetBundleEntryInfo;
 import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -42,6 +45,8 @@ public class BundleInfoCommand extends BundleFileCommand {
 
     private void printText(AssetBundleReader reader) {
         AssetBundleHeader header = reader.getHeader();
+        PrintWriter out = getOutputWriter();
+        out.println("Header:");
         
         TablePrinter tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
@@ -68,7 +73,22 @@ public class BundleInfoCommand extends BundleFileCommand {
             tbl.addRow("dataHeaderSize", header.getDataHeaderSize());
         }
         
-        tbl.print(getOutputWriter());
+        tbl.print(out);
+        
+        out.println();
+        out.println("Entries:");
+        
+        tbl = new TablePrinter(3);
+        tbl.setColumnAlignment(1, 1);
+        tbl.setColumnAlignment(2, 1);
+        tbl.addRow("Name", "Offset", "Size");
+        
+        List<AssetBundleEntryInfo> entryInfos = reader.getEntryInfos();
+        for (AssetBundleEntryInfo entryInfo : entryInfos) {
+            tbl.addRow(entryInfo.getName(), entryInfo.getOffset(), entryInfo.getSize());
+        }
+        
+        tbl.print(out);
     }
     
     private void printJSON(AssetBundleReader reader) {
@@ -86,12 +106,20 @@ public class BundleInfoCommand extends BundleFileCommand {
         root.put("numberOfLevelsToDownload", header.getNumberOfLevelsToDownload());
         root.put("numberOfLevels", header.getNumberOfLevels());
         
+        JSONArray levelByteEndsJson = new JSONArray();
+        
         List<Pair<Long, Long>> levelByteEnds = header.getLevelByteEnd();
         for (int i = 0; i < levelByteEnds.size(); i++) {
+            JSONArray levelByteEndJson = new JSONArray();
+            
             Pair<Long, Long> levelByteEnd = levelByteEnds.get(i);
-            root.put("levelByteEnd[" + i + "][0]", levelByteEnd.getLeft());
-            root.put("levelByteEnd[" + i + "][1]", levelByteEnd.getRight());
+            levelByteEndJson.put(levelByteEnd.getLeft());
+            levelByteEndJson.put(levelByteEnd.getRight());
+            
+            levelByteEndsJson.put(levelByteEndJson);
         }
+        
+        root.put("levelByteEnd", levelByteEndsJson);
         
         if (header.getStreamVersion() >= 2) {
             root.put("completeFileSize", header.getCompleteFileSize());
@@ -100,6 +128,20 @@ public class BundleInfoCommand extends BundleFileCommand {
         if (header.getStreamVersion() >= 3) {
             root.put("dataHeaderSize", header.getDataHeaderSize());
         }
+        
+        JSONArray entryInfosJson = new JSONArray();
+        
+        List<AssetBundleEntryInfo> entryInfos = reader.getEntryInfos();
+        for (AssetBundleEntryInfo entryInfo : entryInfos) {
+            JSONObject entryInfoJson = new JSONObject();
+            entryInfoJson.put("name", entryInfo.getName());
+            entryInfoJson.put("offset", entryInfo.getOffset());
+            entryInfoJson.put("length", entryInfo.getSize());
+            
+            entryInfosJson.put(entryInfoJson);
+        }
+        
+        root.put("entries", entryInfosJson);
         
         root.write(getOutputWriter(), 2);
     }
