@@ -27,12 +27,25 @@ import java.util.logging.Logger;
 public abstract class AssetFileCommand extends MultiFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
+    
+    private AssetBundleReader currentAssetBundle;
+    private AssetBundleEntry currentAssetBundleEntry;
+    
+    protected AssetBundleReader getCurrentAssetBundle() {
+        return currentAssetBundle;
+    }
+    
+    protected AssetBundleEntry getCurrentAssetBundleEntry() {
+        return currentAssetBundleEntry;
+    }
 
     @Override
     public void handleFile(Path file) throws IOException {
         if (AssetBundleUtils.isAssetBundle(file)) {
             try (AssetBundleReader assetBundle = new AssetBundleReader(file)) {
+                currentAssetBundle = assetBundle;
                 handleAssetBundleFile(assetBundle);
+                currentAssetBundle = null;
             }
         } else {
             AssetFile asset = new AssetFile();
@@ -43,8 +56,10 @@ public abstract class AssetFileCommand extends MultiFileCommand {
     
     public void handleAssetBundleFile(AssetBundleReader assetBundle) throws IOException {
         for (AssetBundleEntry assetBundleEntry : assetBundle) {
+            currentAssetBundleEntry = assetBundleEntry;
             L.log(Level.INFO, "Processing {0}", assetBundleEntry.getName());
             handleAssetBundleEntry(assetBundleEntry);
+            currentAssetBundleEntry = null;
         }
     }
     

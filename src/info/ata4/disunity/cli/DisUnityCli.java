@@ -113,7 +113,7 @@ public class DisUnityCli implements Runnable {
         
         JCommander jcc = jc.getCommands().get(cmdName);
         
-        try (PrintWriter out = new PrintWriter(new CloseShieldOutputStream(System.out))) {
+        try (PrintWriter out = new PrintWriter(new CloseShieldOutputStream(System.out), true)) {
             Command cmd = (Command) jcc.getObjects().get(0);
             cmd.setOutputWriter(out);
             cmd.setOptions(opts);

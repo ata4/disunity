@@ -10,11 +10,14 @@
 package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.Parameters;
+import info.ata4.log.LogUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,14 +27,20 @@ import java.nio.file.Path;
     commandNames = "debug-bundle-move",
     commandDescription = "Moves a bunch of asset bundles in directories based on their Unity version."
 )
-public class DebugBundleMove extends BundleFileCommand {
+public class DebugBundleMove extends SingleFileCommand {
     
+    private static final Logger L = LogUtils.getLogger();
+
     @Override
-    public void handleBundleFile(Path file) throws IOException {
+    public void handleFile(Path file) throws IOException {
         byte[] header = new byte[24];
         
         try (InputStream is = Files.newInputStream(file)) {
             is.read(header);
+        }
+        
+        if (!new String(header, 0, 5).equals("Unity")) {
+            L.log(Level.SEVERE, "{0} is not an asset bundle file", file);
         }
 
         String version = new String(header, 19, 5, Charset.forName("ASCII"));

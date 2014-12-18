@@ -52,18 +52,16 @@ public class DebugAssetCollect extends BundleFileCommand {
     private Path outputDir;
 
     @Override
-    public void handleBundleFile(Path file) throws IOException {
-        try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            for (AssetBundleEntry entry : reader) {
-                if (entry.getName().equals("mainData")) {
-                    addMainData(entry, file);
-                    break;
-                }
+    public void handleBundleFile(AssetBundleReader reader) throws IOException {
+        for (AssetBundleEntry entry : reader) {
+            if (entry.getName().equals("mainData")) {
+                addMainData(entry);
+                break;
             }
         }
     }
     
-    private void addMainData(AssetBundleEntry entry, Path bundleFile) throws IOException {
+    private void addMainData(AssetBundleEntry entry) throws IOException {
         try (IOSocket socket = AssetBundleUtils.getSocketForEntry(entry)) {
             String outName = getMD5Checksum(socket);
             Path outFile = outputDir.resolve(outName);
@@ -71,7 +69,7 @@ public class DebugAssetCollect extends BundleFileCommand {
             socket.getPositionable().position(0);
             Files.copy(socket.getInputStream(), outFile);
             
-            L.log(Level.INFO, "{0} = {1}", new Object[]{outName, bundleFile});
+            L.log(Level.INFO, "{0} = {1}", new Object[]{outName, getCurrentFile()});
         } catch (NoSuchAlgorithmException ex) {
             L.log(Level.SEVERE, "MD5 is not supported", ex);
         }

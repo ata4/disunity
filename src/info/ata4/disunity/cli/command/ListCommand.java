@@ -13,6 +13,7 @@ import com.beust.jcommander.Parameters;
 import info.ata4.disunity.cli.util.TablePrinter;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectInfo;
+import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.util.ClassID;
 import java.io.IOException;
@@ -69,7 +70,13 @@ public class ListCommand extends AssetFileCommand {
     
     private void printJSON(AssetFile asset) {
         JSONObject root = new JSONObject();
-        root.put("file", asset.getSourceFile());
+        
+        AssetBundleReader assetBundle = getCurrentAssetBundle();
+        if (assetBundle != null) {
+            root.put("file", getCurrentFile().resolve(getCurrentAssetBundleEntry().getName()));
+        } else {
+            root.put("file", getCurrentFile());
+        }
         
         JSONArray objectsJson = new JSONArray();
         for (ObjectData data : asset.getObjects()) {

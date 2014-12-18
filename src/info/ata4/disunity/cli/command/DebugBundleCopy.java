@@ -40,27 +40,25 @@ public class DebugBundleCopy extends BundleFileCommand {
     private Path outputFile;
 
     @Override
-    public void handleBundleFile(Path file) throws IOException {
+    public void handleBundleFile(AssetBundleReader reader) throws IOException {
         PrintWriter out = getOutputWriter();
-        try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            out.println(ObjectToString.toString(reader.getHeader()));
-            
-            AssetBundleWriter writer = new AssetBundleWriter();
-            for (AssetBundleEntry entry : reader) {
-                writer.addEntry(entry);
-            }
 
-            AssetBundleHeader headerIn = reader.getHeader();
-            AssetBundleHeader headerOut = writer.getHeader();
-            headerOut.setSignature(headerIn.getSignature());
-            headerOut.setStreamVersion(headerIn.getStreamVersion());
-            headerOut.setUnityVersion(headerIn.getUnityVersion());
-            headerOut.setUnityRevision(headerIn.getUnityRevision());
+        out.println(ObjectToString.toString(reader.getHeader()));
 
-            writer.write(outputFile);
-            
-            out.println(ObjectToString.toString(writer.getHeader()));
+        AssetBundleWriter writer = new AssetBundleWriter();
+        for (AssetBundleEntry entry : reader) {
+            writer.addEntry(entry);
         }
+
+        AssetBundleHeader headerIn = reader.getHeader();
+        AssetBundleHeader headerOut = writer.getHeader();
+        headerOut.setSignature(headerIn.getSignature());
+        headerOut.setStreamVersion(headerIn.getStreamVersion());
+        headerOut.setUnityVersion(headerIn.getUnityVersion());
+        headerOut.setUnityRevision(headerIn.getUnityRevision());
+
+        writer.write(outputFile);
+
+        out.println(ObjectToString.toString(writer.getHeader()));
     }
-    
 }

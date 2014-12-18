@@ -14,7 +14,6 @@ import info.ata4.disunity.cli.util.TablePrinter;
 import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
@@ -30,16 +29,14 @@ import org.json.JSONObject;
 public class BundleInfoCommand extends BundleFileCommand {
 
     @Override
-    public void handleBundleFile(Path file) throws IOException {
-        try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            switch (getOptions().getOutputFormat()) {                    
-                case JSON:
-                    printJSON(reader, file);
-                    break;
-                    
-                default:
-                    printText(reader);
-            }
+    public void handleBundleFile(AssetBundleReader reader) throws IOException {
+        switch (getOptions().getOutputFormat()) {                    
+            case JSON:
+                printJSON(reader);
+                break;
+
+            default:
+                printText(reader);
         }
     }
 
@@ -74,11 +71,11 @@ public class BundleInfoCommand extends BundleFileCommand {
         tbl.print(getOutputWriter());
     }
     
-    private void printJSON(AssetBundleReader reader, Path file) {
+    private void printJSON(AssetBundleReader reader) {
         AssetBundleHeader header = reader.getHeader();
         
         JSONObject root = new JSONObject();
-        root.put("file", file);
+        root.put("file", getCurrentFile());
         
         root.put("signature", header.getSignature());
         root.put("streamVersion", header.getStreamVersion());

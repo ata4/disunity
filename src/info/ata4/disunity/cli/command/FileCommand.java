@@ -22,11 +22,18 @@ import java.util.logging.Logger;
 public abstract class FileCommand extends Command {
     
     private static final Logger L = LogUtils.getLogger();
+    private Path currentFile;
+    
+    protected Path getCurrentFile() {
+        return currentFile;
+    }
     
     protected void processFile(Path file) {        
         L.log(Level.INFO, "Processing {0}", file);
         try {
+            currentFile = file;
             handleFile(file);
+            currentFile = null;
         } catch (IOException ex) {
             L.log(Level.WARNING, "Can't process file " + file, ex); 
         }
