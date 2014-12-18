@@ -18,6 +18,7 @@ import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 
 /**
@@ -40,8 +41,9 @@ public class DebugBundleCopy extends BundleFileCommand {
 
     @Override
     public void handleBundleFile(Path file) throws IOException {
+        PrintWriter out = getOutputWriter();
         try (AssetBundleReader reader = new AssetBundleReader(file)) {
-            System.out.println(ObjectToString.toString(reader.getHeader()));
+            out.println(ObjectToString.toString(reader.getHeader()));
             
             AssetBundleWriter writer = new AssetBundleWriter();
             for (AssetBundleEntry entry : reader) {
@@ -57,7 +59,7 @@ public class DebugBundleCopy extends BundleFileCommand {
 
             writer.write(outputFile);
             
-            System.out.println(ObjectToString.toString(writer.getHeader()));
+            out.println(ObjectToString.toString(writer.getHeader()));
         }
     }
     

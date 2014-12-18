@@ -15,8 +15,6 @@ import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.util.io.FileUtilsExt;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,12 +28,6 @@ import org.json.JSONObject;
     commandDescription = "Lists files contained in asset bundles."
 )
 public class BundleListCommand extends BundleFileCommand {
-    
-    private final PrintStream out;
-    
-    public BundleListCommand(PrintStream out) {
-        this.out = out;
-    }
 
     @Override
     public void handleBundleFile(Path file) throws IOException {
@@ -60,7 +52,7 @@ public class BundleListCommand extends BundleFileCommand {
             tbl.addRow(entry.getName(), FileUtilsExt.formatByteCount(entry.getSize()));
         }
         
-        tbl.print(new PrintWriter(out));
+        tbl.print(getOutputWriter());
     }
     
     private void printJSON(AssetBundleReader reader, Path file) {
@@ -76,6 +68,6 @@ public class BundleListCommand extends BundleFileCommand {
         }
         root.put("entries", entriesJson);
         
-        out.println(root.toString(2));
+        root.write(getOutputWriter(), 2);
     }
 }

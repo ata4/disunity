@@ -10,6 +10,7 @@
 package info.ata4.disunity.cli.command;
 
 import info.ata4.disunity.cli.DisUnityOptions;
+import java.io.PrintWriter;
 
 /**
  * Abstract class for command actions.
@@ -19,6 +20,7 @@ import info.ata4.disunity.cli.DisUnityOptions;
 public abstract class Command implements Runnable {
     
     private DisUnityOptions options;
+    private PrintWriter out;
 
     public DisUnityOptions getOptions() {
         return options;
@@ -26,5 +28,13 @@ public abstract class Command implements Runnable {
 
     public void setOptions(DisUnityOptions options) {
         this.options = options;
+    }
+
+    public PrintWriter getOutputWriter() {
+        return out;
+    }
+
+    public void setOutputWriter(PrintWriter out) {
+        this.out = out;
     }
 }

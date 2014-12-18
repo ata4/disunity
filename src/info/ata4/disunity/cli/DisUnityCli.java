@@ -21,11 +21,14 @@ import info.ata4.disunity.cli.command.DebugBundleCopy;
 import info.ata4.disunity.cli.command.DebugBundleMove;
 import info.ata4.disunity.cli.command.GuiCommand;
 import info.ata4.disunity.cli.command.LearnCommand;
+import info.ata4.disunity.cli.command.ListCommand;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.output.CloseShieldOutputStream;
 
 /**
  * DisUnity command line interface.
@@ -44,8 +47,6 @@ public class DisUnityCli implements Runnable {
         jc.setProgramName(DisUnity.getProgramName());
         jc.addObject(opts);
 
-        PrintStream out = System.out;
-        
 //        // asset commands
 //        jc.addCommand(new DumpCmd());
 //        jc.addCommand(new DumpStructCmd());
@@ -56,14 +57,14 @@ public class DisUnityCli implements Runnable {
 //        jc.addCommand(new InfoCmd(out));
 //        jc.addCommand(new StatsCmd(out));
         jc.addCommand(new LearnCommand());
-//        jc.addCommand(new ListCmd(out));
+        jc.addCommand(new ListCommand());
 //        jc.addCommand(new SplitCmd());
 //        
 //        // bundle commands
         jc.addCommand(new BundleExtractCommand());
         jc.addCommand(new BundleBuildCommand());
-        jc.addCommand(new BundleListCommand(out));
-        jc.addCommand(new BundleInfoCommand(out));
+        jc.addCommand(new BundleListCommand());
+        jc.addCommand(new BundleInfoCommand());
         
         // other commands
         jc.addCommand(new GuiCommand());
@@ -112,9 +113,12 @@ public class DisUnityCli implements Runnable {
         
         JCommander jcc = jc.getCommands().get(cmdName);
         
-        Command cmd = (Command) jcc.getObjects().get(0);
-        cmd.setOptions(opts);
-        cmd.run();
+        try (PrintWriter out = new PrintWriter(new CloseShieldOutputStream(System.out))) {
+            Command cmd = (Command) jcc.getObjects().get(0);
+            cmd.setOutputWriter(out);
+            cmd.setOptions(opts);
+            cmd.run();
+        }
     }
     
     /**

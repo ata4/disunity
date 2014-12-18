@@ -28,8 +28,8 @@ public class TablePrinter {
     private static final char CHR_SPACE = ' ';
     
     private final List<List<String>> data = new ArrayList<>();
-    private List<MutableInt> columnWidths;
-    private List<MutableInt> columnAligns;
+    private final List<MutableInt> columnWidths;
+    private final List<MutableInt> columnAligns;
     
     public TablePrinter(int columns) {
         columnWidths = new ArrayList<>(columns);
@@ -105,8 +105,6 @@ public class TablePrinter {
             if (irow == rows - 1) {
                 printSeparator(out);
             }
-            
-            out.flush();
         }
     }
     

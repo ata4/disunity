@@ -14,8 +14,6 @@ import info.ata4.disunity.cli.util.TablePrinter;
 import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,12 +28,6 @@ import org.json.JSONObject;
     commandDescription = "Prints info for asset bundle files."
 )
 public class BundleInfoCommand extends BundleFileCommand {
-    
-    private final PrintStream out;
-    
-    public BundleInfoCommand(PrintStream out) {
-        this.out = out;
-    }
 
     @Override
     public void handleBundleFile(Path file) throws IOException {
@@ -79,7 +71,7 @@ public class BundleInfoCommand extends BundleFileCommand {
             tbl.addRow("dataHeaderSize", header.getDataHeaderSize());
         }
         
-        tbl.print(new PrintWriter(out));
+        tbl.print(getOutputWriter());
     }
     
     private void printJSON(AssetBundleReader reader, Path file) {
@@ -112,6 +104,6 @@ public class BundleInfoCommand extends BundleFileCommand {
             root.put("dataHeaderSize", header.getDataHeaderSize());
         }
         
-        out.println(root.toString(2));
+        root.write(getOutputWriter(), 2);
     }
 }
