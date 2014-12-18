@@ -346,9 +346,9 @@ public class AssetFile extends FileHandler {
             ofsMin = Math.min(ofsMin, out.position());
             ofsMax = Math.max(ofsMax, out.position() + bb.remaining());
             
-            ObjectInfo path = data.getPath();            
-            path.setOffset(out.position() - header.getDataOffset());
-            path.setLength(bb.remaining());
+            ObjectInfo info = data.getInfo();            
+            info.setOffset(out.position() - header.getDataOffset());
+            info.setLength(bb.remaining());
 
             out.writeBuffer(bb);
         }

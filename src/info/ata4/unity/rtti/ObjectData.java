@@ -58,10 +58,6 @@ public class ObjectData {
         this.info = info;
     }
 
-    public ObjectInfo getPath() {
-        return info;
-    }
-
     public ByteBuffer getBuffer() {
         if (buffer == null && instance != null && typeTree != null) {
             try {
