@@ -35,7 +35,7 @@ public class DisUnityOptions {
         names = { "-f", "--output-format" },
         description = "Set output text format."
     )
-    private OutputFormat outputFormat;
+    private OutputFormat outputFormat = OutputFormat.PLAINTEXT;
     
     public boolean isHelp() {
         return help;
