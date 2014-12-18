@@ -53,7 +53,7 @@ public class BundleListCommand extends BundleFileCommand {
     
     private void printText(AssetBundleReader reader) {
         TablePrinter tbl = new TablePrinter(2);
-        tbl.setColumAlignment(1, 1);
+        tbl.setColumnAlignment(1, 1);
         tbl.addRow("Name", "Size");
 
         for (AssetBundleEntry entry : reader) {

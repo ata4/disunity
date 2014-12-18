@@ -1,5 +1,5 @@
 /*
- ** 2014 Dezember 17
+ ** 2014 December 17
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,10 +9,7 @@
  */
 package info.ata4.disunity.cli.util;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +40,7 @@ public class TablePrinter {
         }
     }
     
-    public void setColumAlignment(int icol, int align) {
+    public void setColumnAlignment(int icol, int align) {
         columnAligns.get(icol).setValue(align);
     }
     
