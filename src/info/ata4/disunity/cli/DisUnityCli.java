@@ -20,6 +20,7 @@ import info.ata4.disunity.cli.command.DebugAssetTest;
 import info.ata4.disunity.cli.command.DebugBundleCopy;
 import info.ata4.disunity.cli.command.DebugBundleMove;
 import info.ata4.disunity.cli.command.GuiCommand;
+import info.ata4.disunity.cli.command.InfoCommand;
 import info.ata4.disunity.cli.command.LearnCommand;
 import info.ata4.disunity.cli.command.ListCommand;
 import info.ata4.log.LogUtils;
@@ -54,7 +55,7 @@ public class DisUnityCli implements Runnable {
 //        jc.addCommand(new ExtractRawCmd());
 //        jc.addCommand(new ExtractTxtCmd());
 //        jc.addCommand(new ExtractStructCmd());
-//        jc.addCommand(new InfoCmd(out));
+        jc.addCommand(new InfoCommand());
 //        jc.addCommand(new StatsCmd(out));
         jc.addCommand(new LearnCommand());
         jc.addCommand(new ListCommand());

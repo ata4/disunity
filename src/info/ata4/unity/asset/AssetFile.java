@@ -382,6 +382,10 @@ public class AssetFile extends FileHandler {
     public AssetHeader getHeader() {
         return header;
     }
+    
+    public int getTypeTreeAttributes() {
+        return typeTreeStruct.getAttributes();
+    }
 
     public Map<Integer, FieldTypeNode> getTypeTree() {
         return typeTreeMap;
