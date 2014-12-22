@@ -15,7 +15,6 @@ import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.ObjectInfo;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.rtti.ObjectData;
-import info.ata4.unity.util.ClassID;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,7 +52,7 @@ public class ListCommand extends AssetFileCommand {
             
             int pid = data.getID();
             int cid = info.getClassID();
-            String className = ClassID.getNameForID(cid);
+            String className = info.getUnityClass().getName();
             long ofs = info.getOffset();
             long len = info.getLength();
             String objName = data.getInstance().getChildValue("m_Name");
@@ -87,7 +86,7 @@ public class ListCommand extends AssetFileCommand {
             
             JSONObject classJson = new JSONObject();
             classJson.put("id", info.getClassID());
-            classJson.put("name", ClassID.getNameForID(info.getClassID()));
+            classJson.put("name", info.getUnityClass().getName());
             
             objectJson.put("class", classJson);
             objectJson.put("offset", info.getOffset());

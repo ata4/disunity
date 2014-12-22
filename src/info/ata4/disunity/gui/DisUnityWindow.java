@@ -19,7 +19,7 @@ import info.ata4.disunity.gui.view.AssetTreeCellRenderer;
 import info.ata4.unity.DisUnity;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.assetbundle.AssetBundleUtils;
-import info.ata4.unity.rtti.FieldTypeDatabase;
+import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.progress.Progress;
 import info.ata4.util.progress.ProgressMonitorWrapper;
 import java.awt.Component;
@@ -290,7 +290,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void openTypeDatabaseItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTypeDatabaseItemActionPerformed
-        dataTree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode(FieldTypeDatabase.getInstance())));
+        dataTree.setModel(new DefaultTreeModel(new FieldTypeDatabaseNode()));
     }//GEN-LAST:event_openTypeDatabaseItemActionPerformed
 
     private void extractAssetBundleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extractAssetBundleMenuItemActionPerformed

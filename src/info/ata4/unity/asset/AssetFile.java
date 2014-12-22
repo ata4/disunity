@@ -16,7 +16,6 @@ import info.ata4.io.file.FileHandler;
 import info.ata4.io.socket.IOSocket;
 import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
-import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
 import info.ata4.util.io.DataBlock;
@@ -48,9 +47,9 @@ public class AssetFile extends FileHandler {
     
     // collection fields
     private final Map<Integer, ObjectInfo> objectInfoMap = new LinkedHashMap<>();
-    private final Map<Integer, ObjectData> objectDataMap = new LinkedHashMap<>();
     private final Map<Integer, FieldTypeNode> typeTreeMap = new LinkedHashMap<>();
     private final List<FileIdentifier> externals = new ArrayList<>();
+    private final List<ObjectData> objectList = new ArrayList<>();
     
     // struct fields
     private final VersionInfo versionInfo = new VersionInfo();
@@ -215,20 +214,7 @@ public class AssetFile extends FileHandler {
             in.position(ofs);
             in.readBuffer(buf);
             
-            // try to get type node from database if the embedded one is empty
-            FieldTypeNode typeNode;
-            if (!typeTreeMap.isEmpty()) {
-                typeNode = typeTreeMap.get(info.getTypeID());
-            } else {
-                typeNode = FieldTypeDatabase.getInstance()
-                        .getNode(info.getTypeID(), versionInfo.getUnityRevision(), false);
-            }
-            
-            // in some cases, e.g. standalone MonoBehaviours, the type tree is
-            // generally not available
-            if (typeNode == null && info.getClassID() != 114) {
-                L.log(Level.WARNING, "Skipped {0} with no type tree", info);
-            }
+            FieldTypeNode typeNode = typeTreeMap.get(info.getTypeID());
                        
             ObjectData data = new ObjectData(id, versionInfo);
             data.setInfo(info);
@@ -239,7 +225,7 @@ public class AssetFile extends FileHandler {
             serializer.setSoundData(audioBuffer);
             data.setSerializer(serializer);
             
-            objectDataMap.put(id, data);
+            objectList.add(data);
         }
         
         objectDataBlock.setOffset(ofsMin);
@@ -337,7 +323,7 @@ public class AssetFile extends FileHandler {
         long ofsMin = Long.MAX_VALUE;
         long ofsMax = Long.MIN_VALUE;
         
-        for (ObjectData data : objectDataMap.values()) {            
+        for (ObjectData data : objectList) {            
             ByteBuffer bb = data.getBuffer();
             bb.rewind();
             
@@ -386,31 +372,17 @@ public class AssetFile extends FileHandler {
     public int getTypeTreeAttributes() {
         return typeTreeStruct.getAttributes();
     }
-
+    
     public Map<Integer, FieldTypeNode> getTypeTree() {
         return typeTreeMap;
     }
-    
+
     public Map<Integer, ObjectInfo> getObjectInfoMap() {
         return objectInfoMap;
     }
     
-    public Map<Integer, ObjectData> getObjectDataMap() {
-        return objectDataMap;
-    }
-    
     public List<ObjectData> getObjects() {
-        List<ObjectData> objectsCopy = new ArrayList<>();
-        
-        for (ObjectData object : objectDataMap.values()) {
-            // objects without a type tree are unreadabe in most cases, so skip
-            // these
-            if (object.getTypeTree() != null) {
-                objectsCopy.add(object);
-            }
-        }
-        
-        return objectsCopy;
+        return objectList;
     }
     
     public List<FileIdentifier> getExternals() {

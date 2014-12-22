@@ -12,7 +12,7 @@ package info.ata4.disunity.cli.command;
 import com.beust.jcommander.Parameters;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.rtti.FieldTypeDatabase;
+import info.ata4.unity.util.TypeTreeUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,12 +28,11 @@ public class LearnCommand extends AssetFileCommand {
     
     private static final Logger L = LogUtils.getLogger();
     
-    private final FieldTypeDatabase db = FieldTypeDatabase.getInstance();
     private int learned = 0;
 
     @Override
     public void handleAssetFile(AssetFile asset) {
-        learned += db.learn(asset);
+        learned += TypeTreeUtils.learn(asset);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class LearnCommand extends AssetFileCommand {
         super.run();
         if (learned > 0) {
             L.log(Level.INFO, "Adding {0} new type(s) to database", learned);
-            db.save();
+            TypeTreeUtils.getDatabase().save();
         }
     }
 }

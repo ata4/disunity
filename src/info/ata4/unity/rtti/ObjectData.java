@@ -80,19 +80,9 @@ public class ObjectData {
     public void setTypeTree(FieldTypeNode typeTree) {
         this.typeTree = typeTree;
     }
-    
-    public String getName() {
-        String name = getInstance().getChildValue("m_Name");
-
-        if (name == null || name.isEmpty()) {
-            name = String.format("Object %d", id);
-        }
-        
-        return name;
-    }
 
     public FieldNode getInstance() {
-        if (instance == null && buffer != null && typeTree != null) {
+        if (instance == null && buffer != null) {
             try {
                 serializer.deserialize(this);
             } catch (IOException ex) {
@@ -104,5 +94,15 @@ public class ObjectData {
 
     public void setInstance(FieldNode instance) {
         this.instance = instance;
+    }
+    
+    public String getName() {
+        String name = getInstance().getChildValue("m_Name");
+
+        if (name == null || name.isEmpty()) {
+            name = String.format("Object %d", id);
+        }
+        
+        return name;
     }
 }

@@ -12,7 +12,7 @@ package info.ata4.unity.asset;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
-import info.ata4.unity.util.ClassID;
+import info.ata4.unity.util.UnityClass;
 import java.io.IOException;
 
 /**
@@ -93,9 +93,12 @@ public class ObjectInfo implements Struct {
         this.classID = classID;
     }
     
+    public UnityClass getUnityClass() {
+        return new UnityClass(classID);
+    }
+    
     @Override
     public String toString() {
-        String className = ClassID.getNameForID(getClassID(), true);
-        return String.format("Class %d (%s)", getClassID(), className);
+        return getUnityClass().toString();
     }
 }

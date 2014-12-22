@@ -10,8 +10,10 @@
 package info.ata4.disunity.gui.model;
 
 import info.ata4.disunity.gui.util.FieldNodeUtils;
-import info.ata4.unity.rtti.FieldTypeDatabase;
 import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.util.TypeTreeDatabase;
+import info.ata4.unity.util.TypeTreeUtils;
+import info.ata4.unity.util.UnityClass;
 import info.ata4.unity.util.UnityVersion;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -27,15 +29,15 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
 
-    public FieldTypeDatabaseNode(FieldTypeDatabase db) {
-        super(Paths.get(FieldTypeDatabase.FILENAME));
+    public FieldTypeDatabaseNode() {
+        super(Paths.get(TypeTreeDatabase.FILENAME));
         
         // first step: create a mapping between all versions and their sets of
         // field type nodes
         Map<UnityVersion, Set<FieldTypeNode>> versionNodes = new TreeMap<>();
 
-        Map<Pair<Integer, UnityVersion>, FieldTypeNode> map = db.getFieldTypeMap();
-        for (Map.Entry<Pair<Integer, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
+        Map<Pair<UnityClass, UnityVersion>, FieldTypeNode> map = TypeTreeUtils.getDatabase().getTypeMap();
+        for (Map.Entry<Pair<UnityClass, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
             UnityVersion version = entry.getKey().getValue();
             
             if (!versionNodes.containsKey(version)) {
