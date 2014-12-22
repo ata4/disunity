@@ -12,6 +12,7 @@ package info.ata4.unity.rtti;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.util.collection.Node;
+import java.util.Objects;
 
 /**
  *
@@ -75,5 +76,31 @@ public class FieldNode extends Node<FieldNode> {
     
     public void setChildArray(String name, Object value) {
         getChild(name).getChild("Array").setChildValue("data", value);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 97 * hash + Objects.hashCode(this.type);
+        hash = 97 * hash + Objects.hashCode(this.value);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FieldNode other = (FieldNode) obj;
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        return true;
     }
 }
