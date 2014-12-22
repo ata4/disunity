@@ -46,7 +46,7 @@ public class TypeTreeDatabase {
     private static final Logger L = LogUtils.getLogger();
     
     public static final int VERSION = 1;
-    public static final String FILENAME = "structdb.dat";
+    public static final String FILENAME = "types.dat";
     
     private final Map<Pair<UnityClass, UnityVersion>, FieldTypeNode> nodeMap = new HashMap<>();
     private Path dbFile;

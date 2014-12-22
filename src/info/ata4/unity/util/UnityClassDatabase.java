@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class UnityClassDatabase {
     
     private static final Logger L = LogUtils.getLogger();
-    private static final String CLASSID_PATH = "/resources/classid.txt";
+    private static final String CLASSID_PATH = "/resources/classes.txt";
     private static final String CHARSET = "ASCII";
     
     private final Map<Integer, String> IDToName = new HashMap<>();
