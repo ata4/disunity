@@ -15,7 +15,6 @@ import info.ata4.io.socket.Sockets;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.VersionInfo;
-import info.ata4.unity.util.TypeTreeUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -53,17 +52,6 @@ public class ObjectSerializer {
         in.position(0);
         
         FieldTypeNode typeNode = data.getTypeTree();
-        
-        // get type from database if the embedded one is missing
-        if (typeNode == null) {
-            typeNode = TypeTreeUtils.getNode(data, false);
-        }
-        
-        // throw exception if the type is missing in the database, too
-        if (typeNode == null) {
-            throw new RuntimeTypeException("No type information available");
-        }
-        
         FieldNode instance = readObject(in, typeNode);
         
         // check if all bytes have been read

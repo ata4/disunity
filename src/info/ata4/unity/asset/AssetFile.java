@@ -18,6 +18,7 @@ import info.ata4.io.socket.Sockets;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
+import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -50,6 +51,7 @@ public class AssetFile extends FileHandler {
     private final Map<Integer, FieldTypeNode> typeTreeMap = new LinkedHashMap<>();
     private final List<FileIdentifier> externals = new ArrayList<>();
     private final List<ObjectData> objectList = new ArrayList<>();
+    private final List<ObjectData> objectListBroken= new ArrayList<>();
     
     // struct fields
     private final VersionInfo versionInfo = new VersionInfo();
@@ -215,6 +217,12 @@ public class AssetFile extends FileHandler {
             in.readBuffer(buf);
             
             FieldTypeNode typeNode = typeTreeMap.get(info.getTypeID());
+            
+            // get type from database if the embedded one is missing
+            if (typeNode == null) {
+                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
+                        versionInfo.getUnityRevision(), false);
+            }
                        
             ObjectData data = new ObjectData(id, versionInfo);
             data.setInfo(info);
@@ -225,7 +233,14 @@ public class AssetFile extends FileHandler {
             serializer.setSoundData(audioBuffer);
             data.setSerializer(serializer);
             
-            objectList.add(data);
+            // Add typeless objects to an internal list. They can't be
+            // (de)serialized, but can still be written to the file.
+            if (typeNode == null) {
+                L.log(Level.WARNING, "{0} has no type information!", data.toString());
+                objectListBroken.add(data);
+            } else {
+                objectList.add(data);
+            }
         }
         
         objectDataBlock.setOffset(ofsMin);
@@ -323,7 +338,10 @@ public class AssetFile extends FileHandler {
         long ofsMin = Long.MAX_VALUE;
         long ofsMax = Long.MIN_VALUE;
         
-        for (ObjectData data : objectList) {            
+        // merge object lists
+        objectList.addAll(objectListBroken);
+        
+        for (ObjectData data : objectList) {
             ByteBuffer bb = data.getBuffer();
             bb.rewind();
             
@@ -338,6 +356,9 @@ public class AssetFile extends FileHandler {
 
             out.writeBuffer(bb);
         }
+        
+        // separate object lists
+        objectList.removeAll(objectListBroken);
         
         objectDataBlock.setOffset(ofsMin);
         objectDataBlock.setEndOffset(ofsMax);

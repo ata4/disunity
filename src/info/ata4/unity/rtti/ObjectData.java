@@ -82,7 +82,7 @@ public class ObjectData {
     }
 
     public FieldNode getInstance() {
-        if (instance == null && buffer != null) {
+        if (instance == null && buffer != null && typeTree != null) {
             try {
                 serializer.deserialize(this);
             } catch (IOException ex) {
@@ -104,5 +104,10 @@ public class ObjectData {
         }
         
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Object " + getID() + " " + getInfo().toString();
     }
 }
