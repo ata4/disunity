@@ -147,7 +147,7 @@ public class AssetFile extends FileHandler {
             }
         }
     }
-    
+      
     @Override
     public void load(IOSocket socket) throws IOException {
         if (socket.getProperties().isStreaming()) {
@@ -236,7 +236,10 @@ public class AssetFile extends FileHandler {
             // Add typeless objects to an internal list. They can't be
             // (de)serialized, but can still be written to the file.
             if (typeNode == null) {
-                L.log(Level.WARNING, "{0} has no type information!", data.toString());
+                // log warning if it's not a MonoBehaviour
+                if (info.getClassID() != 114) {
+                    L.log(Level.WARNING, "{0} has no type information!", data.toString());
+                }
                 objectListBroken.add(data);
             } else {
                 objectList.add(data);
