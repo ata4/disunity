@@ -116,12 +116,9 @@ public class AssetFile extends FileHandler {
             socket = Sockets.forFile(file, READ);
         }
         
-        // load audio buffer if existing
-        Path audioStreamFile = file.resolveSibling(fileName + ".resS");
-        if (Files.exists(audioStreamFile)) {
-            L.log(Level.FINE, "Found sound stream file {0}", audioStreamFile.getFileName());
-            audioBuffer = ByteBufferUtils.openReadOnly(audioStreamFile);
-        }
+        // load audio buffer if existing        
+        loadResourceStream(file.resolveSibling(fileName + ".streamingResourceImage"));
+        loadResourceStream(file.resolveSibling(fileName + ".resS"));
         
         load(socket);
         
@@ -145,6 +142,13 @@ public class AssetFile extends FileHandler {
                 
                 external.setAssetFile(childAsset);
             }
+        }
+    }
+    
+    private void loadResourceStream(Path streamFile) throws IOException {
+        if (Files.exists(streamFile)) {
+            L.log(Level.FINE, "Found sound stream file {0}", streamFile.getFileName());
+            audioBuffer = ByteBufferUtils.openReadOnly(streamFile);
         }
     }
       
