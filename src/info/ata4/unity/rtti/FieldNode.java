@@ -45,7 +45,7 @@ public class FieldNode extends Node<FieldNode> {
     }
     
     public FieldNode getChild(String name) {
-        for (FieldNode child : children) {
+        for (FieldNode child : this) {
             if (child.getType().getFieldName().equals(name)) {
                 return child;
             }

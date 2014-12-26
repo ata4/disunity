@@ -22,8 +22,8 @@ import java.util.Objects;
  */
 public abstract class Node<T extends Node> implements Collection<T> {
     
-    protected T parent;
-    protected final List<T> children = new ArrayList<>();
+    private T parent;
+    private final List<T> children = new ArrayList<>();
     
     public T getParent() {
         return parent;

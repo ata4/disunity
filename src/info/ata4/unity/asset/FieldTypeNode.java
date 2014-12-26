@@ -40,7 +40,7 @@ public class FieldTypeNode extends Node<FieldTypeNode> implements Struct {
         for (int i = 0; i < numChildren; i++) {
             FieldTypeNode child = new FieldTypeNode();
             child.read(in);
-            children.add(child);
+            add(child);
         }
     }
 
@@ -48,7 +48,7 @@ public class FieldTypeNode extends Node<FieldTypeNode> implements Struct {
     public void write(DataWriter out) throws IOException {
         type.write(out);
         
-        int numChildren = children.size();
+        int numChildren = size();
         out.writeInt(numChildren);
         for (FieldTypeNode child : this) {
             child.write(out);
