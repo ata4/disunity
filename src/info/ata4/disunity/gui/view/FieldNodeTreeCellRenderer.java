@@ -46,7 +46,7 @@ public class FieldNodeTreeCellRenderer extends NodeTreeCellRenderer<FieldNode> {
             sb.append(']');
         } else {
             String fieldName = type.getFieldName();
-            if (!fieldName.equals("Base")) {
+            if (!fieldName.equals("Base") && !fieldName.equals("Array")) {
                 sb.append(' ');
                 if (fieldName.contains(" ")) {
                     sb.append('"');
