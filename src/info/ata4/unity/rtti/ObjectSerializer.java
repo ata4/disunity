@@ -79,7 +79,7 @@ public class ObjectSerializer {
             // Check if the current node is an array and if the current field is
             // "data". In that case, "data" needs to be read "size" times.
             if (type.getIsArray() && childType.getFieldName().equals("data")) {
-                int size = fieldNode.getChildValue("size");
+                int size = fieldNode.getSInt32("size");
                 
                 FieldNode childFieldNode = new FieldNode(childTypeNode);
 
@@ -104,7 +104,7 @@ public class ObjectSerializer {
         // convert byte buffers to string instances in "string" fields for convenience
         if (fieldNode.getType().getTypeName().equals("string")) {
             // strings use "char" arrays, so it should be wrapped in a ByteBuffer
-            ByteBuffer buf = fieldNode.getChild("Array").getChildValue("data");
+            ByteBuffer buf = fieldNode.getArrayData(ByteBuffer.class);
             fieldNode.setValue(new String(buf.array(), "UTF-8"));
         }
         

@@ -55,7 +55,7 @@ public class ListCommand extends AssetFileCommand {
             String className = info.getUnityClass().getName();
             long ofs = info.getOffset();
             long len = info.getLength();
-            String objName = data.getInstance().getChildValue("m_Name");
+            String objName = data.getInstance().getString("m_Name");
             
             if (objName == null) {
                 objName = "";
@@ -91,7 +91,7 @@ public class ListCommand extends AssetFileCommand {
             objectJson.put("class", classJson);
             objectJson.put("offset", info.getOffset());
             objectJson.put("length", info.getLength());
-            objectJson.put("name", data.getInstance().getChildValue("m_Name"));
+            objectJson.put("name", data.getInstance().getString("m_Name"));
             
             objectsJson.put(objectJson);
         }
