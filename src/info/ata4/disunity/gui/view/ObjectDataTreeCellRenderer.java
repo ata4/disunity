@@ -9,9 +9,11 @@
  */
 package info.ata4.disunity.gui.view;
 
+import info.ata4.disunity.gui.util.IconUtils;
 import info.ata4.unity.rtti.ObjectData;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.Icon;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
@@ -22,6 +24,8 @@ public class ObjectDataTreeCellRenderer implements DelegateTreeCellRenderer<Obje
     
     private final Map<ObjectData, String> textCache = new HashMap<>();
     
+    private final Icon blockIcon = IconUtils.createIcon("document-block.png");
+    
     @Override
     public Class<ObjectData> getTreeCellType() {
         return ObjectData.class;
@@ -31,6 +35,8 @@ public class ObjectDataTreeCellRenderer implements DelegateTreeCellRenderer<Obje
     public void configureTreeCellRenderer(DefaultTreeCellRenderer renderer,
             ObjectData userData, boolean sel, boolean expanded, boolean leaf,
             int row, boolean hasFocus) {
+        renderer.setIcon(blockIcon);
+        
         // getName() is expensive, cache it
         if (!textCache.containsKey(userData)) {
             textCache.put(userData, userData.getName());
