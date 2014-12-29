@@ -224,7 +224,7 @@ public class ObjectSerializer {
                 return buf;
 
             // always wrap char arrays so array() is available on the buffer, which
-            // is required to convert them to Java strings in readString()
+            // is required to convert them to Java strings in readObject()
             case "char":
                 byte[] raw = new byte[size];
                 in.readFully(raw, 0, size);
