@@ -19,13 +19,14 @@ import info.ata4.disunity.cli.command.Command;
 import info.ata4.disunity.cli.command.DebugAssetTest;
 import info.ata4.disunity.cli.command.DebugBundleCopy;
 import info.ata4.disunity.cli.command.DebugBundleMove;
+import info.ata4.disunity.cli.command.DumpTypeCommand;
+import info.ata4.disunity.cli.command.ExtractCommand;
 import info.ata4.disunity.cli.command.GuiCommand;
 import info.ata4.disunity.cli.command.InfoCommand;
 import info.ata4.disunity.cli.command.LearnCommand;
 import info.ata4.disunity.cli.command.ListCommand;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.DisUnity;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,10 +49,10 @@ public class DisUnityCli implements Runnable {
         jc.setProgramName(DisUnity.getProgramName());
         jc.addObject(opts);
 
-//        // asset commands
+        // asset commands
 //        jc.addCommand(new DumpCmd());
 //        jc.addCommand(new DumpStructCmd());
-//        jc.addCommand(new ExtractCmd());
+        jc.addCommand(new ExtractCommand());
 //        jc.addCommand(new ExtractRawCmd());
 //        jc.addCommand(new ExtractTxtCmd());
 //        jc.addCommand(new ExtractStructCmd());
@@ -60,8 +61,8 @@ public class DisUnityCli implements Runnable {
         jc.addCommand(new LearnCommand());
         jc.addCommand(new ListCommand());
 //        jc.addCommand(new SplitCmd());
-//        
-//        // bundle commands
+        
+        // bundle commands
         jc.addCommand(new BundleExtractCommand());
         jc.addCommand(new BundleBuildCommand());
         jc.addCommand(new BundleListCommand());

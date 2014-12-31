@@ -1,5 +1,5 @@
 /*
- ** 2014 Dezember 17
+ ** 2014 December 17
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
