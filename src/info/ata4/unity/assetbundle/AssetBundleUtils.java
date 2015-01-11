@@ -52,7 +52,7 @@ public class AssetBundleUtils {
         try (InputStream is = Files.newInputStream(file)) {
             byte[] header = new byte[8];
             is.read(header);
-            String headerString = new String(header, "ASCII");
+            String headerString = new String(header, PROP_CHARSET);
             return headerString.equals(AssetBundleHeader.SIGNATURE_WEB)
                     || headerString.equals(AssetBundleHeader.SIGNATURE_RAW);
         } catch (IOException ex) {

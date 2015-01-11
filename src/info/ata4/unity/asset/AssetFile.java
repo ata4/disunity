@@ -22,6 +22,7 @@ import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.READ;
@@ -163,7 +164,7 @@ public class AssetFile extends FileHandler {
         loadHeader(in);
 
         // read as little endian from now on
-        in.setSwap(true);
+        in.order(ByteOrder.LITTLE_ENDIAN);
         
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
@@ -183,7 +184,7 @@ public class AssetFile extends FileHandler {
     }
     
     private void loadMetadata(DataReader in) throws IOException {
-        in.setSwap(versionInfo.swapRequired());
+        in.order(versionInfo.getByteOrder());
         
         // read structure data
         typeTreeBlock.markBegin(in);
@@ -266,7 +267,7 @@ public class AssetFile extends FileHandler {
         saveHeader(out);
         
         // write as little endian from now on
-        out.setSwap(true);
+        out.order(ByteOrder.LITTLE_ENDIAN);
         
         // older formats store the object data before the structure data
         if (header.getVersion() < 9) {
@@ -308,7 +309,7 @@ public class AssetFile extends FileHandler {
                 + metadataOffset);
         
         // write updated header
-        out.setSwap(false);
+        out.order(ByteOrder.BIG_ENDIAN);
         out.position(headerBlock.getOffset());
         out.writeStruct(header);
              
@@ -323,7 +324,7 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveMetadata(DataWriter out) throws IOException {
-        out.setSwap(versionInfo.swapRequired());
+        out.order(versionInfo.getByteOrder());
         
         typeTreeBlock.markBegin(out);
         out.writeStruct(typeTreeStruct);

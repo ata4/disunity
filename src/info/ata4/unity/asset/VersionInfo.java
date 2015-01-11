@@ -10,6 +10,7 @@
 package info.ata4.unity.asset;
 
 import info.ata4.unity.util.UnityVersion;
+import java.nio.ByteOrder;
 
 /**
  *
@@ -51,8 +52,8 @@ public class VersionInfo {
         this.assetVersion = assetVersion;
     }
     
-    public boolean swapRequired() {
+    public ByteOrder getByteOrder() {
         // older formats use big endian
-        return assetVersion > 5;
+        return assetVersion > 5 ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
     }
 }

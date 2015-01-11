@@ -13,6 +13,7 @@ import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.Struct;
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.UUID;
 
 /**
@@ -47,11 +48,11 @@ public class FileIdentifier implements Struct {
         }
         
         // read GUID as big-endian
-        boolean swap = in.isSwap();
-        in.setSwap(false);
+        ByteOrder order = in.order();
+        in.order(ByteOrder.BIG_ENDIAN);
         long guidMost = in.readLong();
         long guidLeast = in.readLong();
-        in.setSwap(swap);
+        in.order(order);
         
         guid = new UUID(guidMost, guidLeast);
         type = in.readInt();
@@ -65,11 +66,11 @@ public class FileIdentifier implements Struct {
         }
         
         // write GUID as big-endian
-        boolean swap = out.isSwap();
-        out.setSwap(false);
+        ByteOrder order = out.order();
+        out.order(ByteOrder.BIG_ENDIAN);
         out.writeLong(guid.getMostSignificantBits());
         out.writeLong(guid.getLeastSignificantBits());
-        out.setSwap(swap);
+        out.order(order);
         
         out.writeInt(type);
         out.writeStringNull(filePath);

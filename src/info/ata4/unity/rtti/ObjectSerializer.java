@@ -48,7 +48,7 @@ public class ObjectSerializer {
         versionInfo = data.getVersionInfo();
         
         DataReader in = new DataReader(Sockets.forByteBuffer(data.getBuffer()));
-        in.setSwap(versionInfo.swapRequired());
+        in.order(versionInfo.getByteOrder());
         in.position(0);
         
         FieldTypeNode typeNode = data.getTypeTree();

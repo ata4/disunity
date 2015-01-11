@@ -12,11 +12,11 @@ package info.ata4.disunity.cli.command;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.ata4.disunity.cli.converters.PathConverter;
-import info.ata4.io.util.ObjectToString;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.assetbundle.AssetBundleHeader;
 import info.ata4.unity.assetbundle.AssetBundleReader;
 import info.ata4.unity.assetbundle.AssetBundleWriter;
+import info.ata4.util.ObjectDump;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -43,7 +43,7 @@ public class DebugBundleCopy extends BundleFileCommand {
     public void handleBundleFile(AssetBundleReader reader) throws IOException {
         PrintWriter out = getOutputWriter();
 
-        out.println(ObjectToString.toString(reader.getHeader()));
+        out.println(ObjectDump.toString(reader.getHeader()));
 
         AssetBundleWriter writer = new AssetBundleWriter();
         for (AssetBundleEntry entry : reader) {
@@ -59,6 +59,6 @@ public class DebugBundleCopy extends BundleFileCommand {
 
         writer.write(outputFile);
 
-        out.println(ObjectToString.toString(writer.getHeader()));
+        out.println(ObjectDump.toString(writer.getHeader()));
     }
 }
