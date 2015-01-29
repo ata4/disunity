@@ -38,7 +38,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>info.ata4.unity.cli.DisUnityCli</mainClass>
+              <mainClass>info.ata4.disunity.cli.DisUnityCli</mainClass>
             </manifest>
           </archive>
         </configuration>
