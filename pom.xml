@@ -71,10 +71,9 @@
   </properties>
 
   <repositories>
-    <!-- Local file repo for ioutils and lzmajio -->
     <repository>
-      <id>disunity-local</id>
-      <url>file://${basedir}/maven-repo</url>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
 
@@ -95,14 +94,14 @@
       <version>1.35</version>
     </dependency>
 
-    <!-- Dependencies from local repository -->
+    <!-- Dependencies from jitpack.io -->
     <dependency>
-      <groupId>lzma</groupId>
+      <groupId>com.github.ata4</groupId>
       <artifactId>lzmajio</artifactId>
       <version>0.9.5-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>info.ata4</groupId>
+      <groupId>com.github.ata4</groupId>
       <artifactId>ioutils</artifactId>
       <version>0.0.0-SNAPSHOT</version>
     </dependency>
