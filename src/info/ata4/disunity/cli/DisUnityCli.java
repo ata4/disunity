@@ -19,7 +19,6 @@ import info.ata4.disunity.cli.command.Command;
 import info.ata4.disunity.cli.command.DebugAssetTest;
 import info.ata4.disunity.cli.command.DebugBundleCopy;
 import info.ata4.disunity.cli.command.DebugBundleMove;
-import info.ata4.disunity.cli.command.DumpTypeCommand;
 import info.ata4.disunity.cli.command.ExtractCommand;
 import info.ata4.disunity.cli.command.GuiCommand;
 import info.ata4.disunity.cli.command.InfoCommand;
