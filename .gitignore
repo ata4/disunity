@@ -1,15 +1,22 @@
-# netbeans
-/nbproject/configs/
-/nbproject/private/
+# Created by https://www.gitignore.io
 
-# builds
-/build/
-/dist/
-/releases/
+### NetBeans ###
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
 
-# ignore maven builds/repo
-/target/
-/maven-repo/
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 
-# other
-/private/
+# Other
+private/
