@@ -10,7 +10,7 @@
 package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataWriter;
-import info.ata4.io.socket.Sockets;
+import info.ata4.io.DataWriters;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +63,7 @@ public class AssetBundleWriter {
         header.getLevelByteEnd().addAll(levelOffsetMap.values());
         header.setNumberOfLevelsToDownload(levelOffsetMap.size());
         
-        try (DataWriter out = new DataWriter(Sockets.forFile(file,
-                CREATE, WRITE, TRUNCATE_EXISTING))) {
+        try (DataWriter out = DataWriters.forFile(file, CREATE, WRITE, TRUNCATE_EXISTING)) {
             // write header
             header.write(out);
             header.setHeaderSize((int) out.position());
@@ -73,27 +72,23 @@ public class AssetBundleWriter {
             if (header.isCompressed()) {
                 // write data to temporary file
                 Path dataFile = Files.createTempFile(file.getParent(), "uncompressedData", null);
-                try (DataWriter outData = new DataWriter(Sockets.forFile(dataFile,
-                            CREATE, READ, WRITE, TRUNCATE_EXISTING, DELETE_ON_CLOSE))) {
+                try (DataWriter outData = DataWriters.forFile(dataFile,
+                            CREATE, WRITE, TRUNCATE_EXISTING)) {
                     writeData(outData);
+                }
                     
-                    // configure LZMA encoder
-                    LzmaEncoderProps props = new LzmaEncoderProps();
-                    props.setDictionarySize(1 << 23); // 8 MiB
-                    props.setNumFastBytes(273); // maximum
-                    props.setUncompressedSize(outData.size());
-                    props.setEndMarkerMode(true);
-                    
-                    // stream the temporary bundle data compressed into the bundle file
-                    outData.position(0);
-                    
-                    try (
-                        InputStream is = outData.getSocket().getInputStream();
-                        OutputStream os = new LzmaOutputStream(new BufferedOutputStream(
-                                out.getSocket().getOutputStream()), props);
-                    ) {
-                        IOUtils.copy(is, os);
-                    }
+                // configure LZMA encoder
+                LzmaEncoderProps props = new LzmaEncoderProps();
+                props.setDictionarySize(1 << 23); // 8 MiB
+                props.setNumFastBytes(273); // maximum
+                props.setUncompressedSize(Files.size(dataFile));
+                props.setEndMarkerMode(true);
+
+                // stream the temporary bundle data compressed into the bundle file
+                try (OutputStream os = new LzmaOutputStream(new BufferedOutputStream(out.stream()), props)) {
+                    Files.copy(dataFile, os);
+                } finally {
+                    Files.deleteIfExists(dataFile);
                 }
                 
                 for (MutablePair<Long, Long> levelOffset : levelOffsetMap.values()) {
@@ -143,7 +138,7 @@ public class AssetBundleWriter {
             
             try (
                 InputStream is = entry.getInputStream();
-                OutputStream os = out.getSocket().getOutputStream();
+                OutputStream os = out.stream();
             ) {
                 IOUtils.copy(is, os);
             }

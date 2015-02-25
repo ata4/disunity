@@ -10,9 +10,11 @@
 package info.ata4.unity.assetbundle.codec;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.DataWriter;
-import info.ata4.io.socket.IOSocket;
+import info.ata4.io.DataWriters;
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -30,8 +32,8 @@ public class XianjianCodec implements AssetBundleCodec {
     }
 
     @Override
-    public boolean isEncoded(IOSocket socket) throws IOException {
-        DataReader in = new DataReader(socket);
+    public boolean isEncoded(SeekableByteChannel chan) throws IOException {
+        DataReader in = DataReaders.forSeekableByteChannel(chan);
         
         in.position(1 << 5);
         int b1 = in.readByte();
@@ -42,9 +44,9 @@ public class XianjianCodec implements AssetBundleCodec {
         return b1 == KEY[5] && b2 == KEY[6];
     }
     
-    private void code(IOSocket socket) throws IOException {
-        DataReader in = new DataReader(socket);
-        DataWriter out = new DataWriter(socket);
+    private void code(SeekableByteChannel chan) throws IOException {
+        DataReader in = DataReaders.forSeekableByteChannel(chan);
+        DataWriter out = DataWriters.forSeekableByteChannel(chan);
         
         for (int exp = 5; 1 << exp < in.size(); exp++) {
             int offset = 1 << exp;
@@ -52,18 +54,18 @@ public class XianjianCodec implements AssetBundleCodec {
             int b = in.readByte();
             b ^= KEY[exp % KEY.length];
             out.position(offset);
-            out.writeByte(b);
+            out.writeUnsignedByte(b);
         }
     }
 
     @Override
-    public void encode(IOSocket socket) throws IOException {
-        code(socket);
+    public void encode(SeekableByteChannel chan) throws IOException {
+        code(chan);
     }
 
     @Override
-    public void decode(IOSocket socket) throws IOException {
-        code(socket);
+    public void decode(SeekableByteChannel chan) throws IOException {
+        code(chan);
     }
     
 }

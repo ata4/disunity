@@ -10,9 +10,8 @@
 package info.ata4.unity.assetbundle;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.Positionable;
-import info.ata4.io.socket.IOSocket;
-import info.ata4.io.socket.Sockets;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -39,10 +38,10 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     private final List<AssetBundleEntryInfo> entryInfos = new ArrayList<>();
     
     private final DataReader in;
-    private IOSocket lzmaSocket;
+    private DataReader inLZMA;
 
     public AssetBundleReader(Path file) throws AssetBundleException, IOException {
-        in = new DataReader(Sockets.forFile(file, READ));
+        in = DataReaders.forFile(file, READ);
         header.read(in);
 
         // check signature
@@ -50,7 +49,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             throw new AssetBundleException("Invalid signature");
         }
         
-        DataReader inData = new DataReader(getDataSocket(0));
+        DataReader inData = getDataReader(0);
         int files = inData.readInt();
 
         for (int i = 0; i < files; i++) {
@@ -68,40 +67,36 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
         }
     }
     
-    private IOSocket getDataSocket(long offset) throws IOException {
+    private DataReader getDataReader(long offset) throws IOException {
         // use LZMA stream if the bundle is compressed
         if (header.isCompressed()) {
-            // create initial socket if required
-            if (lzmaSocket == null) {
-                lzmaSocket = getLZMADataSocket();
+            // create initial reader if required
+            if (inLZMA == null) {
+                inLZMA = getLZMADataReader();
             }
-            
-            Positionable pos = lzmaSocket.getPositionable();
             
             // recreate socket if the offset is behind
-            if (pos.position() > offset) {
-                lzmaSocket.close();
-                lzmaSocket = getLZMADataSocket();
+            if (inLZMA.position() > offset) {
+                inLZMA.close();
+                inLZMA = getLZMADataReader();
             }
             
-            pos.position(offset);
-            return lzmaSocket;
+            inLZMA.position(offset);
+            return inLZMA;
         } else {
             in.position(header.getHeaderSize() + offset);
-            return in.getSocket();
+            return in;
         }
     }
     
-    private IOSocket getLZMADataSocket() throws IOException {
+    private DataReader getLZMADataReader() throws IOException {
         in.position(header.getHeaderSize());
-        InputStream is = new LzmaInputStream(
-                new BufferedInputStream(in.getSocket().getInputStream()));
-        return Sockets.forInputStream(is);
+        return DataReaders.forInputStream(new LzmaInputStream(in.stream()));
     }
     
     InputStream getInputStreamForEntry(AssetBundleEntryInfo info) throws IOException {
-        IOSocket socket = getDataSocket(info.getOffset());
-        return new BoundedInputStream(socket.getInputStream(), info.getSize());
+        DataReader inEntry = getDataReader(info.getOffset());
+        return new BoundedInputStream(inEntry.stream(), info.getSize());
     }
 
     public AssetBundleHeader getHeader() {
@@ -123,8 +118,8 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     
     @Override
     public void close() throws IOException {
-        if (lzmaSocket != null) {
-            lzmaSocket.close();
+        if (inLZMA != null) {
+            inLZMA.close();
         }
         in.close();
     }

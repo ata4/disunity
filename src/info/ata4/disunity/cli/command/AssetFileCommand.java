@@ -9,7 +9,7 @@
  */
 package info.ata4.disunity.cli.command;
 
-import info.ata4.io.socket.IOSocket;
+import info.ata4.io.DataReader;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
 import info.ata4.unity.asset.VersionInfo;
@@ -77,9 +77,9 @@ public abstract class AssetFileCommand extends MultiFileCommand {
             return;
         }
 
-        try (IOSocket socket = AssetBundleUtils.getSocketForEntry(assetBundleEntry)) {
+        try (DataReader in = AssetBundleUtils.getDataReaderForEntry(assetBundleEntry)) {
             AssetFile asset = new AssetFile();
-            asset.load(socket);
+            asset.load(in);
             
             // old asset files don't contain a Unity version string, so copy it
             // from the bundle header

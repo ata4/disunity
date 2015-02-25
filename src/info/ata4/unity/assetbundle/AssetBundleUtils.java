@@ -9,9 +9,10 @@
  */
 package info.ata4.unity.assetbundle;
 
+import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
+import info.ata4.io.buffer.ByteBufferChannel;
 import info.ata4.io.buffer.ByteBufferOutputStream;
-import info.ata4.io.socket.IOSocket;
-import info.ata4.io.socket.Sockets;
 import info.ata4.io.util.PathUtils;
 import info.ata4.unity.util.UnityVersion;
 import info.ata4.util.progress.DummyProgress;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -100,26 +102,29 @@ public class AssetBundleUtils {
         assetBundle.write(bundleFile);
     }
     
-    public static IOSocket getSocketForEntry(AssetBundleEntry entry) throws IOException {
-        IOSocket socket;
+    public static SeekableByteChannel getByteChannelForEntry(AssetBundleEntry entry) throws IOException {
+        SeekableByteChannel chan;
         
         // check if the entry is larger than 128 MiB
         long size = entry.getSize();
         if (size > 1 << 27) {
             // copy entry to temporary file
             Path tmpFile = Files.createTempFile("disunity", null);
-            socket = Sockets.forFile(tmpFile, READ, WRITE, DELETE_ON_CLOSE);
-            IOUtils.copy(entry.getInputStream(), socket.getOutputStream());
-            socket.getPositionable().position(0);
+            Files.copy(entry.getInputStream(), tmpFile);
+            chan = Files.newByteChannel(tmpFile, READ, DELETE_ON_CLOSE);
         } else {
             // copy entry to memory
             ByteBuffer bb = ByteBuffer.allocateDirect((int) size);
             IOUtils.copy(entry.getInputStream(), new ByteBufferOutputStream(bb));
             bb.flip();
-            socket = Sockets.forByteBuffer(bb);
+            chan = new ByteBufferChannel(bb);
         }
         
-        return socket;
+        return chan;
+    }
+    
+    public static DataReader getDataReaderForEntry(AssetBundleEntry entry) throws IOException {
+        return DataReaders.forSeekableByteChannel(AssetBundleUtils.getByteChannelForEntry(entry));
     }
     
     private static void writePropertiesFile(Path propsFile, AssetBundleReader assetBundle) throws IOException {

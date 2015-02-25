@@ -48,7 +48,7 @@ public class AssetHeader extends VersionInfoContainer implements Struct {
         dataOffset = in.readUnsignedInt();
         if (versionInfo.getAssetVersion() >= 9) {
             endianness = in.readByte();
-            in.readFully(reserved);
+            in.readBytes(reserved);
         }
     }
 
@@ -60,7 +60,7 @@ public class AssetHeader extends VersionInfoContainer implements Struct {
         out.writeUnsignedInt(dataOffset);
         if (versionInfo.getAssetVersion() >= 9) {
             out.writeByte(endianness);
-            out.write(reserved);
+            out.writeBytes(reserved);
         }
     }
 

@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.assetbundle.codec;
 
-import info.ata4.io.socket.IOSocket;
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 
 /**
  * Inteface for asset bundle codecs.
@@ -21,9 +21,9 @@ public interface AssetBundleCodec {
 
     public String getName();
 
-    public boolean isEncoded(IOSocket socket) throws IOException;
+    public boolean isEncoded(SeekableByteChannel chan) throws IOException;
 
-    public void encode(IOSocket socket) throws IOException;
+    public void encode(SeekableByteChannel chan) throws IOException;
 
-    public void decode(IOSocket socket) throws IOException;
+    public void decode(SeekableByteChannel chan) throws IOException;
 }

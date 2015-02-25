@@ -123,7 +123,7 @@ public class AssetBundleHeader implements Struct {
             out.writeUnsignedInt(dataHeaderSize);
         }
         
-        out.writeByte(0);
+        out.writeUnsignedByte(0);
     }
     
     public boolean hasValidSignature() {

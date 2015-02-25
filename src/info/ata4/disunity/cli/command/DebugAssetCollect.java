@@ -12,7 +12,8 @@ package info.ata4.disunity.cli.command;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.ata4.disunity.cli.converters.PathConverter;
-import info.ata4.io.socket.IOSocket;
+import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.assetbundle.AssetBundleEntry;
 import info.ata4.unity.assetbundle.AssetBundleReader;
@@ -62,12 +63,12 @@ public class DebugAssetCollect extends BundleFileCommand {
     }
     
     private void addMainData(AssetBundleEntry entry) throws IOException {
-        try (IOSocket socket = AssetBundleUtils.getSocketForEntry(entry)) {
-            String outName = getMD5Checksum(socket);
+        try (DataReader in = AssetBundleUtils.getDataReaderForEntry(entry)) {
+            String outName = getMD5Checksum(in);
             Path outFile = outputDir.resolve(outName);
             
-            socket.getPositionable().position(0);
-            Files.copy(socket.getInputStream(), outFile);
+            in.position(0);
+            Files.copy(in.stream(), outFile);
             
             L.log(Level.INFO, "{0} = {1}", new Object[]{outName, getCurrentFile()});
         } catch (NoSuchAlgorithmException ex) {
@@ -75,9 +76,9 @@ public class DebugAssetCollect extends BundleFileCommand {
         }
     }
     
-    private String getMD5Checksum(IOSocket socket) throws IOException, NoSuchAlgorithmException {
+    private String getMD5Checksum(DataReader in) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        try (DigestInputStream dis = new DigestInputStream(socket.getInputStream(), md)) {
+        try (DigestInputStream dis = new DigestInputStream(in.stream(), md)) {
             IOUtils.copy(dis, new NullOutputStream());
         }
 

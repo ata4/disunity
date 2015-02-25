@@ -13,8 +13,7 @@ import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.socket.IOSocket;
-import info.ata4.io.socket.Sockets;
+import info.ata4.io.DataReaders;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
@@ -87,7 +86,7 @@ public class AssetFile extends FileHandler {
         String fileName = file.getFileName().toString();
         String fileExt = FilenameUtils.getExtension(fileName);
         
-        IOSocket socket;
+        DataReader reader;
         
         // join split asset files before loading
         if (fileExt.startsWith("split")) {
@@ -112,16 +111,16 @@ public class AssetFile extends FileHandler {
             }
             
             // load all parts to one byte buffer
-            socket = Sockets.forByteBuffer(ByteBufferUtils.load(parts));
+            reader = DataReaders.forByteBuffer(ByteBufferUtils.load(parts));
         } else {
-            socket = Sockets.forFile(file, READ);
+            reader = DataReaders.forFile(file, READ);
         }
         
         // load audio buffer if existing        
         loadResourceStream(file.resolveSibling(fileName + ".streamingResourceImage"));
         loadResourceStream(file.resolveSibling(fileName + ".resS"));
         
-        load(socket);
+        load(reader);
         
         for (FileIdentifier external : externals) {
             String filePath = external.getFilePath();
@@ -154,13 +153,7 @@ public class AssetFile extends FileHandler {
     }
       
     @Override
-    public void load(IOSocket socket) throws IOException {
-        if (socket.getProperties().isStreaming()) {
-            throw new IOException("Random access is required");
-        }
-        
-        DataReader in = new DataReader(socket);
-        
+    public void load(DataReader in) throws IOException {
         loadHeader(in);
 
         // read as little endian from now on
@@ -257,13 +250,7 @@ public class AssetFile extends FileHandler {
     }
     
     @Override
-    public void save(IOSocket socket) throws IOException {
-        if (socket.getProperties().isStreaming()) {
-            throw new IOException("Random access is required");
-        }
-        
-        DataWriter out = new DataWriter(socket);
-        
+    public void save(DataWriter out) throws IOException {
         saveHeader(out);
         
         // write as little endian from now on
@@ -274,10 +261,10 @@ public class AssetFile extends FileHandler {
             header.setDataOffset(0);
             
             saveObjects(out);
-            out.write(0);
+            out.writeUnsignedByte(0);
             
             saveMetadata(out);
-            out.write(0);
+            out.writeUnsignedByte(0);
         } else {
             saveMetadata(out);
             

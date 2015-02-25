@@ -10,9 +10,9 @@
 package info.ata4.unity.util;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.DataWriter;
-import info.ata4.io.socket.IOSocket;
-import info.ata4.io.socket.Sockets;
+import info.ata4.io.DataWriters;
 import info.ata4.io.util.PathUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.FieldTypeNode;
@@ -88,9 +88,7 @@ public class TypeTreeDatabase {
     }
     
     public void load(InputStream is) {
-        try (IOSocket socket = Sockets.forInputStream(new BufferedInputStream(is))) {
-            DataReader in = new DataReader(socket);
-
+        try (DataReader in = DataReaders.forInputStream(is)) {
             // read header
             int dbVersion = in.readInt();
 
@@ -149,9 +147,7 @@ public class TypeTreeDatabase {
     
     public void save(OutputStream os) {
         // write database file
-        try (IOSocket socket = Sockets.forOutputStream(new BufferedOutputStream(os))) {
-            DataWriter out = new DataWriter(socket);
-            
+        try (DataWriter out = DataWriters.forOutputStream(new BufferedOutputStream(os))) {
             // write header
             out.writeInt(VERSION);
 

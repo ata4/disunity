@@ -53,7 +53,7 @@ public class ObjectInfo implements Struct {
         out.writeUnsignedInt(offset);
         out.writeUnsignedInt(length);
         out.writeInt(typeID);
-        out.writeShort(classID);
+        out.writeShort((short) classID);
         out.writeShort(isDestroyed);
     }
 

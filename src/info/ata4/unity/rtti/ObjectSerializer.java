@@ -10,8 +10,8 @@
 package info.ata4.unity.rtti;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.io.socket.Sockets;
 import info.ata4.unity.asset.FieldType;
 import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.VersionInfo;
@@ -47,7 +47,7 @@ public class ObjectSerializer {
     public void deserialize(ObjectData data) throws IOException {
         versionInfo = data.getVersionInfo();
         
-        DataReader in = new DataReader(Sockets.forByteBuffer(data.getBuffer()));
+        DataReader in = DataReaders.forByteBuffer(data.getBuffer());
         in.order(versionInfo.getByteOrder());
         in.position(0);
         
@@ -227,7 +227,7 @@ public class ObjectSerializer {
             // is required to convert them to Java strings in readObject()
             case "char":
                 byte[] raw = new byte[size];
-                in.readFully(raw, 0, size);
+                in.readBytes(raw, 0, size);
                 return ByteBuffer.wrap(raw);
 
             // read a list of primitive objects
