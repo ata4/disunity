@@ -1,71 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
   
-  <groupId>info.ata4</groupId>
-  <artifactId>disunity-core</artifactId>
-  <name>disunity-core</name>
-  <version>0.4.0-SNAPSHOT</version>
-  <description>Shared core libraries for DisUnity.</description>
-  <url>https://github.com/ata4/disunity</url>
-  
-  <parent>
     <groupId>info.ata4</groupId>
-    <artifactId>disunity</artifactId>
+    <artifactId>disunity-core</artifactId>
+    <name>disunity-core</name>
     <version>0.4.0-SNAPSHOT</version>
-  </parent>
+    <description>Shared core libraries for DisUnity.</description>
+    <url>https://github.com/ata4/disunity</url>
   
-  <licenses>
-    <license>
-      <name>Unlicense</name>
-      <url>http://unlicense.org</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-  </properties>
+    <parent>
+        <groupId>info.ata4</groupId>
+        <artifactId>disunity</artifactId>
+        <version>0.4.0-SNAPSHOT</version>
+    </parent>
   
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <targetPath>resources</targetPath>
-      </resource>
-    </resources>
-  </build>
-
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
-
-  <dependencies>      
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-
-    <!-- Dependencies from jitpack.io -->
-    <dependency>
-      <groupId>com.github.ata4</groupId>
-      <artifactId>lzmajio</artifactId>
-      <version>ata4-0.97</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.ata4</groupId>
-      <artifactId>ioutils</artifactId>
-      <version>00f5c30549f263077424969a5ad0003d439993ea</version>
-    </dependency>
-  </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>resources</targetPath>
+            </resource>
+        </resources>
+    </build>
 </project>

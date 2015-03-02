@@ -1,55 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
   
-  <groupId>info.ata4</groupId>
-  <artifactId>disunity-cli</artifactId>
-  <name>disunity-cli</name>
-  <version>0.4.0-SNAPSHOT</version>
-  <description>Command line interface for DisUnity.</description>
-  <url>https://github.com/ata4/disunity</url>
-  
-  <parent>
     <groupId>info.ata4</groupId>
-    <artifactId>disunity</artifactId>
+    <artifactId>disunity-cli</artifactId>
+    <name>disunity-cli</name>
     <version>0.4.0-SNAPSHOT</version>
-  </parent>
+    <description>Command line interface for DisUnity.</description>
+    <url>https://github.com/ata4/disunity</url>
   
-  <licenses>
-    <license>
-      <name>Unlicense</name>
-      <url>http://unlicense.org</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>info.ata4</groupId>
-      <artifactId>disunity-core</artifactId>
-      <version>0.4.0-SNAPSHOT</version>
-    </dependency>
+    <parent>
+        <groupId>info.ata4</groupId>
+        <artifactId>disunity</artifactId>
+        <version>0.4.0-SNAPSHOT</version>
+    </parent>
     
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.3.1</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>info.ata4</groupId>
+            <artifactId>disunity-core</artifactId>
+            <version>0.4.0-SNAPSHOT</version>
+        </dependency>
     
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-      <version>1.35</version>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.35</version>
+        </dependency>
+    </dependencies>
 </project>
