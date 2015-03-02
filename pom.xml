@@ -1,12 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
   <groupId>info.ata4</groupId>
   <artifactId>disunity</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>disunity</name>
   <version>0.4.0-SNAPSHOT</version>
   <description>An experimental toolset for Unity asset and asset bundle files.</description>
   <url>https://github.com/ata4/disunity</url>
+  
   <licenses>
     <license>
       <name>Unlicense</name>
@@ -14,83 +16,17 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <build>
-    <sourceDirectory>src/</sourceDirectory>
-
-    <!-- Specify resource directory -->
-    <resources>
-      <resource>
-        <directory>src/resources</directory>
-        <targetPath>resources</targetPath>
-      </resource>
-    </resources>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.3</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>info.ata4.disunity.cli.DisUnityCli</mainClass>
-                </transformer>
-              </transformers>
-              <minimizeJar>true</minimizeJar>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
+  
+  <modules>
+    <module>disunity-core</module>
+    <module>disunity-cli</module>
+    <module>disunity-gui</module>
+  </modules>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
-
-  <dependencies>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-      <version>1.35</version>
-    </dependency>
-
-    <!-- Dependencies from jitpack.io -->
-    <dependency>
-      <groupId>com.github.ata4</groupId>
-      <artifactId>lzmajio</artifactId>
-      <version>ata4-0.97</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.ata4</groupId>
-      <artifactId>ioutils</artifactId>
-      <version>00f5c30549f263077424969a5ad0003d439993ea</version>
-    </dependency>
-  </dependencies>
 </project>
