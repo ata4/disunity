@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
   
-    <groupId>info.ata4</groupId>
+    <name>DisUnity Core</name>
     <artifactId>disunity-core</artifactId>
-    <name>disunity-core</name>
-    <version>0.4.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <description>Shared core libraries for DisUnity.</description>
-    <url>https://github.com/ata4/disunity</url>
   
     <parent>
-        <groupId>info.ata4</groupId>
+        <groupId>info.ata4.disunity</groupId>
         <artifactId>disunity</artifactId>
         <version>0.4.0-SNAPSHOT</version>
     </parent>
