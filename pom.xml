@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.github.ata4</groupId>
             <artifactId>ioutils</artifactId>
-            <version>00f5c30549</version>
+            <version>2c2867253a</version>
         </dependency>
     </dependencies>
     
