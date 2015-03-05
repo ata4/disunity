@@ -82,7 +82,7 @@ public class AssetBundleUtils {
                 Files.createDirectories(entryFile.getParent());
                 Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
                 
-                progress.update(i);
+                progress.update(i + 1);
             }
             
             String bundleName = outDir.getFileName().toString();
