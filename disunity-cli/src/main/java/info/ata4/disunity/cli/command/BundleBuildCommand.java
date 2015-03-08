@@ -38,7 +38,7 @@ public class BundleBuildCommand extends SingleFileCommand {
     public void handleFile(Path file) throws IOException {
         if (outFile == null) {
             String fileName = PathUtils.getBaseName(file);
-            outFile = file.getParent().resolve(fileName);
+            outFile = file.getParent().resolve(fileName + ".unity3d");
         }
         AssetBundleUtils.build(file, outFile);
     }
