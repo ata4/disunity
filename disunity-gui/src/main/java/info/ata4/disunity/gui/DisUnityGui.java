@@ -27,7 +27,7 @@ public class DisUnityGui {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        LogUtils.configure(Level.ALL);
+        LogUtils.configure(Level.FINE);
         
         // set the system look and feel
         try {
