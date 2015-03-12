@@ -48,7 +48,14 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             throw new AssetBundleException("Invalid signature");
         }
         
-        InputStream is = getDataInputStream(0, header.getDataHeaderSize());
+        long dataHeaderSize = header.getDataHeaderSize();
+        if (dataHeaderSize == 0) {
+            // old stream versions don't store the data header size, so use a large
+            // fixed number instead
+            dataHeaderSize = 4096;
+        }
+        
+        InputStream is = getDataInputStream(0, dataHeaderSize);
         DataReader inData = DataReaders.forInputStream(is);
         int files = inData.readInt();
 
