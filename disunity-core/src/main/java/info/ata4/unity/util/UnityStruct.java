@@ -7,17 +7,20 @@
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  */
-package info.ata4.unity.asset;
+package info.ata4.unity.util;
+
+import info.ata4.io.Struct;
+import info.ata4.unity.asset.VersionInfo;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public abstract class VersionInfoContainer {
+public abstract class UnityStruct implements Struct {
     
     protected final VersionInfo versionInfo;
 
-    public VersionInfoContainer(VersionInfo versionInfo) {
+    public UnityStruct(VersionInfo versionInfo) {
         this.versionInfo = versionInfo;
     }
 }

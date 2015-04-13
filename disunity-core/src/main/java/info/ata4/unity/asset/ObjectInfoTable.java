@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.asset;
 
+import info.ata4.unity.util.UnityStruct;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ObjectInfoTable extends VersionInfoContainer implements Struct {
+public class ObjectInfoTable extends UnityStruct {
     
     private final Map<Integer, ObjectInfo> infoMap;
 
@@ -34,7 +34,7 @@ public class ObjectInfoTable extends VersionInfoContainer implements Struct {
 
         for (int i = 0; i < entries; i++) {
             int pathID = in.readInt();
-            ObjectInfo info = new ObjectInfo();
+            ObjectInfo info = new ObjectInfo(versionInfo);
             
             info.read(in);
             infoMap.put(pathID, info);
