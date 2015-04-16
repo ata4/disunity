@@ -9,8 +9,8 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.unity.asset.FieldTypeNode;
 import info.ata4.unity.asset.ObjectInfo;
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.asset.VersionInfo;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -26,7 +26,7 @@ public class ObjectData {
     private ObjectSerializer serializer;
     private ObjectInfo info;
     private ByteBuffer buffer;
-    private FieldTypeNode typeTree;
+    private TypeNode typeTree;
     private FieldNode instance;
     
     public ObjectData(int id, VersionInfo versionInfo) {
@@ -73,11 +73,11 @@ public class ObjectData {
         this.buffer = buffer;
     }
     
-    public FieldTypeNode getTypeTree() {
+    public TypeNode getTypeTree() {
         return typeTree;
     }
 
-    public void setTypeTree(FieldTypeNode typeTree) {
+    public void setTypeTree(TypeNode typeTree) {
         this.typeTree = typeTree;
     }
 

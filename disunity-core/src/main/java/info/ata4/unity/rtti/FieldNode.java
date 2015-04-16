@@ -9,8 +9,7 @@
  */
 package info.ata4.unity.rtti;
 
-import info.ata4.unity.asset.FieldType;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.Type;
 import info.ata4.util.collection.Node;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -21,18 +20,14 @@ import java.util.Objects;
  */
 public class FieldNode extends Node<FieldNode> {
     
-    private FieldType type;
+    private Type type;
     private Object value;    
 
-    public FieldNode(FieldTypeNode typeNode) {
-        type = typeNode.getType();
-    }
-
-    public FieldType getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(FieldType field) {
+    public void setType(Type field) {
         this.type = field;
     }
 

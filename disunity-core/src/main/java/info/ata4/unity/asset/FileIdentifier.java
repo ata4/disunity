@@ -11,8 +11,8 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityGUID;
+import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -21,10 +21,8 @@ import java.util.UUID;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity FileIdentifier 
  */
-public class FileIdentifier implements Struct {
-    
-    private VersionInfo versionInfo;
-    
+public class FileIdentifier extends UnityStruct {
+
     // Path to the asset file? Unused in asset format <= 5.
     private String assetPath;
     
@@ -40,6 +38,10 @@ public class FileIdentifier implements Struct {
     private int type;
     
     private AssetFile asset;
+    
+    public FileIdentifier(VersionInfo versionInfo) {
+        super(versionInfo);
+    }
     
     @Override
     public void read(DataReader in) throws IOException {
@@ -93,10 +95,6 @@ public class FileIdentifier implements Struct {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    void setVersionInfo(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
     }
 
     public AssetFile getAssetFile() {

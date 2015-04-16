@@ -10,14 +10,13 @@
 package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.DataReaders;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
-import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,7 +47,6 @@ public class AssetFile extends FileHandler {
     
     // collection fields
     private final Map<Integer, ObjectInfo> objectInfoMap = new LinkedHashMap<>();
-    private final Map<Integer, FieldTypeNode> typeTreeMap = new LinkedHashMap<>();
     private final List<FileIdentifier> externals = new ArrayList<>();
     private final List<ObjectData> objectList = new ArrayList<>();
     private final List<ObjectData> objectListBroken= new ArrayList<>();
@@ -57,7 +55,7 @@ public class AssetFile extends FileHandler {
     private final VersionInfo versionInfo = new VersionInfo();
     private final AssetHeader header = new AssetHeader(versionInfo);
     private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(objectInfoMap, versionInfo);
-    private final FieldTypeTree typeTreeStruct = new FieldTypeTree(typeTreeMap, versionInfo);
+    private final TypeTree typeTreeStruct = new TypeTree(versionInfo);
     private final FileIdentifierTable externalsStruct = new FileIdentifierTable(externals, versionInfo);
     
     // data block fields
@@ -136,6 +134,7 @@ public class AssetFile extends FileHandler {
                 AssetFile childAsset = childAssets.get(refFile);
                 
                 if (childAsset == null) {
+                    L.log(Level.FINE, "Loading dependency {0}", filePath);
                     childAsset = new AssetFile();
                     childAsset.load(refFile, childAssets);
                 }
@@ -189,6 +188,17 @@ public class AssetFile extends FileHandler {
         in.readStruct(objectInfoStruct);
         objectInfoBlock.markEnd(in);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
+        
+        // unknown block for Unity 5
+        if (header.getVersion() > 13) {
+            in.align(4);
+            int num = in.readInt();
+            for (int i = 0; i < num; i++) {
+                in.readInt();
+                in.readInt();
+                in.readInt();
+            }
+        }
 
         externalsBlock.markBegin(in);
         in.readStruct(externalsStruct);
@@ -214,13 +224,18 @@ public class AssetFile extends FileHandler {
             in.position(ofs);
             in.readBuffer(buf);
             
-            FieldTypeNode typeNode = typeTreeMap.get(info.getTypeID());
+            TypeNode typeNode = null;
+            
+            TypeClass typeClass = typeTreeStruct.getClassByID(info.getTypeID());
+            if (typeClass != null) {
+                typeNode = typeClass.getTypeTree();
+            }
             
             // get type from database if the embedded one is missing
-            if (typeNode == null) {
-                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
-                        versionInfo.getUnityRevision(), false);
-            }
+//            if (typeNode == null) {
+//                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
+//                        versionInfo.getUnityRevision(), false);
+//            }
                        
             ObjectData data = new ObjectData(id, versionInfo);
             data.setInfo(info);
@@ -390,7 +405,7 @@ public class AssetFile extends FileHandler {
     }
     
     public Map<Integer, FieldTypeNode> getTypeTree() {
-        return typeTreeMap;
+        return new HashMap();
     }
 
     public Map<Integer, ObjectInfo> getObjectInfoMap() {
@@ -406,10 +421,10 @@ public class AssetFile extends FileHandler {
     }
 
     public boolean isStandalone() {
-        return typeTreeMap.isEmpty();
+        return typeTreeStruct.isEmbedded();
     }
     
     public void setStandalone() {
-        typeTreeMap.clear();
+        typeTreeStruct.setEmbedded(false);
     }
 }

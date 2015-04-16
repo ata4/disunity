@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.util.UnityStruct;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
+import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
 import java.util.Map;
 
@@ -31,6 +31,10 @@ public class ObjectInfoTable extends UnityStruct {
     @Override
     public void read(DataReader in) throws IOException {
         int entries = in.readInt();
+        
+        if (versionInfo.getAssetVersion() > 13) {
+            in.align(4);
+        }
 
         for (int i = 0; i < entries; i++) {
             int pathID = in.readInt();
@@ -45,6 +49,10 @@ public class ObjectInfoTable extends UnityStruct {
     public void write(DataWriter out) throws IOException {
         int entries = infoMap.size();
         out.writeInt(entries);
+        
+        if (versionInfo.getAssetVersion() > 13) {
+            out.align(4);
+        }
 
         for (Map.Entry<Integer, ObjectInfo> infoEntry : infoMap.entrySet()) {
             int pathID = infoEntry.getKey();

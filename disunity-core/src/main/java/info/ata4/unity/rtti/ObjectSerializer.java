@@ -12,8 +12,8 @@ package info.ata4.unity.rtti;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataReaders;
 import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.unity.asset.FieldType;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.Type;
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.asset.VersionInfo;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -51,7 +51,7 @@ public class ObjectSerializer {
         in.order(versionInfo.getByteOrder());
         in.position(0);
         
-        FieldTypeNode typeNode = data.getTypeTree();
+        TypeNode typeNode = data.getTypeTree();
         FieldNode instance = readObject(in, typeNode);
         
         // check if all bytes have been read
@@ -62,10 +62,11 @@ public class ObjectSerializer {
         data.setInstance(instance);
     }
     
-    private FieldNode readObject(DataReader in, FieldTypeNode typeNode) throws IOException {
-        FieldNode fieldNode = new FieldNode(typeNode);
+    private FieldNode readObject(DataReader in, TypeNode typeNode) throws IOException {
+        Type type = typeNode.getType();
         
-        FieldType type = typeNode.getType();
+        FieldNode fieldNode = new FieldNode();
+        fieldNode.setType(type);
         
         // if the type has no children, it has a primitve value
         if (typeNode.isEmpty() && type.getSize() > 0) {
@@ -73,15 +74,16 @@ public class ObjectSerializer {
         }
         
         // read object fields
-        for (FieldTypeNode childTypeNode : typeNode) {
-            FieldType childType = childTypeNode.getType();
+        for (TypeNode childTypeNode : typeNode) {
+            Type childType = childTypeNode.getType();
             
             // Check if the current node is an array and if the current field is
             // "data". In that case, "data" needs to be read "size" times.
             if (type.getIsArray() && childType.getFieldName().equals("data")) {
                 int size = fieldNode.getSInt32("size");
                 
-                FieldNode childFieldNode = new FieldNode(childTypeNode);
+                FieldNode childFieldNode = new FieldNode();
+                childFieldNode.setType(childType);
 
                 // if the child type has no children, it has a primitve array
                 if (childTypeNode.isEmpty()) {
@@ -111,7 +113,7 @@ public class ObjectSerializer {
         return fieldNode;
     }
     
-    private Object readPrimitiveValue(DataReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+    private Object readPrimitiveValue(DataReader in, Type type, int size) throws IOException, RuntimeTypeException {
         long pos = 0;
         if (DEBUG) {
             pos = in.position();
@@ -141,7 +143,7 @@ public class ObjectSerializer {
         return value;
     }
     
-    private Object readPrimitive(DataReader in, FieldType type) throws IOException, RuntimeTypeException {
+    private Object readPrimitive(DataReader in, Type type) throws IOException, RuntimeTypeException {
         switch (type.getTypeName()) {
             // 1 byte
             case "bool":
@@ -192,7 +194,7 @@ public class ObjectSerializer {
         }
     }
     
-    private Object readPrimitiveArray(DataReader in, FieldType type, int size) throws IOException, RuntimeTypeException {
+    private Object readPrimitiveArray(DataReader in, Type type, int size) throws IOException, RuntimeTypeException {
         switch (type.getTypeName()) {
             // read byte arrays natively and wrap them as ByteBuffers,
             // which is much faster and more efficient than a list of wrappped

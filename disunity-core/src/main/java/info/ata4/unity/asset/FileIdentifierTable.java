@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.util.UnityStruct;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
+import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -33,8 +33,7 @@ public class FileIdentifierTable extends UnityStruct implements Iterable<FileIde
     public void read(DataReader in) throws IOException {
         int entries = in.readInt();
         for (int i = 0; i < entries; i++) {
-            FileIdentifier ref = new FileIdentifier();
-            ref.setVersionInfo(versionInfo);
+            FileIdentifier ref = new FileIdentifier(versionInfo);
             ref.read(in);
             fileIDs.add(ref);
         }
@@ -46,7 +45,6 @@ public class FileIdentifierTable extends UnityStruct implements Iterable<FileIde
         out.writeInt(entries);
 
         for (FileIdentifier ref : fileIDs) {
-            ref.setVersionInfo(versionInfo);
             ref.write(out);
         }
     }
