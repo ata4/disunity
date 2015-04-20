@@ -9,9 +9,9 @@
  */
 package info.ata4.unity.asset;
 
-import info.ata4.unity.util.UnityStruct;
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
+import info.ata4.io.Struct;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FileIdentifierTable extends UnityStruct implements Iterable<FileIdentifier> {
+public class FileIdentifierTable extends VersionInfoContainer implements Struct, Iterable<FileIdentifier> {
 
     private final List<FileIdentifier> fileIDs;
     

@@ -11,7 +11,7 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.unity.util.UnityStruct;
+import info.ata4.io.Struct;
 import java.io.IOException;
 
 /**
@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity SerializedFileHeader
  */
-public class AssetHeader extends UnityStruct {
+public class AssetHeader extends VersionInfoContainer implements Struct {
     
     // size of the structure data
     private long metadataSize;
