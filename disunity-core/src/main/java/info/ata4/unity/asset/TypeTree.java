@@ -90,8 +90,6 @@ public class TypeTree extends UnityStruct {
                 
                 typeMap.put(classID, baseClass);
             }
-            
-            in.align(4);
         } else {
             int numBaseClasses = in.readInt();
             for (int i = 0; i < numBaseClasses; i++) {

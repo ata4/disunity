@@ -31,6 +31,10 @@ public class ObjectInfoTable extends UnityStruct {
     @Override
     public void read(DataReader in) throws IOException {
         int entries = in.readInt();
+        
+        if (versionInfo.assetVersion() > 13) {
+            in.align(4);
+        }
 
         for (int i = 0; i < entries; i++) {
             long pathID;
@@ -50,6 +54,10 @@ public class ObjectInfoTable extends UnityStruct {
     public void write(DataWriter out) throws IOException {
         int entries = infoMap.size();
         out.writeInt(entries);
+        
+        if (versionInfo.assetVersion() > 13) {
+            out.align(4);
+        }
 
         for (Map.Entry<Long, ObjectInfo> infoEntry : infoMap.entrySet()) {
             long pathID = infoEntry.getKey();
