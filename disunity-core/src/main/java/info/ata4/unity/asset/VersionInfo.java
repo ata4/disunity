@@ -23,9 +23,14 @@ public class VersionInfo {
     
     // 5 = 1.2 - 2.0
     // 6 = 2.1 - 2.6
+    // 7 = 3.0 (?)
     // 8 = 3.1 - 3.4
     // 9 = 3.5 - 4.5
+    // 11 = 5.0 (beta?)
+    // 12 = 5.0 (beta?)
+    // 13 = 5.0 (beta?)
     // 14 = 5.0
+    // 15 = 5.0 (p3 and newer)
     private int assetVersion;
 
     public UnityVersion getUnityVersion() {

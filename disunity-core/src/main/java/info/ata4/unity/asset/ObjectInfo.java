@@ -11,8 +11,8 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.Struct;
 import info.ata4.unity.util.UnityClass;
+import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
 
 /**
@@ -20,7 +20,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity SerializedFile::ObjectInfo
  */
-public class ObjectInfo implements Struct {
+public class ObjectInfo extends UnityStruct {
     
     // Object data offset
     private long offset;
@@ -36,6 +36,10 @@ public class ObjectInfo implements Struct {
     
     // set to 1 if destroyed object instances are stored?
     private short isDestroyed;
+    
+    public ObjectInfo(VersionInfo versionInfo) {
+        super(versionInfo);
+    }
 
     @Override
     public void read(DataReader in) throws IOException {
@@ -44,7 +48,7 @@ public class ObjectInfo implements Struct {
         typeID = in.readInt();
         classID = in.readShort();
         isDestroyed = in.readShort();
-        
+
         assert typeID == classID || (classID == 114 && typeID < 0);
     }
 

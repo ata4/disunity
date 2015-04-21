@@ -50,7 +50,7 @@ public class ListCommand extends AssetFileCommand {
         for (ObjectData data : asset.getObjects()) {
             ObjectInfo info = data.getInfo();
             
-            int pid = data.getID();
+            long pid = data.getID();
             int cid = info.getClassID();
             String className = info.getUnityClass().getName();
             long ofs = info.getOffset();

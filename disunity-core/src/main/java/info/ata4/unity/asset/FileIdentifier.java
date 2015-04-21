@@ -11,9 +11,9 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.Struct;
+import info.ata4.unity.util.UnityGUID;
+import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
-import java.nio.ByteOrder;
 import java.util.UUID;
 
 /**
@@ -21,17 +21,15 @@ import java.util.UUID;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity FileIdentifier 
  */
-public class FileIdentifier implements Struct {
-    
-    private VersionInfo versionInfo;
-    
+public class FileIdentifier extends UnityStruct {
+
     // Path to the asset file? Unused in asset format <= 5.
     private String assetPath;
     
     // Globally unique identifier of the referred asset. Unity displays these
     // as simple 16 byte hex strings with each byte swapped, but they can also
     // be represented according to the UUID standard.
-    private UUID guid;
+    private final UnityGUID guid = new UnityGUID();
     
     // Path to the asset file. Only used if "type" is 0.
     private String filePath;
@@ -41,20 +39,17 @@ public class FileIdentifier implements Struct {
     
     private AssetFile asset;
     
+    public FileIdentifier(VersionInfo versionInfo) {
+        super(versionInfo);
+    }
+    
     @Override
     public void read(DataReader in) throws IOException {
         if (versionInfo.getAssetVersion() > 5) {
             assetPath = in.readStringNull();
         }
         
-        // read GUID as big-endian
-        ByteOrder order = in.order();
-        in.order(ByteOrder.BIG_ENDIAN);
-        long guidMost = in.readLong();
-        long guidLeast = in.readLong();
-        in.order(order);
-        
-        guid = new UUID(guidMost, guidLeast);
+        guid.read(in);
         type = in.readInt();
         filePath = in.readStringNull();
     }
@@ -65,23 +60,17 @@ public class FileIdentifier implements Struct {
             out.writeStringNull(assetPath);
         }
         
-        // write GUID as big-endian
-        ByteOrder order = out.order();
-        out.order(ByteOrder.BIG_ENDIAN);
-        out.writeLong(guid.getMostSignificantBits());
-        out.writeLong(guid.getLeastSignificantBits());
-        out.order(order);
-        
+        guid.write(out);
         out.writeInt(type);
         out.writeStringNull(filePath);
     }
 
     public UUID getGUID() {
-        return guid;
+        return guid.getUUID();
     }
 
     public void setGUID(UUID guid) {
-        this.guid = guid;
+        this.guid.setUUID(guid);
     }
 
     public String getFilePath() {
@@ -106,10 +95,6 @@ public class FileIdentifier implements Struct {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    void setVersionInfo(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
     }
 
     public AssetFile getAssetFile() {

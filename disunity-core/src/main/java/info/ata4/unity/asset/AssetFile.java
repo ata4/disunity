@@ -10,14 +10,13 @@
 package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
+import info.ata4.io.DataReaders;
 import info.ata4.io.DataWriter;
 import info.ata4.io.buffer.ByteBufferUtils;
 import info.ata4.io.file.FileHandler;
-import info.ata4.io.DataReaders;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
-import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -47,8 +46,8 @@ public class AssetFile extends FileHandler {
     private static final int METADATA_PADDING = 4096;
     
     // collection fields
-    private final Map<Integer, ObjectInfo> objectInfoMap = new LinkedHashMap<>();
-    private final Map<Integer, FieldTypeNode> typeTreeMap = new LinkedHashMap<>();
+    private final Map<Long, ObjectInfo> objectInfoMap = new LinkedHashMap<>();
+    private final Map<Integer, BaseClass> typeTreeMap = new LinkedHashMap<>();
     private final List<FileIdentifier> externals = new ArrayList<>();
     private final List<ObjectData> objectList = new ArrayList<>();
     private final List<ObjectData> objectListBroken= new ArrayList<>();
@@ -56,9 +55,9 @@ public class AssetFile extends FileHandler {
     // struct fields
     private final VersionInfo versionInfo = new VersionInfo();
     private final AssetHeader header = new AssetHeader(versionInfo);
-    private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(objectInfoMap, versionInfo);
-    private final FieldTypeTree typeTreeStruct = new FieldTypeTree(typeTreeMap, versionInfo);
-    private final FileIdentifierTable externalsStruct = new FileIdentifierTable(externals, versionInfo);
+    private final ObjectInfoTable objectInfoStruct = new ObjectInfoTable(versionInfo, objectInfoMap);
+    private final TypeTree typeTreeStruct = new TypeTree(versionInfo, typeTreeMap);
+    private final FileIdentifierTable externalsStruct = new FileIdentifierTable(versionInfo, externals);
     
     // data block fields
     private final DataBlock headerBlock = new DataBlock();
@@ -128,7 +127,7 @@ public class AssetFile extends FileHandler {
             if (filePath == null || filePath.isEmpty()) {
                 continue;
             }
-            
+    
             filePath = filePath.replace("library/", "resources/");
             
             Path refFile = file.resolveSibling(filePath);
@@ -136,6 +135,7 @@ public class AssetFile extends FileHandler {
                 AssetFile childAsset = childAssets.get(refFile);
                 
                 if (childAsset == null) {
+                    L.log(Level.FINE, "Loading dependency {0}", filePath);
                     childAsset = new AssetFile();
                     childAsset.load(refFile, childAssets);
                 }
@@ -189,6 +189,17 @@ public class AssetFile extends FileHandler {
         in.readStruct(objectInfoStruct);
         objectInfoBlock.markEnd(in);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
+        
+        // unknown block for Unity 5
+        if (header.getVersion() > 13) {
+            in.align(4);
+            int num = in.readInt();
+            for (int i = 0; i < num; i++) {
+                in.readInt();
+                in.readInt();
+                in.readInt();
+            }
+        }
 
         externalsBlock.markBegin(in);
         in.readStruct(externalsStruct);
@@ -200,9 +211,9 @@ public class AssetFile extends FileHandler {
         long ofsMin = Long.MAX_VALUE;
         long ofsMax = Long.MIN_VALUE;
         
-        for (Map.Entry<Integer, ObjectInfo> infoEntry : objectInfoMap.entrySet()) {
+        for (Map.Entry<Long, ObjectInfo> infoEntry : objectInfoMap.entrySet()) {
             ObjectInfo info = infoEntry.getValue();
-            int id = infoEntry.getKey();
+            long id = infoEntry.getKey();
             
             ByteBuffer buf = ByteBufferUtils.allocate((int) info.getLength());
             
@@ -214,13 +225,18 @@ public class AssetFile extends FileHandler {
             in.position(ofs);
             in.readBuffer(buf);
             
-            FieldTypeNode typeNode = typeTreeMap.get(info.getTypeID());
+            TypeNode typeNode = null;
+            
+            BaseClass typeClass = typeTreeMap.get(info.getTypeID());
+            if (typeClass != null) {
+                typeNode = typeClass.typeTree();
+            }
             
             // get type from database if the embedded one is missing
-            if (typeNode == null) {
-                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
-                        versionInfo.getUnityRevision(), false);
-            }
+//            if (typeNode == null) {
+//                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
+//                        versionInfo.getUnityRevision(), false);
+//            }
                        
             ObjectData data = new ObjectData(id, versionInfo);
             data.setInfo(info);
@@ -390,10 +406,14 @@ public class AssetFile extends FileHandler {
     }
     
     public Map<Integer, FieldTypeNode> getTypeTree() {
+        return new HashMap();
+    }
+    
+    public Map<Integer, BaseClass> getTypeTreeNew() {
         return typeTreeMap;
     }
-
-    public Map<Integer, ObjectInfo> getObjectInfoMap() {
+    
+    public Map<Long, ObjectInfo> getObjectInfoMap() {
         return objectInfoMap;
     }
     
@@ -406,10 +426,10 @@ public class AssetFile extends FileHandler {
     }
 
     public boolean isStandalone() {
-        return typeTreeMap.isEmpty();
+        return typeTreeStruct.isEmbedded();
     }
     
     public void setStandalone() {
-        typeTreeMap.clear();
+        typeTreeStruct.setEmbedded(false);
     }
 }

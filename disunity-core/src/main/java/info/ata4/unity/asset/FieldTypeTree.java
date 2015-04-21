@@ -11,7 +11,7 @@ package info.ata4.unity.asset;
 
 import info.ata4.io.DataReader;
 import info.ata4.io.DataWriter;
-import info.ata4.io.Struct;
+import info.ata4.unity.util.UnityStruct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity RTTIClassHierarchyDescriptor, RTTIBaseClassDescriptor2
  */
-public class FieldTypeTree extends VersionInfoContainer implements Struct {
+public class FieldTypeTree extends UnityStruct {
 
     private final Map<Integer, FieldTypeNode> typeMap;
 
