@@ -48,7 +48,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             throw new AssetBundleException("Invalid signature");
         }
         
-        long dataHeaderSize = header.getDataHeaderSize();
+        long dataHeaderSize = header.dataHeaderSize();
         if (dataHeaderSize == 0) {
             // old stream versions don't store the data header size, so use a large
             // fixed number instead
@@ -78,7 +78,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
         InputStream is;
         
         // use LZMA stream if the bundle is compressed
-        if (header.isCompressed()) {
+        if (header.compressed()) {
             // create initial input stream if required
             if (lzma == null) {
                 lzma = getLZMAInputStream();
@@ -98,7 +98,7 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
             
             is = lzma;
         } else {
-            in.position(header.getHeaderSize() + offset);
+            in.position(header.headerSize() + offset);
             is = in.stream();
         }
         
@@ -106,23 +106,23 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
     }
     
     private CountingInputStream getLZMAInputStream() throws IOException {
-        in.position(header.getHeaderSize());
+        in.position(header.headerSize());
         return new CountingInputStream(new LzmaInputStream(in.stream()));
     }
     
     InputStream getInputStreamForEntry(AssetBundleEntryInfo info) throws IOException {
-        return getDataInputStream(info.getOffset(), info.getSize());
+        return getDataInputStream(info.offset(), info.size());
     }
 
-    public AssetBundleHeader getHeader() {
+    public AssetBundleHeader header() {
         return header;
     }
     
-    public List<AssetBundleEntryInfo> getEntryInfos() {
+    public List<AssetBundleEntryInfo> entryInfos() {
         return Collections.unmodifiableList(entryInfos);
     }
     
-    public List<AssetBundleEntry> getEntries() {
+    public List<AssetBundleEntry> entries() {
         return Collections.unmodifiableList(entries);
     }
 
@@ -143,8 +143,8 @@ public class AssetBundleReader implements Closeable, Iterable<AssetBundleEntry> 
 
         @Override
         public int compare(AssetBundleEntryInfo o1, AssetBundleEntryInfo o2) {
-            long ofs1 = o1.getOffset();
-            long ofs2 = o2.getOffset();
+            long ofs1 = o1.offset();
+            long ofs2 = o2.offset();
 
             if (ofs1 > ofs2) {
                 return 1;

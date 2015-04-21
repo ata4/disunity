@@ -55,7 +55,7 @@ public class DebugAssetCollect extends BundleFileCommand {
     @Override
     public void handleBundleFile(AssetBundleReader reader) throws IOException {
         for (AssetBundleEntry entry : reader) {
-            if (entry.getName().equals("mainData")) {
+            if (entry.name().equals("mainData")) {
                 addMainData(entry);
                 break;
             }
@@ -63,7 +63,7 @@ public class DebugAssetCollect extends BundleFileCommand {
     }
     
     private void addMainData(AssetBundleEntry entry) throws IOException {
-        try (DataReader in = AssetBundleUtils.getDataReaderForEntry(entry)) {
+        try (DataReader in = AssetBundleUtils.dataReaderForEntry(entry)) {
             String outName = getMD5Checksum(in);
             Path outFile = outputDir.resolve(outName);
             

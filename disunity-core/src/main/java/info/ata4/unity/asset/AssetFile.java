@@ -122,7 +122,7 @@ public class AssetFile extends FileHandler {
         load(reader);
         
         for (FileIdentifier external : externals) {
-            String filePath = external.getFilePath();
+            String filePath = external.filePath();
             
             if (filePath == null || filePath.isEmpty()) {
                 continue;
@@ -140,7 +140,7 @@ public class AssetFile extends FileHandler {
                     childAsset.load(refFile, childAssets);
                 }
                 
-                external.setAssetFile(childAsset);
+                external.assetFile(childAsset);
             }
         }
     }
@@ -177,7 +177,7 @@ public class AssetFile extends FileHandler {
     }
     
     private void loadMetadata(DataReader in) throws IOException {
-        in.order(versionInfo.getByteOrder());
+        in.order(versionInfo.order());
         
         // read structure data
         typeTreeBlock.markBegin(in);
@@ -215,19 +215,19 @@ public class AssetFile extends FileHandler {
             ObjectInfo info = infoEntry.getValue();
             long id = infoEntry.getKey();
             
-            ByteBuffer buf = ByteBufferUtils.allocate((int) info.getLength());
+            ByteBuffer buf = ByteBufferUtils.allocate((int) info.length());
             
-            long ofs = header.getDataOffset() + info.getOffset();
+            long ofs = header.getDataOffset() + info.offset();
             
             ofsMin = Math.min(ofsMin, ofs);
-            ofsMax = Math.max(ofsMax, ofs + info.getLength());
+            ofsMax = Math.max(ofsMax, ofs + info.length());
             
             in.position(ofs);
             in.readBuffer(buf);
             
             TypeNode typeNode = null;
             
-            BaseClass typeClass = typeTreeMap.get(info.getTypeID());
+            BaseClass typeClass = typeTreeMap.get(info.typeID());
             if (typeClass != null) {
                 typeNode = typeClass.typeTree();
             }
@@ -239,19 +239,19 @@ public class AssetFile extends FileHandler {
 //            }
                        
             ObjectData data = new ObjectData(id, versionInfo);
-            data.setInfo(info);
-            data.setBuffer(buf);
-            data.setTypeTree(typeNode);
+            data.info(info);
+            data.buffer(buf);
+            data.typeTree(typeNode);
             
             ObjectSerializer serializer = new ObjectSerializer();
             serializer.setSoundData(audioBuffer);
-            data.setSerializer(serializer);
+            data.serializer(serializer);
             
             // Add typeless objects to an internal list. They can't be
             // (de)serialized, but can still be written to the file.
             if (typeNode == null) {
                 // log warning if it's not a MonoBehaviour
-                if (info.getClassID() != 114) {
+                if (info.classID() != 114) {
                     L.log(Level.WARNING, "{0} has no type information!", data.toString());
                 }
                 objectListBroken.add(data);
@@ -260,8 +260,8 @@ public class AssetFile extends FileHandler {
             }
         }
         
-        objectDataBlock.setOffset(ofsMin);
-        objectDataBlock.setEndOffset(ofsMax);
+        objectDataBlock.offset(ofsMin);
+        objectDataBlock.endOffset(ofsMax);
         L.log(Level.FINER, "objectDataBlock: {0}", objectDataBlock);
     }
     
@@ -296,7 +296,7 @@ public class AssetFile extends FileHandler {
             saveObjects(out);
             
             // write updated path table
-            out.position(objectInfoBlock.getOffset());
+            out.position(objectInfoBlock.offset());
             out.writeStruct(objectInfoStruct);
         }
         
@@ -306,14 +306,14 @@ public class AssetFile extends FileHandler {
         // FIXME: the metadata size is slightly off in comparison to original files
         int metadataOffset = header.getVersion() < 9 ? 2 : 1;
         
-        header.setMetadataSize(typeTreeBlock.getLength()
-                + objectInfoBlock.getLength()
-                + externalsBlock.getLength()
+        header.setMetadataSize(typeTreeBlock.length()
+                + objectInfoBlock.length()
+                + externalsBlock.length()
                 + metadataOffset);
         
         // write updated header
         out.order(ByteOrder.BIG_ENDIAN);
-        out.position(headerBlock.getOffset());
+        out.position(headerBlock.offset());
         out.writeStruct(header);
              
         checkBlocks();
@@ -327,7 +327,7 @@ public class AssetFile extends FileHandler {
     }
     
     private void saveMetadata(DataWriter out) throws IOException {
-        out.order(versionInfo.getByteOrder());
+        out.order(versionInfo.order());
         
         typeTreeBlock.markBegin(out);
         out.writeStruct(typeTreeStruct);
@@ -353,7 +353,7 @@ public class AssetFile extends FileHandler {
         objectList.addAll(objectListBroken);
         
         for (ObjectData data : objectList) {
-            ByteBuffer bb = data.getBuffer();
+            ByteBuffer bb = data.buffer();
             bb.rewind();
             
             out.align(8);
@@ -361,9 +361,9 @@ public class AssetFile extends FileHandler {
             ofsMin = Math.min(ofsMin, out.position());
             ofsMax = Math.max(ofsMax, out.position() + bb.remaining());
             
-            ObjectInfo info = data.getInfo();            
-            info.setOffset(out.position() - header.getDataOffset());
-            info.setLength(bb.remaining());
+            ObjectInfo info = data.info();            
+            info.offset(out.position() - header.getDataOffset());
+            info.length(bb.remaining());
 
             out.writeBuffer(bb);
         }
@@ -371,8 +371,8 @@ public class AssetFile extends FileHandler {
         // separate object lists
         objectList.removeAll(objectListBroken);
         
-        objectDataBlock.setOffset(ofsMin);
-        objectDataBlock.setEndOffset(ofsMax);
+        objectDataBlock.offset(ofsMin);
+        objectDataBlock.endOffset(ofsMax);
         L.log(Level.FINER, "objectDataBlock: {0}", objectDataBlock);
     }
     
@@ -402,7 +402,7 @@ public class AssetFile extends FileHandler {
     }
     
     public int getTypeTreeAttributes() {
-        return typeTreeStruct.getAttributes();
+        return typeTreeStruct.attributes();
     }
     
     public Map<Integer, FieldTypeNode> getTypeTree() {
@@ -426,10 +426,10 @@ public class AssetFile extends FileHandler {
     }
 
     public boolean isStandalone() {
-        return typeTreeStruct.isEmbedded();
+        return typeTreeStruct.embedded();
     }
     
     public void setStandalone() {
-        typeTreeStruct.setEmbedded(false);
+        typeTreeStruct.embedded(false);
     }
 }

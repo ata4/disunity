@@ -46,7 +46,7 @@ public class BundleListCommand extends BundleFileCommand {
         tbl.addRow("Name", "Size");
 
         for (AssetBundleEntry entry : reader) {
-            tbl.addRow(entry.getName(), FileUtilsExt.formatByteCount(entry.getSize()));
+            tbl.addRow(entry.name(), FileUtilsExt.formatByteCount(entry.size()));
         }
         
         tbl.print(getOutputWriter());
@@ -59,8 +59,8 @@ public class BundleListCommand extends BundleFileCommand {
         JSONArray entriesJson = new JSONArray();
         for (AssetBundleEntry entry : reader) {
             JSONObject entryJson = new JSONObject();
-            entryJson.put("name", entry.getName());
-            entryJson.put("size", entry.getSize());
+            entryJson.put("name", entry.name());
+            entryJson.put("size", entry.size());
             entriesJson.put(entryJson);
         }
         root.put("entries", entriesJson);

@@ -38,7 +38,7 @@ public class AudioClip extends UnityObject {
     public ByteBuffer getAudioData() {
         String fieldName;
         
-        if (object.getType().getVersion() > 2) {
+        if (object.getType().version() > 2) {
             // vector m_AudioData
             fieldName = "m_AudioData";
         } else {

@@ -64,7 +64,7 @@ public class InfoCommand extends AssetFileCommand {
         
         tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
-        tbl.addRow("signature", asset.getVersionInfo().getUnityRevision());
+        tbl.addRow("signature", asset.getVersionInfo().unityRevision());
         tbl.addRow("attributes", asset.getTypeTreeAttributes());
         tbl.addRow("numBaseClasses", asset.getTypeTree().size());
         
@@ -76,7 +76,7 @@ public class InfoCommand extends AssetFileCommand {
         tbl.addRow("File path", "Asset path", "GUID", "Type");
         
         for (FileIdentifier external : asset.getExternals()) {
-            tbl.addRow(external.getFilePath(), external.getAssetPath(), external.getGUID(), external.getType());
+            tbl.addRow(external.filePath(), external.assetPath(), external.guid(), external.type());
         }
         
         out.println("Externals:");
@@ -88,7 +88,7 @@ public class InfoCommand extends AssetFileCommand {
         
         AssetBundleReader assetBundle = getCurrentAssetBundle();
         if (assetBundle != null) {
-            root.put("file", getCurrentFile().resolve(getCurrentAssetBundleEntry().getName()));
+            root.put("file", getCurrentFile().resolve(getCurrentAssetBundleEntry().name()));
         } else {
             root.put("file", getCurrentFile());
         }
@@ -104,7 +104,7 @@ public class InfoCommand extends AssetFileCommand {
         root.put("header", headerJson);
         
         JSONObject typeTreeJson = new JSONObject();
-        typeTreeJson.put("signature", asset.getVersionInfo().getUnityRevision());
+        typeTreeJson.put("signature", asset.getVersionInfo().unityRevision());
         typeTreeJson.put("attributes", asset.getTypeTreeAttributes());
         typeTreeJson.put("numBaseClasses", asset.getTypeTree().size());
         
@@ -114,10 +114,10 @@ public class InfoCommand extends AssetFileCommand {
         
         for (FileIdentifier external : asset.getExternals()) {
             JSONObject externalJson = new JSONObject();
-            externalJson.put("assetPath", external.getAssetPath());
-            externalJson.put("guid", external.getGUID());
-            externalJson.put("filePath", external.getFilePath());
-            externalJson.put("type", external.getType());
+            externalJson.put("assetPath", external.assetPath());
+            externalJson.put("guid", external.guid());
+            externalJson.put("filePath", external.filePath());
+            externalJson.put("type", external.type());
             
             externalsJson.put(externalJson);
         }

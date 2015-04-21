@@ -34,7 +34,7 @@ public class UnityClassDatabase {
     private final Map<String, Integer> nameToID = new HashMap<>();
 
     public UnityClassDatabase() {
-        try (BufferedReader reader = getDatabaseReader()) {
+        try (BufferedReader reader = databaseReader()) {
             for (String line; (line = reader.readLine()) != null;) {
                 // skip comments and blank lines
                 if (line.startsWith("#") || line.startsWith("//") || line.trim().isEmpty()) {
@@ -56,7 +56,7 @@ public class UnityClassDatabase {
         }
     }
     
-    private BufferedReader getDatabaseReader() throws IOException {
+    private BufferedReader databaseReader() throws IOException {
         InputStream is = UnityClass.class.getResourceAsStream(CLASSID_PATH);
         
         if (is == null) {
@@ -66,11 +66,11 @@ public class UnityClassDatabase {
         return new BufferedReader(new InputStreamReader(is, CHARSET));
     }
     
-    public Integer getIDForName(String name) {
+    public Integer IDForName(String name) {
         return nameToID.get(name);
     }
     
-    public String getNameForID(Integer id) {
+    public String nameForID(Integer id) {
         return IDToName.get(id);
     }
 }

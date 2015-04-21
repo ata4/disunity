@@ -53,23 +53,23 @@ public class AssetBundleWriter {
         // add offset placeholders
         levelOffsetMap.clear();
         for (AssetBundleEntry entry : entries) {
-            String name = entry.getName();
+            String name = entry.name();
             if (name.equals("mainData") || name.startsWith("level") || entries.size() == 1) {
                 levelOffsetMap.put(entry, new MutablePair<>(0L, 0L));
             }
         }
 
-        header.getLevelByteEnd().clear();
-        header.getLevelByteEnd().addAll(levelOffsetMap.values());
-        header.setNumberOfLevelsToDownload(levelOffsetMap.size());
+        header.levelByteEnd().clear();
+        header.levelByteEnd().addAll(levelOffsetMap.values());
+        header.numberOfLevelsToDownload(levelOffsetMap.size());
         
         try (DataWriter out = DataWriters.forFile(file, CREATE, WRITE, TRUNCATE_EXISTING)) {
             // write header
             header.write(out);
-            header.setHeaderSize((int) out.position());
+            header.headerSize((int) out.position());
 
             // write bundle data
-            if (header.isCompressed()) {
+            if (header.compressed()) {
                 // write data to temporary file
                 Path dataFile = Files.createTempFile(file.getParent(), "uncompressedData", null);
                 try (DataWriter outData = DataWriters.forFile(dataFile,
@@ -101,8 +101,8 @@ public class AssetBundleWriter {
             
             // update header
             int fileSize = (int) out.size();
-            header.setCompleteFileSize(fileSize);
-            header.setMinimumStreamedBytes(fileSize);
+            header.completeFileSize(fileSize);
+            header.minimumStreamedBytes(fileSize);
             
             out.position(0);
             out.writeStruct(header);
@@ -117,8 +117,8 @@ public class AssetBundleWriter {
         List<AssetBundleEntryInfo> entryInfos = new ArrayList<>(entries.size());
         for (AssetBundleEntry entry : entries) {
             AssetBundleEntryInfo entryInfo = new AssetBundleEntryInfo();
-            entryInfo.setName(entry.getName());
-            entryInfo.setSize(entry.getSize());
+            entryInfo.name(entry.name());
+            entryInfo.size(entry.size());
             entryInfo.write(out);
             entryInfos.add(entryInfo);
         }
@@ -130,14 +130,14 @@ public class AssetBundleWriter {
             AssetBundleEntry entry = entries.get(i);
             AssetBundleEntryInfo entryInfo = entryInfos.get(i);
             
-            entryInfo.setOffset(out.position() - baseOffset);
+            entryInfo.offset(out.position() - baseOffset);
             
             if (i == 0) {
-                header.setDataHeaderSize(entryInfo.getOffset());
+                header.dataHeaderSize(entryInfo.offset());
             }
             
             try (
-                InputStream is = entry.getInputStream();
+                InputStream is = entry.inputStream();
                 OutputStream os = out.stream();
             ) {
                 IOUtils.copy(is, os);

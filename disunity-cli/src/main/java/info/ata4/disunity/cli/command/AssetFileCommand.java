@@ -58,14 +58,14 @@ public abstract class AssetFileCommand extends MultiFileCommand {
     public void handleAssetBundleFile(AssetBundleReader assetBundle) throws IOException {
         for (AssetBundleEntry assetBundleEntry : assetBundle) {
             currentAssetBundleEntry = assetBundleEntry;
-            L.log(Level.INFO, "Processing {0}", assetBundleEntry.getName());
+            L.log(Level.INFO, "Processing {0}", assetBundleEntry.name());
             handleAssetBundleEntry(assetBundleEntry);
             currentAssetBundleEntry = null;
         }
     }
     
     public void handleAssetBundleEntry(AssetBundleEntry assetBundleEntry) throws IOException {
-        String name = assetBundleEntry.getName();
+        String name = assetBundleEntry.name();
 
         // skip libraries
         if (assetBundleEntry.isLibrary()) {
@@ -77,15 +77,15 @@ public abstract class AssetFileCommand extends MultiFileCommand {
             return;
         }
 
-        try (DataReader in = AssetBundleUtils.getDataReaderForEntry(assetBundleEntry)) {
+        try (DataReader in = AssetBundleUtils.dataReaderForEntry(assetBundleEntry)) {
             AssetFile asset = new AssetFile();
             asset.load(in);
             
             // old asset files don't contain a Unity version string, so copy it
             // from the bundle header
             VersionInfo versionInfo = asset.getVersionInfo();
-            if (versionInfo.getAssetVersion() <= 5) {
-                versionInfo.setUnityRevision(getCurrentAssetBundle().getHeader().getUnityRevision());
+            if (versionInfo.assetVersion() <= 5) {
+                versionInfo.unityRevision(getCurrentAssetBundle().header().unityRevision());
             }
             
             handleAssetFile(asset);

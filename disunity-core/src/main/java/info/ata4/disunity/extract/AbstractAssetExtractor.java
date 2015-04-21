@@ -33,7 +33,7 @@ public abstract class AbstractAssetExtractor implements AssetExtractor {
 
     @Override
     public boolean isEligible(ObjectData objectData) {
-        return objectData.getInfo().getUnityClass().equals(getUnityClass());
+        return objectData.info().unityClass().equals(getUnityClass());
     }
 
     @Override

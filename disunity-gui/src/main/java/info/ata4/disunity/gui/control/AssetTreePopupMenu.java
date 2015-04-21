@@ -46,7 +46,7 @@ public class AssetTreePopupMenu extends JPopupMenu {
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-                    extractByteBuffer(objectData.getBuffer(), objectData.getName());
+                    extractByteBuffer(objectData.buffer(), objectData.name());
                 }
             });
             add(item);
@@ -59,7 +59,7 @@ public class AssetTreePopupMenu extends JPopupMenu {
                 item.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent evt) {
-                        extractByteBuffer(bb, fieldNode.getType().getFieldName());
+                        extractByteBuffer(bb, fieldNode.getType().fieldName());
                     }
                 });
                 add(item);

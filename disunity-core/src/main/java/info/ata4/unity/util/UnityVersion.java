@@ -56,35 +56,35 @@ public class UnityVersion implements Comparable<UnityVersion> {
         return raw == null;
     }
 
-    public byte getMajor() {
+    public byte major() {
         return major;
     }
 
-    public void setMajor(byte major) {
+    public void major(byte major) {
         this.major = major;
     }
 
-    public byte getMinor() {
+    public byte minor() {
         return minor;
     }
 
-    public void setMinor(byte minor) {
+    public void minor(byte minor) {
         this.minor = minor;
     }
 
-    public byte getPatch() {
+    public byte patch() {
         return patch;
     }
 
-    public void setPatch(byte patch) {
+    public void patch(byte patch) {
         this.patch = patch;
     }
 
-    public String getBuild() {
+    public String build() {
         return build;
     }
 
-    public void setBuild(String build) {
+    public void build(String build) {
         this.build = build;
     }
     

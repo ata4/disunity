@@ -32,7 +32,7 @@ public class ObjectDataNode extends LazyLoadingTreeNode {
     @Override
     protected void doLoad() {
         try {
-            FieldNode fieldNode = objectData.getInstance();
+            FieldNode fieldNode = objectData.instance();
 
             for (FieldNode childFieldNode : fieldNode) {
                 FieldNodeUtils.convertFieldNode(this, childFieldNode);

@@ -24,11 +24,11 @@ public class UnityGUID implements Struct {
     
     private UUID uuid;
     
-    public UUID getUUID() {
+    public UUID UUID() {
         return uuid;
     }
     
-    public void setUUID(UUID uuid) {
+    public void UUID(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -55,6 +55,6 @@ public class UnityGUID implements Struct {
 
     @Override
     public String toString() {
-        return getUUID().toString();
+        return UUID().toString();
     }
 }

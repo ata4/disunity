@@ -34,14 +34,14 @@ public class TextAssetExtractor extends AbstractAssetExtractor {
 
     @Override
     public void extract(ObjectData objectData) throws IOException {
-        TextAsset shader = new TextAsset(objectData.getInstance());
+        TextAsset shader = new TextAsset(objectData.instance());
         String name = shader.getName();
         ByteBuffer script = shader.getScriptRaw();
         
         String ext;
         String assetType;
         
-        if (objectData.getInfo().getUnityClass().getName().equals("Shader")) {
+        if (objectData.info().unityClass().name().equals("Shader")) {
             assetType = "Shader";
             ext = "shader";
         } else {

@@ -57,7 +57,7 @@ public class AudioClipExtractor extends AbstractAssetExtractor {
     
     @Override
     public void extract(ObjectData objectData) throws IOException {
-        AudioClip audio = new AudioClip(objectData.getInstance());
+        AudioClip audio = new AudioClip(objectData.instance());
         String name = audio.getName();
         ByteBuffer audioData = audio.getAudioData();
         

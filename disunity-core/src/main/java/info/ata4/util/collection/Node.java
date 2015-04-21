@@ -25,17 +25,17 @@ public abstract class Node<T extends Node> implements Collection<T> {
     private T parent;
     private final List<T> children = new ArrayList<>();
     
-    public T getParent() {
+    public T parent() {
         return parent;
     }
     
-    protected void setParent(T parent) {
+    protected void parent(T parent) {
         this.parent = parent;
     }
     
-    private void setChildrenParent(Collection<T> col, Node parent) {
+    private void childrenParent(Collection<T> col, Node parent) {
         for (T child : col) {
-            child.setParent(parent);
+            child.parent(parent);
         }
     }
     
@@ -71,7 +71,7 @@ public abstract class Node<T extends Node> implements Collection<T> {
 
     @Override
     public boolean add(T e) {
-        e.setParent(this);
+        e.parent(this);
         return children.add(e);
     }
 
@@ -79,7 +79,7 @@ public abstract class Node<T extends Node> implements Collection<T> {
     public boolean remove(Object o) {
         boolean r = children.remove(o);
         if (r && o instanceof Node) {
-            ((Node) o).setParent(null);
+            ((Node) o).parent(null);
         }
         return r;
     }
@@ -92,13 +92,13 @@ public abstract class Node<T extends Node> implements Collection<T> {
     @Override
     public boolean addAll(Collection<? extends T> c) {
         boolean b = children.addAll(c);
-        setChildrenParent(children, this);
+        childrenParent(children, this);
         return b;
     }
 
     public boolean addAll(int index, Collection<? extends T> c) {
         boolean b = children.addAll(index, c);
-        setChildrenParent(children, this);
+        childrenParent(children, this);
         return b;
     }
 
@@ -107,7 +107,7 @@ public abstract class Node<T extends Node> implements Collection<T> {
         List<T> childrenRemoved = new ArrayList<>(children);
         boolean b = children.removeAll(c);
         childrenRemoved.removeAll(children);
-        setChildrenParent(childrenRemoved, null);
+        childrenParent(childrenRemoved, null);
         return b;
     }
 
@@ -116,13 +116,13 @@ public abstract class Node<T extends Node> implements Collection<T> {
         List<T> childrenRemoved = new ArrayList<>(children);
         boolean b = children.retainAll(c);
         childrenRemoved.removeAll(children);
-        setChildrenParent(childrenRemoved, null);
+        childrenParent(childrenRemoved, null);
         return b;
     }
 
     @Override
     public void clear() {
-        setChildrenParent(children, null);
+        childrenParent(children, null);
         children.clear();
     }
 
@@ -170,7 +170,7 @@ public abstract class Node<T extends Node> implements Collection<T> {
         public void remove() {
             proxy.remove();
             if (current != null) {
-                current.setParent(null);
+                current.parent(null);
             }
         }
     }

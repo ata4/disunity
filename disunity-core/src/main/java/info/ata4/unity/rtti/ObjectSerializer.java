@@ -46,13 +46,13 @@ public class ObjectSerializer {
     }
     
     public void deserialize(ObjectData data) throws IOException {
-        versionInfo = data.getVersionInfo();
+        versionInfo = data.versionInfo();
         
-        DataReader in = DataReaders.forByteBuffer(data.getBuffer());
-        in.order(versionInfo.getByteOrder());
+        DataReader in = DataReaders.forByteBuffer(data.buffer());
+        in.order(versionInfo.order());
         in.position(0);
         
-        TypeNode typeNode = data.getTypeTree();
+        TypeNode typeNode = data.typeTree();
         FieldNode instance = readObject(in, typeNode);
         
         // check if all bytes have been read
@@ -60,33 +60,33 @@ public class ObjectSerializer {
             throw new RuntimeTypeException("Remaining bytes: " + in.remaining());
         }
         
-        data.setInstance(instance);
+        data.instance(instance);
     }
     
     private FieldNode readObject(DataReader in, TypeNode typeNode) throws IOException {
-        Type type = typeNode.getType();
+        Type type = typeNode.type();
         
         if (DEBUG) {
             System.out.printf("%s0x%x: %s v: %d, f: 0x%x, s: %d\n",
-                    StringUtils.repeat("  ", type.getTreeLevel()), in.position(), type.getTypeName(),
-                    type.getVersion(), type.getMetaFlag(), type.getSize());
+                    StringUtils.repeat("  ", type.treeLevel()), in.position(), type.typeName(),
+                    type.version(), type.metaFlag(), type.size());
         }
         
         FieldNode fieldNode = new FieldNode();
         fieldNode.setType(type);
         
         // if the type has no children, it has a primitve value
-        if (typeNode.isEmpty() && type.getSize() > 0) {
+        if (typeNode.isEmpty() && type.size() > 0) {
             fieldNode.setValue(readPrimitiveValue(in, type, -1));
         }
         
         // read object fields
         for (TypeNode childTypeNode : typeNode) {
-            Type childType = childTypeNode.getType();
+            Type childType = childTypeNode.type();
             
             // Check if the current node is an array and if the current field is
             // "data". In that case, "data" needs to be read "size" times.
-            if (type.getIsArray() && childType.getFieldName().equals("data")) {
+            if (type.isArray() && childType.fieldName().equals("data")) {
                 int size = fieldNode.getSInt32("size");
                 
                 FieldNode childFieldNode = new FieldNode();
@@ -111,7 +111,7 @@ public class ObjectSerializer {
         }
         
         // convert byte buffers to string instances in "string" fields for convenience
-        if (fieldNode.getType().getTypeName().equals("string")) {
+        if (fieldNode.getType().typeName().equals("string")) {
             // strings use "char" arrays, so it should be wrapped in a ByteBuffer
             ByteBuffer buf = fieldNode.getArrayData(ByteBuffer.class);
             fieldNode.setValue(new String(buf.array(), "UTF-8"));
@@ -134,7 +134,7 @@ public class ObjectSerializer {
             }
         } else {
             value = readPrimitiveArray(in, type, size);
-            if (versionInfo.getAssetVersion() > 5) {
+            if (versionInfo.assetVersion() > 5) {
                 // arrays always need to be aligned in newer versions
                 in.align(ALIGNMENT);
             }
@@ -143,15 +143,15 @@ public class ObjectSerializer {
         if (DEBUG) {
             long bytes = in.position() - pos;
             System.out.printf("%s0x%x: %s %s = %s, b: %d, v: %d, f: 0x%x, s: %d\n",
-                    StringUtils.repeat("  ", type.getTreeLevel()), pos, type.getTypeName(), type.getFieldName(), value, bytes,
-                    type.getVersion(), type.getMetaFlag(), size);
+                    StringUtils.repeat("  ", type.treeLevel()), pos, type.typeName(), type.fieldName(), value, bytes,
+                    type.version(), type.metaFlag(), size);
         }
         
         return value;
     }
     
     private Object readPrimitive(DataReader in, Type type) throws IOException, RuntimeTypeException {
-        switch (type.getTypeName()) {
+        switch (type.typeName()) {
             // 1 byte
             case "bool":
                 return in.readBoolean();
@@ -197,12 +197,12 @@ public class ObjectSerializer {
                 return in.readDouble();
 
             default:
-                throw new RuntimeTypeException("Unknown primitive type: " + type.getTypeName());
+                throw new RuntimeTypeException("Unknown primitive type: " + type.typeName());
         }
     }
     
     private Object readPrimitiveArray(DataReader in, Type type, int size) throws IOException, RuntimeTypeException {
-        switch (type.getTypeName()) {
+        switch (type.typeName()) {
             // read byte arrays natively and wrap them as ByteBuffers,
             // which is much faster and more efficient than a list of wrappped
             // Byte/Integer objects

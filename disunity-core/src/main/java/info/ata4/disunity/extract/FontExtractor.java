@@ -29,7 +29,7 @@ public class FontExtractor extends AbstractAssetExtractor {
 
     @Override
     public void extract(ObjectData objectData) throws IOException {
-        Font font = new Font(objectData.getInstance());
+        Font font = new Font(objectData.instance());
         ByteBuffer fontData = font.getFontData();
 
         if (ByteBufferUtils.isEmpty(fontData)) {

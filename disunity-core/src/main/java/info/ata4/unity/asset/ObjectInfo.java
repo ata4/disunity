@@ -61,19 +61,19 @@ public class ObjectInfo extends UnityStruct {
         out.writeShort(isDestroyed);
     }
 
-    public long getOffset() {
+    public long offset() {
         return offset;
     }
 
-    public void setOffset(long offset) {
+    public void offset(long offset) {
         this.offset = offset;
     }
 
-    public long getLength() {
+    public long length() {
         return length;
     }
 
-    public void setLength(long length) {
+    public void length(long length) {
         this.length = length;
     }
     
@@ -81,28 +81,28 @@ public class ObjectInfo extends UnityStruct {
         return typeID < 0;
     }
 
-    public int getTypeID() {
+    public int typeID() {
         return typeID;
     }
 
-    public void setTypeID(int typeID) {
+    public void typeID(int typeID) {
         this.typeID = typeID;
     }
     
-    public int getClassID() {
+    public int classID() {
         return classID;
     }
 
-    public void setClassID(int classID) {
+    public void classID(int classID) {
         this.classID = classID;
     }
     
-    public UnityClass getUnityClass() {
+    public UnityClass unityClass() {
         return new UnityClass(classID);
     }
     
     @Override
     public String toString() {
-        return getUnityClass().toString();
+        return unityClass().toString();
     }
 }

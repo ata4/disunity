@@ -21,11 +21,11 @@ public class TypeNode extends Node<TypeNode> {
     
     private Type type;
 
-    public Type getType() {
+    public Type type() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void type(Type type) {
         this.type = type;
     }
 }

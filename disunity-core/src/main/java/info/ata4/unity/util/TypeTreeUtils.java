@@ -39,7 +39,7 @@ public class TypeTreeUtils {
     }
     
     public static void fill(AssetFile asset) {
-        UnityVersion unityRevision = asset.getVersionInfo().getUnityRevision();
+        UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
         if (unityRevision == null) {
             L.warning("unityRevision = null");
             return;
@@ -51,7 +51,7 @@ public class TypeTreeUtils {
         
         while (objectIter.hasNext()) {
             ObjectData object = objectIter.next();
-            int typeID = object.getInfo().getTypeID();
+            int typeID = object.info().typeID();
             
             // skip types that already exist
             if (typeTreeMap.containsKey(typeID)) {
@@ -81,7 +81,7 @@ public class TypeTreeUtils {
             return 0;
         }
         
-        UnityVersion unityRevision = asset.getVersionInfo().getUnityRevision();
+        UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
         if (unityRevision == null) {
             L.warning("unityRevision = null");
             return 0;
@@ -119,9 +119,9 @@ public class TypeTreeUtils {
             }
 
             // check if the class name is known and suggest the type base name if not
-            if (unityClass.getName() == null) {
+            if (unityClass.name() == null) {
                 L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}",
-                        new Object[] {unityClass.getID(), fieldTypeLocal.getType().getTypeName()});
+                        new Object[] {unityClass.ID(), fieldTypeLocal.getType().getTypeName()});
             }
         }
         
@@ -148,8 +148,8 @@ public class TypeTreeUtils {
                 FieldTypeNode fieldNodeEntry = entry.getValue();
                 UnityVersion revisionEntry = fieldNodeKey.getRight();
 
-                if (revisionEntry.getMajor() == unityVersion.getMajor()) {
-                    if (revisionEntry.getMinor() == unityVersion.getMinor()) {
+                if (revisionEntry.major() == unityVersion.major()) {
+                    if (revisionEntry.minor() == unityVersion.minor()) {
                         // if major and minor versions match, it will probably work
                         return fieldNodeEntry;
                     } else {
@@ -182,7 +182,7 @@ public class TypeTreeUtils {
     }
     
     public static FieldTypeNode getNode(ObjectData object, boolean strict) {
-        return getNode(object.getInfo().getUnityClass(), object.getVersionInfo().getUnityRevision(), strict);
+        return getNode(object.info().unityClass(), object.versionInfo().unityRevision(), strict);
     }
 
     private TypeTreeUtils() {

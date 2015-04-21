@@ -44,33 +44,33 @@ public class BundleInfoCommand extends BundleFileCommand {
     }
 
     private void printText(AssetBundleReader reader) {
-        AssetBundleHeader header = reader.getHeader();
+        AssetBundleHeader header = reader.header();
         PrintWriter out = getOutputWriter();
         out.println("Header:");
         
         TablePrinter tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
-        tbl.addRow("signature", header.getSignature());
-        tbl.addRow("streamVersion", header.getStreamVersion());
-        tbl.addRow("unityVersion", header.getUnityVersion());
-        tbl.addRow("unityRevision", header.getUnityRevision());
-        tbl.addRow("minimumStreamedBytes", header.getMinimumStreamedBytes());
-        tbl.addRow("headerSize", header.getHeaderSize());
-        tbl.addRow("numberOfLevelsToDownload", header.getNumberOfLevelsToDownload());
-        tbl.addRow("numberOfLevels", header.getNumberOfLevels());
+        tbl.addRow("signature", header.signature());
+        tbl.addRow("streamVersion", header.streamVersion());
+        tbl.addRow("unityVersion", header.unityVersion());
+        tbl.addRow("unityRevision", header.unityRevision());
+        tbl.addRow("minimumStreamedBytes", header.minimumStreamedBytes());
+        tbl.addRow("headerSize", header.headerSize());
+        tbl.addRow("numberOfLevelsToDownload", header.numberOfLevelsToDownload());
+        tbl.addRow("numberOfLevels", header.numberOfLevels());
         
-        List<Pair<Long, Long>> levelByteEnds = header.getLevelByteEnd();
+        List<Pair<Long, Long>> levelByteEnds = header.levelByteEnd();
         for (int i = 0; i < levelByteEnds.size(); i++) {
             Pair<Long, Long> levelByteEnd = levelByteEnds.get(i);
             tbl.addRow("levelByteEnd[" + i + "][0]", levelByteEnd.getLeft());
             tbl.addRow("levelByteEnd[" + i + "][1]", levelByteEnd.getRight());
         }
         
-        if (header.getStreamVersion() >= 2) {
-            tbl.addRow("completeFileSize", header.getCompleteFileSize());
+        if (header.streamVersion() >= 2) {
+            tbl.addRow("completeFileSize", header.completeFileSize());
         }
-        if (header.getStreamVersion() >= 3) {
-            tbl.addRow("dataHeaderSize", header.getDataHeaderSize());
+        if (header.streamVersion() >= 3) {
+            tbl.addRow("dataHeaderSize", header.dataHeaderSize());
         }
         
         tbl.print(out);
@@ -83,32 +83,32 @@ public class BundleInfoCommand extends BundleFileCommand {
         tbl.setColumnAlignment(2, 1);
         tbl.addRow("Name", "Offset", "Size");
         
-        List<AssetBundleEntryInfo> entryInfos = reader.getEntryInfos();
+        List<AssetBundleEntryInfo> entryInfos = reader.entryInfos();
         for (AssetBundleEntryInfo entryInfo : entryInfos) {
-            tbl.addRow(entryInfo.getName(), entryInfo.getOffset(), entryInfo.getSize());
+            tbl.addRow(entryInfo.name(), entryInfo.offset(), entryInfo.size());
         }
         
         tbl.print(out);
     }
     
     private void printJSON(AssetBundleReader reader) {
-        AssetBundleHeader header = reader.getHeader();
+        AssetBundleHeader header = reader.header();
         
         JSONObject root = new JSONObject();
         root.put("file", getCurrentFile());
         
-        root.put("signature", header.getSignature());
-        root.put("streamVersion", header.getStreamVersion());
-        root.put("unityVersion", header.getUnityVersion());
-        root.put("unityRevision", header.getUnityRevision());
-        root.put("minimumStreamedBytes", header.getMinimumStreamedBytes());
-        root.put("headerSize", header.getHeaderSize());
-        root.put("numberOfLevelsToDownload", header.getNumberOfLevelsToDownload());
-        root.put("numberOfLevels", header.getNumberOfLevels());
+        root.put("signature", header.signature());
+        root.put("streamVersion", header.streamVersion());
+        root.put("unityVersion", header.unityVersion());
+        root.put("unityRevision", header.unityRevision());
+        root.put("minimumStreamedBytes", header.minimumStreamedBytes());
+        root.put("headerSize", header.headerSize());
+        root.put("numberOfLevelsToDownload", header.numberOfLevelsToDownload());
+        root.put("numberOfLevels", header.numberOfLevels());
         
         JSONArray levelByteEndsJson = new JSONArray();
         
-        List<Pair<Long, Long>> levelByteEnds = header.getLevelByteEnd();
+        List<Pair<Long, Long>> levelByteEnds = header.levelByteEnd();
         for (int i = 0; i < levelByteEnds.size(); i++) {
             JSONArray levelByteEndJson = new JSONArray();
             
@@ -121,22 +121,22 @@ public class BundleInfoCommand extends BundleFileCommand {
         
         root.put("levelByteEnd", levelByteEndsJson);
         
-        if (header.getStreamVersion() >= 2) {
-            root.put("completeFileSize", header.getCompleteFileSize());
+        if (header.streamVersion() >= 2) {
+            root.put("completeFileSize", header.completeFileSize());
         }
         
-        if (header.getStreamVersion() >= 3) {
-            root.put("dataHeaderSize", header.getDataHeaderSize());
+        if (header.streamVersion() >= 3) {
+            root.put("dataHeaderSize", header.dataHeaderSize());
         }
         
         JSONArray entryInfosJson = new JSONArray();
         
-        List<AssetBundleEntryInfo> entryInfos = reader.getEntryInfos();
+        List<AssetBundleEntryInfo> entryInfos = reader.entryInfos();
         for (AssetBundleEntryInfo entryInfo : entryInfos) {
             JSONObject entryInfoJson = new JSONObject();
-            entryInfoJson.put("name", entryInfo.getName());
-            entryInfoJson.put("offset", entryInfo.getOffset());
-            entryInfoJson.put("length", entryInfo.getSize());
+            entryInfoJson.put("name", entryInfo.name());
+            entryInfoJson.put("offset", entryInfo.offset());
+            entryInfoJson.put("length", entryInfo.size());
             
             entryInfosJson.put(entryInfoJson);
         }

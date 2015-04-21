@@ -48,14 +48,14 @@ public class ListCommand extends AssetFileCommand {
         tbl.setColumnAlignment(4, 1);
         
         for (ObjectData data : asset.getObjects()) {
-            ObjectInfo info = data.getInfo();
+            ObjectInfo info = data.info();
             
-            long pid = data.getID();
-            int cid = info.getClassID();
-            String className = info.getUnityClass().getName();
-            long ofs = info.getOffset();
-            long len = info.getLength();
-            String objName = data.getInstance().getString("m_Name");
+            long pid = data.ID();
+            int cid = info.classID();
+            String className = info.unityClass().name();
+            long ofs = info.offset();
+            long len = info.length();
+            String objName = data.instance().getString("m_Name");
             
             if (objName == null) {
                 objName = "";
@@ -72,26 +72,26 @@ public class ListCommand extends AssetFileCommand {
         
         AssetBundleReader assetBundle = getCurrentAssetBundle();
         if (assetBundle != null) {
-            root.put("file", getCurrentFile().resolve(getCurrentAssetBundleEntry().getName()));
+            root.put("file", getCurrentFile().resolve(getCurrentAssetBundleEntry().name()));
         } else {
             root.put("file", getCurrentFile());
         }
         
         JSONArray objectsJson = new JSONArray();
         for (ObjectData data : asset.getObjects()) {
-            ObjectInfo info = data.getInfo();
+            ObjectInfo info = data.info();
             JSONObject objectJson = new JSONObject();
             
-            objectJson.put("id", data.getID());
+            objectJson.put("id", data.ID());
             
             JSONObject classJson = new JSONObject();
-            classJson.put("id", info.getClassID());
-            classJson.put("name", info.getUnityClass().getName());
+            classJson.put("id", info.classID());
+            classJson.put("name", info.unityClass().name());
             
             objectJson.put("class", classJson);
-            objectJson.put("offset", info.getOffset());
-            objectJson.put("length", info.getLength());
-            objectJson.put("name", data.getInstance().getString("m_Name"));
+            objectJson.put("offset", info.offset());
+            objectJson.put("length", info.length());
+            objectJson.put("name", data.instance().getString("m_Name"));
             
             objectsJson.put(objectJson);
         }

@@ -29,12 +29,12 @@ public class AssetBundleExternalEntry extends AssetBundleEntry {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
-    public long getSize() {
+    public long size() {
         try {
             return Files.size(file);
         } catch (IOException ex) {
@@ -43,7 +43,7 @@ public class AssetBundleExternalEntry extends AssetBundleEntry {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream inputStream() throws IOException {
         return Files.newInputStream(file);
     }
     

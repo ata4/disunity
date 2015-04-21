@@ -44,9 +44,9 @@ public class AssetHeader extends UnityStruct {
     public void read(DataReader in) throws IOException {
         metadataSize = in.readInt();
         fileSize = in.readUnsignedInt();
-        versionInfo.setAssetVersion(in.readInt());
+        versionInfo.assetVersion(in.readInt());
         dataOffset = in.readUnsignedInt();
-        if (versionInfo.getAssetVersion() >= 9) {
+        if (versionInfo.assetVersion() >= 9) {
             endianness = in.readByte();
             in.readBytes(reserved);
         }
@@ -56,9 +56,9 @@ public class AssetHeader extends UnityStruct {
     public void write(DataWriter out) throws IOException {
         out.writeUnsignedInt(metadataSize);
         out.writeUnsignedInt(fileSize);
-        out.writeInt(versionInfo.getAssetVersion());
+        out.writeInt(versionInfo.assetVersion());
         out.writeUnsignedInt(dataOffset);
-        if (versionInfo.getAssetVersion() >= 9) {
+        if (versionInfo.assetVersion() >= 9) {
             out.writeByte(endianness);
             out.writeBytes(reserved);
         }
@@ -81,11 +81,11 @@ public class AssetHeader extends UnityStruct {
     }
 
     public int getVersion() {
-        return versionInfo.getAssetVersion();
+        return versionInfo.assetVersion();
     }
 
     public void setVersion(int version) {
-        versionInfo.setAssetVersion(version);
+        versionInfo.assetVersion(version);
     }
 
     public long getDataOffset() {

@@ -34,7 +34,7 @@ public class MovieTextureExtractor extends AbstractAssetExtractor {
     
     @Override
     public void extract(ObjectData objectData) throws IOException {
-        MovieTexture mtex = new MovieTexture(objectData.getInstance());
+        MovieTexture mtex = new MovieTexture(objectData.instance());
         String name = mtex.getName();
         ByteBuffer movieData = mtex.getMovieData();
         

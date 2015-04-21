@@ -44,8 +44,8 @@ public class FieldTypeTree extends UnityStruct {
     @Override
     public void read(DataReader in) throws IOException {
         // revision/version for newer formats
-        if (versionInfo.getAssetVersion() >= 7) {
-            versionInfo.setUnityRevision(new UnityVersion(in.readStringNull(255)));
+        if (versionInfo.assetVersion() >= 7) {
+            versionInfo.unityRevision(new UnityVersion(in.readStringNull(255)));
             attributes = in.readInt();
         }
         
@@ -60,7 +60,7 @@ public class FieldTypeTree extends UnityStruct {
         }
         
         // padding
-        if (versionInfo.getAssetVersion() >= 7) {
+        if (versionInfo.assetVersion() >= 7) {
             in.readInt();
         }
     }
@@ -68,8 +68,8 @@ public class FieldTypeTree extends UnityStruct {
     @Override
     public void write(DataWriter out) throws IOException {
         // revision/version for newer formats
-        if (versionInfo.getAssetVersion() >= 7) {
-            out.writeStringNull(versionInfo.getUnityRevision().toString());
+        if (versionInfo.assetVersion() >= 7) {
+            out.writeStringNull(versionInfo.unityRevision().toString());
             out.writeInt(attributes);
         }
         
@@ -85,7 +85,7 @@ public class FieldTypeTree extends UnityStruct {
         }
         
         // padding
-        if (versionInfo.getAssetVersion() >= 7) {
+        if (versionInfo.assetVersion() >= 7) {
             out.writeInt(0);
         }
     }

@@ -26,38 +26,38 @@ public class VersionInfo {
     // 7 = 3.0 (?)
     // 8 = 3.1 - 3.4
     // 9 = 3.5 - 4.5
-    // 11 = 5.0 (beta?)
-    // 12 = 5.0 (beta?)
-    // 13 = 5.0 (beta?)
+    // 11 = pre-5.0
+    // 12 = pre-5.0
+    // 13 = pre-5.0
     // 14 = 5.0
     // 15 = 5.0 (p3 and newer)
     private int assetVersion;
 
-    public UnityVersion getUnityVersion() {
+    public UnityVersion unityVersion() {
         return unityVersion;
     }
 
-    public void setUnityVersion(UnityVersion unityVersion) {
+    public void unityVersion(UnityVersion unityVersion) {
         this.unityVersion = unityVersion;
     }
 
-    public UnityVersion getUnityRevision() {
+    public UnityVersion unityRevision() {
         return unityRevision;
     }
 
-    public void setUnityRevision(UnityVersion unityRevision) {
+    public void unityRevision(UnityVersion unityRevision) {
         this.unityRevision = unityRevision;
     }
 
-    public int getAssetVersion() {
+    public int assetVersion() {
         return assetVersion;
     }
 
-    public void setAssetVersion(int assetVersion) {
+    public void assetVersion(int assetVersion) {
         this.assetVersion = assetVersion;
     }
     
-    public ByteOrder getByteOrder() {
+    public ByteOrder order() {
         // older formats use big endian
         return assetVersion > 5 ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
     }

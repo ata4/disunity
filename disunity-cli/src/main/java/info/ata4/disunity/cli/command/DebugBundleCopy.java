@@ -43,19 +43,19 @@ public class DebugBundleCopy extends BundleFileCommand {
     public void handleBundleFile(AssetBundleReader reader) throws IOException {
         PrintWriter out = getOutputWriter();
 
-        out.println(ObjectDump.toString(reader.getHeader()));
+        out.println(ObjectDump.toString(reader.header()));
 
         AssetBundleWriter writer = new AssetBundleWriter();
         for (AssetBundleEntry entry : reader) {
             writer.addEntry(entry);
         }
 
-        AssetBundleHeader headerIn = reader.getHeader();
+        AssetBundleHeader headerIn = reader.header();
         AssetBundleHeader headerOut = writer.getHeader();
-        headerOut.setSignature(headerIn.getSignature());
-        headerOut.setStreamVersion(headerIn.getStreamVersion());
-        headerOut.setUnityVersion(headerIn.getUnityVersion());
-        headerOut.setUnityRevision(headerIn.getUnityRevision());
+        headerOut.signature(headerIn.signature());
+        headerOut.streamVersion(headerIn.streamVersion());
+        headerOut.unityVersion(headerIn.unityVersion());
+        headerOut.unityRevision(headerIn.unityRevision());
 
         writer.write(outputFile);
 

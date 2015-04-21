@@ -34,31 +34,31 @@ public class ObjectData {
         this.versionInfo = versionInfo;
     }
     
-    public long getID() {
+    public long ID() {
         return id;
     }
     
-    public VersionInfo getVersionInfo() {
+    public VersionInfo versionInfo() {
         return versionInfo;
     }
     
-    public ObjectSerializer getSerializer() {
+    public ObjectSerializer serializer() {
         return serializer;
     }
     
-    public void setSerializer(ObjectSerializer serializer) {
+    public void serializer(ObjectSerializer serializer) {
         this.serializer = serializer;
     }
     
-    public ObjectInfo getInfo() {
+    public ObjectInfo info() {
         return info;
     }
     
-    public void setInfo(ObjectInfo info) {
+    public void info(ObjectInfo info) {
         this.info = info;
     }
 
-    public ByteBuffer getBuffer() {
+    public ByteBuffer buffer() {
         if (buffer == null && instance != null && typeTree != null) {
             try {
                 serializer.serialize(this);
@@ -69,19 +69,19 @@ public class ObjectData {
         return buffer;
     }
     
-    public void setBuffer(ByteBuffer buffer) {
+    public void buffer(ByteBuffer buffer) {
         this.buffer = buffer;
     }
     
-    public TypeNode getTypeTree() {
+    public TypeNode typeTree() {
         return typeTree;
     }
 
-    public void setTypeTree(TypeNode typeTree) {
+    public void typeTree(TypeNode typeTree) {
         this.typeTree = typeTree;
     }
 
-    public FieldNode getInstance() {
+    public FieldNode instance() {
         if (instance == null && buffer != null && typeTree != null) {
             try {
                 serializer.deserialize(this);
@@ -92,12 +92,12 @@ public class ObjectData {
         return instance;
     }
 
-    public void setInstance(FieldNode instance) {
+    public void instance(FieldNode instance) {
         this.instance = instance;
     }
     
-    public String getName() {
-        String name = getInstance().getString("m_Name");
+    public String name() {
+        String name = instance().getString("m_Name");
 
         if (name == null || name.isEmpty()) {
             name = String.format("Object %d", id);
@@ -108,6 +108,6 @@ public class ObjectData {
 
     @Override
     public String toString() {
-        return "Object " + getID() + " " + getInfo().toString();
+        return "Object " + ID() + " " + info().toString();
     }
 }

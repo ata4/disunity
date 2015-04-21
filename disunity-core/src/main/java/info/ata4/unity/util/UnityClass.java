@@ -25,22 +25,22 @@ public class UnityClass {
     }
     
     public UnityClass(String name) {
-        Integer id = DB.getIDForName(name);
+        Integer lid = DB.IDForName(name);
         
         // the ID must be valid
-        if (id == null) {
+        if (lid == null) {
             throw new IllegalArgumentException("Unknown class name: " + name);
         }
         
-        this.id = id;
+        this.id = lid;
     }
     
-    public int getID() {
+    public int ID() {
         return id;
     }
     
-    public String getName() {
-        return DB.getNameForID(id);
+    public String name() {
+        return DB.nameForID(id);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UnityClass {
         sb.append("Class ");
         sb.append(id);
         
-        String name = getName();
+        String name = name();
         if (name != null) {
             sb.append(" (");
             sb.append(name);

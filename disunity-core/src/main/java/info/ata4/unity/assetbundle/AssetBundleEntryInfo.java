@@ -24,27 +24,27 @@ public class AssetBundleEntryInfo implements Struct {
     private long offset;
     private long size;
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public void setName(String name) {
+    public void name(String name) {
         this.name = name;
     }
 
-    public long getOffset() {
+    public long offset() {
         return offset;
     }
 
-    public void setOffset(long offset) {
+    public void offset(long offset) {
         this.offset = offset;
     }
 
-    public long getSize() {
+    public long size() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void size(long size) {
         this.size = size;
     }
     
@@ -64,6 +64,6 @@ public class AssetBundleEntryInfo implements Struct {
 
     @Override
     public String toString() {
-        return getName();
+        return name();
     }
 }

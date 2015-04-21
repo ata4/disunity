@@ -37,7 +37,7 @@ public class FileIdentifier extends UnityStruct {
     // Reference type. Possible values are probably 0 to 3.
     private int type;
     
-    private AssetFile asset;
+    private AssetFile assetFile;
     
     public FileIdentifier(VersionInfo versionInfo) {
         super(versionInfo);
@@ -45,7 +45,7 @@ public class FileIdentifier extends UnityStruct {
     
     @Override
     public void read(DataReader in) throws IOException {
-        if (versionInfo.getAssetVersion() > 5) {
+        if (versionInfo.assetVersion() > 5) {
             assetPath = in.readStringNull();
         }
         
@@ -56,7 +56,7 @@ public class FileIdentifier extends UnityStruct {
 
     @Override
     public void write(DataWriter out) throws IOException {
-        if (versionInfo.getAssetVersion() > 5) {
+        if (versionInfo.assetVersion() > 5) {
             out.writeStringNull(assetPath);
         }
         
@@ -65,43 +65,43 @@ public class FileIdentifier extends UnityStruct {
         out.writeStringNull(filePath);
     }
 
-    public UUID getGUID() {
-        return guid.getUUID();
+    public UUID guid() {
+        return guid.UUID();
     }
 
-    public void setGUID(UUID guid) {
-        this.guid.setUUID(guid);
+    public void guid(UUID guid) {
+        this.guid.UUID(guid);
     }
 
-    public String getFilePath() {
+    public String filePath() {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    public void filePath(String filePath) {
         this.filePath = filePath;
     }
 
-    public String getAssetPath() {
+    public String assetPath() {
         return assetPath;
     }
 
-    public void setAssetPath(String assetPath) {
+    public void assetPath(String assetPath) {
         this.assetPath = assetPath;
     }
 
-    public int getType() {
+    public int type() {
         return type;
     }
 
-    public void setType(int type) {
+    public void type(int type) {
         this.type = type;
     }
 
-    public AssetFile getAssetFile() {
-        return asset;
+    public AssetFile assetFile() {
+        return assetFile;
     }
 
-    void setAssetFile(AssetFile asset) {
-        this.asset = asset;
+    void assetFile(AssetFile assetFile) {
+        this.assetFile = assetFile;
     }
 }

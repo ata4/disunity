@@ -186,7 +186,7 @@ public class TypeTreeDatabase {
                 index = fieldNodeMap.get(entry.getValue());
                 Pair<UnityClass, UnityVersion> fieldNodeKey = entry.getKey();
 
-                int classID = fieldNodeKey.getLeft().getID();
+                int classID = fieldNodeKey.getLeft().ID();
                 UnityVersion version = fieldNodeKey.getRight();
 
                 out.writeInt(index);

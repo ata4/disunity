@@ -53,7 +53,7 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
         for (ObjectData objectData : asset.getObjects()) {
             try {
-                String fieldNodeType = objectData.getTypeTree().getType().getTypeName();
+                String fieldNodeType = objectData.typeTree().type().typeName();
 
                 if (!nodeCategories.containsKey(fieldNodeType)) {
                     DefaultMutableTreeNode nodeCategory = new DefaultMutableTreeNode(fieldNodeType);
@@ -85,8 +85,8 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Externals");
         
         for (FileIdentifier external : externals) {
-            if (external.getAssetFile() != null) {
-                refNode.add(new AssetFileNode(tree, external.getAssetFile()));
+            if (external.assetFile() != null) {
+                refNode.add(new AssetFileNode(tree, external.assetFile()));
             } else {
                 refNode.add(new DefaultMutableTreeNode(external));
             }

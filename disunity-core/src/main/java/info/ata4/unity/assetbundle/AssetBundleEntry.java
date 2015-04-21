@@ -19,14 +19,14 @@ import org.apache.commons.io.FilenameUtils;
  */
 public abstract class AssetBundleEntry {
     
-    public abstract String getName();
+    public abstract String name();
     
-    public abstract long getSize();
+    public abstract long size();
 
-    public abstract InputStream getInputStream() throws IOException;
+    public abstract InputStream inputStream() throws IOException;
     
     public boolean isLibrary() {
-        String ext = FilenameUtils.getExtension(getName());
+        String ext = FilenameUtils.getExtension(name());
         return ext.equals("dll") || ext.equals("mdb");
     }
 }

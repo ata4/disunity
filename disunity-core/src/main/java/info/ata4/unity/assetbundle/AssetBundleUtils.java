@@ -67,7 +67,7 @@ public class AssetBundleUtils {
         try(
             AssetBundleReader assetBundle = new AssetBundleReader(file)
         ) {
-            List<AssetBundleEntry> entries = assetBundle.getEntries();
+            List<AssetBundleEntry> entries = assetBundle.entries();
             progress.setLimit(entries.size());
 
             for (int i = 0; i < entries.size(); i++) {
@@ -76,11 +76,11 @@ public class AssetBundleUtils {
                 }
                 
                 AssetBundleEntry entry = entries.get(i);
-                progress.setLabel(entry.getName());
+                progress.setLabel(entry.name());
                 
-                Path entryFile = outDir.resolve(entry.getName());
+                Path entryFile = outDir.resolve(entry.name());
                 Files.createDirectories(entryFile.getParent());
-                Files.copy(entry.getInputStream(), entryFile, REPLACE_EXISTING);
+                Files.copy(entry.inputStream(), entryFile, REPLACE_EXISTING);
                 
                 progress.update(i + 1);
             }
@@ -102,20 +102,20 @@ public class AssetBundleUtils {
         assetBundle.write(bundleFile);
     }
     
-    public static SeekableByteChannel getByteChannelForEntry(AssetBundleEntry entry) throws IOException {
+    public static SeekableByteChannel byteChannelForEntry(AssetBundleEntry entry) throws IOException {
         SeekableByteChannel chan;
         
         // check if the entry is larger than 128 MiB
-        long size = entry.getSize();
+        long size = entry.size();
         if (size > 1 << 27) {
             // copy entry to temporary file
             Path tmpFile = Files.createTempFile("disunity", null);
-            Files.copy(entry.getInputStream(), tmpFile);
+            Files.copy(entry.inputStream(), tmpFile);
             chan = Files.newByteChannel(tmpFile, READ, DELETE_ON_CLOSE);
         } else {
             // copy entry to memory
             ByteBuffer bb = ByteBuffer.allocateDirect((int) size);
-            IOUtils.copy(entry.getInputStream(), new ByteBufferOutputStream(bb));
+            IOUtils.copy(entry.inputStream(), new ByteBufferOutputStream(bb));
             bb.flip();
             chan = new ByteBufferChannel(bb);
         }
@@ -123,22 +123,22 @@ public class AssetBundleUtils {
         return chan;
     }
     
-    public static DataReader getDataReaderForEntry(AssetBundleEntry entry) throws IOException {
-        return DataReaders.forSeekableByteChannel(AssetBundleUtils.getByteChannelForEntry(entry));
+    public static DataReader dataReaderForEntry(AssetBundleEntry entry) throws IOException {
+        return DataReaders.forSeekableByteChannel(AssetBundleUtils.byteChannelForEntry(entry));
     }
     
     private static void writePropertiesFile(Path propsFile, AssetBundleReader assetBundle) throws IOException {
-        AssetBundleHeader header = assetBundle.getHeader();
+        AssetBundleHeader header = assetBundle.header();
 
         JSONObject props = new JSONObject();
-        props.put("compressed", header.isCompressed());
-        props.put("streamVersion", header.getStreamVersion());
-        props.put("unityVersion", header.getUnityVersion().toString());
-        props.put("unityRevision", header.getUnityRevision().toString());
+        props.put("compressed", header.compressed());
+        props.put("streamVersion", header.streamVersion());
+        props.put("unityVersion", header.unityVersion().toString());
+        props.put("unityRevision", header.unityRevision().toString());
 
         JSONArray files = new JSONArray();
         for (AssetBundleEntry entry : assetBundle) {
-            files.put(entry.getName());
+            files.put(entry.name());
         }
         props.put("files", files);
 
@@ -157,10 +157,10 @@ public class AssetBundleUtils {
         
         AssetBundleHeader header = assetBundle.getHeader();
         
-        header.setCompressed(props.getBoolean("compressed"));
-        header.setStreamVersion(props.getInt("streamVersion"));
-        header.setUnityVersion(new UnityVersion(props.getString("unityVersion")));
-        header.setUnityRevision(new UnityVersion(props.getString("unityRevision")));
+        header.compressed(props.getBoolean("compressed"));
+        header.streamVersion(props.getInt("streamVersion"));
+        header.unityVersion(new UnityVersion(props.getString("unityVersion")));
+        header.unityRevision(new UnityVersion(props.getString("unityRevision")));
         
         JSONArray files = props.getJSONArray("files");
         

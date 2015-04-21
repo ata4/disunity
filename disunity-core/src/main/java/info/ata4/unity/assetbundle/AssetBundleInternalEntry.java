@@ -27,22 +27,22 @@ public class AssetBundleInternalEntry extends AssetBundleEntry {
     }
     
     @Override
-    public String getName() {
-        return info.getName();
+    public String name() {
+        return info.name();
     }
     
     @Override
-    public long getSize() {
-        return info.getSize();
+    public long size() {
+        return info.size();
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream inputStream() throws IOException {
         return reader.getInputStreamForEntry(info);
     }
 
     @Override
     public String toString() {
-        return getName();
+        return name();
     }
 }

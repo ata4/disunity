@@ -39,7 +39,7 @@ public class ObjectDataTreeCellRenderer implements DelegateTreeCellRenderer<Obje
         
         // getName() is expensive, cache it
         if (!textCache.containsKey(userData)) {
-            textCache.put(userData, userData.getName());
+            textCache.put(userData, userData.name());
         }
         
         renderer.setText(textCache.get(userData));

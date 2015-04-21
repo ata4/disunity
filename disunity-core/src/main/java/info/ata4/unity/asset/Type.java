@@ -82,99 +82,91 @@ public class Type extends UnityStruct {
         }
     }
 
-    public String getTypeName() {
+    public String typeName() {
         return type;
     }
 
-    public void setTypeName(String type) {
+    public void typeName(String type) {
         this.type = type;
     }
 
-    public String getFieldName() {
+    public String fieldName() {
         return name;
     }
 
-    public void setFieldName(String name) {
+    public void fieldName(String name) {
         this.name = name;
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void size(int size) {
         this.size = size;
     }
 
-    public int getIndex() {
+    public int index() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void index(int index) {
         this.index = index;
     }
 
-    public boolean getIsArray() {
+    public boolean isArray() {
         return isArray;
     }
 
-    public void setIsArray(boolean isArray) {
+    public void isArray(boolean isArray) {
         this.isArray = isArray;
     }
 
-    public int getVersion() {
+    public int version() {
         return version;
     }
 
-    public void setVersion(int flags1) {
+    public void version(int flags1) {
         this.version = flags1;
     }
 
-    public int getMetaFlag() {
+    public int metaFlag() {
         return metaFlag;
     }
 
-    public void setMetaFlag(int flags2) {
+    public void metaFlag(int flags2) {
         this.metaFlag = flags2;
     }
 
-    public String getType() {
+    public String type() {
         return type;
     }
 
-    public void setType(String type) {
+    public void type(String type) {
         this.type = type;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getTreeLevel() {
+    public int treeLevel() {
         return treeLevel;
     }
 
-    public void setTreeLevel(int treeLevel) {
+    public void treeLevel(int treeLevel) {
         this.treeLevel = treeLevel;
     }
 
-    public int getTypeOffset() {
+    public int typeOffset() {
         return typeOffset;
     }
 
-    public void setTypeOffset(int typeOffset) {
+    public void typeOffset(int typeOffset) {
         this.typeOffset = typeOffset;
     }
 
-    public int getNameOffset() {
+    public int nameOffset() {
         return nameOffset;
     }
 
-    public void setNameOffset(int nameOffset) {
+    public void nameOffset(int nameOffset) {
         this.nameOffset = nameOffset;
     }
     
@@ -185,7 +177,7 @@ public class Type extends UnityStruct {
     
     @Override
     public void read(DataReader in) throws IOException {
-        if (versionInfo.getAssetVersion() > 13) {
+        if (versionInfo.assetVersion() > 13) {
             version = in.readShort();
             treeLevel = in.readUnsignedByte();
             isArray = in.readBoolean();

@@ -130,91 +130,91 @@ public class AssetBundleHeader implements Struct {
         return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
     }
     
-    public void setCompressed(boolean compressed) {
+    public void compressed(boolean compressed) {
         signature = compressed ? SIGNATURE_WEB : SIGNATURE_RAW;
     }
     
-    public boolean isCompressed() {
+    public boolean compressed() {
         return signature.equals(SIGNATURE_WEB);
     }
 
-    public String getSignature() {
+    public String signature() {
         return signature;
     }
 
-    public void setSignature(String signature) {
+    public void signature(String signature) {
         this.signature = signature;
     }
 
-    public int getStreamVersion() {
+    public int streamVersion() {
         return streamVersion;
     }
 
-    public void setStreamVersion(int format) {
+    public void streamVersion(int format) {
         this.streamVersion = format;
     }
 
-    public UnityVersion getUnityVersion() {
+    public UnityVersion unityVersion() {
         return unityVersion;
     }
 
-    public void setUnityVersion(UnityVersion version) {
+    public void unityVersion(UnityVersion version) {
         this.unityVersion = version;
     }
 
-    public UnityVersion getUnityRevision() {
+    public UnityVersion unityRevision() {
         return unityRevision;
     }
 
-    public void setUnityRevision(UnityVersion revision) {
+    public void unityRevision(UnityVersion revision) {
         this.unityRevision = revision;
     }
 
-    public int getHeaderSize() {
+    public int headerSize() {
         return headerSize;
     }
 
-    public void setHeaderSize(int dataOffset) {
+    public void headerSize(int dataOffset) {
         this.headerSize = dataOffset;
     }
     
-    public List<Pair<Long, Long>> getLevelByteEnd() {
+    public List<Pair<Long, Long>> levelByteEnd() {
         return levelByteEnd;
     }
     
-    public int getNumberOfLevels() {
+    public int numberOfLevels() {
         return levelByteEnd.size();
     }
 
-    public int getNumberOfLevelsToDownload() {
+    public int numberOfLevelsToDownload() {
         return numberOfLevelsToDownload;
     }
 
-    public void setNumberOfLevelsToDownload(int numberOfLevelsToDownload) {
+    public void numberOfLevelsToDownload(int numberOfLevelsToDownload) {
         this.numberOfLevelsToDownload = numberOfLevelsToDownload;
     }
 
-    public long getCompleteFileSize() {
+    public long completeFileSize() {
         return completeFileSize;
     }
 
-    public void setCompleteFileSize(long completeFileSize) {
+    public void completeFileSize(long completeFileSize) {
         this.completeFileSize = completeFileSize;
     }
 
-    public long getMinimumStreamedBytes() {
+    public long minimumStreamedBytes() {
         return minimumStreamedBytes;
     }
 
-    public void setMinimumStreamedBytes(long minimumStreamedBytes) {
+    public void minimumStreamedBytes(long minimumStreamedBytes) {
         this.minimumStreamedBytes = minimumStreamedBytes;
     }
 
-    public long getDataHeaderSize() {
+    public long dataHeaderSize() {
         return dataHeaderSize;
     }
 
-    public void setDataHeaderSize(long dataHeaderSize) {
+    public void dataHeaderSize(long dataHeaderSize) {
         this.dataHeaderSize = dataHeaderSize;
     }
 }

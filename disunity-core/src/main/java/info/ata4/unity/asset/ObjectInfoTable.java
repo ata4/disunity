@@ -34,7 +34,7 @@ public class ObjectInfoTable extends UnityStruct {
 
         for (int i = 0; i < entries; i++) {
             long pathID;
-            if (versionInfo.getAssetVersion() > 13) {
+            if (versionInfo.assetVersion() > 13) {
                 pathID = in.readLong();
             } else {
                 pathID = in.readUnsignedInt();
@@ -55,7 +55,7 @@ public class ObjectInfoTable extends UnityStruct {
             long pathID = infoEntry.getKey();
             ObjectInfo info = infoEntry.getValue();
             
-            if (versionInfo.getAssetVersion() > 13) {
+            if (versionInfo.assetVersion() > 13) {
                 out.writeLong(pathID);
             } else {
                 out.writeUnsignedInt(pathID);

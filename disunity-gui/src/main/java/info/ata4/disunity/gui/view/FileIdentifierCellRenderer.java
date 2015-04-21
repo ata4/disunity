@@ -30,12 +30,12 @@ public class FileIdentifierCellRenderer implements DelegateTreeCellRenderer<File
             int row, boolean hasFocus) {
         String text;
         
-        if (!StringUtils.isBlank(userData.getFilePath())) {
-            text = userData.getFilePath();
-        } else if (!StringUtils.isBlank(userData.getAssetPath())) {
-            text = userData.getAssetPath();
+        if (!StringUtils.isBlank(userData.filePath())) {
+            text = userData.filePath();
+        } else if (!StringUtils.isBlank(userData.assetPath())) {
+            text = userData.assetPath();
         } else {
-            text = userData.getGUID().toString();
+            text = userData.guid().toString();
         }
         
         renderer.setText(text);
