@@ -14,6 +14,7 @@ import info.ata4.io.DataWriter;
 import info.ata4.unity.util.UnityStruct;
 import java.io.IOException;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Class that contains the runtime type of a single field.
@@ -171,11 +172,6 @@ public class Type extends UnityStruct {
     }
     
     @Override
-    public String toString() {
-        return type + ":" + name;
-    }
-    
-    @Override
     public void read(DataReader in) throws IOException {
         if (versionInfo.assetVersion() > 13) {
             version = in.readShort();
@@ -206,6 +202,13 @@ public class Type extends UnityStruct {
         out.writeInt(isArray ? 1 : 0);
         out.writeInt(version);
         out.writeInt(metaFlag);
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s%s %s [v: %d, f: 0x%x, s: %d]",
+                StringUtils.repeat("  ", treeLevel()), typeName(), fieldName(),
+                version(), metaFlag(), size());
     }
     
     @Override
