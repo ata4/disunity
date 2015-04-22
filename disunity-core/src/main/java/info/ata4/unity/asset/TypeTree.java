@@ -162,17 +162,16 @@ public class TypeTree extends UnityStruct {
             TypeNode nodeCurr = new TypeNode();
             nodeCurr.type(type);
             
-            int levelCurr = type.treeLevel();
-            int levelPrev = nodePrev.type().treeLevel();
-            
-            if (levelCurr <= levelPrev) {
+            int levels = nodePrev.type().treeLevel() - type.treeLevel();
+            if (levels >= 0) {
                 // move down in tree hierarchy if required
-                for (int i = 0; i < levelPrev - levelCurr; i++) {
+                for (int i = 0; i < levels; i++) {
                     nodePrev = nodePrev.parent();
                 }
                 
                 nodePrev.parent().add(nodeCurr);
             } else {
+                // can move only one level up at a time, so simply add the node
                 nodePrev.add(nodeCurr);
             }
             
