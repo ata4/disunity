@@ -22,7 +22,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class StringTable {
     
-    private static final int INTERNAL_FLAG = 1 << 31;
+    private static final int FLAG_INTERNAL = 1 << 31;
    
     private final Map<Integer, String> strings = new HashMap<>();
     
@@ -42,14 +42,14 @@ public class StringTable {
         for (int i = 0, n = 0; i < data.length; i++) {
             if (data[i] == 0) {
                 String string = new String(data, n, i - n, StandardCharsets.US_ASCII);
-                int offset = n;
+                
                 if (internal) {
-                    offset |= INTERNAL_FLAG;
+                    n |= FLAG_INTERNAL;
                 }
                 
+                strings.put(n, string);
+
                 n = i + 1;
-                
-                strings.put(offset, string);
             }
         }
     }
