@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -148,33 +149,34 @@ public class TypeTree extends UnityStruct {
             }
             field.typeName(type);
         }
-        
+                
         // convert list to tree structure
-        TypeNode currentNode = null;
+        TypeNode nodePrev = null;
         for (Type type : types) {
-            if (currentNode == null) {
+            if (nodePrev == null) {
                 node.type(type);
-                currentNode = node;
+                nodePrev = node;
                 continue;
             }
             
-            int treeLevel = type.treeLevel();
-            int currentTreeLevel = currentNode.type().treeLevel();
+            TypeNode nodeCurr = new TypeNode();
+            nodeCurr.type(type);
             
-            TypeNode childNode = new TypeNode();
-            childNode.type(type);
+            int levelCurr = type.treeLevel();
+            int levelPrev = nodePrev.type().treeLevel();
             
-            currentNode.add(childNode);
-            
-            if (treeLevel > currentTreeLevel) {
-                // move one level up
-                currentNode = childNode;
-            } else if (treeLevel < currentTreeLevel) {
-                // move levels down
-                for (; treeLevel < currentTreeLevel; currentTreeLevel--) {
-                    currentNode = currentNode.parent();
+            if (levelCurr <= levelPrev) {
+                // move down in tree hierarchy if required
+                for (int i = 0; i < levelPrev - levelCurr; i++) {
+                    nodePrev = nodePrev.parent();
                 }
+                
+                nodePrev.parent().add(nodeCurr);
+            } else {
+                nodePrev.add(nodeCurr);
             }
+            
+            nodePrev = nodeCurr;
         }
     }
     
