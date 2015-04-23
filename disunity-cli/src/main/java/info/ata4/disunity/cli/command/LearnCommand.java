@@ -32,7 +32,7 @@ public class LearnCommand extends AssetFileCommand {
 
     @Override
     public void handleAssetFile(AssetFile asset) {
-        learned += TypeTreeUtils.learn(asset);
+        learned += TypeTreeUtils.learnTypes(asset);
     }
 
     @Override

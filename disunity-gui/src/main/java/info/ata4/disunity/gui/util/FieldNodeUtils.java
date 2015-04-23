@@ -9,8 +9,8 @@
  */
 package info.ata4.disunity.gui.util;
 
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.rtti.FieldNode;
-import info.ata4.unity.asset.FieldTypeNode;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -23,11 +23,11 @@ public class FieldNodeUtils {
     private FieldNodeUtils() {
     }
     
-    public static void convertFieldTypeNode(DefaultMutableTreeNode root, FieldTypeNode fieldTypeNode) {
-        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(fieldTypeNode);
+    public static void convertFieldTypeNode(DefaultMutableTreeNode root, TypeNode typeNode) {
+        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(typeNode);
 
-        for (FieldTypeNode childFieldNode : fieldTypeNode) {
-            convertFieldTypeNode(treeNode, childFieldNode);
+        for (TypeNode childNode : typeNode) {
+            convertFieldTypeNode(treeNode, childNode);
         }
 
         root.add(treeNode);

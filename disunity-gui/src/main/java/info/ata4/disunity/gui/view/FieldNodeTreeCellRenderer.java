@@ -9,7 +9,7 @@
  */
 package info.ata4.disunity.gui.view;
 
-import info.ata4.unity.asset.FieldType;
+import info.ata4.unity.asset.Type;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.util.io.FileUtilsExt;
 import java.nio.ByteBuffer;
@@ -32,12 +32,12 @@ public class FieldNodeTreeCellRenderer extends NodeTreeCellRenderer<FieldNode> {
     public void configureTreeCellRenderer(DefaultTreeCellRenderer renderer,
             FieldNode userData, boolean sel, boolean expanded, boolean leaf, int row,
             boolean hasFocus) {
-        FieldType type = userData.getType();
+        Type type = userData.getType();
         
         renderer.setIcon(getIconForType(type));
 
         StringBuilder sb = new StringBuilder();
-        sb.append(type.getTypeName());
+        sb.append(type.typeName());
 
         Object nodeValue = userData.getValue();
         if (nodeValue instanceof List) {
@@ -45,7 +45,7 @@ public class FieldNodeTreeCellRenderer extends NodeTreeCellRenderer<FieldNode> {
             sb.append(((List) nodeValue).size());
             sb.append(']');
         } else {
-            String fieldName = type.getFieldName();
+            String fieldName = type.fieldName();
             if (!fieldName.equals("Base") && !fieldName.equals("Array")) {
                 sb.append(' ');
                 if (fieldName.contains(" ")) {

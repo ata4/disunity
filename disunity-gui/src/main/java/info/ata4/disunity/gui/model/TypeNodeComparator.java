@@ -9,17 +9,17 @@
  */
 package info.ata4.disunity.gui.model;
 
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.TypeNode;
 import java.util.Comparator;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeNodeComparator implements Comparator<FieldTypeNode> {
+public class TypeNodeComparator implements Comparator<TypeNode> {
     
     @Override
-    public int compare(FieldTypeNode o1, FieldTypeNode o2) {
-        return o1.getType().getTypeName().compareTo(o2.getType().getTypeName());
+    public int compare(TypeNode o1, TypeNode o2) {
+        return o1.type().typeName().compareTo(o2.type().typeName());
     }
 }

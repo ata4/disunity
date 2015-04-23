@@ -17,6 +17,7 @@ import info.ata4.io.file.FileHandler;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.ObjectSerializer;
+import info.ata4.unity.util.TypeTreeUtils;
 import info.ata4.util.io.DataBlock;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -160,8 +161,8 @@ public class AssetFile extends FileHandler {
         in.order(ByteOrder.LITTLE_ENDIAN);
         
         // older formats store the object data before the structure data
-        if (header.getVersion() < 9) {
-            in.position(header.getFileSize() - header.getMetadataSize() + 1);
+        if (header.version() < 9) {
+            in.position(header.fileSize() - header.metadataSize() + 1);
         }
         
         loadMetadata(in);
@@ -191,7 +192,7 @@ public class AssetFile extends FileHandler {
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
         
         // unknown block for Unity 5
-        if (header.getVersion() > 13) {
+        if (header.version() > 13) {
             in.align(4);
             int num = in.readInt();
             for (int i = 0; i < num; i++) {
@@ -217,7 +218,7 @@ public class AssetFile extends FileHandler {
             
             ByteBuffer buf = ByteBufferUtils.allocate((int) info.length());
             
-            long ofs = header.getDataOffset() + info.offset();
+            long ofs = header.dataOffset() + info.offset();
             
             ofsMin = Math.min(ofsMin, ofs);
             ofsMax = Math.max(ofsMax, ofs + info.length());
@@ -233,10 +234,10 @@ public class AssetFile extends FileHandler {
             }
             
             // get type from database if the embedded one is missing
-//            if (typeNode == null) {
-//                typeNode = TypeTreeUtils.getNode(info.getUnityClass(),
-//                        versionInfo.getUnityRevision(), false);
-//            }
+            if (typeNode == null) {
+                typeNode = TypeTreeUtils.getTypeNode(info.unityClass(),
+                        versionInfo.unityRevision(), false);
+            }
                        
             ObjectData data = new ObjectData(id, versionInfo);
             data.info(info);
@@ -273,8 +274,8 @@ public class AssetFile extends FileHandler {
         out.order(ByteOrder.LITTLE_ENDIAN);
         
         // older formats store the object data before the structure data
-        if (header.getVersion() < 9) {
-            header.setDataOffset(0);
+        if (header.version() < 9) {
+            header.dataOffset(0);
             
             saveObjects(out);
             out.writeUnsignedByte(0);
@@ -291,7 +292,7 @@ public class AssetFile extends FileHandler {
             }
             
             out.align(16);
-            header.setDataOffset(out.position());
+            header.dataOffset(out.position());
             
             saveObjects(out);
             
@@ -301,12 +302,12 @@ public class AssetFile extends FileHandler {
         }
         
         // update header
-        header.setFileSize(out.size());
+        header.fileSize(out.size());
         
         // FIXME: the metadata size is slightly off in comparison to original files
-        int metadataOffset = header.getVersion() < 9 ? 2 : 1;
+        int metadataOffset = header.version() < 9 ? 2 : 1;
         
-        header.setMetadataSize(typeTreeBlock.length()
+        header.metadataSize(typeTreeBlock.length()
                 + objectInfoBlock.length()
                 + externalsBlock.length()
                 + metadataOffset);
@@ -362,7 +363,7 @@ public class AssetFile extends FileHandler {
             ofsMax = Math.max(ofsMax, out.position() + bb.remaining());
             
             ObjectInfo info = data.info();            
-            info.offset(out.position() - header.getDataOffset());
+            info.offset(out.position() - header.dataOffset());
             info.length(bb.remaining());
 
             out.writeBuffer(bb);
@@ -405,11 +406,7 @@ public class AssetFile extends FileHandler {
         return typeTreeStruct.attributes();
     }
     
-    public Map<Integer, FieldTypeNode> getTypeTree() {
-        return new HashMap();
-    }
-    
-    public Map<Integer, BaseClass> getTypeTreeNew() {
+    public Map<Integer, BaseClass> getTypeTree() {
         return typeTreeMap;
     }
     

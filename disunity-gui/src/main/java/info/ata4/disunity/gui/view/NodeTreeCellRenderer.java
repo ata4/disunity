@@ -10,7 +10,7 @@
 package info.ata4.disunity.gui.view;
 
 import info.ata4.disunity.gui.util.IconUtils;
-import info.ata4.unity.asset.FieldType;
+import info.ata4.unity.asset.Type;
 import javax.swing.Icon;
 
 /**
@@ -29,8 +29,8 @@ public abstract class NodeTreeCellRenderer<E> implements DelegateTreeCellRendere
     private final Icon binaryIcon = IconUtils.createIcon("document-binary.png");
     private final Icon stringIcon = IconUtils.createIcon("document-text.png");
     
-    protected Icon getIconForType(FieldType type) {
-        switch (type.getTypeName()) {
+    protected Icon getIconForType(Type type) {
+        switch (type.typeName()) {
             case "bool":
                 return boolIcon;
 

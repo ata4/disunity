@@ -9,33 +9,33 @@
  */
 package info.ata4.disunity.gui.view;
 
-import info.ata4.unity.asset.FieldType;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.Type;
+import info.ata4.unity.asset.TypeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class FieldTypeNodeTreeCellRenderer extends NodeTreeCellRenderer<FieldTypeNode> {
+public class FieldTypeNodeTreeCellRenderer extends NodeTreeCellRenderer<TypeNode> {
     
     @Override
-    public Class<FieldTypeNode> getTreeCellType() {
-        return FieldTypeNode.class;
+    public Class<TypeNode> getTreeCellType() {
+        return TypeNode.class;
     }
 
     @Override
     public void configureTreeCellRenderer(DefaultTreeCellRenderer renderer,
-            FieldTypeNode userData, boolean sel, boolean expanded, boolean leaf,
+            TypeNode userData, boolean sel, boolean expanded, boolean leaf,
             int row, boolean hasFocus) {
-        FieldType type = userData.getType();
+        Type type = userData.type();
         
         renderer.setIcon(getIconForType(type));
 
-        String fieldName = type.getFieldName();
+        String fieldName = type.fieldName();
 
         StringBuilder sb = new StringBuilder();
-        sb.append(type.getTypeName());
+        sb.append(type.typeName());
 
         if (!fieldName.equals("Base")) {
             sb.append(' ');

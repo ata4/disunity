@@ -10,10 +10,10 @@
 package info.ata4.disunity.gui.model;
 
 import info.ata4.disunity.gui.util.FieldNodeUtils;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.util.TypeTreeDatabase;
+import info.ata4.unity.util.TypeTreeDatabaseEntry;
 import info.ata4.unity.util.TypeTreeUtils;
-import info.ata4.unity.util.UnityClass;
 import info.ata4.unity.util.UnityVersion;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -30,28 +29,27 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FieldTypeDatabaseNode extends DefaultMutableTreeNode {
 
     public FieldTypeDatabaseNode() {
-        super(Paths.get(TypeTreeDatabase.FILENAME));
+        super(Paths.get(TypeTreeDatabase.FILE_NAME));
         
         // first step: create a mapping between all versions and their sets of
         // field type nodes
-        Map<UnityVersion, Set<FieldTypeNode>> versionNodes = new TreeMap<>();
+        Map<UnityVersion, Set<TypeNode>> versionNodes = new TreeMap<>();
 
-        Map<Pair<UnityClass, UnityVersion>, FieldTypeNode> map = TypeTreeUtils.getDatabase().getTypeMap();
-        for (Map.Entry<Pair<UnityClass, UnityVersion>, FieldTypeNode> entry : map.entrySet()) {
-            UnityVersion version = entry.getKey().getValue();
+        for (TypeTreeDatabaseEntry entry : TypeTreeUtils.getDatabase().getEntries()) {
+            UnityVersion version = entry.unityVersion();
             
             if (!versionNodes.containsKey(version)) {
-                versionNodes.put(version, new TreeSet<>(new FieldTypeNodeComparator()));
+                versionNodes.put(version, new TreeSet<>(new TypeNodeComparator()));
             }
             
-            versionNodes.get(version).add(entry.getValue());
+            versionNodes.get(version).add(entry.typeNode());
         }
         
         // second step: convert the map to a node structure
-        for (Map.Entry<UnityVersion, Set<FieldTypeNode>> entry : versionNodes.entrySet()) {
+        for (Map.Entry<UnityVersion, Set<TypeNode>> entry : versionNodes.entrySet()) {
             DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(entry.getKey());
             
-            for (FieldTypeNode typeNode : entry.getValue()) {
+            for (TypeNode typeNode : entry.getValue()) {
                 FieldNodeUtils.convertFieldTypeNode(treeNode, typeNode);
             }
             

@@ -35,7 +35,7 @@ public class AssetHeader extends UnityStruct {
     
     // unused
     private final byte[] reserved = new byte[3];
-    
+
     public AssetHeader(VersionInfo versionInfo) {
         super(versionInfo);
     }
@@ -64,43 +64,43 @@ public class AssetHeader extends UnityStruct {
         }
     }
 
-    public long getMetadataSize() {
+    public long metadataSize() {
         return metadataSize;
     }
 
-    public void setMetadataSize(long metadataSize) {
+    public void metadataSize(long metadataSize) {
         this.metadataSize = metadataSize;
     }
 
-    public long getFileSize() {
+    public long fileSize() {
         return fileSize;
     }
 
-    public void setFileSize(long fileSize) {
+    public void fileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
-    public int getVersion() {
+    public int version() {
         return versionInfo.assetVersion();
     }
 
-    public void setVersion(int version) {
+    public void version(int version) {
         versionInfo.assetVersion(version);
     }
 
-    public long getDataOffset() {
+    public long dataOffset() {
         return dataOffset;
     }
 
-    public void setDataOffset(long dataOffset) {
+    public void dataOffset(long dataOffset) {
         this.dataOffset = dataOffset;
     }
 
-    public byte getEndianness() {
+    public byte endianness() {
         return endianness;
     }
 
-    public void setEndianness(byte endianness) {
+    public void endianness(byte endianness) {
         this.endianness = endianness;
     }
 }

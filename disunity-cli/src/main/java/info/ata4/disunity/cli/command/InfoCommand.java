@@ -49,13 +49,13 @@ public class InfoCommand extends AssetFileCommand {
         
         TablePrinter tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
-        tbl.addRow("metadataSize", header.getMetadataSize());
-        tbl.addRow("fileSize", header.getFileSize());
-        tbl.addRow("version", header.getVersion());
-        tbl.addRow("dataOffset", header.getDataOffset());
+        tbl.addRow("metadataSize", header.metadataSize());
+        tbl.addRow("fileSize", header.fileSize());
+        tbl.addRow("version", header.version());
+        tbl.addRow("dataOffset", header.dataOffset());
         
-        if (header.getVersion() >= 9) {
-            tbl.addRow("endianness", header.getEndianness());
+        if (header.version() >= 9) {
+            tbl.addRow("endianness", header.endianness());
         }
         
         out.println("Header:");
@@ -96,10 +96,10 @@ public class InfoCommand extends AssetFileCommand {
         AssetHeader header = asset.getHeader();
         
         JSONObject headerJson = new JSONObject();
-        headerJson.put("metadataSize", header.getMetadataSize());
-        headerJson.put("fileSize", header.getFileSize());
-        headerJson.put("version", header.getVersion());
-        headerJson.put("dataOffset", header.getDataOffset());
+        headerJson.put("metadataSize", header.metadataSize());
+        headerJson.put("fileSize", header.fileSize());
+        headerJson.put("version", header.version());
+        headerJson.put("dataOffset", header.dataOffset());
         
         root.put("header", headerJson);
         

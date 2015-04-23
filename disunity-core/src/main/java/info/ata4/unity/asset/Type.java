@@ -17,7 +17,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Class that contains the runtime type of a single field.
+ * Class for objects that contain the runtime type of a single field.
  * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity TypeTree

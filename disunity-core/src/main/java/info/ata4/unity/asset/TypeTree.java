@@ -15,13 +15,11 @@ import info.ata4.unity.util.UnityHash128;
 import info.ata4.unity.util.UnityStruct;
 import info.ata4.unity.util.UnityVersion;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * Class for objects that hold the runtime type information of an asset file.
+ * 
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity RTTIClassHierarchyDescriptor, RTTIBaseClassDescriptor2, TypeTree
  */
@@ -60,10 +58,10 @@ public class TypeTree extends UnityStruct {
             attributes = in.readInt();
         }
         
+        TypeNodeReader nodeReader = new TypeNodeReader(versionInfo);
+        
         // Unity 5+ uses a serialized tree structure and string buffers
         if (versionInfo.assetVersion() > 13) {
-            StringTable stInt = new StringTable();
-            
             embedded = in.readBoolean();
             int numBaseClasses = in.readInt();
 
@@ -85,7 +83,7 @@ public class TypeTree extends UnityStruct {
                 
                 if (embedded) {
                     TypeNode node = new TypeNode();
-                    readTypeNode(in, node, stInt);
+                    nodeReader.read(in, node);
                     baseClass.typeTree(node);
                 }
                 
@@ -99,9 +97,9 @@ public class TypeTree extends UnityStruct {
                 BaseClass baseClass = new BaseClass();
                 baseClass.classID(classID);
                 
-                TypeNode typeNode = new TypeNode();
-                readTypeNodeOld(in, typeNode, 0);
-                baseClass.typeTree(typeNode);
+                TypeNode node = new TypeNode();
+                nodeReader.read(in, node);
+                baseClass.typeTree(node);
                 
                 typeMap.put(classID, baseClass);
             }
@@ -115,85 +113,6 @@ public class TypeTree extends UnityStruct {
         }
     }
     
-    private void readTypeNode(DataReader in, TypeNode node, StringTable stInt) throws IOException {
-        int numFields = in.readInt();
-        int stringTableLen = in.readInt();
-
-        // read types
-        List<Type> types = new ArrayList<>(numFields);
-        for (int j = 0; j < numFields; j++) {
-            Type type = new Type(versionInfo);
-            type.read(in);
-            types.add(type);
-        }
-
-        // read string table
-        byte[] stringTable = new byte[stringTableLen];
-        in.readBytes(stringTable);
-
-        // assign strings
-        StringTable stExt = new StringTable();
-        stExt.loadStrings(stringTable);
-        for (Type field : types) {
-            int nameOffset = field.nameOffset();
-            String name = stExt.getString(nameOffset);
-            if (name == null) {
-                name = stInt.getString(nameOffset);
-            }
-            field.fieldName(name);
-            
-            int typeOffset = field.typeOffset();
-            String type = stExt.getString(typeOffset);
-            if (type == null) {
-                type = stInt.getString(typeOffset);
-            }
-            field.typeName(type);
-        }
-                
-        // convert list to tree structure
-        TypeNode nodePrev = null;
-        for (Type type : types) {
-            if (nodePrev == null) {
-                node.type(type);
-                nodePrev = node;
-                continue;
-            }
-            
-            TypeNode nodeCurr = new TypeNode();
-            nodeCurr.type(type);
-            
-            int levels = nodePrev.type().treeLevel() - type.treeLevel();
-            if (levels >= 0) {
-                // move down in tree hierarchy if required
-                for (int i = 0; i < levels; i++) {
-                    nodePrev = nodePrev.parent();
-                }
-                
-                nodePrev.parent().add(nodeCurr);
-            } else {
-                // can move only one level up at a time, so simply add the node
-                nodePrev.add(nodeCurr);
-            }
-            
-            nodePrev = nodeCurr;
-        }
-    }
-    
-    private void readTypeNodeOld(DataReader in, TypeNode node, int level) throws IOException {
-        Type type = new Type(versionInfo);
-        type.read(in);
-        type.treeLevel(level);
-        
-        node.type(type);
-        
-        int numChildren = in.readInt();
-        for (int i = 0; i < numChildren; i++) {
-            TypeNode childNode = new TypeNode();
-            readTypeNodeOld(in, childNode, level + 1);
-            node.add(childNode);
-        }        
-    }
-    
     @Override
     public void write(DataWriter out) throws IOException {
         // revision/version for newer formats
@@ -201,6 +120,8 @@ public class TypeTree extends UnityStruct {
             out.writeStringNull(versionInfo.unityRevision().toString());
             out.writeInt(attributes);
         }
+        
+        TypeNodeWriter nodeWriter = new TypeNodeWriter(versionInfo);
         
         if (versionInfo.assetVersion() > 13) {
             // TODO
@@ -214,24 +135,13 @@ public class TypeTree extends UnityStruct {
                 out.writeInt(classID);
 
                 TypeNode node = bc.typeTree();
-                writeFieldTypeNodeOld(out, node);
+                nodeWriter.write(out, node);
             }
 
             // padding
             if (versionInfo.assetVersion() > 6) {
                 out.writeInt(0);
             }
-        }
-    }
-    
-    private void writeFieldTypeNodeOld(DataWriter out, TypeNode node) throws IOException {
-        Type type = node.type();
-        type.write(out);
-        
-        int numChildren = node.size();
-        out.writeInt(numChildren);
-        for (TypeNode childNode : node) {
-            writeFieldTypeNodeOld(out, childNode);
         }
     }
 }

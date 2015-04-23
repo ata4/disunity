@@ -11,15 +11,14 @@ package info.ata4.unity.util;
 
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.BaseClass;
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -38,7 +37,7 @@ public class TypeTreeUtils {
         return DB;
     }
     
-    public static void fill(AssetFile asset) {
+    public static void embedTypes(AssetFile asset) {
         UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
         if (unityRevision == null) {
             L.warning("unityRevision = null");
@@ -47,18 +46,18 @@ public class TypeTreeUtils {
         
         List<ObjectData> objects = asset.getObjects();
         Iterator<ObjectData> objectIter = objects.iterator();
-        Map<Integer, FieldTypeNode> typeTreeMap = asset.getTypeTree();
+        Map<Integer, BaseClass> typeTree = asset.getTypeTree();
         
         while (objectIter.hasNext()) {
             ObjectData object = objectIter.next();
             int typeID = object.info().typeID();
             
             // skip types that already exist
-            if (typeTreeMap.containsKey(typeID)) {
+            if (typeTree.containsKey(typeID)) {
                 continue;
             }
 
-            FieldTypeNode typeNode = getNode(object, false);
+            TypeNode typeNode = getTypeNode(object, false);
             
             // remove objects with no type tree, which would crash the editor
             // when loading the file otherwise
@@ -69,17 +68,17 @@ public class TypeTreeUtils {
                 continue;
             }
            
-            typeTreeMap.put(typeID, typeNode);
+            typeTree.get(typeID).typeTree(typeNode);
         }
     }
 
-    public static int learn(AssetFile asset) {
-        Map<Integer, FieldTypeNode> typeTreeMap = asset.getTypeTree();
-        
-        if (typeTreeMap.isEmpty()) {
+    public static int learnTypes(AssetFile asset) {
+        if (asset.isStandalone()) {
             L.warning("File doesn't contain type information");
             return 0;
         }
+        
+        Map<Integer, BaseClass> typeTree = asset.getTypeTree();
         
         UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
         if (unityRevision == null) {
@@ -90,9 +89,9 @@ public class TypeTreeUtils {
         int learned = 0;
         
         // merge the TypeTree map with the database field map
-        for (Map.Entry<Integer, FieldTypeNode> typeTreeEntry : typeTreeMap.entrySet()) {
+        for (Map.Entry<Integer, BaseClass> typeTreeEntry : typeTree.entrySet()) {
             int typeID = typeTreeEntry.getKey();
-            FieldTypeNode fieldTypeLocal = typeTreeEntry.getValue();
+            TypeNode typeNode = typeTreeEntry.getValue().typeTree();
             
             // skip MonoBehaviour types
             if (typeID < 1) {
@@ -100,89 +99,40 @@ public class TypeTreeUtils {
             }
             
             UnityClass unityClass = new UnityClass(typeID);
-            FieldTypeNode fieldTypeDatabase = getNode(unityClass, unityRevision, true);
+            TypeNode typeNodeDB = TypeTreeUtils.getTypeNode(unityClass, unityRevision, true);
 
-            if (fieldTypeDatabase == null) {
-                fieldTypeDatabase = fieldTypeLocal;
+            if (typeNodeDB == null) {
                 L.log(Level.INFO, "New: {0}", unityClass);
-                DB.getTypeMap().put(new ImmutablePair<>(unityClass, unityRevision), fieldTypeDatabase);
+                DB.addEntry(unityClass, unityRevision, typeNode);
+                typeNodeDB = typeNode;
                 learned++;
             }
 
             // check the hashes, they must be identical at this point
-            int hash1 = fieldTypeLocal.hashCode();
-            int hash2 = fieldTypeDatabase.hashCode();
+            int hash1 = typeNode.hashCode();
+            int hash2 = typeNodeDB.hashCode();
 
             if (hash1 != hash2) {
                 L.log(Level.WARNING, "Database hash mismatch for {0}: {1} != {2}",
-                        new Object[] {fieldTypeDatabase.getType().getTypeName(), hash1, hash2});
+                        new Object[] {typeNodeDB.type().typeName(), hash1, hash2});
             }
 
             // check if the class name is known and suggest the type base name if not
             if (unityClass.name() == null) {
                 L.log(Level.WARNING, "Unknown ClassID {0}, suggested name: {1}",
-                        new Object[] {unityClass.ID(), fieldTypeLocal.getType().getTypeName()});
+                        new Object[] {unityClass.ID(), typeNode.type().typeName()});
             }
         }
         
         return learned;
     }
     
-    public static FieldTypeNode getNode(UnityClass unityClass, UnityVersion unityVersion, boolean strict) {
-        FieldTypeNode fieldNode = DB.getTypeMap().get(new ImmutablePair<>(unityClass, unityVersion));
-
-        // if set to strict, only return exact matches or null
-        if (fieldNode != null || strict) {
-            return fieldNode;
-        }
-
-        FieldTypeNode fieldNodeB = null;
-        UnityVersion versionB = null;
-
-        FieldTypeNode fieldNodeC = null;
-        UnityVersion versionC = null;
-
-        for (Map.Entry<Pair<UnityClass, UnityVersion>, FieldTypeNode> entry : DB.getTypeMap().entrySet()) {
-            Pair<UnityClass, UnityVersion> fieldNodeKey = entry.getKey();
-            if (fieldNodeKey.getLeft().equals(unityClass)) {
-                FieldTypeNode fieldNodeEntry = entry.getValue();
-                UnityVersion revisionEntry = fieldNodeKey.getRight();
-
-                if (revisionEntry.major() == unityVersion.major()) {
-                    if (revisionEntry.minor() == unityVersion.minor()) {
-                        // if major and minor versions match, it will probably work
-                        return fieldNodeEntry;
-                    } else {
-                        // suboptimal choice
-                        fieldNodeB = fieldNodeEntry;
-                        versionB = revisionEntry;
-                    }
-                }
-
-                // worst choice
-                fieldNodeC = fieldNodeEntry;
-                versionC = revisionEntry;
-            }
-        }
-
-        // return less perfect match
-        if (fieldNodeB != null) {
-            L.log(Level.WARNING, "Unprecise match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionB});
-            return fieldNodeB;
-        }
-
-        // return field node from any revision as the very last resort
-        if (fieldNodeC != null) {
-            L.log(Level.WARNING, "Bad match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionC});
-            return fieldNodeC;
-        }
-
-        // no matches at all
-        return null;
+    public static TypeNode getTypeNode(UnityClass unityClass, UnityVersion unityVersion, boolean exact) {
+        return DB.getTypeNode(unityClass, unityVersion, exact);
     }
     
-    public static FieldTypeNode getNode(ObjectData object, boolean strict) {
-        return getNode(object.info().unityClass(), object.versionInfo().unityRevision(), strict);
+    public static TypeNode getTypeNode(ObjectData object, boolean strict) {
+        return TypeTreeUtils.getTypeNode(object.info().unityClass(), object.versionInfo().unityRevision(), strict);
     }
 
     private TypeTreeUtils() {

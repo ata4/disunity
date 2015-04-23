@@ -12,8 +12,9 @@ package info.ata4.disunity.gui.model;
 import info.ata4.disunity.gui.util.FieldNodeUtils;
 import info.ata4.log.LogUtils;
 import info.ata4.unity.asset.AssetFile;
-import info.ata4.unity.asset.FieldTypeNode;
+import info.ata4.unity.asset.BaseClass;
 import info.ata4.unity.asset.FileIdentifier;
+import info.ata4.unity.asset.TypeNode;
 import info.ata4.unity.rtti.ObjectData;
 import info.ata4.unity.rtti.RuntimeTypeException;
 import java.util.List;
@@ -101,10 +102,13 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         }
         
         DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
-        Set<FieldTypeNode> fieldTypeNodes = new TreeSet<>(new FieldTypeNodeComparator());
-        fieldTypeNodes.addAll(asset.getTypeTree().values());
+        Set<TypeNode> typeNodes = new TreeSet<>(new TypeNodeComparator());
         
-        for (FieldTypeNode fieldNode : fieldTypeNodes) {
+        for (BaseClass baseClass : asset.getTypeTree().values()) {
+            typeNodes.add(baseClass.typeTree());
+        }
+        
+        for (TypeNode fieldNode : typeNodes) {
             FieldNodeUtils.convertFieldTypeNode(typeNode, fieldNode);
         }
  
