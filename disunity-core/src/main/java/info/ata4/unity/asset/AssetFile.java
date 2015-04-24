@@ -238,7 +238,7 @@ public class AssetFile extends FileHandler {
                 typeNode = TypeTreeUtils.getTypeNode(info.unityClass(),
                         versionInfo.unityRevision(), false);
             }
-                       
+
             ObjectData data = new ObjectData(id, versionInfo);
             data.info(info);
             data.buffer(buf);
@@ -423,10 +423,10 @@ public class AssetFile extends FileHandler {
     }
 
     public boolean isStandalone() {
-        return typeTreeStruct.embedded();
+        return !typeTreeStruct.embedded();
     }
     
     public void setStandalone() {
-        typeTreeStruct.embedded(false);
+        typeTreeStruct.embedded(true);
     }
 }
