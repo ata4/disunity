@@ -12,6 +12,7 @@ package info.ata4.util.collection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -52,6 +53,28 @@ public class Node<T extends Node<T>> implements Iterable<T> {
         return removed;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.children);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Node<?> other = (Node<?>) obj;
+        if (!Objects.equals(this.children, other.children)) {
+            return false;
+        }
+        return true;
+    }
+    
     @Override
     public Iterator<T> iterator() {
         return new IteratorImpl(children.iterator());

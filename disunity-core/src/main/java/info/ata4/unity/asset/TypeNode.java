@@ -10,6 +10,7 @@
 package info.ata4.unity.asset;
 
 import info.ata4.util.collection.Node;
+import java.util.Objects;
 
 /**
  * Type tree node class.
@@ -27,5 +28,27 @@ public class TypeNode extends Node<TypeNode> {
 
     public void type(Type type) {
         this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 31 * hash + Objects.hashCode(this.type);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TypeNode other = (TypeNode) obj;
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return super.equals(obj);
     }
 }
