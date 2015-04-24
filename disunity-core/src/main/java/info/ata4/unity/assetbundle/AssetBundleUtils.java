@@ -110,7 +110,7 @@ public class AssetBundleUtils {
         if (size > 1 << 27) {
             // copy entry to temporary file
             Path tmpFile = Files.createTempFile("disunity", null);
-            Files.copy(entry.inputStream(), tmpFile);
+            Files.copy(entry.inputStream(), tmpFile, REPLACE_EXISTING);
             chan = Files.newByteChannel(tmpFile, READ, DELETE_ON_CLOSE);
         } else {
             // copy entry to memory
