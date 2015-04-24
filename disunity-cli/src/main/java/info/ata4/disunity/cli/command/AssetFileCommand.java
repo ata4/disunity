@@ -67,8 +67,8 @@ public abstract class AssetFileCommand extends MultiFileCommand {
     public void handleAssetBundleEntry(AssetBundleEntry assetBundleEntry) throws IOException {
         String name = assetBundleEntry.name();
 
-        // skip libraries
-        if (assetBundleEntry.isLibrary()) {
+        // skip libraries and resources
+        if (assetBundleEntry.isLibrary() || assetBundleEntry.isResource()) {
             return;
         }
         
@@ -76,7 +76,7 @@ public abstract class AssetFileCommand extends MultiFileCommand {
         if (name.equals("33Obf")) {
             return;
         }
-
+        
         try (DataReader in = AssetBundleUtils.dataReaderForEntry(assetBundleEntry)) {
             AssetFile asset = new AssetFile();
             asset.load(in);

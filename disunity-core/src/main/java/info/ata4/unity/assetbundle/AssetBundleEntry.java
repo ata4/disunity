@@ -29,4 +29,9 @@ public abstract class AssetBundleEntry {
         String ext = FilenameUtils.getExtension(name());
         return ext.equals("dll") || ext.equals("mdb");
     }
+    
+    public boolean isResource() {
+        String ext = FilenameUtils.getExtension(name());
+        return ext.equals("resource");
+    }
 }
