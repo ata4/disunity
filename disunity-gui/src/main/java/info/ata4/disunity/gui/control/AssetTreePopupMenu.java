@@ -10,7 +10,7 @@
 package info.ata4.disunity.gui.control;
 
 import info.ata4.io.buffer.ByteBufferUtils;
-import info.ata4.disunity.gui.util.DialogBuilder;
+import info.ata4.disunity.gui.util.dialog.DialogBuilder;
 import info.ata4.unity.rtti.FieldNode;
 import info.ata4.unity.rtti.ObjectData;
 import java.awt.event.ActionEvent;

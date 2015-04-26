@@ -12,8 +12,8 @@ package info.ata4.disunity.gui;
 import info.ata4.disunity.gui.control.AssetTreePopupMenuListener;
 import info.ata4.disunity.gui.model.AssetFileNode;
 import info.ata4.disunity.gui.model.FieldTypeDatabaseNode;
-import info.ata4.disunity.gui.util.DialogBuilder;
-import info.ata4.disunity.gui.util.DialogBuilder.ReturnType;
+import info.ata4.disunity.gui.util.dialog.DialogBuilder;
+import info.ata4.disunity.gui.util.dialog.DialogReturnType;
 import info.ata4.disunity.gui.util.FileExtensionFilter;
 import info.ata4.disunity.gui.view.AssetTreeCellRenderer;
 import info.ata4.unity.DisUnity;
@@ -58,7 +58,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
             // check if the file is an asset bundle, these can't be opened or edited
             // directly and need to be extracted
             if (AssetBundleUtils.isAssetBundle(file.toPath())) {
-                ReturnType result = new DialogBuilder()
+                DialogReturnType result = new DialogBuilder()
                         .question()
                         .withYesNo()
                         .withTitle("Extract asset bundle")
@@ -67,7 +67,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
                                 + "Do you want to extract it now?")
                         .show();
                 
-                if (result == ReturnType.YES) {
+                if (result == DialogReturnType.YES) {
                     extractAssetBundles(true, file);
                 }
                 
