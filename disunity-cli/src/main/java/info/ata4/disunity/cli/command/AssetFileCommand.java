@@ -83,7 +83,7 @@ public abstract class AssetFileCommand extends MultiFileCommand {
             
             // old asset files don't contain a Unity version string, so copy it
             // from the bundle header
-            VersionInfo versionInfo = asset.getVersionInfo();
+            VersionInfo versionInfo = asset.versionInfo();
             if (versionInfo.assetVersion() <= 5) {
                 versionInfo.unityRevision(getCurrentAssetBundle().header().unityRevision());
             }

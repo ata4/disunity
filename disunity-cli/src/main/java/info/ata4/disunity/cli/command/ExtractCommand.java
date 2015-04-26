@@ -66,7 +66,7 @@ public class ExtractCommand extends AssetFileCommand {
         }
         
         // scan objects and extract files
-        for (ObjectData objectData : asset.getObjects()) {
+        for (ObjectData objectData : asset.objects()) {
             for (AssetExtractor extractor : extractors) {
                 if (extractor.isEligible(objectData)) {
                     extractor.extract(objectData);

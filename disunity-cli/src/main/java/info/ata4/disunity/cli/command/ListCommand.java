@@ -47,7 +47,7 @@ public class ListCommand extends AssetFileCommand {
         tbl.setColumnAlignment(3, 1);
         tbl.setColumnAlignment(4, 1);
         
-        for (ObjectData data : asset.getObjects()) {
+        for (ObjectData data : asset.objects()) {
             ObjectInfo info = data.info();
             
             long pid = data.ID();
@@ -78,7 +78,7 @@ public class ListCommand extends AssetFileCommand {
         }
         
         JSONArray objectsJson = new JSONArray();
-        for (ObjectData data : asset.getObjects()) {
+        for (ObjectData data : asset.objects()) {
             ObjectInfo info = data.info();
             JSONObject objectJson = new JSONObject();
             

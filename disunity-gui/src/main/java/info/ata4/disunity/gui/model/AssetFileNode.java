@@ -52,7 +52,7 @@ public class AssetFileNode extends DefaultMutableTreeNode {
     
     private void addObjects(AssetFile asset) {
         Map<String, DefaultMutableTreeNode> nodeCategories = new TreeMap<>();
-        for (ObjectData objectData : asset.getObjects()) {
+        for (ObjectData objectData : asset.objects()) {
             try {
                 String fieldNodeType = objectData.typeTree().type().typeName();
 
@@ -78,8 +78,8 @@ public class AssetFileNode extends DefaultMutableTreeNode {
     }
     
     private void addExternals(AssetFile asset) {
-        List<FileIdentifier> externals = asset.getExternals();
-        if (asset.getExternals().isEmpty()) {
+        List<FileIdentifier> externals = asset.externals();
+        if (asset.externals().isEmpty()) {
             return;
         }
         
@@ -104,7 +104,7 @@ public class AssetFileNode extends DefaultMutableTreeNode {
         DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode("Types");
         Set<TypeNode> typeNodes = new TreeSet<>(new TypeNodeComparator());
         
-        for (BaseClass baseClass : asset.getTypeTree().values()) {
+        for (BaseClass baseClass : asset.typeTree().values()) {
             typeNodes.add(baseClass.typeTree());
         }
         

@@ -76,6 +76,7 @@ public class DisUnityWindow extends javax.swing.JFrame {
             
             AssetFile asset = new AssetFile();
             asset.load(file.toPath());
+            asset.loadExternals();
 
             dataTree.setModel(new DefaultTreeModel(new AssetFileNode(dataTree, asset)));
             

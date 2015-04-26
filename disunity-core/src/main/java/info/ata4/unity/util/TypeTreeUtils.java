@@ -38,15 +38,15 @@ public class TypeTreeUtils {
     }
     
     public static void embedTypes(AssetFile asset) {
-        UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
+        UnityVersion unityRevision = asset.versionInfo().unityRevision();
         if (unityRevision == null) {
             L.warning("unityRevision = null");
             return;
         }
         
-        List<ObjectData> objects = asset.getObjects();
+        List<ObjectData> objects = asset.objects();
         Iterator<ObjectData> objectIter = objects.iterator();
-        Map<Integer, BaseClass> typeTree = asset.getTypeTree();
+        Map<Integer, BaseClass> typeTree = asset.typeTree();
         
         while (objectIter.hasNext()) {
             ObjectData object = objectIter.next();
@@ -78,9 +78,9 @@ public class TypeTreeUtils {
             return 0;
         }
         
-        Map<Integer, BaseClass> typeTree = asset.getTypeTree();
+        Map<Integer, BaseClass> typeTree = asset.typeTree();
         
-        UnityVersion unityRevision = asset.getVersionInfo().unityRevision();
+        UnityVersion unityRevision = asset.versionInfo().unityRevision();
         if (unityRevision == null) {
             L.warning("unityRevision = null");
             return 0;

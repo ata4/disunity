@@ -72,16 +72,7 @@ public class AssetFile extends FileHandler {
     
     @Override
     public void load(Path file) throws IOException {
-        load(file, null);
-    }
-
-    private void load(Path file, Map<Path, AssetFile> childAssets) throws IOException {
         sourceFile = file;
-        
-        if (childAssets == null) {
-            childAssets = new HashMap<>();
-        }
-        childAssets.put(file, this);
         
         String fileName = file.getFileName().toString();
         String fileExt = FilenameUtils.getExtension(fileName);
@@ -121,29 +112,6 @@ public class AssetFile extends FileHandler {
         loadResourceStream(file.resolveSibling(fileName + ".resS"));
         
         load(reader);
-        
-        for (FileIdentifier external : externals) {
-            String filePath = external.filePath();
-            
-            if (filePath == null || filePath.isEmpty()) {
-                continue;
-            }
-    
-            filePath = filePath.replace("library/", "resources/");
-            
-            Path refFile = file.resolveSibling(filePath);
-            if (Files.exists(refFile)) {
-                AssetFile childAsset = childAssets.get(refFile);
-                
-                if (childAsset == null) {
-                    L.log(Level.FINE, "Loading dependency {0}", filePath);
-                    childAsset = new AssetFile();
-                    childAsset.load(refFile, childAssets);
-                }
-                
-                external.assetFile(childAsset);
-            }
-        }
     }
     
     private void loadResourceStream(Path streamFile) throws IOException {
@@ -168,6 +136,38 @@ public class AssetFile extends FileHandler {
         loadMetadata(in);
         loadObjects(in);
         checkBlocks();
+    }
+    
+    public void loadExternals() throws IOException {
+        loadExternals(new HashMap<Path, AssetFile>());
+    }
+    
+    private void loadExternals(Map<Path, AssetFile> loadedAssets) throws IOException {
+        loadedAssets.put(sourceFile, this);
+        
+        for (FileIdentifier external : externals) {
+            String filePath = external.filePath();
+
+            if (filePath == null || filePath.isEmpty()) {
+                continue;
+            }
+
+            filePath = filePath.replace("library/", "resources/");
+
+            Path refFile = sourceFile.resolveSibling(filePath);
+            if (Files.exists(refFile)) {
+                AssetFile childAsset = loadedAssets.get(refFile);
+                
+                if (childAsset == null) {
+                    L.log(Level.FINE, "Loading dependency {0} for {1}",
+                            new Object[] {filePath, sourceFile.getFileName()});
+                    childAsset = new AssetFile();
+                    childAsset.load(refFile);
+                    childAsset.loadExternals(loadedAssets);
+                    external.assetFile(childAsset);
+                }
+            }
+        }
     }
     
     private void loadHeader(DataReader in) throws IOException {
@@ -394,31 +394,31 @@ public class AssetFile extends FileHandler {
         assert !objectDataBlock.isIntersecting(externalsBlock);
     }
 
-    public VersionInfo getVersionInfo() {
+    public VersionInfo versionInfo() {
         return versionInfo;
     }
 
-    public AssetHeader getHeader() {
+    public AssetHeader header() {
         return header;
     }
     
-    public int getTypeTreeAttributes() {
+    public int typeTreeAttributes() {
         return typeTreeStruct.attributes();
     }
     
-    public Map<Integer, BaseClass> getTypeTree() {
+    public Map<Integer, BaseClass> typeTree() {
         return typeTreeMap;
     }
     
-    public Map<Long, ObjectInfo> getObjectInfoMap() {
+    public Map<Long, ObjectInfo> objectInfoMap() {
         return objectInfoMap;
     }
     
-    public List<ObjectData> getObjects() {
+    public List<ObjectData> objects() {
         return objectList;
     }
     
-    public List<FileIdentifier> getExternals() {
+    public List<FileIdentifier> externals() {
         return externals;
     }
 

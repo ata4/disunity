@@ -54,7 +54,7 @@ public class DebugAssetTest extends MultiFileCommand {
     }
 
     private void testDeserialize(AssetFile asset) throws IOException {
-        for (ObjectData obj : asset.getObjects()) {
+        for (ObjectData obj : asset.objects()) {
             obj.instance();
         }
     }

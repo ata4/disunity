@@ -45,7 +45,7 @@ public class InfoCommand extends AssetFileCommand {
     private void printText(AssetFile asset) {
         PrintWriter out = getOutputWriter();
 
-        AssetHeader header = asset.getHeader();
+        AssetHeader header = asset.header();
         
         TablePrinter tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
@@ -64,9 +64,9 @@ public class InfoCommand extends AssetFileCommand {
         
         tbl = new TablePrinter(2);
         tbl.addRow("Field", "Value");
-        tbl.addRow("signature", asset.getVersionInfo().unityRevision());
-        tbl.addRow("attributes", asset.getTypeTreeAttributes());
-        tbl.addRow("numBaseClasses", asset.getTypeTree().size());
+        tbl.addRow("signature", asset.versionInfo().unityRevision());
+        tbl.addRow("attributes", asset.typeTreeAttributes());
+        tbl.addRow("numBaseClasses", asset.typeTree().size());
         
         out.println("Type tree:");
         tbl.print(out);
@@ -75,7 +75,7 @@ public class InfoCommand extends AssetFileCommand {
         tbl = new TablePrinter(4);
         tbl.addRow("File path", "Asset path", "GUID", "Type");
         
-        for (FileIdentifier external : asset.getExternals()) {
+        for (FileIdentifier external : asset.externals()) {
             tbl.addRow(external.filePath(), external.assetPath(), external.guid(), external.type());
         }
         
@@ -93,7 +93,7 @@ public class InfoCommand extends AssetFileCommand {
             root.put("file", getCurrentFile());
         }
         
-        AssetHeader header = asset.getHeader();
+        AssetHeader header = asset.header();
         
         JSONObject headerJson = new JSONObject();
         headerJson.put("metadataSize", header.metadataSize());
@@ -104,15 +104,15 @@ public class InfoCommand extends AssetFileCommand {
         root.put("header", headerJson);
         
         JSONObject typeTreeJson = new JSONObject();
-        typeTreeJson.put("signature", asset.getVersionInfo().unityRevision());
-        typeTreeJson.put("attributes", asset.getTypeTreeAttributes());
-        typeTreeJson.put("numBaseClasses", asset.getTypeTree().size());
+        typeTreeJson.put("signature", asset.versionInfo().unityRevision());
+        typeTreeJson.put("attributes", asset.typeTreeAttributes());
+        typeTreeJson.put("numBaseClasses", asset.typeTree().size());
         
         root.put("typeTree", typeTreeJson);
         
         JSONArray externalsJson = new JSONArray();
         
-        for (FileIdentifier external : asset.getExternals()) {
+        for (FileIdentifier external : asset.externals()) {
             JSONObject externalJson = new JSONObject();
             externalJson.put("assetPath", external.assetPath());
             externalJson.put("guid", external.guid());
