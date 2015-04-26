@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONObject2;
 
 /**
  *
@@ -94,7 +95,7 @@ public class BundleInfoCommand extends BundleFileCommand {
     private void printJSON(AssetBundleReader reader) {
         AssetBundleHeader header = reader.header();
         
-        JSONObject root = new JSONObject();
+        JSONObject2 root = new JSONObject2();
         root.put("file", getCurrentFile());
         
         root.put("signature", header.signature());

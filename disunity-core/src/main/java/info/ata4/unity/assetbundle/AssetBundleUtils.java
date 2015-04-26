@@ -31,7 +31,9 @@ import static java.nio.file.StandardOpenOption.*;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONObject2;
 import org.json.JSONTokener;
 
 /**
@@ -130,7 +132,7 @@ public class AssetBundleUtils {
     private static void writePropertiesFile(Path propsFile, AssetBundleReader assetBundle) throws IOException {
         AssetBundleHeader header = assetBundle.header();
 
-        JSONObject props = new JSONObject();
+        JSONObject props = new JSONObject2();
         props.put("compressed", header.compressed());
         props.put("streamVersion", header.streamVersion());
         props.put("unityVersion", header.unityVersion().toString());
@@ -144,7 +146,7 @@ public class AssetBundleUtils {
 
         try (Writer out = Files.newBufferedWriter(propsFile,
                 PROP_CHARSET, WRITE, CREATE, TRUNCATE_EXISTING)) {
-            props.write(out, 2);
+            props.write(out);
         }
     }
     

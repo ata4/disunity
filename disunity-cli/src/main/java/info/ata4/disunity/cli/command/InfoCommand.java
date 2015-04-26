@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONObject2;
 
 /**
  *
@@ -84,7 +85,7 @@ public class InfoCommand extends AssetFileCommand {
     }
 
     private void printJSON(AssetFile asset) {
-        JSONObject root = new JSONObject();
+        JSONObject2 root = new JSONObject2();
         
         AssetBundleReader assetBundle = getCurrentAssetBundle();
         if (assetBundle != null) {

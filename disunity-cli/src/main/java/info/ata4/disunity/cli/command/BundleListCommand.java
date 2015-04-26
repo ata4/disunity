@@ -17,6 +17,7 @@ import info.ata4.util.io.FileUtilsExt;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONObject2;
 
 /**
  *
@@ -53,7 +54,7 @@ public class BundleListCommand extends BundleFileCommand {
     }
     
     private void printJSON(AssetBundleReader reader) {
-        JSONObject root = new JSONObject();
+        JSONObject2 root = new JSONObject2();
         root.put("file", getCurrentFile());
         
         JSONArray entriesJson = new JSONArray();

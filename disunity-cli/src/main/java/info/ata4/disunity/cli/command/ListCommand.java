@@ -18,6 +18,7 @@ import info.ata4.unity.rtti.ObjectData;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONObject2;
 
 /**
  *
@@ -68,7 +69,7 @@ public class ListCommand extends AssetFileCommand {
     }
     
     private void printJSON(AssetFile asset) {
-        JSONObject root = new JSONObject();
+        JSONObject2 root = new JSONObject2();
         
         AssetBundleReader assetBundle = getCurrentAssetBundle();
         if (assetBundle != null) {
