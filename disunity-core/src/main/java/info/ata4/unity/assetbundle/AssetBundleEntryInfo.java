@@ -17,6 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @unity StreamingInfo
  */
 public class AssetBundleEntryInfo implements Struct {
     
