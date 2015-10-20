@@ -195,6 +195,10 @@ public class AssetFile extends FileHandler {
         if (header.version() > 13) {
             in.align(4);
             int num = in.readInt();
+            if (num != 0 && header.version() >= 15) { 
+                // sorry, no info on that block => cant read externals. num -> num-9 worked for my experimental file, but I dont know about others
+                return;
+            } 
             for (int i = 0; i < num; i++) {
                 in.readInt();
                 in.readInt();
