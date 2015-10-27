@@ -55,10 +55,17 @@ public class AudioClipExtractor extends AbstractAssetExtractor {
         return new UnityClass("AudioClip");
     }
     
+        
     @Override
     public void extract(ObjectData objectData) throws IOException {
         AudioClip audio = new AudioClip(objectData.instance());
         String name = audio.getName();
+        
+        if (objectData.instance().getChild("m_Resource") != null) {
+            L.log(Level.WARNING, "Audio clip {0} has external resource, which is not supported by disunity", audio.getName());
+            return;
+        }
+        
         ByteBuffer audioData = audio.getAudioData();
         
         // skip empty buffers
