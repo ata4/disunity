@@ -88,7 +88,7 @@ public class AssetBundleUtils {
             }
             
             String bundleName = outDir.getFileName().toString();
-            Path propsFile = outDir.getParent().resolve(bundleName + ".json");
+            Path propsFile = outDir.resolveSibling(bundleName + ".json");
             
             writePropertiesFile(propsFile, assetBundle);
         }
