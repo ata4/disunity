@@ -54,6 +54,7 @@ public class TypeTreeDatabase {
     
     private final List<TypeTreeDatabaseEntry> entries = new ArrayList<>();
     private final Map<Pair<UnityClass, UnityVersion>, TypeTreeDatabaseEntry> entryMap = new HashMap<>();
+    private final Set<Pair<UnityClass, UnityVersion>> warnedMatches = new HashSet<>();
     private Path dbFile;
     
     public TypeTreeDatabase() {
@@ -233,7 +234,8 @@ public class TypeTreeDatabase {
     
     public TypeTreeDatabaseEntry getEntry(UnityClass unityClass, UnityVersion unityVersion, boolean exact) {
         // search for exact matches
-        TypeTreeDatabaseEntry entryA = entryMap.get(new ImmutablePair<>(unityClass, unityVersion));
+        Pair<UnityClass, UnityVersion> classAndVersion = new ImmutablePair<>(unityClass, unityVersion);
+        TypeTreeDatabaseEntry entryA = entryMap.get(classAndVersion);
         if (entryA != null) {
             return entryA;
         }
@@ -273,17 +275,27 @@ public class TypeTreeDatabase {
 
         // return less perfect match
         if (entryB != null) {
-            L.log(Level.WARNING, "Unprecise match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionB});
+            if (!warnedMatches.contains(classAndVersion)) {
+                L.log(Level.WARNING, "Unprecise match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionB});
+                warnedMatches.add(classAndVersion);
+            }
             return entryB;
         }
 
         // return field node from any revision as the very last resort
         if (entryC != null) {
-            L.log(Level.WARNING, "Bad match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionC});
+            if (!warnedMatches.contains(classAndVersion)) {
+                L.log(Level.WARNING, "Bad match for class {0} (required: {1}, available: {2})", new Object[]{unityClass, unityVersion, versionC});
+                warnedMatches.add(classAndVersion);
+            }
             return entryC;
         }
 
         // no matches at all
+        if (!warnedMatches.contains(classAndVersion)) {
+            L.log(Level.WARNING, "No match for class {0} (required: {1})", new Object[]{unityClass, unityVersion});
+            warnedMatches.add(classAndVersion);
+        }
         return null;
     }
     
