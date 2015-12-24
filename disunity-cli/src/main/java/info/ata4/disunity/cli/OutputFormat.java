@@ -15,5 +15,5 @@ package info.ata4.disunity.cli;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public enum OutputFormat {
-    PLAINTEXT, JSON
+    TEXT, JSON
 }

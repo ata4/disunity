@@ -1,7 +1,7 @@
 /*
- ** 2014 December 16
+ ** 2015 December 01
  **
- ** The author disclaims copyright to this source code.  In place of
+ ** The author disclaims copyright to this source code. In place of
  ** a legal notice, here is a blessing:
  **    May you do good and not evil.
  **    May you find forgiveness for yourself and forgive others.
@@ -9,11 +9,10 @@
  */
 package info.ata4.disunity.cli.command;
 
-import info.ata4.log.LogUtils;
-import java.io.IOException;
+import com.beust.jcommander.Parameter;
+import info.ata4.disunity.cli.converters.PathConverter;
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 /**
  *
@@ -21,23 +20,17 @@ import java.util.logging.Logger;
  */
 public abstract class FileCommand extends Command {
     
-    private static final Logger L = LogUtils.getLogger();
-    private Path currentFile;
+    @Parameter(
+        description = "<file> [file]...",
+        converter = PathConverter.class,
+        required = true
+    )
+    private List<Path> filePaths;
     
-    protected Path getCurrentFile() {
-        return currentFile;
+    @Override
+    public void run() {
+        filePaths.forEach(this::runFile);
     }
     
-    protected void processFile(Path file) {        
-        L.log(Level.INFO, "Processing {0}", file);
-        try {
-            currentFile = file;
-            handleFile(file);
-            currentFile = null;
-        } catch (IOException ex) {
-            L.log(Level.WARNING, "Can't process file " + file, ex); 
-        }
-    }
-    
-    public abstract void handleFile(Path file) throws IOException;
+    protected abstract void runFile(Path file);
 }
