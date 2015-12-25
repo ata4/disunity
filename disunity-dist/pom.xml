@@ -39,6 +39,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <finalName>disunity</finalName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>info.ata4.disunity.cli.DisUnityCli</mainClass>
