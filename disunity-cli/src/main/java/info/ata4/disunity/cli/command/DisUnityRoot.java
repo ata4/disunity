@@ -9,11 +9,11 @@
  */
 package info.ata4.disunity.cli.command;
 
-import info.ata4.disunity.cli.command.bundle.BundleRoot;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.ata4.disunity.cli.command.asset.AssetRoot;
+import info.ata4.disunity.cli.command.bundle.BundleRoot;
 import info.ata4.log.LogUtils;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -55,7 +55,7 @@ public class DisUnityRoot extends Command {
         
         // display usage
         if (help) {
-            commander().usage();
+            usage();
             return;
         }
         

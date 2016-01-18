@@ -10,6 +10,7 @@
 package info.ata4.disunity.cli.command;
 
 import com.beust.jcommander.JCommander;
+import info.ata4.disunity.DisUnity;
 import info.ata4.junity.progress.Progress;
 import java.io.PrintWriter;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public abstract class Command implements Runnable {
     public JCommander commander() {
         return commander;
     }
-
+    
     @Override
     public void run() {
         String commandName = commander.getParsedCommand();
@@ -49,7 +50,7 @@ public abstract class Command implements Runnable {
                 commandObj.run();
             } else {
                 // no command selected, show usage
-                commander.usage();
+                usage();
             }
         }
     }
@@ -59,6 +60,11 @@ public abstract class Command implements Runnable {
         JCommander subCommander = commander.getCommands().get(commandName);
         commandObj.init(subCommander, out);
         return subCommander;
+    }
+    
+    protected void usage() {
+        output().println(DisUnity.getSignature());
+        commander().usage();
     }
     
     protected PrintWriter output() {
