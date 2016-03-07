@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class ObjectInfoV1 extends ObjectInfo {
-    
+
     // set to 1 if the object instance is destroyed?
     // (no longer stored in files starting with Unity 5)
     private short isDestroyed;
@@ -48,5 +48,5 @@ public class ObjectInfoV1 extends ObjectInfo {
         out.writeShort((short) classID);
         out.writeShort(isDestroyed);
     }
-    
+
 }

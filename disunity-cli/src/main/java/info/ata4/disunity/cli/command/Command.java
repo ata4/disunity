@@ -24,7 +24,7 @@ public abstract class Command implements Runnable {
 
     private JCommander commander;
     private PrintWriter out;
-    
+
     protected final Progress progress = (s, p) -> {
         if (s.isPresent()) {
             output().println(s.get());
@@ -35,11 +35,11 @@ public abstract class Command implements Runnable {
         this.commander = Objects.requireNonNull(commander);
         this.out = Objects.requireNonNull(out);
     }
-        
+
     public JCommander commander() {
         return commander;
     }
-    
+
     @Override
     public void run() {
         String commandName = commander.getParsedCommand();
@@ -54,19 +54,19 @@ public abstract class Command implements Runnable {
             }
         }
     }
-    
+
     protected JCommander addSubCommand(String commandName, Command commandObj) {
         commander.addCommand(commandName, commandObj);
         JCommander subCommander = commander.getCommands().get(commandName);
         commandObj.init(subCommander, out);
         return subCommander;
     }
-    
+
     protected void usage() {
         output().println(DisUnity.getSignature());
         commander().usage();
     }
-    
+
     protected PrintWriter output() {
         return out;
     }

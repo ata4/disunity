@@ -32,7 +32,7 @@ import org.apache.commons.lang3.tuple.Pair;
     commandDescription = "Show bundle information."
 )
 public class BundleInfo extends BundleCommand {
-    
+
     @ParametersDelegate
     private final OutputFormatDelegate outputFormat = new OutputFormatDelegate();
 
@@ -41,19 +41,19 @@ public class BundleInfo extends BundleCommand {
         if (outputFormat.get() == OutputFormat.TEXT) {
             output().println(file);
         }
-        
+
         List<TableModel> tables = new ArrayList<>();
         tables.add(new TableModel("Header", buildHeaderTable(bundle.header())));
-        
+
         TablePrinter tablePrinter = TablePrinter.fromOutputFormat(outputFormat.get(), output());
         tablePrinter.file(file);
         tablePrinter.print(tables);
     }
-    
+
     private Table<Integer, Integer, Object> buildHeaderTable(BundleHeader header) {
         TableBuilder table = new TableBuilder();
         table.row("Field", "Value");
-        
+
         table.row("signature", header.signature());
         table.row("streamVersion", header.streamVersion());
         table.row("unityVersion", header.unityVersion());
@@ -62,23 +62,23 @@ public class BundleInfo extends BundleCommand {
         table.row("headerSize", header.headerSize());
         table.row("numberOfLevelsToDownload", header.numberOfLevelsToDownload());
         table.row("numberOfLevels", header.numberOfLevels());
-        
+
         List<Pair<Long, Long>> levelByteEnds = header.levelByteEnd();
         for (int i = 0; i < levelByteEnds.size(); i++) {
             Pair<Long, Long> levelByteEnd = levelByteEnds.get(i);
             table.row("levelByteEnd[" + i + "][0]", levelByteEnd.getLeft());
             table.row("levelByteEnd[" + i + "][1]", levelByteEnd.getRight());
         }
-        
+
         if (header.streamVersion() >= 2) {
             table.row("completeFileSize", header.completeFileSize());
         }
-        
+
         if (header.streamVersion() >= 3) {
             table.row("dataHeaderSize", header.dataHeaderSize());
         }
-        
+
         return table.get();
     }
-    
+
 }

@@ -26,21 +26,21 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Asset bundle file utility class.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleUtils {
-    
+
     private static final Charset PROP_CHARSET = Charset.forName("US-ASCII");
-    
+
     private BundleUtils() {
     }
-    
+
     public static boolean isBundle(Path file) {
         if (!Files.isRegularFile(file)) {
             return false;
         }
-        
+
         try (InputStream is = Files.newInputStream(file)) {
             byte[] header = new byte[8];
             is.read(header);
@@ -51,10 +51,10 @@ public class BundleUtils {
             return false;
         }
     }
-        
+
     public static SeekableByteChannel byteChannelForEntry(BundleEntry entry) throws IOException {
         SeekableByteChannel chan;
-        
+
         // check if the entry is larger than 128 MiB
         long size = entry.size();
         if (size > 1 << 27) {
@@ -69,10 +69,10 @@ public class BundleUtils {
             bb.flip();
             chan = new ByteBufferChannel(bb);
         }
-        
+
         return chan;
     }
-    
+
     public static DataReader dataReaderForEntry(BundleEntry entry) throws IOException {
         return DataReaders.forSeekableByteChannel(BundleUtils.byteChannelForEntry(entry));
     }

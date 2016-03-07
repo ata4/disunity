@@ -13,35 +13,35 @@ import info.ata4.io.Struct;
 
 /**
  * Class for objects that contain the runtime type of a single field.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity TypeTree
  */
 public abstract class Type implements Struct {
-    
+
     public static final int FLAG_FORCE_ALIGN = 0x4000;
-    
+
     // field type string
     protected String type;
-    
+
     // field name string
     protected String name;
-    
+
     // size of the field value in bytes or -1 if the field contains sub-fields only
     protected int size;
-    
+
     // field index for the associated parent field
     protected int index;
-    
+
     // set to 1 if "type" is "Array" or "TypelessData"
     protected boolean isArray;
-    
+
     // type version, starts with 1 and is incremented when the type
     // information is updated in a new Unity release
     //
     // equal to serializedVersion in YAML format files
     protected int version;
-    
+
     // field flags
     // observed values:
     // 0x1
@@ -52,7 +52,7 @@ public abstract class Type implements Struct {
     // 0x200000
     // 0x400000
     protected int metaFlag;
-    
+
     public String typeName() {
         return type;
     }
@@ -92,7 +92,7 @@ public abstract class Type implements Struct {
     public void isArray(boolean isArray) {
         this.isArray = isArray;
     }
-    
+
     public int version() {
         return version;
     }
@@ -100,7 +100,7 @@ public abstract class Type implements Struct {
     public void version(int version) {
         this.version = version;
     }
-    
+
     public int metaFlag() {
         return metaFlag;
     }

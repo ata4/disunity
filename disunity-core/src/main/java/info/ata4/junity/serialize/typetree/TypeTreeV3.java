@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
-    
+
     public TypeTreeV3(Class<T> elementFactory) {
         super(elementFactory);
     }
@@ -66,7 +66,7 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
             typeMap.put(classID, typeRoot);
         }
     }
-    
+
     private void readNode(DataReader in, Node<T> node) throws IOException {
         int numFields = in.readInt();
         int stringTableLen = in.readInt();
@@ -87,23 +87,23 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
         for (T field : types) {
             int nameOffset = field.nameOffset();
             String name = stringTable.get(nameOffset);
-            
+
             if (name == null) {
                 throw new SerializedFileException("No string table entry found for name index " + nameOffset);
             }
-            
+
             field.fieldName(name);
-            
+
             int typeOffset = field.typeOffset();
             String type = stringTable.get(typeOffset);
-            
+
             if (name == null) {
                 throw new SerializedFileException("No string table entry found for type index " + typeOffset);
             }
-            
+
             field.typeName(type);
         }
-                
+
         // convert list to tree structure
         Node<T> nodePrev = null;
         for (T type : types) {
@@ -113,22 +113,22 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
                 nodePrev = node;
                 continue;
             }
-            
+
             Node<T> nodeCurr = new Node<>(type);
-            
+
             int levels = nodePrev.data().treeLevel() - type.treeLevel();
             if (levels >= 0) {
                 // move down in tree hierarchy if required
                 for (int i = 0; i < levels; i++) {
                     nodePrev = nodePrev.parent();
                 }
-                
+
                 nodePrev.parent().add(nodeCurr);
             } else {
                 // can move only one level up at a time, so simply add the node
                 nodePrev.add(nodeCurr);
             }
-            
+
             nodePrev = nodeCurr;
         }
     }
@@ -143,30 +143,30 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
         for (Map.Entry<Integer, TypeRoot<T>> entry : typeMap.entrySet()) {
             int classID = entry.getKey();
             TypeRoot typeRoot = entry.getValue();
-            
+
             out.writeInt(classID);
-            
+
             if (classID < 0) {
                 out.writeStruct(typeRoot.scriptID());
             }
-            
+
             out.writeStruct(typeRoot.oldTypeHash());
-            
+
             if (embedded) {
                 writeNode(out, typeRoot.nodes());
             }
         }
     }
-    
+
     private void writeNode(DataWriter out, Node<T> node) throws IOException {
         List<T> types = new ArrayList<>();
         serializeNode(node, types, 0);
-        
+
         // build string table
         AtomicInteger index = new AtomicInteger();
         Map<String, Integer> localMap = new LinkedHashMap<>();
         Map<String, Integer> commonMap = StringTable.commonStrings(revision.major()).inverse();
-        
+
         Function<String, Integer> addStringOffset = typeName -> {
             if (commonMap.containsKey(typeName)) {
                 return commonMap.get(typeName);
@@ -178,25 +178,25 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
                 return stringIndex;
             }
         };
-        
+
         // apply string offsets
-        types.forEach(type -> {            
+        types.forEach(type -> {
             type.typeOffset(addStringOffset.apply(type.typeName()));
             type.nameOffset(addStringOffset.apply(type.fieldName()));
         });
-        
+
         out.writeInt(types.size());
         out.writeInt(index.get());
 
         for (T type : types) {
             out.writeStruct(type);
         }
-        
+
         for (String string : localMap.keySet()) {
             out.writeStringNull(string);
         }
     }
-    
+
     private void serializeNode(Node<T> node, List<T> list, int level) {
         node.data().treeLevel(level);
         list.add(node.data());

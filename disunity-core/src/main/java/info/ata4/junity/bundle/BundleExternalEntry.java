@@ -19,7 +19,7 @@ import java.nio.file.Path;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleExternalEntry extends BundleEntry {
-    
+
     private final Path file;
 
     public BundleExternalEntry(Path file) {
@@ -44,5 +44,5 @@ public class BundleExternalEntry extends BundleEntry {
     public InputStream inputStream() throws IOException {
         return Files.newInputStream(file);
     }
-    
+
 }

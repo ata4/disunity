@@ -11,7 +11,7 @@ package info.ata4.disunity;
 
 /**
  * DisUnity program metadata.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class DisUnity {
@@ -19,15 +19,15 @@ public class DisUnity {
     public static String getName() {
         return "DisUnity";
     }
-    
+
     public static String getProgramName() {
         return "disunity";
     }
-    
+
     public static String getVersion() {
         return "0.5.0";
     }
-    
+
     public static String getSignature() {
         return getName() + " v" + getVersion();
     }

@@ -24,9 +24,9 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class BundleCommand extends RecursiveFileCommand {
-    
+
     private static final Logger L = LogUtils.getLogger();
-        
+
     @Override
     protected void runFileRecursive(Path file) {
         try (BundleReader reader = new BundleReader(file)) {
@@ -36,11 +36,11 @@ public abstract class BundleCommand extends RecursiveFileCommand {
             L.log(Level.WARNING, "Can't open asset bundle " + file, ex);
         }
     }
-    
+
     @Override
     protected boolean fileFilter(Path file) {
         return BundleUtils.isBundle(file);
     }
-    
+
     protected abstract void runBundle(Path file, Bundle bundle);
 }

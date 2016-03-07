@@ -1,11 +1,11 @@
 /*
-** 2015 December 02
-**
-** The author disclaims copyright to this source code. In place of
-** a legal notice, here is a blessing:
-**    May you do good and not evil.
-**    May you find forgiveness for yourself and forgive others.
-**    May you share freely, never taking more than you give.
+ ** 2015 December 02
+ **
+ ** The author disclaims copyright to this source code. In place of
+ ** a legal notice, here is a blessing:
+ **    May you do good and not evil.
+ **    May you find forgiveness for yourself and forgive others.
+ **    May you share freely, never taking more than you give.
  */
 package info.ata4.test.junity;
 
@@ -41,22 +41,22 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(Parameterized.class)
 public class SerializedFileTest {
-    
+
     @Parameterized.Parameters
     public static List<Path[]> data() throws IOException {
         List<Path[]> params = new ArrayList<>();
-        
+
         // public set
         Path mainDataDirPublic = Paths.get("src", "test", "resources", "mainData");
         params.addAll(ParameterizedUtils.getPathParameters(mainDataDirPublic));
-        
+
         // private set (files that are too large or proprietary)
         //Path mainDataDirPrivate = Paths.get("..", "private", "test", "mainData");
         //params.addAll(ParameterizedUtils.getPathParameters(mainDataDirPrivate));
-        
+
         return params;
     }
-    
+
     private final Path readFile;
     private SerializedFile asset;
 
@@ -64,29 +64,29 @@ public class SerializedFileTest {
         this.readFile = file;
         System.out.println(file);
     }
-    
+
     @Before
     public void setUp() throws IOException {
         try (SerializedFileReader assetReader = new SerializedFileReader(readFile)) {
             asset = assetReader.read();
         }
     }
-    
+
     @Test
     public void offsetsAndSizesValid() throws IOException {
         SerializedFileHeader header = asset.header();
-        
+
         long fileSize = Files.size(readFile);
         assertEquals("Header file size and actual file size must be equal",
                 header.fileSize(), fileSize);
-        
+
         assertTrue("Data offset must be within file",
                 header.dataOffset() < header.fileSize());
-        
+
         // allowing a difference of 3 bytes because of padding
         assertEquals("Metadata sizes in data block and header must match",
                 header.metadataSize(), asset.metadataBlock().length(), 3);
-        
+
         // check blocks
         List<DataBlock> blocks = asset.dataBlocks();
         blocks.forEach(block1 -> blocks.forEach(block2 -> {
@@ -96,7 +96,7 @@ public class SerializedFileTest {
             }
         }));
     }
-    
+
     @Test
     public void objectInfoValid() throws IOException {
         asset.metadata().objectInfoTable().infoMap().forEach((path, objectInfo) -> {
@@ -109,7 +109,7 @@ public class SerializedFileTest {
                     (objectInfo.classID() == 114 && objectInfo.typeID() < 0));
         });
     }
-    
+
     @Test
     public void typeTreeValid() {
         if (asset.metadata().typeTree().embedded()) {
@@ -126,7 +126,7 @@ public class SerializedFileTest {
             });
         }
     }
-    
+
     @Test
     public void directCopyMatches() throws IOException {
         Path writeFile = Files.createTempFile("writeTest", ".assets");
@@ -135,7 +135,7 @@ public class SerializedFileTest {
                     DataWriters.forFile(writeFile, WRITE))) {
                 writer.write(asset);
             }
-            
+
             assertEquals("Output file must match input file",
                     FileUtils.checksumCRC32(readFile.toFile()),
                     FileUtils.checksumCRC32(writeFile.toFile()));

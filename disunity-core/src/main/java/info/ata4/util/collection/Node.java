@@ -25,24 +25,24 @@ import java.util.function.Consumer;
  * @param <T>
  */
 public class Node<T> implements Collection<Node<T>> {
-    
+
     private T data;
     private Node<T> parent;
     private final List<Node<T>> children = new ArrayList<>();
-    
+
     public Node() {
     }
-    
+
     public Node(T data) {
         this.data = data;
     }
-    
+
     public Node(Collection<Node<T>> children) {
         if (children != null) {
             this.children.addAll(children);
         }
     }
-    
+
     public Node(T data, Collection<Node<T>> children) {
         this.data = data;
         if (children != null) {
@@ -53,19 +53,19 @@ public class Node<T> implements Collection<Node<T>> {
     public T data() {
         return data;
     }
-    
+
     public void data(T data) {
         this.data = data;
     }
-    
+
     public Node<T> parent() {
         return parent;
     }
-    
+
     private void parent(Node<T> parent) {
         this.parent = parent;
     }
-    
+
     public void forEachData(Consumer<T> action) {
         Objects.requireNonNull(action);
         action.accept(data());
@@ -91,7 +91,7 @@ public class Node<T> implements Collection<Node<T>> {
     public Iterator<Node<T>> iterator() {
         return Collections.unmodifiableList(children).iterator();
     }
-    
+
     @Override
     public Spliterator<Node<T>> spliterator() {
         return Spliterators.spliterator(Collections.unmodifiableList(children),
@@ -166,7 +166,7 @@ public class Node<T> implements Collection<Node<T>> {
     public void clear() {
         children.clear();
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -174,7 +174,7 @@ public class Node<T> implements Collection<Node<T>> {
         hash = 43 * hash + Objects.hashCode(this.children);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

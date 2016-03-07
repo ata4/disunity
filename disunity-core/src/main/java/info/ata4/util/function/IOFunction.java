@@ -16,14 +16,14 @@ import java.util.function.Function;
 /**
  * Interface for functions that throw IOExceptions, which are wrapped to
  * UncheckedIOExceptions.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @FunctionalInterface
 public interface IOFunction<T, R> {
-    
+
     R apply(T t) throws IOException;
-    
+
     public static <T, R> Function<T, R> uncheck(IOFunction<T, R> function) {
         return t -> {
             try {

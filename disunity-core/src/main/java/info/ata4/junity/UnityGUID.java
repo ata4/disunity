@@ -22,13 +22,13 @@ import java.util.UUID;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityGUID implements Struct {
-    
+
     private UUID uuid;
-    
+
     public UUID uuid() {
         return uuid;
     }
-    
+
     public void uuid(UUID uuid) {
         this.uuid = Objects.requireNonNull(uuid);
     }

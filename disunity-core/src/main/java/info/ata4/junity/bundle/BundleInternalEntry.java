@@ -18,7 +18,7 @@ import java.io.InputStream;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleInternalEntry extends BundleEntry {
-    
+
     private final BundleEntryInfo info;
     private final IOFunction<BundleEntryInfo, InputStream> inputStreamFactory;
 
@@ -27,12 +27,12 @@ public class BundleInternalEntry extends BundleEntry {
         this.info = info;
         this.inputStreamFactory = isFactory;
     }
-    
+
     @Override
     public String name() {
         return info.name();
     }
-    
+
     @Override
     public long size() {
         return info.size();

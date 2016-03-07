@@ -19,9 +19,9 @@ import java.util.OptionalInt;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TableBuilder<T> {
-    
+
     private final Table<Integer, Integer, T> table = TreeBasedTable.create();
-    
+
     public TableBuilder row(T... value) {
         int row = table.rowKeySet().size();
         for (int col = 0; col < value.length; col++) {
@@ -29,10 +29,10 @@ public class TableBuilder<T> {
         }
         return this;
     }
-    
+
     public TableBuilder append(T... value) {
         int row = table.rowKeySet().size() - 1;
-        
+
         // check for empty table
         if (row < 0) {
             return this;
@@ -41,11 +41,11 @@ public class TableBuilder<T> {
         Map<Integer, T> rowMap = table.row(row);
         OptionalInt colMax = rowMap.keySet().stream().mapToInt(Integer::valueOf).max();
         int colOffset = colMax.isPresent() ? colMax.getAsInt() + 1 : 0;
-        
+
         for (int col = 0; col < value.length; col++) {
             table.put(row, colOffset + col, value[col]);
         }
-        
+
         return this;
     }
 

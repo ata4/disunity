@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TextTablePrinter extends TablePrinter {
-    
+
     private final char rowSeparator = '-';
     private final char nameSeparator = '=';
     private final String cellSeparator = "  ";
@@ -31,27 +31,27 @@ public class TextTablePrinter extends TablePrinter {
     public void print(TableModel model) {
         TextTableFormat format = model.format();
         format.configure(model);
-        
+
         out.println(file);
-        
+
         // print table name
         String name = model.name();
         name = " " + name + " ";
         int size = Math.max(name.length() + 2, format.tableWidth(cellSeparator));
         name = StringUtils.center(name, size, nameSeparator);
         out.println(name);
-        
+
         // print cells
         model.table().cellSet().forEach(cell -> printCell(model, format, cell));
         out.println();
         out.println();
     }
-    
+
     private void printCell(TableModel model, TextTableFormat format, Table.Cell<Integer, Integer, Object> cell) {
         int numColumns = format.numColumns();
         int colKey = cell.getColumnKey();
         int rowKey = cell.getRowKey();
-        
+
         // print new line after the last cell of a row
         if (colKey == 0) {
             if (rowKey != 0) {
@@ -69,7 +69,7 @@ public class TextTablePrinter extends TablePrinter {
                 out.println();
             }
         }
-        
+
         out.print(format.formatCell(cell.getValue(), colKey));
 
         // print cell separator unless it's the last cell

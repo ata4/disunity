@@ -35,20 +35,20 @@ import org.apache.commons.lang3.tuple.MutablePair;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleWriter implements Closeable {
-    
+
     private final DataWriter out;
     private final Map<BundleEntry, MutablePair<Long, Long>> levelOffsetMap = new LinkedHashMap<>();
     private final Path dataFile;
     private Bundle bundle;
-    
+
     public BundleWriter(Path file) throws IOException {
         out = DataWriters.forFile(file, CREATE, WRITE, TRUNCATE_EXISTING);
         dataFile = Files.createTempFile(file.getParent(), "uncompressedData", null);
     }
-    
+
     public void write(Bundle bundle, Progress progress) throws IOException {
         this.bundle = bundle;
-        
+
         // add offset placeholders
         levelOffsetMap.clear();
         bundle.entries().stream()
@@ -65,7 +65,7 @@ public class BundleWriter implements Closeable {
         header.levelByteEnd().clear();
         header.levelByteEnd().addAll(levelOffsetMap.values());
         header.numberOfLevelsToDownload(levelOffsetMap.size());
-        
+
         // write header
         out.writeStruct(header);
         header.headerSize((int) out.position());
@@ -106,7 +106,7 @@ public class BundleWriter implements Closeable {
         out.position(0);
         out.writeStruct(header);
     }
-    
+
     private void writeData(DataWriter out, Progress progress) throws IOException {
         // write entry list
         List<BundleEntry> entries = bundle.entries();
@@ -121,29 +121,29 @@ public class BundleWriter implements Closeable {
             out.writeStruct(entryInfo);
             entryInfos.add(entryInfo);
         }
-        
+
         // write entry data
         for (int i = 0; i < entries.size(); i++) {
             out.align(4);
-            
+
             BundleEntry entry = entries.get(i);
             BundleEntryInfo entryInfo = entryInfos.get(i);
-            
+
             progress.update(Optional.of(entry.name()), i / (double) entries.size());
-            
+
             entryInfo.offset(out.position() - baseOffset);
-            
+
             if (i == 0) {
                 bundle.header().dataHeaderSize(entryInfo.offset());
             }
-            
+
             try (
                 InputStream is = entry.inputStream();
                 OutputStream os = out.stream();
             ) {
                 IOUtils.copy(is, os);
             }
-            
+
             MutablePair<Long, Long> levelOffset = levelOffsetMap.get(entry);
             if (levelOffset != null) {
                 long offset = out.position() - baseOffset;
@@ -151,7 +151,7 @@ public class BundleWriter implements Closeable {
                 levelOffset.setRight(offset);
             }
         }
-        
+
         // update offsets
         out.position(baseOffset + 4);
         for (BundleEntryInfo entryInfo : entryInfos) {

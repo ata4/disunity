@@ -19,30 +19,30 @@ import java.util.Collection;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class TablePrinter {
-    
+
     public static TablePrinter fromOutputFormat(OutputFormat format, PrintWriter out) {
         switch (format) {
             case JSON:
                 return new JsonTablePrinter(out);
-                
+
             default:
                 return new TextTablePrinter(out);
         }
     }
-    
+
     protected final PrintWriter out;
     protected Path file;
 
     public TablePrinter(PrintWriter out) {
         this.out = out;
     }
-    
+
     public void file(Path file) {
         this.file = file;
     }
-    
+
     public abstract void print(TableModel model);
-    
+
     public void print(Collection<TableModel> models) {
         models.forEach(this::print);
     }

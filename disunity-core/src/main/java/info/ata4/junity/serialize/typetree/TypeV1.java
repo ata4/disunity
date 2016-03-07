@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TypeV1 extends Type {
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         type = in.readStringNull(256);

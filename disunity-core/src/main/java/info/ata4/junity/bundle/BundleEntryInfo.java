@@ -20,7 +20,7 @@ import java.io.IOException;
  * @unity StreamingInfo
  */
 public class BundleEntryInfo implements Struct {
-    
+
     private String name;
     private long offset;
     private long size;
@@ -48,7 +48,7 @@ public class BundleEntryInfo implements Struct {
     public void size(long size) {
         this.size = size;
     }
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         name = in.readStringNull();

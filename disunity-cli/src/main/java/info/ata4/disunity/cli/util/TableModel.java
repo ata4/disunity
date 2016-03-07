@@ -16,7 +16,7 @@ import com.google.common.collect.Table;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TableModel {
-    
+
     private final Table<Integer, Integer, Object> table;
     private final String name;
     private boolean columnHeader = true;
@@ -26,15 +26,15 @@ public class TableModel {
         this.name = name;
         this.table = table;
     }
-    
+
     public Table<Integer, Integer, Object> table() {
         return table;
     }
-    
+
     public TextTableFormat format() {
         return format;
     }
-    
+
     public void format(TextTableFormat format) {
         this.format = format;
     }

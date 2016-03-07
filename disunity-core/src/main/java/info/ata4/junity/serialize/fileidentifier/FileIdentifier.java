@@ -16,21 +16,21 @@ import java.util.UUID;
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
-  * @unity FileIdentifier 
+  * @unity FileIdentifier
  */
 public abstract class FileIdentifier implements Struct {
-    
+
     // Globally unique identifier of the referred asset. Unity displays these
     // as simple 16 byte hex strings with each byte swapped, but they can also
     // be represented according to the UUID standard.
     protected final UnityGUID guid = new UnityGUID();
-    
+
     // Path to the asset file. Only used if "type" is 0.
     protected String filePath;
-    
+
     // Reference type. Possible values are probably 0 to 3.
     protected int type;
-    
+
     public UUID guid() {
         return guid.uuid();
     }

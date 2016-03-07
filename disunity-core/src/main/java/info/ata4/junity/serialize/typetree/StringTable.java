@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class StringTable {
-    
+
     private static Map<Integer, Map<Integer, String>> commonStringMap = new HashMap<>();
-    
+
     private StringTable() {
     }
-    
+
     private static BufferedReader resourceReader(String path) {
         return new BufferedReader(new InputStreamReader(
             StringTable.class.getResourceAsStream(path), StandardCharsets.US_ASCII));
     }
-    
+
     public static BiMap<Integer, String> commonStrings(int version) throws IOException {
         // load default strings from resource files if required
         if (!commonStringMap.containsKey(version)) {
@@ -53,13 +53,13 @@ public class StringTable {
                 throw new RuntimeException("No common strings file found for version " + version);
             }
         }
-        
+
         return HashBiMap.create(commonStringMap.get(version));
     }
-    
+
     public static BiMap<Integer, String> read(DataReader in, int length) throws IOException {
         BiMap<Integer, String> map = HashBiMap.create();
-        
+
         // load strings from input
         long startPos = in.position();
         long endPos = startPos + length;

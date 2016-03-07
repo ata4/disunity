@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public class BundlePack extends FileCommand {
 
     private static final Logger L = LogUtils.getLogger();
-    
+
     @Parameter(
         names = {"-o", "--output"},
         description = "Asset bundle output file",
@@ -46,7 +46,7 @@ public class BundlePack extends FileCommand {
             String fileName = PathUtils.getBaseName(file);
             outFile = file.getParent().resolve(fileName + ".unity3d");
         }
-            
+
         Bundle bundle = new Bundle();
         try (BundleWriter bundleWriter = new BundleWriter(outFile)) {
             BundleProps.read(file, bundle);

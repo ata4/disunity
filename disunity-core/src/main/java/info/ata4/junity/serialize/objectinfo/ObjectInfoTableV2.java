@@ -23,7 +23,7 @@ public class ObjectInfoTableV2<T extends ObjectInfoV2> extends ObjectInfoTableV1
     public ObjectInfoTableV2(Class<T> elementFactory) {
         super(elementFactory);
     }
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         int entries = in.readInt();
@@ -35,7 +35,7 @@ public class ObjectInfoTableV2<T extends ObjectInfoV2> extends ObjectInfoTableV1
             infoMap.put(pathID, info);
         }
     }
-    
+
     @Override
     public void write(DataWriter out) throws IOException {
         int entries = infoMap.size();
