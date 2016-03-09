@@ -20,44 +20,44 @@ import java.util.List;
  * @unity SerializedFile
  */
 public class SerializedFile {
-    
+
     // struct fields
     private final SerializedFileHeader header = new SerializedFileHeader();
     private final SerializedFileMetadata metadata = new SerializedFileMetadata();
-    
+
     // data block fields
     private final DataBlock headerBlock = new DataBlock();
     private final DataBlock metadataBlock = new DataBlock();
     private final DataBlock objectDataBlock = new DataBlock();
-    
+
     // misc fields
     private final List<SerializedObjectData> objectData = new ArrayList<>();
     private ByteBuffer audioBuffer;
-    
+
     public SerializedFileHeader header() {
         return header;
     }
-    
+
     public SerializedFileMetadata metadata() {
         return metadata;
     }
-    
+
     public List<SerializedObjectData> objectData() {
         return objectData;
     }
-    
+
     public DataBlock headerBlock() {
         return headerBlock;
     }
-    
+
     public DataBlock metadataBlock() {
         return metadataBlock;
     }
-    
+
     public DataBlock objectDataBlock() {
         return objectDataBlock;
     }
-    
+
     public List<DataBlock> dataBlocks() {
         List<DataBlock> blocks = new ArrayList<>();
         blocks.add(headerBlock);

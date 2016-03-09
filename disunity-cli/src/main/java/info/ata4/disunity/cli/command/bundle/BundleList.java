@@ -32,20 +32,20 @@ import java.util.List;
     commandDescription = "List all files in bundles."
 )
 public class BundleList extends BundleCommand {
-    
+
     @ParametersDelegate
     private final OutputFormatDelegate outputFormat = new OutputFormatDelegate();
-    
+
     @Override
     protected void runBundle(Path file, Bundle bundle) {
         if (outputFormat.get() == OutputFormat.TEXT) {
             output().println(file);
         }
-        
+
         TableModel tableModel = new TableModel("Files", buildEntryTable(bundle));
         TextTableFormat format = tableModel.format();
         format.columnFormatter(2, Formatters::hex);
-        
+
         List<TableModel> tables = new ArrayList<>();
         tables.add(tableModel);
 
@@ -53,15 +53,15 @@ public class BundleList extends BundleCommand {
         tablePrinter.file(file);
         tablePrinter.print(tables);
     }
-    
+
     private Table<Integer, Integer, Object> buildEntryTable(Bundle bundle) {
         TableBuilder table = new TableBuilder();
         table.row("Name", "Size", "Offset");
-        
+
         bundle.entryInfos().forEach(entry -> {
             table.row(entry.name(), entry.size(), entry.offset());
         });
-        
+
         return table.get();
     }
 }

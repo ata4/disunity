@@ -19,7 +19,7 @@ import java.util.Objects;
  * @unity SerializedFile::Type
  */
 public class TypeRoot<T extends Type> {
-    
+
     private int classID;
     private UnityHash128 scriptID;
     private UnityHash128 oldTypeHash;

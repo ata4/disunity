@@ -19,11 +19,11 @@ import java.util.Map;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class ObjectInfoTableV1<T extends ObjectInfo> extends ObjectInfoTable<T> {
-    
+
     public ObjectInfoTableV1(Class<T> elementFactory) {
         super(elementFactory);
     }
-        
+
     @Override
     public void read(DataReader in) throws IOException {
         int entries = in.readInt();

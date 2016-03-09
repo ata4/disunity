@@ -20,9 +20,9 @@ import javax.xml.bind.DatatypeConverter;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityHash128 implements Struct {
-    
+
     private final byte[] hash = new byte[16];
-    
+
     public byte[] hash() {
         return hash;
     }

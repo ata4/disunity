@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * IOException used for asset bundle errors.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleException extends IOException {

@@ -36,22 +36,22 @@ import java.util.logging.Logger;
     commandDescription = "Extract files from bundles."
 )
 public class BundleUnpack extends FileCommand {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     @Parameter(
         names = {"-o", "--output"},
         description = "Output directory",
         converter = PathConverter.class
     )
     private Path outputDir;
-    
+
     @Parameter(
         names = {"-f", "--filename"},
         description = "Extract file with this name only."
     )
     private String filename;
-    
+
     @Parameter(
         names = {"-p", "--prop"},
         description = "Write bundle property file."
@@ -59,13 +59,13 @@ public class BundleUnpack extends FileCommand {
     private boolean writeProp;
 
     @Override
-    protected void runFile(Path file) {    
+    protected void runFile(Path file) {
         try (BundleReader bundleReader = new BundleReader(file)) {
             Bundle bundle = bundleReader.read();
-            
+
             AtomicInteger done = new AtomicInteger();
             long total = bundle.entryInfos().size();
-            
+
             // define output directory, if not yet defined
             if (outputDir == null) {
                 // if there's only one file inside the bundle, then don't bother
@@ -77,7 +77,7 @@ public class BundleUnpack extends FileCommand {
                     outputDir = file.resolveSibling(fileName);
                 }
             }
-            
+
             try {
                 bundle.entries()
                     .stream()
@@ -96,7 +96,7 @@ public class BundleUnpack extends FileCommand {
             } catch (UncheckedIOException ex) {
                 throw ex.getCause();
             }
-            
+
             if (writeProp && filename == null) {
                 String bundleName = outputDir.getFileName().toString();
                 Path propsFile = outputDir.getParent().resolve(bundleName + ".json");

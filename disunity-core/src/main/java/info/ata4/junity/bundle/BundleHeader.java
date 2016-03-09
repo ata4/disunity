@@ -22,53 +22,53 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Structure for Unity asset bundles.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  * @unity UnityWebStreamHeader
  */
 public class BundleHeader implements Struct {
-    
+
     public static final String SIGNATURE_WEB = "UnityWeb";
     public static final String SIGNATURE_RAW = "UnityRaw";
-    
+
     // UnityWeb or UnityRaw
     private String signature;
-    
+
     // file version
     // 3 in Unity 3.5 and 4
     // 2 in Unity 2.6 to 3.4
     // 1 in Unity 1 to 2.5
     private int streamVersion;
-    
+
     // player version string
     // 2.x.x for Unity 2
     // 3.x.x for Unity 3/4
     private UnityVersion unityVersion = new UnityVersion();
-    
+
     // engine version string
     private UnityVersion unityRevision = new UnityVersion();
-    
+
     // minimum number of bytes to read for streamed bundles,
     // equal to completeFileSize for normal bundles
     private long minimumStreamedBytes;
-    
+
     // offset to the bundle data or size of the bundle header
     private int headerSize;
-    
+
     // equal to 1 if it's a streamed bundle, number of levelX + mainData assets
     // otherwise
     private int numberOfLevelsToDownload;
-    
+
     // list of compressed and uncompressed offsets
     private List<Pair<Long, Long>> levelByteEnd = new ArrayList<>();
-    
+
     // equal to file size, sometimes equal to uncompressed data size without the header
     private long completeFileSize;
-    
+
     // offset to the first asset file within the data area? equals compressed
     // file size if completeFileSize contains the uncompressed data size
     private long dataHeaderSize;
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         signature = in.readStringNull();
@@ -77,7 +77,7 @@ public class BundleHeader implements Struct {
         unityRevision = new UnityVersion(in.readStringNull());
         minimumStreamedBytes = in.readUnsignedInt();
         headerSize = in.readInt();
-        
+
         numberOfLevelsToDownload = in.readInt();
         int numberOfLevels = in.readInt();
 
@@ -85,15 +85,15 @@ public class BundleHeader implements Struct {
         for (int i = 0; i < numberOfLevels; i++) {
             levelByteEnd.add(new ImmutablePair(in.readUnsignedInt(), in.readUnsignedInt()));
         }
-        
+
         if (streamVersion >= 2) {
             completeFileSize = in.readUnsignedInt();
         }
-        
+
         if (streamVersion >= 3) {
             dataHeaderSize = in.readUnsignedInt();
         }
-        
+
         in.readByte();
     }
 
@@ -105,34 +105,34 @@ public class BundleHeader implements Struct {
         out.writeStringNull(unityRevision.toString());
         out.writeUnsignedInt(minimumStreamedBytes);
         out.writeInt(headerSize);
-        
+
         out.writeInt(numberOfLevelsToDownload);
         out.writeInt(levelByteEnd.size());
-        
+
         for (Pair<Long, Long> offset : levelByteEnd) {
             out.writeUnsignedInt(offset.getLeft());
             out.writeUnsignedInt(offset.getRight());
         }
-        
+
         if (streamVersion >= 2) {
             out.writeUnsignedInt(completeFileSize);
         }
-        
+
         if (streamVersion >= 3) {
             out.writeUnsignedInt(dataHeaderSize);
         }
-        
+
         out.writeUnsignedByte(0);
     }
-    
+
     public boolean hasValidSignature() {
         return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
     }
-    
+
     public void compressed(boolean compressed) {
         signature = compressed ? SIGNATURE_WEB : SIGNATURE_RAW;
     }
-    
+
     public boolean compressed() {
         return signature.equals(SIGNATURE_WEB);
     }
@@ -176,11 +176,11 @@ public class BundleHeader implements Struct {
     public void headerSize(int dataOffset) {
         this.headerSize = dataOffset;
     }
-    
+
     public List<Pair<Long, Long>> levelByteEnd() {
         return levelByteEnd;
     }
-    
+
     public int numberOfLevels() {
         return levelByteEnd.size();
     }

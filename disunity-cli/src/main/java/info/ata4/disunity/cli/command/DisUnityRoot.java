@@ -24,14 +24,14 @@ import java.util.logging.Level;
  */
 @Parameters
 public class DisUnityRoot extends Command {
-    
+
     @Parameter(
         names = {"-h", "--help"},
         description = "Print this help.",
         help = true
     )
     private boolean help;
-    
+
     @Parameter(
         names = { "-v", "--verbose" },
         description = "Show more verbose log output."
@@ -41,7 +41,7 @@ public class DisUnityRoot extends Command {
     @Override
     public void init(JCommander commander, PrintWriter out) {
         super.init(commander, out);
-        
+
         addSubCommand("bundle", new BundleRoot());
         addSubCommand("asset", new AssetRoot());
     }
@@ -52,13 +52,13 @@ public class DisUnityRoot extends Command {
         if (verbose) {
             LogUtils.configure(Level.ALL);
         }
-        
+
         // display usage
         if (help) {
             usage();
             return;
         }
-        
+
         super.run();
     }
 }

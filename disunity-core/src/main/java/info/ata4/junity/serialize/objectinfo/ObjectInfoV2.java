@@ -18,13 +18,13 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class ObjectInfoV2 extends ObjectInfo {
-    
+
     private short scriptTypeIndex;
-    
+
     public short scriptTypeIndex() {
         return scriptTypeIndex;
     }
-    
+
     public void scriptTypeIndex(short scriptTypeIndex) {
         this.scriptTypeIndex = scriptTypeIndex;
     }
@@ -46,5 +46,5 @@ public class ObjectInfoV2 extends ObjectInfo {
         out.writeShort((short) classID);
         out.writeShort(scriptTypeIndex);
     }
-    
+
 }

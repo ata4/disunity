@@ -16,14 +16,14 @@ import java.util.function.Consumer;
 /**
  * Interface for consumers that throw IOExceptions, which are wrapped to
  * UncheckedIOExceptions.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @FunctionalInterface
 public interface IOConsumer<T> {
-    
+
     void accept(T t) throws IOException;
-    
+
     public static <T> Consumer<T> uncheck(IOConsumer<T> consumer) {
         return t -> {
             try {

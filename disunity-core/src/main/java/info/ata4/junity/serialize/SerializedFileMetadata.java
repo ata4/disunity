@@ -45,37 +45,37 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class SerializedFileMetadata implements Struct {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     private final DataBlock typeTreeBlock = new DataBlock();
     private final DataBlock objectInfoBlock = new DataBlock();
     private final DataBlock objectIDBlock = new DataBlock();
     private final DataBlock externalsBlock = new DataBlock();
-    
+
     private TypeTree typeTree;
     private ObjectInfoTable objectInfoTable;
     private ObjectIdentifierTable objectIDTable;
     private FileIdentifierTable externals;
-    
+
     private int version;
-    
+
     public DataBlock typeTreeBlock() {
         return typeTreeBlock;
     }
-    
+
     public DataBlock objectInfoBlock() {
         return objectInfoBlock;
     }
-    
+
     public DataBlock objectIDBlock() {
         return objectIDBlock;
     }
-    
+
     public DataBlock externalsBlock() {
         return externalsBlock;
     }
-    
+
     public List<DataBlock> dataBlocks() {
         List<DataBlock> blocks = new ArrayList<>();
         blocks.add(typeTreeBlock());
@@ -84,43 +84,43 @@ public class SerializedFileMetadata implements Struct {
         blocks.add(externalsBlock());
         return blocks;
     }
-    
+
     public int version() {
         return version;
     }
-    
+
     public void version(int version) {
         this.version = version;
     }
-    
+
     public <T extends Type> TypeTree<T> typeTree() {
         return typeTree;
     }
-    
+
     public <T extends Type> void typeTree(TypeTree<T> typeTree) {
         this.typeTree = Objects.requireNonNull(typeTree);
     }
-    
+
     public <T extends ObjectInfo> ObjectInfoTable<T> objectInfoTable() {
         return objectInfoTable;
     }
-    
+
     public <T extends ObjectInfo> void objectInfoTable(ObjectInfoTable<T> objInfoTable) {
         this.objectInfoTable = Objects.requireNonNull(objInfoTable);
     }
-    
+
     public ObjectIdentifierTable objectIDTable() {
         return objectIDTable;
     }
-    
+
     public void objectIDTable(ObjectIdentifierTable objectIDTable) {
         this.objectIDTable = Objects.requireNonNull(objectIDTable);
     }
-    
+
     public <T extends FileIdentifier> FileIdentifierTable<T> externals() {
         return externals;
     }
-    
+
     public <T extends FileIdentifier> void externals(FileIdentifierTable<T> externals) {
         this.externals = Objects.requireNonNull(externals);
     }
@@ -135,12 +135,12 @@ public class SerializedFileMetadata implements Struct {
         } else {
             typeTree = new TypeTreeV1(TypeV1.class);
         }
-        
+
         typeTreeBlock.markBegin(in);
         in.readStruct(typeTree);
         typeTreeBlock.markEnd(in);
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
-        
+
         // load object info table
         if (version > 14) {
             objectInfoTable = new ObjectInfoTableV2(ObjectInfoV3.class);
@@ -149,12 +149,12 @@ public class SerializedFileMetadata implements Struct {
         } else {
             objectInfoTable = new ObjectInfoTableV1(ObjectInfoV1.class);
         }
-        
+
         objectInfoBlock.markBegin(in);
         in.readStruct(objectInfoTable);
         objectInfoBlock.markEnd(in);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
-        
+
         // load object identifiers (Unity 5+ only)
         objectIDTable = new ObjectIdentifierTable();
         if (version > 10) {
@@ -163,14 +163,14 @@ public class SerializedFileMetadata implements Struct {
             objectIDBlock.markEnd(in);
             L.log(Level.FINER, "objectIDBlock: {0}", objectIDBlock);
         }
-        
+
         // load external references
         if (version > 5) {
             externals = new FileIdentifierTable(FileIdentifierV2.class);
         } else {
             externals = new FileIdentifierTable(FileIdentifierV1.class);
         }
-        
+
         externalsBlock.markBegin(in);
         in.readStruct(externals);
         externalsBlock.markEnd(in);
@@ -183,19 +183,19 @@ public class SerializedFileMetadata implements Struct {
         out.writeStruct(typeTree);
         typeTreeBlock.markEnd(out);
         L.log(Level.FINER, "typeTreeBlock: {0}", typeTreeBlock);
-        
+
         objectInfoBlock.markBegin(out);
         out.writeStruct(objectInfoTable);
         objectInfoBlock.markEnd(out);
         L.log(Level.FINER, "objectInfoBlock: {0}", objectInfoBlock);
-        
+
         if (version > 10) {
             objectIDBlock.markBegin(out);
             out.writeStruct(objectIDTable);
             objectIDBlock.markEnd(out);
             L.log(Level.FINER, "objectIDBlock: {0}", objectIDBlock);
         }
-        
+
         externalsBlock.markBegin(out);
         out.writeStruct(externals);
         externalsBlock.markEnd(out);

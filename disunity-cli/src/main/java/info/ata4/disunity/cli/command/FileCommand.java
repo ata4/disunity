@@ -19,18 +19,18 @@ import java.util.List;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class FileCommand extends Command {
-    
+
     @Parameter(
         description = "<file> [file]...",
         converter = PathConverter.class,
         required = true
     )
     private List<Path> filePaths;
-    
+
     @Override
     public void run() {
         filePaths.forEach(this::runFile);
     }
-    
+
     protected abstract void runFile(Path file);
 }

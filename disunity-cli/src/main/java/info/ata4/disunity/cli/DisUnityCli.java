@@ -21,28 +21,28 @@ import java.util.logging.Logger;
 
 /**
  * DisUnity command line interface.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class DisUnityCli {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         LogUtils.configure();
-        
+
         try (PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out), true)) {
             JCommander jc = new JCommander();
-            DisUnityRoot root = new DisUnityRoot();     
+            DisUnityRoot root = new DisUnityRoot();
             root.init(jc, out);
-            
+
             jc.setProgramName(DisUnity.getProgramName());
             jc.addObject(root);
             jc.parse(args);
-            
+
             root.run();
         } catch (ParameterException ex) {
             L.log(Level.WARNING, "Parameter error: {0}", ex.getMessage());

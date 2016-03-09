@@ -21,13 +21,13 @@ import java.util.List;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityTableStruct<T extends Struct> extends UnityStruct<T> {
-    
+
     private final List<T> elements = new ArrayList<>();
 
     public UnityTableStruct(Class<T> elementFactory) {
         super(elementFactory);
     }
-    
+
     public List<T> elements() {
         return elements;
     }
@@ -40,7 +40,7 @@ public class UnityTableStruct<T extends Struct> extends UnityStruct<T> {
             elements.add(readEntry(in));
         }
     }
-    
+
     protected T readEntry(DataReader in) throws IOException {
         T element = createElement();
         in.readStruct(element);
@@ -55,7 +55,7 @@ public class UnityTableStruct<T extends Struct> extends UnityStruct<T> {
             writeEntry(out, element);
         }
     }
-    
+
     protected void writeEntry(DataWriter out, T element) throws IOException {
         out.writeStruct(element);
     }

@@ -1,11 +1,11 @@
 /*
-** 2015 December 22
-**
-** The author disclaims copyright to this source code. In place of
-** a legal notice, here is a blessing:
-**    May you do good and not evil.
-**    May you find forgiveness for yourself and forgive others.
-**    May you share freely, never taking more than you give.
+ ** 2015 December 22
+ **
+ ** The author disclaims copyright to this source code. In place of
+ ** a legal notice, here is a blessing:
+ **    May you do good and not evil.
+ **    May you find forgiveness for yourself and forgive others.
+ **    May you share freely, never taking more than you give.
  */
 package info.ata4.disunity.cli.command.asset;
 
@@ -27,11 +27,11 @@ import java.util.Map;
     commandDescription = "List file data blocks."
 )
 public class AssetBlocks extends AssetTableCommand {
-    
+
     @Override
     protected TableModel tableModel(SerializedFile serialized) {
         Map<String, DataBlock> blocks = new LinkedHashMap<>();
-        
+
         blocks.put("Header", serialized.headerBlock());
         blocks.put("Type Tree", serialized.metadata().typeTreeBlock());
         blocks.put("Object Info", serialized.metadata().objectInfoBlock());
@@ -40,9 +40,9 @@ public class AssetBlocks extends AssetTableCommand {
 
         TableBuilder table = new TableBuilder();
         table.row("Name", "Offset", "Size");
-        
+
         blocks.entrySet().stream()
-            .sorted((e1, e2) -> 
+            .sorted((e1, e2) ->
                 Long.compare(
                     e1.getValue().offset(),
                     e2.getValue().offset()
@@ -56,7 +56,7 @@ public class AssetBlocks extends AssetTableCommand {
                     block.length()
                 );
             });
-        
+
         TableModel model = new TableModel("Blocks", table.get());
         TextTableFormat format = model.format();
         format.columnFormatter(1, Formatters::hex);

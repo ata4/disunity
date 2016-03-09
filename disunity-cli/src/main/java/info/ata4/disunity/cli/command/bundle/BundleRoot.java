@@ -20,11 +20,11 @@ import java.io.PrintWriter;
  */
 @Parameters
 public class BundleRoot extends Command {
-    
+
     @Override
     public void init(JCommander commander, PrintWriter out) {
         super.init(commander, out);
-        
+
         addSubCommand("list", new BundleList());
         addSubCommand("info", new BundleInfo());
         addSubCommand("pack", new BundlePack());

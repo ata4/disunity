@@ -30,9 +30,9 @@ import java.util.logging.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class AssetCommand extends RecursiveFileCommand {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     @Override
     protected void runFileRecursive(Path file) {
         if (BundleUtils.isBundle(file)) {
@@ -63,6 +63,6 @@ public abstract class AssetCommand extends RecursiveFileCommand {
             }
         }
     }
-    
+
     protected abstract void runSerializedFile(Path file, SerializedFile serialized);
 }

@@ -18,13 +18,13 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class ObjectInfoV3 extends ObjectInfoV2 {
-    
+
     private boolean stripped;
-    
+
     public boolean isStripped() {
         return stripped;
     }
-    
+
     public void setStripped(boolean stripped) {
         this.stripped = stripped;
     }

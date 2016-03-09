@@ -23,25 +23,25 @@ import org.apache.commons.io.input.CountingInputStream;
 
 /**
  * Streaming reader for Unity asset bundles.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class BundleReader implements Closeable {
-    
+
     private final DataReader in;
     private Bundle bundle;
     private CountingInputStream lzma;
     private boolean closed;
-    
+
     public BundleReader(Path file) throws IOException {
         in = DataReaders.forFile(file, READ);
     }
 
     public Bundle read() throws BundleException, IOException {
         bundle = new Bundle();
-        
+
         in.position(0);
-        
+
         BundleHeader header = bundle.header();
         in.readStruct(header);
 
@@ -49,14 +49,14 @@ public class BundleReader implements Closeable {
         if (!header.hasValidSignature()) {
             throw new BundleException("Invalid signature");
         }
-        
+
         long dataHeaderSize = header.dataHeaderSize();
         if (dataHeaderSize == 0) {
             // old stream versions don't store the data header size, so use a large
             // fixed number instead
             dataHeaderSize = 4096;
         }
-        
+
         List<BundleEntryInfo> entryInfos = bundle.entryInfos();
         InputStream is = dataInputStream(0, dataHeaderSize);
         DataReader inData = DataReaders.forInputStream(is);
@@ -67,62 +67,62 @@ public class BundleReader implements Closeable {
             inData.readStruct(entryInfo);
             entryInfos.add(entryInfo);
         }
-        
+
         // sort entries by offset so that they're in the order in which they
         // appear in the file, which is convenient for compressed bundles
         entryInfos.sort((a, b) -> Long.compare(a.offset(), b.offset()));
-        
+
         List<BundleEntry> entries = bundle.entries();
         entryInfos.forEach(entryInfo -> {
             entries.add(new BundleInternalEntry(entryInfo, this::inputStreamForEntry));
         });
-        
+
         return bundle;
     }
-    
+
     private InputStream dataInputStream(long offset, long size) throws IOException {
         InputStream is;
-        
+
         // use LZMA stream if the bundle is compressed
         if (bundle.header().compressed()) {
             // create initial input stream if required
             if (lzma == null) {
                 lzma = lzmaInputStream();
             }
-            
+
             // recreate stream if the offset is behind
             long lzmaOffset = lzma.getByteCount();
             if (lzmaOffset > offset) {
                 lzma.close();
                 lzma = lzmaInputStream();
             }
-            
+
             // skip forward if required
             if (lzmaOffset < offset) {
                 lzma.skip(offset - lzmaOffset);
             }
-            
+
             is = lzma;
         } else {
             in.position(bundle.header().headerSize() + offset);
             is = in.stream();
         }
-        
+
         return new BoundedInputStream(is, size);
     }
-    
+
     private CountingInputStream lzmaInputStream() throws IOException {
         in.position(bundle.header().headerSize());
         return new CountingInputStream(new LzmaInputStream(in.stream()));
     }
-    
+
     private InputStream inputStreamForEntry(BundleEntryInfo info) throws IOException {
         if (closed) {
             throw new BundleException("Bundle reader is closed");
         }
         return dataInputStream(info.offset(), info.size());
     }
-    
+
     @Override
     public void close() throws IOException {
         closed = true;

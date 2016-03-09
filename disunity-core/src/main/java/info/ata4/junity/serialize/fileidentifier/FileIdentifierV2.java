@@ -18,10 +18,10 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class FileIdentifierV2 extends FileIdentifierV1 {
-    
+
     // Path to the asset file?
     private String assetPath;
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         assetPath = in.readStringNull();
@@ -33,7 +33,7 @@ public class FileIdentifierV2 extends FileIdentifierV1 {
         out.writeStringNull(assetPath);
         super.write(out);
     }
-    
+
     public String assetPath() {
         return assetPath;
     }

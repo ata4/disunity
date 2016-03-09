@@ -34,9 +34,9 @@ import java.util.logging.Logger;
     commandDescription = "Split asset file into data blocks."
 )
 public class AssetUnpack extends AssetCommand {
-    
+
     private static final Logger L = LogUtils.getLogger();
-    
+
     @Parameter(
         names = {"-l", "--level"},
         description = "Unpacking level"
@@ -51,16 +51,16 @@ public class AssetUnpack extends AssetCommand {
             if (Files.isRegularFile(outputDir)) {
                 outputDir = PathUtils.append(outputDir, "_");
             }
-            
+
             if (Files.notExists(outputDir)) {
                 Files.createDirectory(outputDir);
             }
-            
+
             try (FileChannel fc = FileChannel.open(file)) {
                 DataBlock headerBlock = asset.headerBlock();
                 Path headerFile = outputDir.resolve("header.block");
                 copyBlock(headerBlock, headerFile, fc);
-                
+
                 if (level > 0) {
                     DataBlock typeTreeBlock = asset.metadata().typeTreeBlock();
                     Path typeTreeFile = outputDir.resolve("type_tree.block");
@@ -69,7 +69,7 @@ public class AssetUnpack extends AssetCommand {
                     DataBlock objectInfoBlock = asset.metadata().objectInfoBlock();
                     Path objectInfoFile = outputDir.resolve("object_info.block");
                     copyBlock(objectInfoBlock, objectInfoFile, fc);
-                    
+
                     DataBlock objectIDBlock = asset.metadata().objectIDBlock();
                     if (objectIDBlock.length() > 0) {
                         Path objectIDFile = outputDir.resolve("object_ids.block");
@@ -84,27 +84,27 @@ public class AssetUnpack extends AssetCommand {
                     Path metadataFile = outputDir.resolve("metadata.block");
                     copyBlock(metadataBlock, metadataFile, fc);
                 }
-                
+
                 if (level < 2) {
                     DataBlock objectDataBlock = asset.objectDataBlock();
                     Path objectDataFile = outputDir.resolve("object_data.block");
                     copyBlock(objectDataBlock, objectDataFile, fc);
                 }
             }
-            
+
             if (level > 1) {
                 Path objectDataDir = outputDir.resolve("object_data");
-                
+
                 if (Files.notExists(objectDataDir)) {
                     Files.createDirectory(objectDataDir);
                 }
-                
+
                 for (SerializedObjectData od : asset.objectData()) {
                     String objectDataName = String.format("%010d", od.id());
                     Path objectDataFile = objectDataDir.resolve(objectDataName + ".block");
                     ByteBuffer objectDataBuffer = od.buffer();
                     objectDataBuffer.rewind();
-                    
+
                     ByteBufferUtils.save(objectDataFile, objectDataBuffer);
                 }
             }
@@ -112,7 +112,7 @@ public class AssetUnpack extends AssetCommand {
             L.log(Level.WARNING, "Can't unpack asset file " + file, ex);
         }
     }
-    
+
     private void copyBlock(DataBlock block, Path file, FileChannel fc) throws IOException {
         try (FileChannel fcOut = FileChannel.open(file, CREATE, WRITE)) {
             fc.transferTo(block.offset(), block.length(), fcOut);

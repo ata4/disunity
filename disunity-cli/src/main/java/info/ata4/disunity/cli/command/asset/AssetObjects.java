@@ -34,52 +34,52 @@ public class AssetObjects extends AssetTableCommand {
     @Override
     protected TableModel tableModel(SerializedFile serialized) {
         SerializedFileMetadata metadata = serialized.metadata();
-        
+
         TableBuilder table = new TableBuilder();
         table.row("Path ID", "Offset", "Length", "Type ID", "Class ID");
-        
+
         Class<ObjectInfo> factory = metadata.objectInfoTable().elementFactory();
-        
+
         boolean typeTreePresent = metadata.typeTree().embedded();
         boolean v2 = ObjectInfoV2.class.isAssignableFrom(factory);
         boolean v3 = ObjectInfoV3.class.isAssignableFrom(factory);
-        
+
         if (typeTreePresent) {
             table.append("Class Name");
         }
-  
+
         if (v2) {
             table.append("Script Type ID");
         }
-        
+
         if (v3) {
             table.append("Stripped");
         }
-        
+
         metadata.objectInfoTable().infoMap().entrySet().stream().forEach(e -> {
             ObjectInfo info = e.getValue();
             table.row(e.getKey(), info.offset(), info.length(), info.typeID(),
                     info.classID());
-            
+
             if (typeTreePresent) {
                 TypeRoot<Type> baseClass = metadata.typeTree().typeMap().get(info.typeID());
                 String className = baseClass.nodes().data().typeName();
                 table.append(className);
             }
-            
+
             if (v2) {
                 table.append(((ObjectInfoV2) info).scriptTypeIndex());
             }
-            
+
             if (v3) {
                 table.append(((ObjectInfoV3) info).isStripped());
             }
         });
-        
+
         TableModel model = new TableModel("Objects", table.get());
         TextTableFormat format = model.format();
         format.columnFormatter(1, Formatters::hex);
-        
+
         return model;
     }
 }

@@ -18,16 +18,16 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TypeV2 extends TypeV1 {
-    
+
     // Unity 5+, the level of this type within the type tree
     protected int treeLevel;
-    
+
     // Unity 5+, offset to the type string
     protected int typeOffset;
-    
+
     // Unity 5+, offset to the name string
     protected int nameOffset;
-    
+
     public int treeLevel() {
         return treeLevel;
     }
@@ -51,7 +51,7 @@ public class TypeV2 extends TypeV1 {
     public void nameOffset(int nameOffset) {
         this.nameOffset = nameOffset;
     }
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         version = in.readShort();
@@ -63,7 +63,7 @@ public class TypeV2 extends TypeV1 {
         index = in.readInt();
         metaFlag = in.readInt();
     }
-    
+
     @Override
     public void write(DataWriter out) throws IOException {
         out.writeShort((short) version);

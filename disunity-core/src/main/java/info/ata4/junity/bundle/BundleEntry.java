@@ -18,19 +18,19 @@ import org.apache.commons.io.FilenameUtils;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class BundleEntry {
-    
+
     public static boolean isLibrary(BundleEntry entry) {
         String ext = FilenameUtils.getExtension(entry.name());
         return ext.equals("dll") || ext.equals("mdb");
     }
-    
+
     public static boolean isResource(BundleEntry entry) {
         String ext = FilenameUtils.getExtension(entry.name());
         return ext.equals("resource");
     }
-    
+
     public abstract String name();
-    
+
     public abstract long size();
 
     public abstract InputStream inputStream() throws IOException;

@@ -19,16 +19,16 @@ import java.nio.ByteBuffer;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class SerializedObjectData {
-    
+
     private final long id;
     private ObjectInfo info;
     private ByteBuffer buffer;
     private Node<Type> typeTree;
-    
+
     public SerializedObjectData(long id) {
         this.id = id;
     }
-    
+
     public long id() {
         return id;
     }
@@ -36,7 +36,7 @@ public class SerializedObjectData {
     public ObjectInfo info() {
         return info;
     }
-    
+
     public void info(ObjectInfo info) {
         this.info = info;
     }
@@ -44,11 +44,11 @@ public class SerializedObjectData {
     public ByteBuffer buffer() {
         return buffer;
     }
-    
+
     public void buffer(ByteBuffer buffer) {
         this.buffer = buffer;
     }
-    
+
     public Node<Type> typeTree() {
         return typeTree;
     }

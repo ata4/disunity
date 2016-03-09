@@ -18,15 +18,15 @@ import info.ata4.io.Struct;
 public abstract class UnityStruct<T extends Struct> implements Struct {
 
     protected final Class<T> elementFactory;
-    
+
     public UnityStruct(Class<T> elementFactory) {
         this.elementFactory = elementFactory;
     }
-    
+
     public Class<T> elementFactory() {
         return elementFactory;
     }
-    
+
     protected T createElement() {
         try {
             return elementFactory.newInstance();
@@ -34,5 +34,5 @@ public abstract class UnityStruct<T extends Struct> implements Struct {
             throw new RuntimeException(ex);
         }
     }
-    
+
 }

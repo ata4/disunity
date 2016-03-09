@@ -16,6 +16,6 @@ import java.util.Optional;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public interface Progress {
-    
+
     void update(Optional<String> stage, double complete);
 }

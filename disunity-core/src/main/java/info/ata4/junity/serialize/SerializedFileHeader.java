@@ -20,13 +20,13 @@ import java.io.IOException;
  * @unity SerializedFileHeader
  */
 public class SerializedFileHeader implements Struct {
-    
+
     // size of the structure data
     private long metadataSize;
-    
+
     // size of the whole asset file
     private long fileSize;
-    
+
     // 5 = 1.2 - 2.0
     // 6 = 2.1 - 2.6
     // 7 = 3.0 (?)
@@ -38,13 +38,13 @@ public class SerializedFileHeader implements Struct {
     // 14 = 5.0
     // 15 = 5.0 (p3 and newer)
     private int version;
-    
+
     // offset to the serialized data
     private long dataOffset;
-    
+
     // byte order of the serialized data?
     private byte endianness;
-    
+
     // unused
     private final byte[] reserved = new byte[3];
 
@@ -87,7 +87,7 @@ public class SerializedFileHeader implements Struct {
     public void endianness(byte endianness) {
         this.endianness = endianness;
     }
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         metadataSize = in.readInt();

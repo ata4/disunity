@@ -24,7 +24,7 @@ public class AssetRoot extends Command {
     @Override
     public void init(JCommander commander, PrintWriter out) {
         super.init(commander, out);
-        
+
         addSubCommand("blocks", new AssetBlocks());
         addSubCommand("externals", new AssetExternalRefs());
         addSubCommand("header", new AssetHeader());

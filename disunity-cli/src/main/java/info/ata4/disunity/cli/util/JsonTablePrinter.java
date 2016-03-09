@@ -25,37 +25,37 @@ import java.util.Collection;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class JsonTablePrinter extends TablePrinter {
-    
+
     public JsonTablePrinter(PrintWriter out) {
         super(out);
     }
-    
+
     public JsonTablePrinter withFile(Path file) {
         this.file = file;
         return this;
     }
-    
+
     @Override
-    public void print(TableModel model) {        
+    public void print(TableModel model) {
         print(Arrays.asList(model));
     }
-    
+
     @Override
     public void print(Collection<TableModel> models) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonObject jsonRoot = new JsonObject();
-        
+
         if (file != null) {
             jsonRoot.add("file", new JsonPrimitive(file.toString()));
         }
-        
+
         models.forEach(model -> {
             jsonRoot.add(model.name().toLowerCase(), tableToJson(model.table(), gson));
         });
-        
+
         gson.toJson(jsonRoot, out);
     }
-    
+
     private JsonArray tableToJson(Table<Integer, Integer, Object> table, Gson gson) {
         JsonArray jsonTable = new JsonArray();
 
@@ -76,11 +76,11 @@ public class JsonTablePrinter extends TablePrinter {
         });
 
         JsonObject jsonRoot = new JsonObject();
-        
+
         if (file != null) {
             jsonRoot.add("file", new JsonPrimitive(file.toString()));
         }
-        
+
         return jsonTable;
     }
 }

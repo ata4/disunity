@@ -13,17 +13,17 @@ import java.util.Objects;
 
 /**
  * Unity engine version string container.
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class UnityVersion implements Comparable<UnityVersion> {
-    
+
     private byte major;
     private byte minor;
     private byte patch;
     private String build;
     private String raw;
-    
+
     public UnityVersion(String version) {
         try {
             major = partFromString(version.substring(0, 1));
@@ -35,11 +35,11 @@ public class UnityVersion implements Comparable<UnityVersion> {
             raw = version;
         }
     }
-    
+
     public UnityVersion() {
         this("1.0.0f1");
     }
-    
+
     private byte partFromString(String part) {
         if (part.equals("x")) {
             return -1;
@@ -47,7 +47,7 @@ public class UnityVersion implements Comparable<UnityVersion> {
             return Byte.valueOf(part);
         }
     }
-    
+
     private String partToString(byte part) {
         if (part == -1) {
             return "x";
@@ -55,7 +55,7 @@ public class UnityVersion implements Comparable<UnityVersion> {
             return String.valueOf(part);
         }
     }
-    
+
     public boolean isValid() {
         return raw == null;
     }
@@ -91,7 +91,7 @@ public class UnityVersion implements Comparable<UnityVersion> {
     public void build(String build) {
         this.build = build;
     }
-    
+
     @Override
     public String toString() {
         if (raw != null) {
@@ -101,7 +101,7 @@ public class UnityVersion implements Comparable<UnityVersion> {
                     partToString(minor), partToString(patch), build);
         }
     }
-    
+
     @Override
     public int hashCode() {
         if (raw != null) {
@@ -179,7 +179,7 @@ public class UnityVersion implements Comparable<UnityVersion> {
     public boolean lesserThan(UnityVersion that) {
         return this.compareTo(that) == 1;
     }
-    
+
     public boolean greaterThan(UnityVersion that) {
         return this.compareTo(that) == -1;
     }

@@ -19,11 +19,11 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TypeTreeV1<T extends TypeV1> extends TypeTree<T> {
-    
+
     public TypeTreeV1(Class<T> elementFactory) {
         super(elementFactory);
     }
-    
+
     @Override
     public void read(DataReader in) throws IOException {
         int numBaseClasses = in.readInt();
@@ -42,19 +42,19 @@ public class TypeTreeV1<T extends TypeV1> extends TypeTree<T> {
 
         embedded = numBaseClasses > 0;
     }
-    
+
     private void readNode(DataReader in, Node<T> node) throws IOException {
         T type = createElement();
         in.readStruct(type);
-        
+
         node.data(type);
-        
+
         int numChildren = in.readInt();
         for (int i = 0; i < numChildren; i++) {
             Node<T> childNode = new Node<>();
             readNode(in, childNode);
             node.add(childNode);
-        }  
+        }
     }
 
     @Override
@@ -63,8 +63,8 @@ public class TypeTreeV1<T extends TypeV1> extends TypeTree<T> {
         if (!embedded) {
             out.writeInt(0);
             return;
-        }        
-        
+        }
+
         int numBaseClasses = typeMap.size();
         out.writeInt(numBaseClasses);
 
@@ -73,18 +73,18 @@ public class TypeTreeV1<T extends TypeV1> extends TypeTree<T> {
             out.writeInt(classID);
 
             Node<T> node = bc.nodes();
-            
+
             writeNode(out, node);
         }
     }
-    
-    private void writeNode(DataWriter out, Node<T> node) throws IOException {        
+
+    private void writeNode(DataWriter out, Node<T> node) throws IOException {
         T type = node.data();
         out.writeStruct(type);
 
         int numChildren = node.size();
         out.writeInt(numChildren);
-        
+
         for (Node child : node) {
             writeNode(out, child);
         }
