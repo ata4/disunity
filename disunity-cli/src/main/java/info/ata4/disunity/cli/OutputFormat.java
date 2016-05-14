@@ -11,9 +11,9 @@ package info.ata4.disunity.cli;
 
 /**
  * CLI text output format enum
- * 
+ *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public enum OutputFormat {
-    PLAINTEXT, JSON
+    TEXT, JSON
 }

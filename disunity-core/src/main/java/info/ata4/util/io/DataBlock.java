@@ -17,52 +17,52 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class DataBlock {
-    
+
     private long offset;
     private long length;
 
-    public long getOffset() {
+    public long offset() {
         return offset;
     }
 
-    public void setOffset(long offset) {
+    public void offset(long offset) {
         this.offset = offset;
     }
 
-    public long getLength() {
+    public long length() {
         return length;
     }
 
-    public void setLength(long length) {
+    public void length(long length) {
         this.length = length;
     }
-    
-    public void setEndOffset(long endOffset) {
+
+    public void endOffset(long endOffset) {
         this.length = endOffset - offset;
     }
-    
-    public long getEndOffset() {
+
+    public long endOffset() {
         return offset + length;
     }
-    
+
     public boolean isIntersecting(DataBlock that) {
-        return this.getEndOffset() > that.getOffset() && that.getEndOffset() > this.getOffset();
+        return this.endOffset() > that.offset() && that.endOffset() > this.offset();
     }
-    
+
     public boolean isInside(DataBlock that) {
-        return this.getOffset() >= that.getOffset() && this.getEndOffset() <= that.getEndOffset();
+        return this.offset() >= that.offset() && this.endOffset() <= that.endOffset();
     }
-    
+
     public void markBegin(Positionable p) throws IOException {
-        setOffset(p.position());
+        offset(p.position());
     }
-    
+
     public void markEnd(Positionable p) throws IOException {
-        setEndOffset(p.position());
+        DataBlock.this.endOffset(p.position());
     }
-    
+
     @Override
     public String toString() {
-        return getOffset() + " - " + getEndOffset() + " (" + getLength() + ")";
+        return DataBlock.this.offset() + " - " + endOffset() + " (" + DataBlock.this.length() + ")";
     }
 }

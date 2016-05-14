@@ -5,7 +5,7 @@
     <artifactId>disunity</artifactId>
     <groupId>info.ata4.disunity</groupId>
     <packaging>pom</packaging>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <description>An experimental toolset for Unity asset and asset bundle files.</description>
     <url>https://github.com/ata4/disunity</url>
   
@@ -19,8 +19,8 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
     <repositories>
@@ -41,24 +41,34 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.5</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0-rc2</version>
+        </dependency>
 
         <!-- Dependencies from jitpack.io -->
         <dependency>
             <groupId>com.github.ata4</groupId>
             <artifactId>lzmajio</artifactId>
-            <version>ata4-0.97</version>
+            <version>e6877e7e01</version>
         </dependency>
         <dependency>
             <groupId>com.github.ata4</groupId>
             <artifactId>ioutils</artifactId>
-            <version>1844cb11d0</version>
+            <version>047e401d73</version>
         </dependency>
     </dependencies>
     
     <modules>
         <module>disunity-core</module>
         <module>disunity-cli</module>
-        <module>disunity-gui</module>
         <module>disunity-dist</module>
     </modules>
 
