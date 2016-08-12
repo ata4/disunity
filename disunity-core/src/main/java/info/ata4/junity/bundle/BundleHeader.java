@@ -30,11 +30,13 @@ public class BundleHeader implements Struct {
 
     public static final String SIGNATURE_WEB = "UnityWeb";
     public static final String SIGNATURE_RAW = "UnityRaw";
+    public static final String SIGNATURE_FS  = "UnityFS";
 
     // UnityWeb or UnityRaw
     private String signature;
 
     // file version
+    // 6 in Unity 5.3+ (UnityFS files)
     // 3 in Unity 3.5 and 4
     // 2 in Unity 2.6 to 3.4
     // 1 in Unity 1 to 2.5
@@ -43,6 +45,7 @@ public class BundleHeader implements Struct {
     // player version string
     // 2.x.x for Unity 2
     // 3.x.x for Unity 3/4
+    // 5.x.x for Unity 5
     private UnityVersion unityVersion = new UnityVersion();
 
     // engine version string
@@ -69,32 +72,64 @@ public class BundleHeader implements Struct {
     // file size if completeFileSize contains the uncompressed data size
     private long dataHeaderSize;
 
+    // (UnityFS) length of the possibly-compressed (LZMA, LZ4) bundle data header
+    private int compressedDataHeaderSize;
+
+    // (UnityFS) flags
+    //  0x100 = <unknown>
+    //   0x80 = data header at end of file
+    //   0x40 = entry info present
+    //   0x3f = low six bits are data header compression method
+    //             0 = none
+    //             1 = LZMA
+    //             3 = LZ4
+    private int flags;
+
     @Override
     public void read(DataReader in) throws IOException {
         signature = in.readStringNull();
         streamVersion = in.readInt();
         unityVersion = new UnityVersion(in.readStringNull());
         unityRevision = new UnityVersion(in.readStringNull());
-        minimumStreamedBytes = in.readUnsignedInt();
-        headerSize = in.readInt();
 
-        numberOfLevelsToDownload = in.readInt();
-        int numberOfLevels = in.readInt();
+        if (signature.equals(SIGNATURE_FS)) {
+            // FS signature
+            // Expect streamVersion == 6
+            completeFileSize = in.readLong();
+            compressedDataHeaderSize = in.readInt();
+            dataHeaderSize = in.readInt();
+            flags = in.readInt();
 
-        levelByteEnd.clear();
-        for (int i = 0; i < numberOfLevels; i++) {
-            levelByteEnd.add(new ImmutablePair(in.readUnsignedInt(), in.readUnsignedInt()));
+            headerSize = (int) in.position();
+
+            if ((flags & 0x80) == 0) {
+                // The data header is part of the bundle header
+                headerSize += compressedDataHeaderSize;
+            }
+            // else it's at the end of the file
+        } else {
+            // Web or Raw signature
+            minimumStreamedBytes = in.readUnsignedInt();
+            headerSize = in.readInt();
+
+            numberOfLevelsToDownload = in.readInt();
+            int numberOfLevels = in.readInt();
+
+            levelByteEnd.clear();
+            for (int i = 0; i < numberOfLevels; i++) {
+                levelByteEnd.add(new ImmutablePair(in.readUnsignedInt(), in.readUnsignedInt()));
+            }
+
+            if (streamVersion >= 2) {
+                completeFileSize = in.readUnsignedInt();
+            }
+
+            if (streamVersion >= 3) {
+                dataHeaderSize = in.readUnsignedInt();
+            }
+
+            in.readByte();
         }
-
-        if (streamVersion >= 2) {
-            completeFileSize = in.readUnsignedInt();
-        }
-
-        if (streamVersion >= 3) {
-            dataHeaderSize = in.readUnsignedInt();
-        }
-
-        in.readByte();
     }
 
     @Override
@@ -126,7 +161,8 @@ public class BundleHeader implements Struct {
     }
 
     public boolean hasValidSignature() {
-        return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW);
+        return signature.equals(SIGNATURE_WEB) || signature.equals(SIGNATURE_RAW)
+                || signature.equals(SIGNATURE_FS);
     }
 
     public void compressed(boolean compressed) {
@@ -216,4 +252,12 @@ public class BundleHeader implements Struct {
     public void dataHeaderSize(long dataHeaderSize) {
         this.dataHeaderSize = dataHeaderSize;
     }
+
+    public int compressedDataHeaderSize() { return compressedDataHeaderSize; }
+
+    public int dataHeaderCompressionScheme() { return (flags & 0x3f); }
+
+    public boolean dataHeaderAtEndOfFile() { return (flags & 0x80) != 0; }
+
+    public boolean entryInfoPresent() { return (signature.equals(SIGNATURE_FS)) ? ((flags & 0x40) != 0) : true; }
 }
