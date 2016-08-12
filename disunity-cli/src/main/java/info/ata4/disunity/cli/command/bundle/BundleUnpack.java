@@ -23,6 +23,8 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -72,6 +74,10 @@ public class BundleUnpack extends FileCommand {
                 // with sub-directories
                 if (bundle.entryInfos().size() == 1) {
                     outputDir = file.getParent();
+                    if (outputDir == null) {
+                        // Passed a filename only. Use the current directory.
+                        outputDir = Paths.get(".");
+                    }
                 } else {
                     String fileName = PathUtils.getBaseName(file);
                     outputDir = file.resolveSibling(fileName);
