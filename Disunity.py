@@ -12,11 +12,11 @@ class BinaryReader:
     def __init__(self, file):
         self.file = file
 
-    def tell():
-        return file.tell()
+    def tell(self):
+        return self.file.tell()
 
-    def seek(offset, whence=0):
-        file.seek(offset, whence)
+    def seek(self, offset, whence=0):
+        self.file.seek(offset, whence)
 
     def read(self, size):
         return self.file.read(size)
