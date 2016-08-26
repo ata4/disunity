@@ -51,7 +51,7 @@ class SerializedFileReader:
         r = BinaryReader(file)
         sf = Munch()
         self.read_header(r, sf)
-        self.read_rtti(r, sf)
+        self.read_types(r, sf)
         return sf
 
     def read_header(self, r, sf):
@@ -82,23 +82,23 @@ class SerializedFileReader:
         if sf.header.version != 15:
             raise NotImplementedError("Unsupported format version %d" % sf.header.version)
 
-    def read_rtti(self, r, sf):
-        sf.rtti = Munch()
+    def read_types(self, r, sf):
+        sf.types = Munch()
 
         # older formats store the object data before the structure data
         if sf.header.version < 9:
-            rtti_offset = sf.header.fileSize - sf.header.metadataSize + 1
-            r.seek(rtti_offset)
+            types_offset = sf.header.fileSize - sf.header.metadataSize + 1
+            r.seek(types_offset)
 
         if sf.header.version > 6:
-            sf.rtti.signature = r.read_cstring()
-            sf.rtti.attributes = r.read_int32()
+            sf.types.signature = r.read_cstring()
+            sf.types.attributes = r.read_int32()
 
         if sf.header.version > 13:
-            sf.rtti.embedded = r.read_bool()
+            sf.types.embedded = r.read_bool()
 
         numBaseClasses = r.read_int32()
-        sf.rtti.base_classes = {}
+        sf.types.classes = {}
 
         for i in range(0, numBaseClasses):
             bclass = Munch()
@@ -109,11 +109,11 @@ class SerializedFileReader:
 
             bclass.old_type_hash = r.read(16)
 
-            if sf.rtti.embedded:
+            if sf.types.embedded:
                 # TODO
                 raise NotImplementedError("Runtime type node reading")
 
-            sf.rtti.base_classes[class_id] = bclass
+            sf.types.classes[class_id] = bclass
 
 def main(argv):
     app = argv.pop(0)
