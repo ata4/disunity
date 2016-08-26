@@ -39,6 +39,9 @@ class BinaryReader:
         b = self.file.read(1)
         return b[0] if b else None
 
+    def read_bool(self):
+        return self.read_int8() != 0
+
     def read_int32(self):
         return self.read_struct(">i" if self.be else "i")[0]
 
@@ -46,7 +49,7 @@ class SerializedFileReader:
 
     def read(self, file):
         r = BinaryReader(file)
-        sf = SerializedFile()
+        sf = Munch()
         self.read_header(r, sf)
         self.read_rtti(r, sf)
         return sf
@@ -55,6 +58,7 @@ class SerializedFileReader:
         # the header always uses big-endian byte order
         r.be = True
 
+        sf.header = Munch()
         sf.header.metadataSize = r.read_int32()
         sf.header.fileSize = r.read_int32()
         sf.header.version = r.read_int32()
@@ -70,15 +74,17 @@ class SerializedFileReader:
             sf.header.endianness = r.read_int8()
             r.read(3) # reserved
 
-        # newer formats use little endian for the rest of the file
+        # newer formats use little-endian for the rest of the file
         if sf.header.version > 5:
             r.be = False
 
         # TODO: test more formats
         if sf.header.version != 15:
-            raise RuntimeError("Unsupported format version %d" % sf.header.version)
+            raise NotImplementedError("Unsupported format version %d" % sf.header.version)
 
     def read_rtti(self, r, sf):
+        sf.rtti = Munch()
+
         # older formats store the object data before the structure data
         if sf.header.version < 9:
             rtti_offset = sf.header.fileSize - sf.header.metadataSize + 1
@@ -89,32 +95,25 @@ class SerializedFileReader:
             sf.rtti.attributes = r.read_int32()
 
         if sf.header.version > 13:
-            sf.rtti.embedded = r.read_int8()
+            sf.rtti.embedded = r.read_bool()
 
         numBaseClasses = r.read_int32()
-        sf.rtti.classes = []
+        sf.rtti.base_classes = {}
 
         for i in range(0, numBaseClasses):
-            bclass = BaseClass()
-            class_id = r.read_int32()
+            bclass = Munch()
 
-            if bclass.class_id < 0:
+            class_id = r.read_int32()
+            if class_id < 0:
                 bclass.script_id = r.read(16)
 
             bclass.old_type_hash = r.read(16)
 
             if sf.rtti.embedded:
                 # TODO
-                pass
+                raise NotImplementedError("Runtime type node reading")
 
-            sf.rtti.classes.append(bclass)
-
-class BaseClass(Munch):
-    pass
-
-class SerializedFile:
-    header = Munch()
-    rtti = Munch()
+            sf.rtti.base_classes[class_id] = bclass
 
 def main(argv):
     app = argv.pop(0)
@@ -122,20 +121,18 @@ def main(argv):
 
     reader = SerializedFileReader()
 
-    for filename in glob.iglob(path):
-        basename, ext = os.path.splitext(filename)
-        if ext == ".resource" or ext[0:6] == ".split":
+    for globpath in glob.iglob(path):
+        _, fext = os.path.splitext(globpath)
+        if fext == ".resource" or fext[0:6] == ".split":
             continue
 
-        if os.path.isdir(filename):
+        if os.path.isdir(globpath):
             continue
 
-        print(filename)
-        with open(filename, "rb") as file:
+        print(globpath)
+        with open(globpath, "rb") as file:
             sf = reader.read(file)
-            #pprint(sf.header)
-            #pprint(sf.rtti)
-            #print(len(sf.rtti.types))
+            pprint(sf)
 
     return 0
 
