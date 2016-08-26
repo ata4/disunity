@@ -18,6 +18,12 @@ class BinaryReader:
     def seek(self, offset, whence=0):
         self.file.seek(offset, whence)
 
+    def align(self, pad):
+        pos = self.tell()
+        newpos = (pos + pad - 1) // pad * pad
+        if newpos != pos:
+            self.seek(newpos)
+
     def read(self, size):
         return self.file.read(size)
 
@@ -35,15 +41,32 @@ class BinaryReader:
         data = self.file.read(size)
         return struct.unpack(format, data)
 
+    def read_int(self, type):
+        if self.be:
+            type = ">" + type
+        return self.read_struct(type)[0]
+
     def read_int8(self):
         b = self.file.read(1)
         return b[0] if b else None
 
-    def read_bool(self):
-        return self.read_int8() != 0
+    def read_int16(self):
+        return self.read_int("h")
+
+    def read_uint16(self):
+        return self.read_int("H")
 
     def read_int32(self):
-        return self.read_struct(">i" if self.be else "i")[0]
+        return self.read_int("i")
+
+    def read_uint32(self):
+        return self.read_int("I")
+
+    def read_int64(self):
+        return self.read_int("q")
+
+    def read_uint64(self):
+        return self.read_int("Q")
 
 class SerializedFileReader:
 
@@ -52,6 +75,7 @@ class SerializedFileReader:
         sf = Munch()
         self.read_header(r, sf)
         self.read_types(r, sf)
+        self.read_object_info(r, sf)
         return sf
 
     def read_header(self, r, sf):
@@ -95,12 +119,12 @@ class SerializedFileReader:
             sf.types.attributes = r.read_int32()
 
         if sf.header.version > 13:
-            sf.types.embedded = r.read_bool()
+            sf.types.embedded = r.read_int8() != 0
 
-        numBaseClasses = r.read_int32()
         sf.types.classes = {}
 
-        for i in range(0, numBaseClasses):
+        num_classes = r.read_int32()
+        for i in range(0, num_classes):
             bclass = Munch()
 
             class_id = r.read_int32()
@@ -113,7 +137,40 @@ class SerializedFileReader:
                 # TODO
                 raise NotImplementedError("Runtime type node reading")
 
+            if class_id in sf.types.classes:
+                raise RuntimeError("Duplicate class ID %d" % path_id)
+
             sf.types.classes[class_id] = bclass
+
+    def read_object_info(self, r, sf):
+        sf.objects = {}
+
+        num_entries = r.read_int32()
+
+        if sf.header.version > 13:
+            r.align(4)
+
+        for i in range(0, num_entries):
+            path_id = r.read_int64()
+
+            obj = Munch()
+            obj.byte_start = r.read_uint32()
+            obj.byte_size = r.read_uint32()
+            obj.type_id = r.read_int32()
+            obj.class_id = r.read_int16()
+
+            if sf.header.version > 13:
+                obj.script_type_index = r.read_int16()
+            else:
+                obj.is_destroyed = r.read_int16() != 0
+
+            if sf.header.version > 14:
+                obj.stripped = r.read_int32() != 0
+
+            if path_id in sf.objects:
+                raise RuntimeError("Duplicate path ID %d" % path_id)
+
+            sf.objects[path_id] = obj
 
 def main(argv):
     app = argv.pop(0)
@@ -132,7 +189,7 @@ def main(argv):
         print(globpath)
         with open(globpath, "rb") as file:
             sf = reader.read(file)
-            pprint(sf)
+            #pprint(sf)
 
     return 0
 
