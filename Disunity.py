@@ -75,7 +75,8 @@ class SerializedFileReader:
         sf = Munch()
         self.read_header(r, sf)
         self.read_types(r, sf)
-        self.read_object_info(r, sf)
+        self.read_objects(r, sf)
+        self.read_object_ids(r, sf)
         return sf
 
     def read_header(self, r, sf):
@@ -142,15 +143,15 @@ class SerializedFileReader:
 
             sf.types.classes[class_id] = bclass
 
-    def read_object_info(self, r, sf):
+    def read_objects(self, r, sf):
         sf.objects = {}
 
         num_entries = r.read_int32()
 
-        if sf.header.version > 13:
-            r.align(4)
-
         for i in range(0, num_entries):
+            if sf.header.version > 13:
+                r.align(4)
+
             path_id = r.read_int64()
 
             obj = Munch()
@@ -165,12 +166,23 @@ class SerializedFileReader:
                 obj.is_destroyed = r.read_int16() != 0
 
             if sf.header.version > 14:
-                obj.stripped = r.read_int32() != 0
+                obj.stripped = r.read_int8() != 0
 
             if path_id in sf.objects:
                 raise RuntimeError("Duplicate path ID %d" % path_id)
 
             sf.objects[path_id] = obj
+
+    def read_object_ids(self, r, sf):
+        sf.object_ids = []
+
+        num_entries = r.read_int32()
+        for i in range(0, num_entries):
+            obj_id = Munch()
+            obj_id.serialized_file_index = r.read_int32()
+            obj_id.identifier_in_file = r.read_int64()
+
+            sf.object_ids.append(obj_id)
 
 def main(argv):
     app = argv.pop(0)
