@@ -6,6 +6,9 @@ from pprint import pprint
 from ChunkedFileIO import *
 from SerializedFileReader import *
 
+def process(sf):
+    pprint(sf)
+
 def main(argv):
     app = argv.pop(0)
     path = argv.pop(0)
@@ -20,7 +23,7 @@ def main(argv):
         if fext == ".resource":
             continue
 
-        if fext == ".split0":
+        if fext == ".split0" and fname[-9:] != ".resource":
             index = 0
             splitpath = fname + fext
             splitpaths = []
@@ -32,15 +35,13 @@ def main(argv):
 
             print(splitpaths[0])
             with ChunkedFileIO(splitpaths) as file:
-                sf = reader.read(file)
-                pprint(sf)
+                process(reader.read(file))
         elif fext[0:6] == ".split":
             continue
         else:
             print(globpath)
             with open(globpath, "rb") as file:
-                sf = reader.read(file)
-                pprint(sf)
+                process(reader.read(file))
 
     return 0
 
