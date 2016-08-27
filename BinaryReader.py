@@ -24,10 +24,10 @@ class BinaryReader:
 
     def read_cstring(self):
         buf = bytearray()
-        b = self.read_int8()
+        b = self.read_byte()
         while b and b != 0:
             buf.append(b)
-            b = self.read_int8()
+            b = self.read_byte()
 
         return buf.decode("ascii")
 
@@ -45,9 +45,15 @@ class BinaryReader:
         data = self.read(16)
         return UUID(bytes=data)
 
-    def read_int8(self):
+    def read_byte(self):
         b = self.file.read(1)
         return b[0] if b else None
+
+    def read_int8(self):
+        return self.read_int("b")
+
+    def read_uint8(self):
+        return self.read_int("B")
 
     def read_int16(self):
         return self.read_int("h")

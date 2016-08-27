@@ -1,7 +1,10 @@
 from BinaryReader import *
+from StringTableReader import *
 from munch import Munch
 
 class SerializedFileReader:
+
+    streader = StringTableReader()
 
     def read(self, file):
         r = BinaryReader(file)
@@ -71,13 +74,73 @@ class SerializedFileReader:
             bclass.old_type_hash = r.read_uuid()
 
             if sf.types.embedded:
-                # TODO
-                raise NotImplementedError("Runtime type node reading")
+                bclass.type_tree = self.read_type_node(r, sf)
 
             if class_id in sf.types.classes:
-                raise RuntimeError("Duplicate class ID %d" % path_id)
+                raise RuntimeError("Duplicate class ID %d" % class_id)
 
             sf.types.classes[class_id] = bclass
+
+    def read_type_node(self, r, sf):
+        fields = []
+        num_fields = r.read_int32()
+        string_table_len = r.read_int32()
+
+        # read field list
+        for i in range(num_fields):
+            field = Munch()
+            field.version = r.read_int16()
+            field.tree_level = r.read_uint8()
+            field.is_array = r.read_uint8() != 0
+            field.type_offset = r.read_uint32()
+            field.name_offset = r.read_uint32()
+            field.size = r.read_int32()
+            field.index = r.read_int32()
+            field.meta_flag = r.read_int32()
+
+            fields.append(field)
+
+        # read local string table
+        string_table_buf = r.read(string_table_len)
+        string_table = self.streader.get(string_table_buf)
+
+        # convert list to tree structure
+        node_prev = None
+        node_root = None
+
+        for field in fields:
+            # assign strings
+            field.name = string_table[field.name_offset]
+            field.type = string_table[field.type_offset]
+
+            # don't need those offsets anymore
+            del field.name_offset
+            del field.type_offset
+
+            # convert to node
+            node = field
+            node.children = []
+            node.parent = node_prev
+
+            # set root node
+            if not node_root:
+                node_root = node_prev = node
+                continue
+
+            levels = node_prev.tree_level - node.tree_level
+            if levels >= 0:
+                # climb down if required
+                for i in range(levels):
+                    node_prev = node_prev.parent
+
+                node_prev.parent.children.append(node)
+            else:
+                # can climb up once at a time only, so simply add the node
+                node_prev.children.append(node)
+
+            node_prev = node
+
+        return node_root
 
     def read_objects(self, r, sf):
         sf.objects = {}

@@ -7,7 +7,8 @@ from ChunkedFileIO import *
 from SerializedFileReader import *
 
 def process(sf):
-    pprint(sf)
+    #pprint(sf)
+    pass
 
 def main(argv):
     app = argv.pop(0)
