@@ -2,6 +2,7 @@ import sys
 import os
 import struct
 import glob
+from uuid import UUID
 from pprint import pprint
 from munch import Munch
 
@@ -46,6 +47,10 @@ class BinaryReader:
             type = ">" + type
         return self.read_struct(type)[0]
 
+    def read_uuid(self):
+        data = self.read(16)
+        return UUID(bytes=data)
+
     def read_int8(self):
         b = self.file.read(1)
         return b[0] if b else None
@@ -76,7 +81,10 @@ class SerializedFileReader:
         self.read_header(r, sf)
         self.read_types(r, sf)
         self.read_objects(r, sf)
-        self.read_object_ids(r, sf)
+        if sf.header.version > 10:
+            self.read_script_types(r, sf)
+        self.read_externals(r, sf)
+
         return sf
 
     def read_header(self, r, sf):
@@ -130,9 +138,9 @@ class SerializedFileReader:
 
             class_id = r.read_int32()
             if class_id < 0:
-                bclass.script_id = r.read(16)
+                bclass.script_id = r.read_uuid()
 
-            bclass.old_type_hash = r.read(16)
+            bclass.old_type_hash = r.read_uuid()
 
             if sf.types.embedded:
                 # TODO
@@ -173,16 +181,35 @@ class SerializedFileReader:
 
             sf.objects[path_id] = obj
 
-    def read_object_ids(self, r, sf):
-        sf.object_ids = []
+    def read_script_types(self, r, sf):
+        sf.script_types = []
+
+        num_entries = r.read_int32()
+
+        for i in range(0, num_entries):
+            r.align(4)
+
+            script_type = Munch()
+            script_type.serialized_file_index = r.read_int32()
+            script_type.identifier_in_file = r.read_int64()
+
+            sf.script_types.append(script_type)
+
+    def read_externals(self, r, sf):
+        sf.externals = []
 
         num_entries = r.read_int32()
         for i in range(0, num_entries):
-            obj_id = Munch()
-            obj_id.serialized_file_index = r.read_int32()
-            obj_id.identifier_in_file = r.read_int64()
+            external = Munch()
 
-            sf.object_ids.append(obj_id)
+            if sf.header.version > 5:
+                external.asset_path = r.read_cstring()
+
+            external.guid = r.read_uuid()
+            external.type = r.read_int32()
+            external.file_path = r.read_cstring()
+
+            sf.externals.append(external)
 
 def main(argv):
     app = argv.pop(0)
@@ -201,7 +228,7 @@ def main(argv):
         print(globpath)
         with open(globpath, "rb") as file:
             sf = reader.read(file)
-            #pprint(sf)
+            pprint(sf)
 
     return 0
 
