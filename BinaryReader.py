@@ -3,9 +3,8 @@ from uuid import UUID
 
 class BinaryReader:
 
-    be = False
-
     def __init__(self, file):
+        self.be = False
         self.file = file
 
     def tell(self):

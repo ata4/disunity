@@ -2,10 +2,9 @@ import io
 
 class ChunkedFileIO(io.BufferedIOBase):
 
-    chunks = []
-    index = 0
-
     def __init__(self, paths):
+        self.chunks = []
+        self.index = 0
         pos = 0
         for path in paths:
             chunk = self.Chunk(path, pos)
