@@ -6,9 +6,11 @@ from ChunkedFileIO import *
 import io
 import os
 
+from pprint import pprint
+
 class SerializedFileReader:
 
-    versions_tested = [14, 15]
+    versions_tested = [9, 14, 15]
     streader = StringTableReader()
 
     def valid_file(self, file):
@@ -112,20 +114,30 @@ class SerializedFileReader:
             bclass = ObjectDict()
 
             class_id = r.read_int32()
-            if class_id < 0:
-                bclass.script_id = r.read_uuid()
 
-            bclass.old_type_hash = r.read_uuid()
+            if sf.header.version > 13:
+                if class_id < 0:
+                    bclass.script_id = r.read_uuid()
 
-            if sf.types.embedded:
+                bclass.old_type_hash = r.read_uuid()
                 bclass.type_tree = self.read_type_node(r, sf)
+            else:
+                bclass.type_tree = self.read_type_node_old(r, sf)
 
             if class_id in sf.types.classes:
                 raise RuntimeError("Duplicate class ID %d" % class_id)
 
             sf.types.classes[class_id] = bclass
 
+        # padding
+        if sf.header.version > 6 and sf.header.version < 13:
+            r.read_int32()
+
     def read_type_node(self, r, sf):
+        # return None if there's no embedded type tree
+        if not sf.types.embedded:
+            return None
+
         fields = []
         num_fields = r.read_int32()
         string_table_len = r.read_int32()
@@ -133,6 +145,8 @@ class SerializedFileReader:
         # read field list
         for i in range(num_fields):
             field = ObjectDict()
+            field.type = None
+            field.name = None
             field.version = r.read_int16()
             field.tree_level = r.read_uint8()
             field.is_array = r.read_uint8() != 0
@@ -194,6 +208,23 @@ class SerializedFileReader:
 
         return node_root
 
+    def read_type_node_old(self, r, sf):
+        field = ObjectDict()
+        field.type = r.read_cstring()
+        field.name = r.read_cstring()
+        field.size = r.read_int32()
+        field.index = r.read_int32()
+        field.is_array = r.read_int32() != 0
+        field.version = r.read_int32()
+        field.metaFlag = r.read_int32()
+        field.children = []
+
+        num_children = r.read_int32()
+        for i in range(num_children):
+            field.children.append(self.read_type_node_old(r, sf))
+
+        return field
+
     def read_objects(self, r, sf):
         sf.objects = {}
 
@@ -202,8 +233,9 @@ class SerializedFileReader:
         for i in range(0, num_entries):
             if sf.header.version > 13:
                 r.align(4)
-
-            path_id = r.read_int64()
+                path_id = r.read_uint64()
+            else:
+                path_id = r.read_uint32()
 
             obj = ObjectDict()
             obj.byte_start = r.read_uint32()

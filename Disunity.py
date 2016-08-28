@@ -13,22 +13,24 @@ def process(sf):
     for path_id in sf.types.classes:
         if path_id <= 0:
             continue
+
         bclass = sf.types.classes[path_id]
 
-        path_dir = os.path.join(types_dir, str(path_id))
-        path_type = os.path.join(path_dir, bclass.old_type_hash.hex + ".json")
+        if "old_type_hash" in bclass:
+            if bclass.type_tree:
+                path_dir = os.path.join(types_dir, str(path_id))
+                if not os.path.exists(path_dir):
+                    os.makedirs(path_dir)
 
-        if "type_tree" in bclass:
-            if not os.path.exists(path_dir):
-                os.makedirs(path_dir)
-
-            if not os.path.exists(path_type):
-                print(path_type)
-                with open(path_type, "w") as file:
-                    json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
-        else:
-            found = os.path.exists(path_type)
-            print("% 4d %s: %s" % (path_id, bclass.old_type_hash.hex, found))
+                path_type = os.path.join(path_dir, bclass.old_type_hash.hex + ".json")
+                if not os.path.exists(path_type):
+                    print(path_type)
+                    with open(path_type, "w") as file:
+                        json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
+            else:
+                found = os.path.exists(path_type)
+                if not found:
+                    print("% 4d %s" % (path_id, bclass.old_type_hash.hex))
 
 def main(argv):
     app = argv.pop(0)
