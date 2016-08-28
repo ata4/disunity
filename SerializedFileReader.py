@@ -117,9 +117,9 @@ class SerializedFileReader:
 
             if sf.header.version > 13:
                 if class_id < 0:
-                    bclass.script_id = r.read_uuid()
+                    bclass.script_id = r.read_hash128()
 
-                bclass.old_type_hash = r.read_uuid()
+                bclass.old_type_hash = r.read_hash128()
                 bclass.type_tree = self.read_type_node(r, sf)
             else:
                 bclass.type_tree = self.read_type_node_old(r, sf)

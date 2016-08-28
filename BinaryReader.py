@@ -1,4 +1,5 @@
 import struct
+import binascii
 from uuid import UUID
 
 class BinaryReader:
@@ -44,6 +45,10 @@ class BinaryReader:
     def read_uuid(self):
         data = self.read(16)
         return UUID(bytes=data)
+
+    def read_hash128(self):
+        data = self.read(16)
+        return binascii.hexlify(data).decode("ascii")
 
     def read_byte(self):
         b = self.file.read(1)
