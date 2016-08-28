@@ -28,7 +28,7 @@ def process(sf):
                     json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
         else:
             found = os.path.exists(path_type)
-            print(path_id, bclass.old_type_hash.hex, found)
+            print("% 4d %s: %s" % (path_id, bclass.old_type_hash.hex, found))
 
 def main(argv):
     app = argv.pop(0)
