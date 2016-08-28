@@ -1,14 +1,34 @@
 import sys
 import os
 import glob
+import json
 from pprint import pprint
 
-from ChunkedFileIO import *
 from SerializedFileReader import *
 
 def process(sf):
-    #pprint(sf)
-    pass
+    script_dir = os.path.dirname(__file__)
+    types_dir = os.path.join(script_dir, "resources", "types")
+
+    for path_id in sf.types.classes:
+        if path_id <= 0:
+            continue
+        bclass = sf.types.classes[path_id]
+
+        path_dir = os.path.join(types_dir, str(path_id))
+        path_type = os.path.join(path_dir, bclass.old_type_hash.hex + ".json")
+
+        if "type_tree" in bclass:
+            if not os.path.exists(path_dir):
+                os.makedirs(path_dir)
+
+            if not os.path.exists(path_type):
+                print(path_type)
+                with open(path_type, "w") as file:
+                    json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
+        else:
+            found = os.path.exists(path_type)
+            print(path_id, bclass.old_type_hash.hex, found)
 
 def main(argv):
     app = argv.pop(0)
@@ -20,29 +40,10 @@ def main(argv):
         if os.path.isdir(globpath):
             continue
 
-        fname, fext = os.path.splitext(globpath)
-        if fext == ".resource":
-            continue
-
-        if fext == ".split0" and fname[-9:] != ".resource":
-            index = 0
-            splitpath = fname + fext
-            splitpaths = []
-
-            while os.path.exists(splitpath):
-                splitpaths.append(splitpath)
-                index += 1
-                splitpath = fname + ".split%d" % index
-
-            print(splitpaths[0])
-            with ChunkedFileIO(splitpaths) as file:
-                process(reader.read(file))
-        elif fext[0:6] == ".split":
-            continue
-        else:
+        sf = reader.read_file(globpath)
+        if sf:
             print(globpath)
-            with open(globpath, "rb") as file:
-                process(reader.read(file))
+            process(sf)
 
     return 0
 

@@ -1,12 +1,56 @@
 from BinaryReader import *
 from StringTableReader import *
 from ObjectDict import *
+from ChunkedFileIO import *
+
+import io
+import os
 
 class SerializedFileReader:
 
+    versions_tested = [14, 15]
     streader = StringTableReader()
 
+    def valid_file(self, file):
+        r = BinaryReader(file)
+        r.be = True
+
+        r.seek(0, io.SEEK_END)
+        filesize = r.tell()
+        r.seek(0, io.SEEK_SET)
+
+        if filesize < 12:
+            return False
+
+        r.seek(4, io.SEEK_SET)
+        header_filesize = r.read_int32()
+        header_version = r.read_int32()
+        r.seek(0, io.SEEK_SET)
+
+        return header_version >= 5 and header_version <= 15 and filesize == header_filesize
+
+    def read_file(self, path):
+        fname, fext = os.path.splitext(path)
+
+        if fext == ".split0":
+            index = 0
+            splitpath = fname + fext
+            splitpaths = []
+            while os.path.exists(splitpath):
+                splitpaths.append(splitpath)
+                index += 1
+                splitpath = fname + ".split%d" % index
+
+            with ChunkedFileIO(splitpaths) as file:
+                return self.read(file)
+        else:
+            with open(path, "rb") as file:
+                return self.read(file)
+
     def read(self, file):
+        if not self.valid_file(file):
+            return None
+
         r = BinaryReader(file)
         sf = ObjectDict()
         self.read_header(r, sf)
@@ -43,7 +87,7 @@ class SerializedFileReader:
             r.be = False
 
         # TODO: test more formats
-        if sf.header.version != 15:
+        if not sf.header.version in self.versions_tested:
             raise NotImplementedError("Unsupported format version %d" % sf.header.version)
 
     def read_types(self, r, sf):
