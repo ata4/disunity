@@ -1,6 +1,6 @@
 from BinaryReader import *
 from StringTableReader import *
-from munch import Munch
+from ObjectDict import *
 
 class SerializedFileReader:
 
@@ -8,7 +8,7 @@ class SerializedFileReader:
 
     def read(self, file):
         r = BinaryReader(file)
-        sf = Munch()
+        sf = ObjectDict()
         self.read_header(r, sf)
         self.read_types(r, sf)
         self.read_objects(r, sf)
@@ -22,7 +22,7 @@ class SerializedFileReader:
         # the header always uses big-endian byte order
         r.be = True
 
-        sf.header = Munch()
+        sf.header = ObjectDict()
         sf.header.metadataSize = r.read_int32()
         sf.header.fileSize = r.read_int32()
         sf.header.version = r.read_int32()
@@ -47,7 +47,7 @@ class SerializedFileReader:
             raise NotImplementedError("Unsupported format version %d" % sf.header.version)
 
     def read_types(self, r, sf):
-        sf.types = Munch()
+        sf.types = ObjectDict()
 
         # older formats store the object data before the structure data
         if sf.header.version < 9:
@@ -65,7 +65,7 @@ class SerializedFileReader:
 
         num_classes = r.read_int32()
         for i in range(0, num_classes):
-            bclass = Munch()
+            bclass = ObjectDict()
 
             class_id = r.read_int32()
             if class_id < 0:
@@ -88,7 +88,7 @@ class SerializedFileReader:
 
         # read field list
         for i in range(num_fields):
-            field = Munch()
+            field = ObjectDict()
             field.version = r.read_int16()
             field.tree_level = r.read_uint8()
             field.is_array = r.read_uint8() != 0
@@ -154,7 +154,7 @@ class SerializedFileReader:
 
             path_id = r.read_int64()
 
-            obj = Munch()
+            obj = ObjectDict()
             obj.byte_start = r.read_uint32()
             obj.byte_size = r.read_uint32()
             obj.type_id = r.read_int32()
@@ -181,7 +181,7 @@ class SerializedFileReader:
         for i in range(0, num_entries):
             r.align(4)
 
-            script_type = Munch()
+            script_type = ObjectDict()
             script_type.serialized_file_index = r.read_int32()
             script_type.identifier_in_file = r.read_int64()
 
@@ -192,7 +192,7 @@ class SerializedFileReader:
 
         num_entries = r.read_int32()
         for i in range(0, num_entries):
-            external = Munch()
+            external = ObjectDict()
 
             if sf.header.version > 5:
                 external.asset_path = r.read_cstring()
