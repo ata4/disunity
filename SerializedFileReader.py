@@ -108,6 +108,7 @@ class SerializedFileReader:
         node_stack = []
         node_prev = None
         node_root = None
+        tree_level_prev = 0
 
         for field in fields:
             # assign strings
@@ -126,19 +127,25 @@ class SerializedFileReader:
             if not node_root:
                 node_root = node_prev = node
                 node_stack.append(node)
+                tree_level_prev = field.tree_level
+                del field.tree_level
                 continue
 
             # get tree level difference and move node up or down if required
-            tree_level_diff = field.tree_level - node_prev.tree_level
+            tree_level_diff = field.tree_level - tree_level_prev
+            tree_level_prev = field.tree_level
+
+            # don't need this one now either
+            del field.tree_level
 
             if tree_level_diff > 0:
                 node_prev.children.append(node)
                 node_stack.append(node_prev)
-            elif tree_level_diff < 0:
+            else:
                 for i in range(-tree_level_diff):
                     node_stack.pop()
+                node_stack[-1].children.append(node)
 
-            node_stack[-1].children.append(node)
             node_prev = node
 
         return node_root
