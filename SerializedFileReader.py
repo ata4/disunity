@@ -16,18 +16,18 @@ class SerializedFileReader:
         r.be = True
 
         r.seek(0, io.SEEK_END)
-        filesize = r.tell()
+        file_size = r.tell()
         r.seek(0, io.SEEK_SET)
 
-        if filesize < 12:
+        if file_size < 12:
             return False
 
         r.seek(4, io.SEEK_SET)
-        header_filesize = r.read_int32()
+        header_file_size = r.read_int32()
         header_version = r.read_int32()
         r.seek(0, io.SEEK_SET)
 
-        return header_version >= 5 and header_version <= 15 and filesize == header_filesize
+        return header_version >= 5 and header_version <= 15 and file_size == header_file_size
 
     def read_file(self, path):
         fname, fext = os.path.splitext(path)
@@ -67,16 +67,16 @@ class SerializedFileReader:
         r.be = True
 
         sf.header = ObjectDict()
-        sf.header.metadataSize = r.read_int32()
-        sf.header.fileSize = r.read_int32()
+        sf.header.metadata_size = r.read_int32()
+        sf.header.file_size = r.read_int32()
         sf.header.version = r.read_int32()
-        sf.header.dataOffset = r.read_int32()
+        sf.header.data_offset = r.read_int32()
 
-        if sf.header.dataOffset > sf.header.fileSize:
-            raise RuntimeError("Invalid dataOffset %d" % sf.header.dataOffset)
+        if sf.header.data_offset > sf.header.file_size:
+            raise RuntimeError("Invalid data_offset %d" % sf.header.data_offset)
 
-        if sf.header.metadataSize > sf.header.fileSize:
-            raise RuntimeError("Invalid metadataSize %d" % sf.header.metadataSize)
+        if sf.header.metadata_size > sf.header.file_size:
+            raise RuntimeError("Invalid metadata_size %d" % sf.header.metadata_size)
 
         if sf.header.version >= 9:
             sf.header.endianness = r.read_int8()
@@ -95,7 +95,7 @@ class SerializedFileReader:
 
         # older formats store the object data before the structure data
         if sf.header.version < 9:
-            types_offset = sf.header.fileSize - sf.header.metadataSize + 1
+            types_offset = sf.header.file_size - sf.header.metadata_size + 1
             r.seek(types_offset)
 
         if sf.header.version > 6:
