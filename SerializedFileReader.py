@@ -105,6 +105,7 @@ class SerializedFileReader:
         string_table = self.streader.get(string_table_buf)
 
         # convert list to tree structure
+        node_stack = []
         node_prev = None
         node_root = None
 
@@ -120,24 +121,24 @@ class SerializedFileReader:
             # convert to node
             node = field
             node.children = []
-            node.parent = node_prev
 
             # set root node
             if not node_root:
                 node_root = node_prev = node
+                node_stack.append(node)
                 continue
 
-            levels = node_prev.tree_level - node.tree_level
-            if levels >= 0:
-                # climb down if required
-                for i in range(levels):
-                    node_prev = node_prev.parent
+            # get tree level difference and move node up or down if required
+            tree_level_diff = field.tree_level - node_prev.tree_level
 
-                node_prev.parent.children.append(node)
-            else:
-                # can climb up once at a time only, so simply add the node
+            if tree_level_diff > 0:
                 node_prev.children.append(node)
+                node_stack.append(node_prev)
+            elif tree_level_diff < 0:
+                for i in range(-tree_level_diff):
+                    node_stack.pop()
 
+            node_stack[-1].children.append(node)
             node_prev = node
 
         return node_root
