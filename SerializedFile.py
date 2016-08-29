@@ -11,12 +11,34 @@ from AutoCloseable import *
 VERSION_MIN = 5
 VERSION_MAX = 15
 
+METAFLAG_ALIGN = 0x4000
+
 class SerializedFile(AutoCloseable):
 
     versions_tested = [9, 14, 15]
+    read_prim = {
+        "bool": BinaryReader.read_bool8,
+        "SInt8": BinaryReader.read_int8,
+        "UInt8": BinaryReader.read_uint8,
+        "char": BinaryReader.read_uint8,
+        "SInt16": BinaryReader.read_int16,
+        "short": BinaryReader.read_int16,
+        "UInt16": BinaryReader.read_int16,
+        "unsigned short": BinaryReader.read_int16,
+        "SInt32": BinaryReader.read_int32,
+        "int": BinaryReader.read_int32,
+        "UInt32": BinaryReader.read_uint32,
+        "unsigned int": BinaryReader.read_uint32,
+        "SInt64": BinaryReader.read_int64,
+        "long": BinaryReader.read_int64,
+        "UInt64": BinaryReader.read_uint64,
+        "unsigned long": BinaryReader.read_uint64,
+        "float": BinaryReader.read_float,
+        "double": BinaryReader.read_double,
+    }
 
     def __init__(self, path):
-        self.stmapper = StringTableMapper()
+        self.string_mapper = StringTableMapper()
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = self._create_reader(path)
@@ -119,7 +141,7 @@ class SerializedFile(AutoCloseable):
             types.attributes = r.read_int32()
 
         if self.header.version > 13:
-            types.embedded = r.read_int8() != 0
+            types.embedded = r.read_bool8()
 
         types.classes = {}
 
@@ -165,7 +187,7 @@ class SerializedFile(AutoCloseable):
             field.name = None
             field.version = r.read_int16()
             field.tree_level = r.read_uint8()
-            field.is_array = r.read_uint8() != 0
+            field.is_array = r.read_bool8()
             field.type_offset = r.read_uint32()
             field.name_offset = r.read_uint32()
             field.size = r.read_int32()
@@ -176,7 +198,7 @@ class SerializedFile(AutoCloseable):
 
         # read local string table
         string_table_buf = r.read(string_table_len)
-        string_table = self.stmapper.get(string_table_buf)
+        string_table = self.string_mapper.get(string_table_buf)
 
         # convert list to tree structure
         node_stack = []
@@ -230,9 +252,9 @@ class SerializedFile(AutoCloseable):
         field.name = r.read_cstring()
         field.size = r.read_int32()
         field.index = r.read_int32()
-        field.is_array = r.read_int32() != 0
+        field.is_array = r.read_bool32()
         field.version = r.read_int32()
-        field.metaFlag = r.read_int32()
+        field.meta_flag = r.read_int32()
         field.children = []
 
         num_children = r.read_int32()
@@ -262,10 +284,10 @@ class SerializedFile(AutoCloseable):
             if self.header.version > 13:
                 obj.script_type_index = r.read_int16()
             else:
-                obj.is_destroyed = r.read_int16() != 0
+                obj.is_destroyed = r.read_bool16()
 
             if self.header.version > 14:
-                obj.stripped = r.read_int8() != 0
+                obj.stripped = r.read_bool8()
 
             if path_id in objects:
                 raise RuntimeError("Duplicate path ID %d" % path_id)
@@ -308,8 +330,68 @@ class SerializedFile(AutoCloseable):
 
         return externals
 
+    def _read_object_node(self, r, obj_type):
+        base = obj_type.name == "Base"
+
+        if not base and not obj_type.children:
+            # no children and not a base -> primitive
+            if not obj_type.type in self.read_prim:
+                raise RuntimeError("Unknown primitive type %s" % obj_type.type)
+            obj = self.read_prim[obj_type.type](r)
+
+            # align if flagged
+            if obj_type.meta_flag & METAFLAG_ALIGN != 0:
+                r.align(4)
+        elif not base and obj_type.children[0].is_array:
+            # unpack "Array" objects to native Python arrays
+            type_array = obj_type.children[0]
+            type_size = type_array.children[0]
+            type_data = type_array.children[1]
+
+            size = self._read_object_node(r, type_size)
+            if type_data.type == "SInt8" or type_data.type == "UInt8":
+                # read byte array
+                obj = r.read(size)
+            if type_data.type == "char":
+                # read char array -> string
+                obj = r.read(size).decode("utf-8")
+            else:
+                # read generic array
+                obj = []
+                for i in range(size):
+                    obj.append(self._read_object_node(r, type_data))
+
+            # arrays always need to be aligned in version 5 or newer
+            if self.header.version > 5:
+                r.align(4)
+        else:
+            # complex object with children
+            obj_class = type(obj_type.type, (ObjectDict,), {})
+            obj = obj_class()
+            for child in obj_type.children:
+                obj[child.name] = self._read_object_node(r, child)
+
+        return obj
+
     def read_object(self, path_id):
-        pass
+        object_info = self.objects[path_id]
+        object_pos = self.header.data_offset + object_info.byte_start
+        
+        if not object_info.type_id in self.types.classes:
+            return None
+        
+        object_type = self.types.classes[object_info.type_id].type_tree
+
+        self.r.seek(object_pos, io.SEEK_SET)
+
+        obj = self._read_object_node(self.r, object_type)
+
+        # check if all bytes were read correctly
+        obj_size = self.r.tell() - object_pos
+        if obj_size != object_info.byte_size:
+            raise RuntimeError("Wrong object size for path %d: %d != %d" % (path_id, obj_size, object_info.byte_size))
+
+        return obj
 
     def close(self):
         self.r.close()

@@ -42,7 +42,7 @@ class BinaryReader(AutoCloseable):
         data = self.fp.read(size)
         return struct.unpack(format, data)
 
-    def read_int(self, type):
+    def read_num(self, type):
         if self.be:
             type = ">" + type
         return self.read_struct(type)[0]
@@ -60,25 +60,40 @@ class BinaryReader(AutoCloseable):
         return b[0] if b else None
 
     def read_int8(self):
-        return self.read_int("b")
+        return self.read_num("b")
 
     def read_uint8(self):
-        return self.read_int("B")
+        return self.read_num("B")
 
     def read_int16(self):
-        return self.read_int("h")
+        return self.read_num("h")
 
     def read_uint16(self):
-        return self.read_int("H")
+        return self.read_num("H")
 
     def read_int32(self):
-        return self.read_int("i")
+        return self.read_num("i")
 
     def read_uint32(self):
-        return self.read_int("I")
+        return self.read_num("I")
 
     def read_int64(self):
-        return self.read_int("q")
+        return self.read_num("q")
 
     def read_uint64(self):
-        return self.read_int("Q")
+        return self.read_num("Q")
+
+    def read_float(self):
+        return self.read_num("f")
+
+    def read_double(self):
+        return self.read_num("d")
+
+    def read_bool8(self):
+        return self.read_uint8() != 0
+
+    def read_bool16(self):
+        return self.read_uint16() != 0
+
+    def read_bool32(self):
+        return self.read_uint32() != 0

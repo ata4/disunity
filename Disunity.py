@@ -16,14 +16,14 @@ def process(path):
         script_dir = os.path.dirname(__file__)
         types_dir = os.path.join(script_dir, "resources", "types")
 
-        for path_id in sf.types.classes:
-            if path_id <= 0:
+        for class_id in sf.types.classes:
+            if class_id <= 0:
                 continue
 
-            bclass = sf.types.classes[path_id]
+            bclass = sf.types.classes[class_id]
 
             if "old_type_hash" in bclass:
-                path_dir = os.path.join(types_dir, str(path_id))
+                path_dir = os.path.join(types_dir, str(class_id))
                 path_type = os.path.join(path_dir, bclass.old_type_hash + ".json")
 
                 if bclass.type_tree:
@@ -37,8 +37,13 @@ def process(path):
                 else:
                     found = os.path.exists(path_type)
                     if not found:
-                        print("% 4d %s" % (path_id, bclass.old_type_hash))
+                        print("% 4d %s" % (class_id, bclass.old_type_hash))
 
+        for path_id in sf.objects:
+            object = sf.read_object(path_id)
+            #object_json = json.dumps(object, indent=2, separators=(',', ': '))
+            #print(path_id)
+            #print(object_json)
 def main(argv):
     app = argv.pop(0)
     path = argv.pop(0)
