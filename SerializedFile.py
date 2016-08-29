@@ -338,12 +338,9 @@ class SerializedFile(AutoCloseable):
             type_data = obj_type.children[1]
 
             size = self._read_object_node(r, type_size)
-            if type_data.type == "SInt8" or type_data.type == "UInt8":
+            if type_data.type == "SInt8" or type_data.type == "UInt8" or type_data.type == "char":
                 # read byte array
                 obj = r.read(size)
-            elif type_data.type == "char":
-                # read char array -> string
-                obj = r.read(size).decode("utf-8")
             else:
                 # read generic array
                 obj = []
@@ -368,6 +365,13 @@ class SerializedFile(AutoCloseable):
             obj = obj_class()
             for child in obj_type.children:
                 obj[child.name] = self._read_object_node(r, child)
+
+        if obj_type.type == "string":
+            # convert string objects to native Python strings
+            obj = obj.Array.decode("utf-8")
+        elif obj_type.type == "vector":
+            # unpack collection containers
+            obj = obj.Array
 
         return obj
 
