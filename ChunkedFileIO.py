@@ -2,12 +2,12 @@ import io
 
 class ChunkedFileIO(io.BufferedIOBase):
 
-    def __init__(self, paths):
+    def __init__(self, paths, mode):
         self.chunks = []
         self.index = 0
         pos = 0
         for path in paths:
-            chunk = self.Chunk(path, pos)
+            chunk = Chunk(path, mode, pos)
             # filter out empty chunks
             if chunk.size == 0:
                 chunk.close()
@@ -69,27 +69,27 @@ class ChunkedFileIO(io.BufferedIOBase):
             chunk.close()
         super(ChunkedFileIO, self).close()
 
-    class Chunk():
+class Chunk():
 
-        def __init__(self, path, pos):
-            self.handle = open(path, "rb")
-            self.handle.seek(0, io.SEEK_END)
-            self.size = self.handle.tell()
-            self.handle.seek(0, io.SEEK_SET)
-            self.start = pos
-            self.end = pos + self.size
+    def __init__(self, path, mode, pos):
+        self.handle = open(path, mode)
+        self.handle.seek(0, io.SEEK_END)
+        self.size = self.handle.tell()
+        self.handle.seek(0, io.SEEK_SET)
+        self.start = pos
+        self.end = pos + self.size
 
-        def tell(self):
-            return self.start + self.handle.tell()
+    def tell(self):
+        return self.start + self.handle.tell()
 
-        def read(self, size=-1):
-            return self.handle.read(size)
+    def read(self, size=-1):
+        return self.handle.read(size)
 
-        def seek(self, offset):
-            offset -= self.start
-            if offset < 0 or offset > self.size:
-                raise ValueError("Offset out of range:", offset)
-            self.handle.seek(offset, io.SEEK_SET)
+    def seek(self, offset):
+        offset -= self.start
+        if offset < 0 or offset > self.size:
+            raise ValueError("Offset out of range:", offset)
+        self.handle.seek(offset, io.SEEK_SET)
 
-        def close(self):
-            self.handle.close()
+    def close(self):
+        self.handle.close()

@@ -2,17 +2,22 @@ import struct
 import binascii
 from uuid import UUID
 
-class BinaryReader:
+from AutoCloseable import *
 
-    def __init__(self, file):
+class BinaryReader(AutoCloseable):
+
+    def __init__(self, fp):
         self.be = False
-        self.file = file
+        self.fp = fp
+
+    def close(self):
+        self.fp.close()
 
     def tell(self):
-        return self.file.tell()
+        return self.fp.tell()
 
     def seek(self, offset, whence=0):
-        self.file.seek(offset, whence)
+        self.fp.seek(offset, whence)
 
     def align(self, pad):
         pos = self.tell()
@@ -21,7 +26,7 @@ class BinaryReader:
             self.seek(newpos)
 
     def read(self, size):
-        return self.file.read(size)
+        return self.fp.read(size)
 
     def read_cstring(self):
         buf = bytearray()
@@ -34,7 +39,7 @@ class BinaryReader:
 
     def read_struct(self, format):
         size = struct.calcsize(format)
-        data = self.file.read(size)
+        data = self.fp.read(size)
         return struct.unpack(format, data)
 
     def read_int(self, type):
@@ -51,7 +56,7 @@ class BinaryReader:
         return binascii.hexlify(data).decode("ascii")
 
     def read_byte(self):
-        b = self.file.read(1)
+        b = self.fp.read(1)
         return b[0] if b else None
 
     def read_int8(self):

@@ -4,49 +4,50 @@ import glob
 import json
 from pprint import pprint
 
-from SerializedFileReader import *
+from SerializedFile import *
 
-def process(sf):
-    script_dir = os.path.dirname(__file__)
-    types_dir = os.path.join(script_dir, "resources", "types")
+def process(path):
+    with SerializedFile(path) as sf:
+        if not sf.valid:
+            return
 
-    for path_id in sf.types.classes:
-        if path_id <= 0:
-            continue
+        print(path)
 
-        bclass = sf.types.classes[path_id]
+        script_dir = os.path.dirname(__file__)
+        types_dir = os.path.join(script_dir, "resources", "types")
 
-        if "old_type_hash" in bclass:
-            path_dir = os.path.join(types_dir, str(path_id))
-            path_type = os.path.join(path_dir, bclass.old_type_hash + ".json")
+        for path_id in sf.types.classes:
+            if path_id <= 0:
+                continue
 
-            if bclass.type_tree:
-                if not os.path.exists(path_dir):
-                    os.makedirs(path_dir)
+            bclass = sf.types.classes[path_id]
 
-                if not os.path.exists(path_type):
-                    print(path_type)
-                    with open(path_type, "w") as file:
-                        json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
-            else:
-                found = os.path.exists(path_type)
-                if not found:
-                    print("% 4d %s" % (path_id, bclass.old_type_hash))
+            if "old_type_hash" in bclass:
+                path_dir = os.path.join(types_dir, str(path_id))
+                path_type = os.path.join(path_dir, bclass.old_type_hash + ".json")
+
+                if bclass.type_tree:
+                    if not os.path.exists(path_dir):
+                        os.makedirs(path_dir)
+
+                    if not os.path.exists(path_type):
+                        print(path_type)
+                        with open(path_type, "w") as file:
+                            json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
+                else:
+                    found = os.path.exists(path_type)
+                    if not found:
+                        print("% 4d %s" % (path_id, bclass.old_type_hash))
 
 def main(argv):
     app = argv.pop(0)
     path = argv.pop(0)
 
-    reader = SerializedFileReader()
-
     for globpath in glob.iglob(path):
         if os.path.isdir(globpath):
             continue
 
-        sf = reader.read_file(globpath)
-        if sf:
-            print(globpath)
-            process(sf)
+        process(globpath)
 
     return 0
 
