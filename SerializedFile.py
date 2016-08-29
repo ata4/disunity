@@ -385,6 +385,9 @@ class SerializedFile(AutoCloseable):
         self.r.seek(object_pos, io.SEEK_SET)
 
         object_type = self.types.classes[object_info.type_id].type_tree
+        if not object_type:
+            return None
+
         obj = self._read_object_node(self.r, object_type)
 
         # check if all bytes were read correctly
