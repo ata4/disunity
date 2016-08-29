@@ -124,7 +124,8 @@ class SerializedFile(AutoCloseable):
             r.be = False
 
         if not header.version in self.versions_tested:
-            raise NotImplementedError("Unsupported format version %d" % header.version)
+            raise NotImplementedError("Unsupported format version %d"
+                                      % header.version)
 
         return header
 
@@ -331,28 +332,16 @@ class SerializedFile(AutoCloseable):
         return externals
 
     def _read_object_node(self, r, obj_type):
-        base = obj_type.name == "Base"
-
-        if not base and not obj_type.children:
-            # no children and not a base -> primitive
-            if not obj_type.type in self.read_prim:
-                raise RuntimeError("Unknown primitive type %s" % obj_type.type)
-            obj = self.read_prim[obj_type.type](r)
-
-            # align if flagged
-            if obj_type.meta_flag & METAFLAG_ALIGN != 0:
-                r.align(4)
-        elif not base and obj_type.children[0].is_array:
+        if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
-            type_array = obj_type.children[0]
-            type_size = type_array.children[0]
-            type_data = type_array.children[1]
+            type_size = obj_type.children[0]
+            type_data = obj_type.children[1]
 
             size = self._read_object_node(r, type_size)
             if type_data.type == "SInt8" or type_data.type == "UInt8":
                 # read byte array
                 obj = r.read(size)
-            if type_data.type == "char":
+            elif type_data.type == "char":
                 # read char array -> string
                 obj = r.read(size).decode("utf-8")
             else:
@@ -363,6 +352,15 @@ class SerializedFile(AutoCloseable):
 
             # arrays always need to be aligned in version 5 or newer
             if self.header.version > 5:
+                r.align(4)
+        elif obj_type.name != "Base" and not obj_type.children:
+            # no children and not a base -> primitive
+            if not obj_type.type in self.read_prim:
+                raise RuntimeError("Unknown primitive type %s" % obj_type.type)
+            obj = self.read_prim[obj_type.type](r)
+
+            # align if flagged
+            if obj_type.meta_flag & METAFLAG_ALIGN != 0:
                 r.align(4)
         else:
             # complex object with children
@@ -375,21 +373,21 @@ class SerializedFile(AutoCloseable):
 
     def read_object(self, path_id):
         object_info = self.objects[path_id]
-        object_pos = self.header.data_offset + object_info.byte_start
-        
+
         if not object_info.type_id in self.types.classes:
             return None
         
-        object_type = self.types.classes[object_info.type_id].type_tree
-
+        object_pos = self.header.data_offset + object_info.byte_start
         self.r.seek(object_pos, io.SEEK_SET)
 
+        object_type = self.types.classes[object_info.type_id].type_tree
         obj = self._read_object_node(self.r, object_type)
 
         # check if all bytes were read correctly
         obj_size = self.r.tell() - object_pos
         if obj_size != object_info.byte_size:
-            raise RuntimeError("Wrong object size for path %d: %d != %d" % (path_id, obj_size, object_info.byte_size))
+            raise RuntimeError("Wrong object size for path %d: %d != %d"
+                               % (path_id, obj_size, object_info.byte_size))
 
         return obj
 
