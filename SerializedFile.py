@@ -1,6 +1,8 @@
 import io
 import os
+import json
 
+from munch import Munch
 from pprint import pprint
 
 from BinaryReader import *
@@ -161,7 +163,15 @@ class SerializedFile(AutoCloseable):
                 if types.embedded:
                     bclass.type_tree = self._read_type_node(r)
                 else:
-                    bclass.type_tree = None
+                    path_script_dir = os.path.dirname(__file__)
+                    path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
+                    path_type = os.path.join(path_type_dir, bclass.old_type_hash + ".json")
+                    if os.path.exists(path_type):
+                        print("Loading " + path_type)
+                        with open(path_type) as file:
+                            bclass.type_tree = Munch.fromDict(json.load(file))
+                    else:
+                        bclass.type_tree = None
             else:
                 bclass.type_tree = self._read_type_node_old(r)
 
