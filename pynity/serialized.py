@@ -39,6 +39,7 @@ class SerializedFile(AutoCloseable):
 
     def __init__(self, path):
         self.string_mapper = StringTableMapper()
+        self.debug = False
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = BinaryReader(UnityFile(path, "rb"))
@@ -149,10 +150,13 @@ class SerializedFile(AutoCloseable):
                     path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
                     path_type = os.path.join(path_type_dir, bclass.old_type_hash + ".json")
                     if os.path.exists(path_type):
-                        print("Loading " + path_type)
+                        if self.debug:
+                            print("Type %s loaded from database" % bclass.old_type_hash)
                         with open(path_type) as file:
                             bclass.type_tree = Munch.fromDict(json.load(file))
                     else:
+                        if self.debug:
+                            print("Type %s not found in file or database" % bclass.old_type_hash)
                         bclass.type_tree = None
             else:
                 bclass.type_tree = self._read_type_node_old(r)
@@ -324,7 +328,9 @@ class SerializedFile(AutoCloseable):
         return externals
 
     def _read_object_node(self, r, obj_type):
-        #print(r.tell(), obj_type.type, obj_type.name)
+        if self.debug:
+            print(r.tell(), obj_type.type, obj_type.name)
+
         if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
             type_size = obj_type.children[0]
@@ -390,6 +396,30 @@ class SerializedFile(AutoCloseable):
                                % (path_id, obj_size, object_info.byte_size))
 
         return obj
+
+    def scan_types(self):
+        script_dir = os.path.dirname(__file__)
+        types_dir = os.path.join(script_dir, "resources", "types")
+
+        for class_id in self.types.classes:
+            # ignore script types
+            if class_id <= 0:
+                continue
+
+            bclass = self.types.classes[class_id]
+
+            if "old_type_hash" in bclass and self.types.embedded and bclass.type_tree:
+                # create type files that don't exist yet
+                path_dir = os.path.join(types_dir, str(class_id))
+                if not os.path.exists(path_dir):
+                    os.makedirs(path_dir)
+
+                path_type = os.path.join(path_dir, bclass.old_type_hash + ".json")
+                if not os.path.exists(path_type):
+                    print("Added " + path_type)
+                    with open(path_type, "w") as file:
+                        json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
+
 
     def close(self):
         self.r.close()
