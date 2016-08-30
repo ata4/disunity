@@ -67,7 +67,7 @@ class UnityFile(io.BufferedIOBase):
         data = chunk.read(size)
 
         # get next chunk if required
-        if not data:
+        if size > 0 and not data:
             chunk = self.chunk_next()
             if chunk:
                 data = chunk.read(size)
