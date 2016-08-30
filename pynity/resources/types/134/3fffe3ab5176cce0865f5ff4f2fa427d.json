@@ -1,48 +1,48 @@
 {
+  "type": "PhysicMaterial",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "PhysicMaterial",
   "children": [
     {
+      "type": "string",
+      "name": "m_Name",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 1,
       "meta_flag": 32769,
-      "name": "m_Name",
-      "type": "string",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 2,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 3,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "char",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 4,
               "meta_flag": 1,
-              "name": "data",
-              "type": "char",
               "children": []
             }
           ]
@@ -50,53 +50,53 @@
       ]
     },
     {
+      "type": "float",
+      "name": "dynamicFriction",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 5,
       "meta_flag": 2048,
-      "name": "dynamicFriction",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "staticFriction",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 6,
       "meta_flag": 2048,
-      "name": "staticFriction",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "bounciness",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 7,
       "meta_flag": 2048,
-      "name": "bounciness",
-      "type": "float",
       "children": []
     },
     {
+      "type": "int",
+      "name": "frictionCombine",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 8,
       "meta_flag": 0,
-      "name": "frictionCombine",
-      "type": "int",
       "children": []
     },
     {
+      "type": "int",
+      "name": "bounceCombine",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 9,
       "meta_flag": 0,
-      "name": "bounceCombine",
-      "type": "int",
       "children": []
     }
   ]

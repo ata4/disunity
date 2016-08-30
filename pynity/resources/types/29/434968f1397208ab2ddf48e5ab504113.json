@@ -1,58 +1,58 @@
 {
+  "type": "SceneSettings",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "SceneSettings",
   "children": [
     {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 1,
       "meta_flag": 1,
-      "name": "m_ObjectHideFlags",
-      "type": "unsigned int",
       "children": []
     },
     {
+      "type": "vector",
+      "name": "m_PVSData",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 2,
       "meta_flag": 32768,
-      "name": "m_PVSData",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 3,
           "meta_flag": 16384,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 4,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "UInt8",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 5,
               "meta_flag": 0,
-              "name": "data",
-              "type": "UInt8",
               "children": []
             }
           ]
@@ -60,60 +60,60 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_PVSObjectsArray",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 6,
       "meta_flag": 0,
-      "name": "m_PVSObjectsArray",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 7,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 8,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "PPtr<Renderer>",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 12,
               "index": 9,
               "meta_flag": 0,
-              "name": "data",
-              "type": "PPtr<Renderer>",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_FileID",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 10,
                   "meta_flag": 1,
-                  "name": "m_FileID",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "SInt64",
+                  "name": "m_PathID",
                   "version": 1,
                   "is_array": false,
                   "size": 8,
                   "index": 11,
                   "meta_flag": 1,
-                  "name": "m_PathID",
-                  "type": "SInt64",
                   "children": []
                 }
               ]
@@ -123,60 +123,60 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_PVSPortalsArray",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 12,
       "meta_flag": 0,
-      "name": "m_PVSPortalsArray",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 13,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 14,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "PPtr<OcclusionPortal>",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 12,
               "index": 15,
               "meta_flag": 0,
-              "name": "data",
-              "type": "PPtr<OcclusionPortal>",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_FileID",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 16,
                   "meta_flag": 1,
-                  "name": "m_FileID",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "SInt64",
+                  "name": "m_PathID",
                   "version": 1,
                   "is_array": false,
                   "size": 8,
                   "index": 17,
                   "meta_flag": 1,
-                  "name": "m_PathID",
-                  "type": "SInt64",
                   "children": []
                 }
               ]
@@ -186,42 +186,42 @@
       ]
     },
     {
+      "type": "OcclusionBakeSettings",
+      "name": "m_OcclusionBakeSettings",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 18,
       "meta_flag": 8388608,
-      "name": "m_OcclusionBakeSettings",
-      "type": "OcclusionBakeSettings",
       "children": [
         {
+          "type": "float",
+          "name": "smallestOccluder",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 19,
           "meta_flag": 8388608,
-          "name": "smallestOccluder",
-          "type": "float",
           "children": []
         },
         {
+          "type": "float",
+          "name": "smallestHole",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 20,
           "meta_flag": 8388608,
-          "name": "smallestHole",
-          "type": "float",
           "children": []
         },
         {
+          "type": "float",
+          "name": "backfaceThreshold",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 21,
           "meta_flag": 8388608,
-          "name": "backfaceThreshold",
-          "type": "float",
           "children": []
         }
       ]

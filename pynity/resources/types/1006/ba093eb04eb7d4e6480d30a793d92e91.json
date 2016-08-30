@@ -1,0 +1,1420 @@
+{
+  "type": "TextureImporter",
+  "name": "Base",
+  "version": 2,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 11,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "m_FileIDToRecycleName",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 12,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 13,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 14,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "pair",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 15,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "SInt64",
+                  "name": "first",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 8,
+                  "index": 16,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "string",
+                  "name": "second",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 17,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 18,
+                      "meta_flag": 16385,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 19,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 20,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_MipMapMode",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 21,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_EnableMipMap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 22,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_LinearTexture",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 23,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "correctGamma",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 24,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_FadeOut",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 25,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_BorderMipMap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 26,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_MipMapFadeDistanceStart",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 27,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_MipMapFadeDistanceEnd",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 28,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_ConvertToNormalMap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 29,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_ExternalNormalMap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 30,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_HeightScale",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 31,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_NormalMapFilter",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 32,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_IsReadable",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 33,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_GrayScaleToAlpha",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 34,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_GenerateCubemap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 35,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_CubemapConvolution",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 36,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_CubemapConvolutionSteps",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 37,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_CubemapConvolutionExponent",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 38,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_SeamlessCubemap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 39,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_TextureFormat",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 40,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_MaxTextureSize",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 41,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "GLTextureSettings",
+      "name": "m_TextureSettings",
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 42,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FilterMode",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 43,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_Aniso",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 44,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_MipBias",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 45,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_WrapMode",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 46,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_NPOTScale",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 47,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_Lightmap",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 48,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_RGBM",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 49,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_CompressionQuality",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 50,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_AllowsAlphaSplitting",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 51,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_SpriteMode",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 52,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "unsigned int",
+      "name": "m_SpriteExtrude",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 53,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_SpriteMeshType",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 54,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_Alignment",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 55,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "Vector2f",
+      "name": "m_SpritePivot",
+      "version": 1,
+      "is_array": false,
+      "size": 8,
+      "index": 56,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 57,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 58,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector4f",
+      "name": "m_SpriteBorder",
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 59,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 60,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 61,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 62,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "w",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 63,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_SpritePixelsToUnits",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 64,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_AlphaIsTransparency",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 65,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_TextureType",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 66,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "vector",
+      "name": "m_BuildTargetSettings",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 67,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 68,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 69,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "BuildTargetSettings",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 70,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "string",
+                  "name": "m_BuildTarget",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 71,
+                  "meta_flag": 1081344,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 72,
+                      "meta_flag": 1064961,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 73,
+                          "meta_flag": 1048577,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 74,
+                          "meta_flag": 1048577,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "int",
+                  "name": "m_MaxTextureSize",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 75,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "m_TextureFormat",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 76,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "m_CompressionQuality",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 77,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "m_AllowsAlphaSplitting",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 78,
+                  "meta_flag": 16384,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "SpriteSheetMetaData",
+      "name": "m_SpriteSheet",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 79,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "vector",
+          "name": "m_Sprites",
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 80,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 81,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 82,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "SpriteMetaData",
+                  "name": "data",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 83,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "string",
+                      "name": "m_Name",
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 84,
+                      "meta_flag": 32768,
+                      "children": [
+                        {
+                          "type": "Array",
+                          "name": "Array",
+                          "version": 1,
+                          "is_array": true,
+                          "size": -1,
+                          "index": 85,
+                          "meta_flag": 16385,
+                          "children": [
+                            {
+                              "type": "int",
+                              "name": "size",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 86,
+                              "meta_flag": 1,
+                              "children": []
+                            },
+                            {
+                              "type": "char",
+                              "name": "data",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 1,
+                              "index": 87,
+                              "meta_flag": 1,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Rectf",
+                      "name": "m_Rect",
+                      "version": 2,
+                      "is_array": false,
+                      "size": 16,
+                      "index": 88,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 89,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 90,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "width",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 91,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "height",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 92,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "int",
+                      "name": "m_Alignment",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 93,
+                      "meta_flag": 0,
+                      "children": []
+                    },
+                    {
+                      "type": "Vector2f",
+                      "name": "m_Pivot",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 8,
+                      "index": 94,
+                      "meta_flag": 2097152,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 95,
+                          "meta_flag": 2097152,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 96,
+                          "meta_flag": 2097152,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Vector4f",
+                      "name": "m_Border",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 16,
+                      "index": 97,
+                      "meta_flag": 2097152,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 98,
+                          "meta_flag": 2097152,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 99,
+                          "meta_flag": 2097152,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 100,
+                          "meta_flag": 2097152,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "w",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 101,
+                          "meta_flag": 2097152,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_SpritePackingTag",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 102,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 103,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 104,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 105,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextureImportOutput",
+      "name": "m_Output",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 106,
+      "meta_flag": 49152,
+      "children": [
+        {
+          "type": "TextureImportInstructions",
+          "name": "textureImportInstructions",
+          "version": 1,
+          "is_array": false,
+          "size": 36,
+          "index": 107,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "int",
+              "name": "compressedFormat",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 108,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "uncompressedFormat",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 109,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "recommendedFormat",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 110,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "desiredFormat",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 111,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "usageMode",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 112,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "colorSpace",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 113,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "width",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 114,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "height",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 115,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "compressionQuality",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 116,
+              "meta_flag": 0,
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "SourceTextureInformation",
+          "name": "sourceTextureInformation",
+          "version": 1,
+          "is_array": false,
+          "size": 10,
+          "index": 117,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "int",
+              "name": "width",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 118,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "height",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 119,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "bool",
+              "name": "doesTextureContainAlpha",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 120,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "bool",
+              "name": "sourceWasHDR",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 121,
+              "meta_flag": 16384,
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "string",
+          "name": "importInspectorWarnings",
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 122,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 123,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 124,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 125,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_UserData",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 126,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 127,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 128,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 129,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_AssetBundleName",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 130,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 131,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 132,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 133,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_AssetBundleVariant",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 134,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 135,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 136,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 137,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

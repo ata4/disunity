@@ -1,193 +1,193 @@
 {
+  "type": "Rigidbody",
+  "name": "Base",
   "version": 2,
   "is_array": false,
   "size": 63,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "Rigidbody",
   "children": [
     {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 1,
       "meta_flag": 1,
-      "name": "m_ObjectHideFlags",
-      "type": "unsigned int",
       "children": []
     },
     {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 2,
       "meta_flag": 65537,
-      "name": "m_PrefabParentObject",
-      "type": "PPtr<EditorExtension>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 3,
           "meta_flag": 65537,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 4,
           "meta_flag": 65537,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 5,
       "meta_flag": 65537,
-      "name": "m_PrefabInternal",
-      "type": "PPtr<Prefab>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 6,
           "meta_flag": 65537,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 7,
           "meta_flag": 65537,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 8,
       "meta_flag": 65601,
-      "name": "m_GameObject",
-      "type": "PPtr<GameObject>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 9,
           "meta_flag": 65601,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 10,
           "meta_flag": 65601,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "float",
+      "name": "m_Mass",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 11,
       "meta_flag": 2048,
-      "name": "m_Mass",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_Drag",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 12,
       "meta_flag": 2048,
-      "name": "m_Drag",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_AngularDrag",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 13,
       "meta_flag": 2048,
-      "name": "m_AngularDrag",
-      "type": "float",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_UseGravity",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 14,
       "meta_flag": 2048,
-      "name": "m_UseGravity",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_IsKinematic",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 15,
       "meta_flag": 0,
-      "name": "m_IsKinematic",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "UInt8",
+      "name": "m_Interpolate",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 16,
       "meta_flag": 16384,
-      "name": "m_Interpolate",
-      "type": "UInt8",
       "children": []
     },
     {
+      "type": "int",
+      "name": "m_Constraints",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 17,
       "meta_flag": 4194305,
-      "name": "m_Constraints",
-      "type": "int",
       "children": []
     },
     {
+      "type": "int",
+      "name": "m_CollisionDetection",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 18,
       "meta_flag": 0,
-      "name": "m_CollisionDetection",
-      "type": "int",
       "children": []
     }
   ]

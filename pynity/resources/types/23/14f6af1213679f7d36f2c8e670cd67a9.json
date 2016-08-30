@@ -1,200 +1,200 @@
 {
+  "type": "MeshRenderer",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "MeshRenderer",
   "children": [
     {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 1,
       "meta_flag": 1,
-      "name": "m_ObjectHideFlags",
-      "type": "unsigned int",
       "children": []
     },
     {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 2,
       "meta_flag": 65537,
-      "name": "m_PrefabParentObject",
-      "type": "PPtr<EditorExtension>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 3,
           "meta_flag": 65537,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 4,
           "meta_flag": 65537,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 5,
       "meta_flag": 65537,
-      "name": "m_PrefabInternal",
-      "type": "PPtr<Prefab>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 6,
           "meta_flag": 65537,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 7,
           "meta_flag": 65537,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 8,
       "meta_flag": 65601,
-      "name": "m_GameObject",
-      "type": "PPtr<GameObject>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 9,
           "meta_flag": 65601,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 10,
           "meta_flag": 65601,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "bool",
+      "name": "m_Enabled",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 11,
       "meta_flag": 16385,
-      "name": "m_Enabled",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "UInt8",
+      "name": "m_CastShadows",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 12,
       "meta_flag": 0,
-      "name": "m_CastShadows",
-      "type": "UInt8",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_ReceiveShadows",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 13,
       "meta_flag": 16384,
-      "name": "m_ReceiveShadows",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "vector",
+      "name": "m_Materials",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 14,
       "meta_flag": 0,
-      "name": "m_Materials",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 15,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 16,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "PPtr<Material>",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 12,
               "index": 17,
               "meta_flag": 0,
-              "name": "data",
-              "type": "PPtr<Material>",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_FileID",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 18,
                   "meta_flag": 1,
-                  "name": "m_FileID",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "SInt64",
+                  "name": "m_PathID",
                   "version": 1,
                   "is_array": false,
                   "size": 8,
                   "index": 19,
                   "meta_flag": 1,
-                  "name": "m_PathID",
-                  "type": "SInt64",
                   "children": []
                 }
               ]
@@ -204,41 +204,41 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_SubsetIndices",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 20,
       "meta_flag": 1,
-      "name": "m_SubsetIndices",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 21,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 22,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "unsigned int",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 23,
               "meta_flag": 1,
-              "name": "data",
-              "type": "unsigned int",
               "children": []
             }
           ]
@@ -246,206 +246,206 @@
       ]
     },
     {
+      "type": "PPtr<Transform>",
+      "name": "m_StaticBatchRoot",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 24,
       "meta_flag": 1,
-      "name": "m_StaticBatchRoot",
-      "type": "PPtr<Transform>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 25,
           "meta_flag": 1,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 26,
           "meta_flag": 1,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "bool",
+      "name": "m_UseLightProbes",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 27,
       "meta_flag": 16384,
-      "name": "m_UseLightProbes",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "int",
+      "name": "m_ReflectionProbeUsage",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 28,
       "meta_flag": 0,
-      "name": "m_ReflectionProbeUsage",
-      "type": "int",
       "children": []
     },
     {
+      "type": "PPtr<Transform>",
+      "name": "m_ProbeAnchor",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 29,
       "meta_flag": 0,
-      "name": "m_ProbeAnchor",
-      "type": "PPtr<Transform>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 30,
           "meta_flag": 1,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 31,
           "meta_flag": 1,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "float",
+      "name": "m_ScaleInLightmap",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 32,
       "meta_flag": 8388609,
-      "name": "m_ScaleInLightmap",
-      "type": "float",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_PreserveUVs",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 33,
       "meta_flag": 8388609,
-      "name": "m_PreserveUVs",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_IgnoreNormalsForChartDetection",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 34,
       "meta_flag": 8388609,
-      "name": "m_IgnoreNormalsForChartDetection",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_ImportantGI",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 35,
       "meta_flag": 8404993,
-      "name": "m_ImportantGI",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "int",
+      "name": "m_MinimumChartSize",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 36,
       "meta_flag": 8388609,
-      "name": "m_MinimumChartSize",
-      "type": "int",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_AutoUVMaxDistance",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 37,
       "meta_flag": 8388609,
-      "name": "m_AutoUVMaxDistance",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_AutoUVMaxAngle",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 38,
       "meta_flag": 8388609,
-      "name": "m_AutoUVMaxAngle",
-      "type": "float",
       "children": []
     },
     {
+      "type": "PPtr<LightmapParameters>",
+      "name": "m_LightmapParameters",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 39,
       "meta_flag": 8404992,
-      "name": "m_LightmapParameters",
-      "type": "PPtr<LightmapParameters>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 40,
           "meta_flag": 8388609,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 41,
           "meta_flag": 8388609,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "int",
+      "name": "m_SortingLayerID",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 42,
       "meta_flag": 1,
-      "name": "m_SortingLayerID",
-      "type": "int",
       "children": []
     },
     {
+      "type": "SInt16",
+      "name": "m_SortingOrder",
       "version": 1,
       "is_array": false,
       "size": 2,
       "index": 43,
       "meta_flag": 16385,
-      "name": "m_SortingOrder",
-      "type": "SInt16",
       "children": []
     }
   ]

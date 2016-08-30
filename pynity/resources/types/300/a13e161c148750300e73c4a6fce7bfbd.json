@@ -1,76 +1,76 @@
 {
+  "type": "RuntimeInitializeOnLoadManager",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "RuntimeInitializeOnLoadManager",
   "children": [
     {
+      "type": "vector",
+      "name": "m_AssemblyNames",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 1,
       "meta_flag": 32768,
-      "name": "m_AssemblyNames",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 2,
           "meta_flag": 32768,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 3,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "string",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 4,
               "meta_flag": 32768,
-              "name": "data",
-              "type": "string",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 5,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 6,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "char",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 7,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "char",
                       "children": []
                     }
                   ]
@@ -82,69 +82,69 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_NamespaceNames",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 8,
       "meta_flag": 49152,
-      "name": "m_NamespaceNames",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 9,
           "meta_flag": 32768,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 10,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "string",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 11,
               "meta_flag": 32768,
-              "name": "data",
-              "type": "string",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 12,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 13,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "char",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 14,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "char",
                       "children": []
                     }
                   ]
@@ -156,98 +156,98 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_ClassInfos",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 15,
       "meta_flag": 49152,
-      "name": "m_ClassInfos",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 16,
           "meta_flag": 32768,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 17,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "ClassInfo",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 18,
               "meta_flag": 32768,
-              "name": "data",
-              "type": "ClassInfo",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_AssemblyNameIndex",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 19,
                   "meta_flag": 0,
-                  "name": "m_AssemblyNameIndex",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "m_NamespaceIndex",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 20,
                   "meta_flag": 16384,
-                  "name": "m_NamespaceIndex",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "string",
+                  "name": "m_ClassName",
                   "version": 1,
                   "is_array": false,
                   "size": -1,
                   "index": 21,
                   "meta_flag": 49152,
-                  "name": "m_ClassName",
-                  "type": "string",
                   "children": [
                     {
+                      "type": "Array",
+                      "name": "Array",
                       "version": 1,
                       "is_array": true,
                       "size": -1,
                       "index": 22,
                       "meta_flag": 16385,
-                      "name": "Array",
-                      "type": "Array",
                       "children": [
                         {
+                          "type": "int",
+                          "name": "size",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 23,
                           "meta_flag": 1,
-                          "name": "size",
-                          "type": "int",
                           "children": []
                         },
                         {
+                          "type": "char",
+                          "name": "data",
                           "version": 1,
                           "is_array": false,
                           "size": 1,
                           "index": 24,
                           "meta_flag": 1,
-                          "name": "data",
-                          "type": "char",
                           "children": []
                         }
                       ]
@@ -255,33 +255,33 @@
                   ]
                 },
                 {
+                  "type": "int",
+                  "name": "m_NumOfMethods",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 25,
                   "meta_flag": 0,
-                  "name": "m_NumOfMethods",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "m_MethodIndex",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 26,
                   "meta_flag": 16384,
-                  "name": "m_MethodIndex",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "bool",
+                  "name": "m_IsUnityClass",
                   "version": 1,
                   "is_array": false,
                   "size": 1,
                   "index": 27,
                   "meta_flag": 16384,
-                  "name": "m_IsUnityClass",
-                  "type": "bool",
                   "children": []
                 }
               ]
@@ -291,88 +291,88 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_ClassMethodInfos",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 28,
       "meta_flag": 49152,
-      "name": "m_ClassMethodInfos",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 29,
           "meta_flag": 32768,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 30,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "ClassMethodInfo",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 31,
               "meta_flag": 32768,
-              "name": "data",
-              "type": "ClassMethodInfo",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_ClassIndex",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 32,
                   "meta_flag": 0,
-                  "name": "m_ClassIndex",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "string",
+                  "name": "m_MethodName",
                   "version": 1,
                   "is_array": false,
                   "size": -1,
                   "index": 33,
                   "meta_flag": 49152,
-                  "name": "m_MethodName",
-                  "type": "string",
                   "children": [
                     {
+                      "type": "Array",
+                      "name": "Array",
                       "version": 1,
                       "is_array": true,
                       "size": -1,
                       "index": 34,
                       "meta_flag": 16385,
-                      "name": "Array",
-                      "type": "Array",
                       "children": [
                         {
+                          "type": "int",
+                          "name": "size",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 35,
                           "meta_flag": 1,
-                          "name": "size",
-                          "type": "int",
                           "children": []
                         },
                         {
+                          "type": "char",
+                          "name": "data",
                           "version": 1,
                           "is_array": false,
                           "size": 1,
                           "index": 36,
                           "meta_flag": 1,
-                          "name": "data",
-                          "type": "char",
                           "children": []
                         }
                       ]
@@ -380,13 +380,13 @@
                   ]
                 },
                 {
+                  "type": "int",
+                  "name": "m_OrderNumber",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 37,
                   "meta_flag": 16384,
-                  "name": "m_OrderNumber",
-                  "type": "int",
                   "children": []
                 }
               ]
@@ -396,41 +396,41 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_UnityMethodExecutionOrders",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 38,
       "meta_flag": 0,
-      "name": "m_UnityMethodExecutionOrders",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 39,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 40,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "int",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 41,
               "meta_flag": 0,
-              "name": "data",
-              "type": "int",
               "children": []
             }
           ]
@@ -438,41 +438,41 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_MethodExecutionOrders",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 42,
       "meta_flag": 16384,
-      "name": "m_MethodExecutionOrders",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 43,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 44,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "int",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 45,
               "meta_flag": 0,
-              "name": "data",
-              "type": "int",
               "children": []
             }
           ]

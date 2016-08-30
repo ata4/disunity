@@ -1,0 +1,809 @@
+{
+  "type": "Material",
+  "name": "Base",
+  "version": 6,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 11,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Shader>",
+      "name": "m_Shader",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 12,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 13,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 14,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_ShaderKeywords",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 15,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 16,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 17,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 18,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "unsigned int",
+      "name": "m_LightmapFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 19,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_CustomRenderQueue",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 20,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "map",
+      "name": "stringTagMap",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 21,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 22,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 23,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "pair",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 24,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "string",
+                  "name": "first",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 25,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 26,
+                      "meta_flag": 16385,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 27,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 28,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "second",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 29,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 30,
+                      "meta_flag": 16385,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 31,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 32,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "UnityPropertySheet",
+      "name": "m_SavedProperties",
+      "version": 2,
+      "is_array": false,
+      "size": -1,
+      "index": 33,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "map",
+          "name": "m_TexEnvs",
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 34,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 35,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 36,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "pair",
+                  "name": "data",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 37,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "FastPropertyName",
+                      "name": "first",
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 38,
+                      "meta_flag": 32768,
+                      "children": [
+                        {
+                          "type": "string",
+                          "name": "name",
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 39,
+                          "meta_flag": 32768,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 40,
+                              "meta_flag": 16385,
+                              "children": [
+                                {
+                                  "type": "int",
+                                  "name": "size",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 41,
+                                  "meta_flag": 1,
+                                  "children": []
+                                },
+                                {
+                                  "type": "char",
+                                  "name": "data",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 1,
+                                  "index": 42,
+                                  "meta_flag": 1,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "UnityTexEnv",
+                      "name": "second",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 28,
+                      "index": 43,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "PPtr<Texture>",
+                          "name": "m_Texture",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 12,
+                          "index": 44,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "int",
+                              "name": "m_FileID",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 45,
+                              "meta_flag": 1,
+                              "children": []
+                            },
+                            {
+                              "type": "SInt64",
+                              "name": "m_PathID",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 8,
+                              "index": 46,
+                              "meta_flag": 1,
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Vector2f",
+                          "name": "m_Scale",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 8,
+                          "index": 47,
+                          "meta_flag": 2097152,
+                          "children": [
+                            {
+                              "type": "float",
+                              "name": "x",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 48,
+                              "meta_flag": 2097152,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "y",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 49,
+                              "meta_flag": 2097152,
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Vector2f",
+                          "name": "m_Offset",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 8,
+                          "index": 50,
+                          "meta_flag": 2097152,
+                          "children": [
+                            {
+                              "type": "float",
+                              "name": "x",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 51,
+                              "meta_flag": 2097152,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "y",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 52,
+                              "meta_flag": 2097152,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "map",
+          "name": "m_Floats",
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 53,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 54,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 55,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "pair",
+                  "name": "data",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 56,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "FastPropertyName",
+                      "name": "first",
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 57,
+                      "meta_flag": 32768,
+                      "children": [
+                        {
+                          "type": "string",
+                          "name": "name",
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 58,
+                          "meta_flag": 32768,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 59,
+                              "meta_flag": 16385,
+                              "children": [
+                                {
+                                  "type": "int",
+                                  "name": "size",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 60,
+                                  "meta_flag": 1,
+                                  "children": []
+                                },
+                                {
+                                  "type": "char",
+                                  "name": "data",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 1,
+                                  "index": 61,
+                                  "meta_flag": 1,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "float",
+                      "name": "second",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 62,
+                      "meta_flag": 0,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "map",
+          "name": "m_Colors",
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 63,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 64,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 65,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "pair",
+                  "name": "data",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 66,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "FastPropertyName",
+                      "name": "first",
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 67,
+                      "meta_flag": 32768,
+                      "children": [
+                        {
+                          "type": "string",
+                          "name": "name",
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 68,
+                          "meta_flag": 32768,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 69,
+                              "meta_flag": 16385,
+                              "children": [
+                                {
+                                  "type": "int",
+                                  "name": "size",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 70,
+                                  "meta_flag": 1,
+                                  "children": []
+                                },
+                                {
+                                  "type": "char",
+                                  "name": "data",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 1,
+                                  "index": 71,
+                                  "meta_flag": 1,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ColorRGBA",
+                      "name": "second",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 16,
+                      "index": 72,
+                      "meta_flag": 2097152,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "r",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 73,
+                          "meta_flag": 2097153,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "g",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 74,
+                          "meta_flag": 2097153,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "b",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 75,
+                          "meta_flag": 2097153,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "a",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 76,
+                          "meta_flag": 2097153,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,40 +1,40 @@
 {
+  "type": "TimeManager",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": 12,
   "index": 0,
   "meta_flag": 0,
-  "name": "Base",
-  "type": "TimeManager",
   "children": [
     {
+      "type": "float",
+      "name": "Fixed Timestep",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 1,
       "meta_flag": 2048,
-      "name": "Fixed Timestep",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "Maximum Allowed Timestep",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 2,
       "meta_flag": 2048,
-      "name": "Maximum Allowed Timestep",
-      "type": "float",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_TimeScale",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 3,
       "meta_flag": 2048,
-      "name": "m_TimeScale",
-      "type": "float",
       "children": []
     }
   ]

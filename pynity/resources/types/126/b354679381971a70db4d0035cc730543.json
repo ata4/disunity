@@ -1,85 +1,85 @@
 {
+  "type": "NavMeshAreas",
+  "name": "Base",
   "version": 2,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "NavMeshAreas",
   "children": [
     {
+      "type": "vector",
+      "name": "areas",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 1,
       "meta_flag": 34816,
-      "name": "areas",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 2,
           "meta_flag": 34816,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 3,
               "meta_flag": 2048,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "NavMeshAreaData",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 4,
               "meta_flag": 34816,
-              "name": "data",
-              "type": "NavMeshAreaData",
               "children": [
                 {
+                  "type": "string",
+                  "name": "name",
                   "version": 1,
                   "is_array": false,
                   "size": -1,
                   "index": 5,
                   "meta_flag": 34816,
-                  "name": "name",
-                  "type": "string",
                   "children": [
                     {
+                      "type": "Array",
+                      "name": "Array",
                       "version": 1,
                       "is_array": true,
                       "size": -1,
                       "index": 6,
                       "meta_flag": 18433,
-                      "name": "Array",
-                      "type": "Array",
                       "children": [
                         {
+                          "type": "int",
+                          "name": "size",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 7,
                           "meta_flag": 2049,
-                          "name": "size",
-                          "type": "int",
                           "children": []
                         },
                         {
+                          "type": "char",
+                          "name": "data",
                           "version": 1,
                           "is_array": false,
                           "size": 1,
                           "index": 8,
                           "meta_flag": 2049,
-                          "name": "data",
-                          "type": "char",
                           "children": []
                         }
                       ]
@@ -87,13 +87,13 @@
                   ]
                 },
                 {
+                  "type": "float",
+                  "name": "cost",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 9,
                   "meta_flag": 2048,
-                  "name": "cost",
-                  "type": "float",
                   "children": []
                 }
               ]

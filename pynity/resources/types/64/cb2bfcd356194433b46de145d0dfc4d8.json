@@ -1,131 +1,131 @@
 {
+  "type": "MeshCollider",
+  "name": "Base",
   "version": 2,
   "is_array": false,
   "size": 39,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "MeshCollider",
   "children": [
     {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 1,
       "meta_flag": 65601,
-      "name": "m_GameObject",
-      "type": "PPtr<GameObject>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 2,
           "meta_flag": 65601,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 3,
           "meta_flag": 65601,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "PPtr<PhysicMaterial>",
+      "name": "m_Material",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 4,
       "meta_flag": 2048,
-      "name": "m_Material",
-      "type": "PPtr<PhysicMaterial>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 5,
           "meta_flag": 2049,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 6,
           "meta_flag": 2049,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]
     },
     {
+      "type": "bool",
+      "name": "m_IsTrigger",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 7,
       "meta_flag": 2048,
-      "name": "m_IsTrigger",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_Enabled",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 8,
       "meta_flag": 16641,
-      "name": "m_Enabled",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_Convex",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 9,
       "meta_flag": 16384,
-      "name": "m_Convex",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "PPtr<Mesh>",
+      "name": "m_Mesh",
       "version": 1,
       "is_array": false,
       "size": 12,
       "index": 10,
       "meta_flag": 0,
-      "name": "m_Mesh",
-      "type": "PPtr<Mesh>",
       "children": [
         {
+          "type": "int",
+          "name": "m_FileID",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 11,
           "meta_flag": 1,
-          "name": "m_FileID",
-          "type": "int",
           "children": []
         },
         {
+          "type": "SInt64",
+          "name": "m_PathID",
           "version": 1,
           "is_array": false,
           "size": 8,
           "index": 12,
           "meta_flag": 1,
-          "name": "m_PathID",
-          "type": "SInt64",
           "children": []
         }
       ]

@@ -1,48 +1,48 @@
 {
+  "type": "Shader",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "Shader",
   "children": [
     {
+      "type": "string",
+      "name": "m_Name",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 1,
       "meta_flag": 32769,
-      "name": "m_Name",
-      "type": "string",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 2,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 3,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "char",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 4,
               "meta_flag": 1,
-              "name": "data",
-              "type": "char",
               "children": []
             }
           ]
@@ -50,41 +50,41 @@
       ]
     },
     {
+      "type": "string",
+      "name": "m_Script",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 5,
       "meta_flag": 67141633,
-      "name": "m_Script",
-      "type": "string",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 6,
           "meta_flag": 67125249,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 7,
               "meta_flag": 67108865,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "char",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 8,
               "meta_flag": 67108865,
-              "name": "data",
-              "type": "char",
               "children": []
             }
           ]
@@ -92,41 +92,41 @@
       ]
     },
     {
+      "type": "string",
+      "name": "m_PathName",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 9,
       "meta_flag": 32769,
-      "name": "m_PathName",
-      "type": "string",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 10,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 11,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "char",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 12,
               "meta_flag": 1,
-              "name": "data",
-              "type": "char",
               "children": []
             }
           ]
@@ -134,60 +134,60 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_Dependencies",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 13,
       "meta_flag": 0,
-      "name": "m_Dependencies",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 14,
           "meta_flag": 0,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 15,
               "meta_flag": 0,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "PPtr<Shader>",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 12,
               "index": 16,
               "meta_flag": 0,
-              "name": "data",
-              "type": "PPtr<Shader>",
               "children": [
                 {
+                  "type": "int",
+                  "name": "m_FileID",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 17,
                   "meta_flag": 1,
-                  "name": "m_FileID",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "SInt64",
+                  "name": "m_PathID",
                   "version": 1,
                   "is_array": false,
                   "size": 8,
                   "index": 18,
                   "meta_flag": 1,
-                  "name": "m_PathID",
-                  "type": "SInt64",
                   "children": []
                 }
               ]
@@ -197,13 +197,13 @@
       ]
     },
     {
+      "type": "bool",
+      "name": "m_ShaderIsBaked",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 19,
       "meta_flag": 16384,
-      "name": "m_ShaderIsBaked",
-      "type": "bool",
       "children": []
     }
   ]

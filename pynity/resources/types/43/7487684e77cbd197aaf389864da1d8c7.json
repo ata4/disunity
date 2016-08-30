@@ -1,48 +1,48 @@
 {
+  "type": "Mesh",
+  "name": "Base",
   "version": 8,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 32768,
-  "name": "Base",
-  "type": "Mesh",
   "children": [
     {
+      "type": "string",
+      "name": "m_Name",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 1,
       "meta_flag": 32769,
-      "name": "m_Name",
-      "type": "string",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 2,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 3,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "char",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 4,
               "meta_flag": 1,
-              "name": "data",
-              "type": "char",
               "children": []
             }
           ]
@@ -50,179 +50,179 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_SubMeshes",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 5,
       "meta_flag": 1,
-      "name": "m_SubMeshes",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 6,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 7,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "SubMesh",
+              "name": "data",
               "version": 2,
               "is_array": false,
               "size": 44,
               "index": 8,
               "meta_flag": 1,
-              "name": "data",
-              "type": "SubMesh",
               "children": [
                 {
+                  "type": "unsigned int",
+                  "name": "firstByte",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 9,
                   "meta_flag": 1,
-                  "name": "firstByte",
-                  "type": "unsigned int",
                   "children": []
                 },
                 {
+                  "type": "unsigned int",
+                  "name": "indexCount",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 10,
                   "meta_flag": 1,
-                  "name": "indexCount",
-                  "type": "unsigned int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "topology",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 11,
                   "meta_flag": 1,
-                  "name": "topology",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "unsigned int",
+                  "name": "firstVertex",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 12,
                   "meta_flag": 1,
-                  "name": "firstVertex",
-                  "type": "unsigned int",
                   "children": []
                 },
                 {
+                  "type": "unsigned int",
+                  "name": "vertexCount",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 13,
                   "meta_flag": 1,
-                  "name": "vertexCount",
-                  "type": "unsigned int",
                   "children": []
                 },
                 {
+                  "type": "AABB",
+                  "name": "localAABB",
                   "version": 1,
                   "is_array": false,
                   "size": 24,
                   "index": 14,
                   "meta_flag": 1,
-                  "name": "localAABB",
-                  "type": "AABB",
                   "children": [
                     {
+                      "type": "Vector3f",
+                      "name": "m_Center",
                       "version": 1,
                       "is_array": false,
                       "size": 12,
                       "index": 15,
                       "meta_flag": 2097153,
-                      "name": "m_Center",
-                      "type": "Vector3f",
                       "children": [
                         {
+                          "type": "float",
+                          "name": "x",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 16,
                           "meta_flag": 2097153,
-                          "name": "x",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "y",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 17,
                           "meta_flag": 2097153,
-                          "name": "y",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "z",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 18,
                           "meta_flag": 2097153,
-                          "name": "z",
-                          "type": "float",
                           "children": []
                         }
                       ]
                     },
                     {
+                      "type": "Vector3f",
+                      "name": "m_Extent",
                       "version": 1,
                       "is_array": false,
                       "size": 12,
                       "index": 19,
                       "meta_flag": 2097153,
-                      "name": "m_Extent",
-                      "type": "Vector3f",
                       "children": [
                         {
+                          "type": "float",
+                          "name": "x",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 20,
                           "meta_flag": 2097153,
-                          "name": "x",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "y",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 21,
                           "meta_flag": 2097153,
-                          "name": "y",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "z",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 22,
                           "meta_flag": 2097153,
-                          "name": "z",
-                          "type": "float",
                           "children": []
                         }
                       ]
@@ -236,182 +236,182 @@
       ]
     },
     {
+      "type": "BlendShapeData",
+      "name": "m_Shapes",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 23,
       "meta_flag": 32769,
-      "name": "m_Shapes",
-      "type": "BlendShapeData",
       "children": [
         {
+          "type": "vector",
+          "name": "vertices",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 24,
           "meta_flag": 1,
-          "name": "vertices",
-          "type": "vector",
           "children": [
             {
+              "type": "Array",
+              "name": "Array",
               "version": 1,
               "is_array": true,
               "size": -1,
               "index": 25,
               "meta_flag": 1,
-              "name": "Array",
-              "type": "Array",
               "children": [
                 {
+                  "type": "int",
+                  "name": "size",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 26,
                   "meta_flag": 1,
-                  "name": "size",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "BlendShapeVertex",
+                  "name": "data",
                   "version": 1,
                   "is_array": false,
                   "size": 40,
                   "index": 27,
                   "meta_flag": 1,
-                  "name": "data",
-                  "type": "BlendShapeVertex",
                   "children": [
                     {
+                      "type": "Vector3f",
+                      "name": "vertex",
                       "version": 1,
                       "is_array": false,
                       "size": 12,
                       "index": 28,
                       "meta_flag": 2097153,
-                      "name": "vertex",
-                      "type": "Vector3f",
                       "children": [
                         {
+                          "type": "float",
+                          "name": "x",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 29,
                           "meta_flag": 2097153,
-                          "name": "x",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "y",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 30,
                           "meta_flag": 2097153,
-                          "name": "y",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "z",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 31,
                           "meta_flag": 2097153,
-                          "name": "z",
-                          "type": "float",
                           "children": []
                         }
                       ]
                     },
                     {
+                      "type": "Vector3f",
+                      "name": "normal",
                       "version": 1,
                       "is_array": false,
                       "size": 12,
                       "index": 32,
                       "meta_flag": 2097153,
-                      "name": "normal",
-                      "type": "Vector3f",
                       "children": [
                         {
+                          "type": "float",
+                          "name": "x",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 33,
                           "meta_flag": 2097153,
-                          "name": "x",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "y",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 34,
                           "meta_flag": 2097153,
-                          "name": "y",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "z",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 35,
                           "meta_flag": 2097153,
-                          "name": "z",
-                          "type": "float",
                           "children": []
                         }
                       ]
                     },
                     {
+                      "type": "Vector3f",
+                      "name": "tangent",
                       "version": 1,
                       "is_array": false,
                       "size": 12,
                       "index": 36,
                       "meta_flag": 2097153,
-                      "name": "tangent",
-                      "type": "Vector3f",
                       "children": [
                         {
+                          "type": "float",
+                          "name": "x",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 37,
                           "meta_flag": 2097153,
-                          "name": "x",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "y",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 38,
                           "meta_flag": 2097153,
-                          "name": "y",
-                          "type": "float",
                           "children": []
                         },
                         {
+                          "type": "float",
+                          "name": "z",
                           "version": 1,
                           "is_array": false,
                           "size": 4,
                           "index": 39,
                           "meta_flag": 2097153,
-                          "name": "z",
-                          "type": "float",
                           "children": []
                         }
                       ]
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "index",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 40,
                       "meta_flag": 1,
-                      "name": "index",
-                      "type": "unsigned int",
                       "children": []
                     }
                   ]
@@ -421,80 +421,80 @@
           ]
         },
         {
+          "type": "vector",
+          "name": "shapes",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 41,
           "meta_flag": 32769,
-          "name": "shapes",
-          "type": "vector",
           "children": [
             {
+              "type": "Array",
+              "name": "Array",
               "version": 1,
               "is_array": true,
               "size": -1,
               "index": 42,
               "meta_flag": 32769,
-              "name": "Array",
-              "type": "Array",
               "children": [
                 {
+                  "type": "int",
+                  "name": "size",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 43,
                   "meta_flag": 1,
-                  "name": "size",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "MeshBlendShape",
+                  "name": "data",
                   "version": 1,
                   "is_array": false,
                   "size": 10,
                   "index": 44,
                   "meta_flag": 32769,
-                  "name": "data",
-                  "type": "MeshBlendShape",
                   "children": [
                     {
+                      "type": "unsigned int",
+                      "name": "firstVertex",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 45,
                       "meta_flag": 1,
-                      "name": "firstVertex",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "vertexCount",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 46,
                       "meta_flag": 1,
-                      "name": "vertexCount",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "bool",
+                      "name": "hasNormals",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 47,
                       "meta_flag": 1,
-                      "name": "hasNormals",
-                      "type": "bool",
                       "children": []
                     },
                     {
+                      "type": "bool",
+                      "name": "hasTangents",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 48,
                       "meta_flag": 16385,
-                      "name": "hasTangents",
-                      "type": "bool",
                       "children": []
                     }
                   ]
@@ -504,78 +504,78 @@
           ]
         },
         {
+          "type": "vector",
+          "name": "channels",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 49,
           "meta_flag": 32769,
-          "name": "channels",
-          "type": "vector",
           "children": [
             {
+              "type": "Array",
+              "name": "Array",
               "version": 1,
               "is_array": true,
               "size": -1,
               "index": 50,
               "meta_flag": 32769,
-              "name": "Array",
-              "type": "Array",
               "children": [
                 {
+                  "type": "int",
+                  "name": "size",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 51,
                   "meta_flag": 1,
-                  "name": "size",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "MeshBlendShapeChannel",
+                  "name": "data",
                   "version": 1,
                   "is_array": false,
                   "size": -1,
                   "index": 52,
                   "meta_flag": 32769,
-                  "name": "data",
-                  "type": "MeshBlendShapeChannel",
                   "children": [
                     {
+                      "type": "string",
+                      "name": "name",
                       "version": 1,
                       "is_array": false,
                       "size": -1,
                       "index": 53,
                       "meta_flag": 32769,
-                      "name": "name",
-                      "type": "string",
                       "children": [
                         {
+                          "type": "Array",
+                          "name": "Array",
                           "version": 1,
                           "is_array": true,
                           "size": -1,
                           "index": 54,
                           "meta_flag": 16385,
-                          "name": "Array",
-                          "type": "Array",
                           "children": [
                             {
+                              "type": "int",
+                              "name": "size",
                               "version": 1,
                               "is_array": false,
                               "size": 4,
                               "index": 55,
                               "meta_flag": 1,
-                              "name": "size",
-                              "type": "int",
                               "children": []
                             },
                             {
+                              "type": "char",
+                              "name": "data",
                               "version": 1,
                               "is_array": false,
                               "size": 1,
                               "index": 56,
                               "meta_flag": 1,
-                              "name": "data",
-                              "type": "char",
                               "children": []
                             }
                           ]
@@ -583,33 +583,33 @@
                       ]
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "nameHash",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 57,
                       "meta_flag": 1,
-                      "name": "nameHash",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "int",
+                      "name": "frameIndex",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 58,
                       "meta_flag": 1,
-                      "name": "frameIndex",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "int",
+                      "name": "frameCount",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 59,
                       "meta_flag": 1,
-                      "name": "frameCount",
-                      "type": "int",
                       "children": []
                     }
                   ]
@@ -619,41 +619,41 @@
           ]
         },
         {
+          "type": "vector",
+          "name": "fullWeights",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 60,
           "meta_flag": 1,
-          "name": "fullWeights",
-          "type": "vector",
           "children": [
             {
+              "type": "Array",
+              "name": "Array",
               "version": 1,
               "is_array": true,
               "size": -1,
               "index": 61,
               "meta_flag": 1,
-              "name": "Array",
-              "type": "Array",
               "children": [
                 {
+                  "type": "int",
+                  "name": "size",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 62,
                   "meta_flag": 1,
-                  "name": "size",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "data",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 63,
                   "meta_flag": 1,
-                  "name": "data",
-                  "type": "float",
                   "children": []
                 }
               ]
@@ -663,200 +663,200 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_BindPose",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 64,
       "meta_flag": 1,
-      "name": "m_BindPose",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 65,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 66,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "Matrix4x4f",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 64,
               "index": 67,
               "meta_flag": 1,
-              "name": "data",
-              "type": "Matrix4x4f",
               "children": [
                 {
+                  "type": "float",
+                  "name": "e00",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 68,
                   "meta_flag": 1,
-                  "name": "e00",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e01",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 69,
                   "meta_flag": 1,
-                  "name": "e01",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e02",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 70,
                   "meta_flag": 1,
-                  "name": "e02",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e03",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 71,
                   "meta_flag": 1,
-                  "name": "e03",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e10",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 72,
                   "meta_flag": 1,
-                  "name": "e10",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e11",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 73,
                   "meta_flag": 1,
-                  "name": "e11",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e12",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 74,
                   "meta_flag": 1,
-                  "name": "e12",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e13",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 75,
                   "meta_flag": 1,
-                  "name": "e13",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e20",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 76,
                   "meta_flag": 1,
-                  "name": "e20",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e21",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 77,
                   "meta_flag": 1,
-                  "name": "e21",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e22",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 78,
                   "meta_flag": 1,
-                  "name": "e22",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e23",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 79,
                   "meta_flag": 1,
-                  "name": "e23",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e30",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 80,
                   "meta_flag": 1,
-                  "name": "e30",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e31",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 81,
                   "meta_flag": 1,
-                  "name": "e31",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e32",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 82,
                   "meta_flag": 1,
-                  "name": "e32",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "e33",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 83,
                   "meta_flag": 1,
-                  "name": "e33",
-                  "type": "float",
                   "children": []
                 }
               ]
@@ -866,41 +866,41 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_BoneNameHashes",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 84,
       "meta_flag": 1,
-      "name": "m_BoneNameHashes",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 85,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 86,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "unsigned int",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 87,
               "meta_flag": 1,
-              "name": "data",
-              "type": "unsigned int",
               "children": []
             }
           ]
@@ -908,91 +908,91 @@
       ]
     },
     {
+      "type": "unsigned int",
+      "name": "m_RootBoneNameHash",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 88,
       "meta_flag": 1,
-      "name": "m_RootBoneNameHash",
-      "type": "unsigned int",
       "children": []
     },
     {
+      "type": "UInt8",
+      "name": "m_MeshCompression",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 89,
       "meta_flag": 1,
-      "name": "m_MeshCompression",
-      "type": "UInt8",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_IsReadable",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 90,
       "meta_flag": 1,
-      "name": "m_IsReadable",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_KeepVertices",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 91,
       "meta_flag": 1,
-      "name": "m_KeepVertices",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "bool",
+      "name": "m_KeepIndices",
       "version": 1,
       "is_array": false,
       "size": 1,
       "index": 92,
       "meta_flag": 16385,
-      "name": "m_KeepIndices",
-      "type": "bool",
       "children": []
     },
     {
+      "type": "vector",
+      "name": "m_IndexBuffer",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 93,
       "meta_flag": 32769,
-      "name": "m_IndexBuffer",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 94,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 95,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "UInt8",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 96,
               "meta_flag": 1,
-              "name": "data",
-              "type": "UInt8",
               "children": []
             }
           ]
@@ -1000,120 +1000,120 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_Skin",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 97,
       "meta_flag": 1,
-      "name": "m_Skin",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 98,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 99,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "BoneInfluence",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 32,
               "index": 100,
               "meta_flag": 1,
-              "name": "data",
-              "type": "BoneInfluence",
               "children": [
                 {
+                  "type": "float",
+                  "name": "weight[0]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 101,
                   "meta_flag": 1,
-                  "name": "weight[0]",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "weight[1]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 102,
                   "meta_flag": 1,
-                  "name": "weight[1]",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "weight[2]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 103,
                   "meta_flag": 1,
-                  "name": "weight[2]",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "float",
+                  "name": "weight[3]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 104,
                   "meta_flag": 1,
-                  "name": "weight[3]",
-                  "type": "float",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "boneIndex[0]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 105,
                   "meta_flag": 1,
-                  "name": "boneIndex[0]",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "boneIndex[1]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 106,
                   "meta_flag": 1,
-                  "name": "boneIndex[1]",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "boneIndex[2]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 107,
                   "meta_flag": 1,
-                  "name": "boneIndex[2]",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "int",
+                  "name": "boneIndex[3]",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 108,
                   "meta_flag": 1,
-                  "name": "boneIndex[3]",
-                  "type": "int",
                   "children": []
                 }
               ]
@@ -1123,109 +1123,109 @@
       ]
     },
     {
+      "type": "VertexData",
+      "name": "m_VertexData",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 109,
       "meta_flag": 49153,
-      "name": "m_VertexData",
-      "type": "VertexData",
       "children": [
         {
+          "type": "unsigned int",
+          "name": "m_CurrentChannels",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 110,
           "meta_flag": 1,
-          "name": "m_CurrentChannels",
-          "type": "unsigned int",
           "children": []
         },
         {
+          "type": "unsigned int",
+          "name": "m_VertexCount",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 111,
           "meta_flag": 1,
-          "name": "m_VertexCount",
-          "type": "unsigned int",
           "children": []
         },
         {
+          "type": "vector",
+          "name": "m_Channels",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 112,
           "meta_flag": 1,
-          "name": "m_Channels",
-          "type": "vector",
           "children": [
             {
+              "type": "Array",
+              "name": "Array",
               "version": 1,
               "is_array": true,
               "size": -1,
               "index": 113,
               "meta_flag": 1,
-              "name": "Array",
-              "type": "Array",
               "children": [
                 {
+                  "type": "int",
+                  "name": "size",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 114,
                   "meta_flag": 1,
-                  "name": "size",
-                  "type": "int",
                   "children": []
                 },
                 {
+                  "type": "ChannelInfo",
+                  "name": "data",
                   "version": 1,
                   "is_array": false,
                   "size": 4,
                   "index": 115,
                   "meta_flag": 1,
-                  "name": "data",
-                  "type": "ChannelInfo",
                   "children": [
                     {
+                      "type": "UInt8",
+                      "name": "stream",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 116,
                       "meta_flag": 1,
-                      "name": "stream",
-                      "type": "UInt8",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "offset",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 117,
                       "meta_flag": 1,
-                      "name": "offset",
-                      "type": "UInt8",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "format",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 118,
                       "meta_flag": 1,
-                      "name": "format",
-                      "type": "UInt8",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "dimension",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 119,
                       "meta_flag": 1,
-                      "name": "dimension",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1235,32 +1235,32 @@
           ]
         },
         {
+          "type": "TypelessData",
+          "name": "m_DataSize",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 120,
           "meta_flag": 16385,
-          "name": "m_DataSize",
-          "type": "TypelessData",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 121,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "UInt8",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 122,
               "meta_flag": 1,
-              "name": "data",
-              "type": "UInt8",
               "children": []
             }
           ]
@@ -1268,89 +1268,89 @@
       ]
     },
     {
+      "type": "CompressedMesh",
+      "name": "m_CompressedMesh",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 123,
       "meta_flag": 32769,
-      "name": "m_CompressedMesh",
-      "type": "CompressedMesh",
       "children": [
         {
+          "type": "PackedBitVector",
+          "name": "m_Vertices",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 124,
           "meta_flag": 32769,
-          "name": "m_Vertices",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 125,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Range",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 126,
               "meta_flag": 1,
-              "name": "m_Range",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Start",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 127,
               "meta_flag": 1,
-              "name": "m_Start",
-              "type": "float",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 128,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 129,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 130,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 131,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1358,92 +1358,92 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 132,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_UV",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 133,
           "meta_flag": 32769,
-          "name": "m_UV",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 134,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Range",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 135,
               "meta_flag": 1,
-              "name": "m_Range",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Start",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 136,
               "meta_flag": 1,
-              "name": "m_Start",
-              "type": "float",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 137,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 138,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 139,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 140,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1451,92 +1451,92 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 141,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_Normals",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 142,
           "meta_flag": 32769,
-          "name": "m_Normals",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 143,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Range",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 144,
               "meta_flag": 1,
-              "name": "m_Range",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Start",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 145,
               "meta_flag": 1,
-              "name": "m_Start",
-              "type": "float",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 146,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 147,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 148,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 149,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1544,92 +1544,92 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 150,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_Tangents",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 151,
           "meta_flag": 32769,
-          "name": "m_Tangents",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 152,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Range",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 153,
               "meta_flag": 1,
-              "name": "m_Range",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Start",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 154,
               "meta_flag": 1,
-              "name": "m_Start",
-              "type": "float",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 155,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 156,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 157,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 158,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1637,72 +1637,72 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 159,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_Weights",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 160,
           "meta_flag": 32769,
-          "name": "m_Weights",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 161,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 162,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 163,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 164,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 165,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1710,72 +1710,72 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 166,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_NormalSigns",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 167,
           "meta_flag": 32769,
-          "name": "m_NormalSigns",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 168,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 169,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 170,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 171,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 172,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1783,72 +1783,72 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 173,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_TangentSigns",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 174,
           "meta_flag": 32769,
-          "name": "m_TangentSigns",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 175,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 176,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 177,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 178,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 179,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1856,92 +1856,92 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 180,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_FloatColors",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 181,
           "meta_flag": 32769,
-          "name": "m_FloatColors",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 182,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Range",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 183,
               "meta_flag": 1,
-              "name": "m_Range",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "m_Start",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 184,
               "meta_flag": 1,
-              "name": "m_Start",
-              "type": "float",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 185,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 186,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 187,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 188,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -1949,72 +1949,72 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 189,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_BoneIndices",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 190,
           "meta_flag": 32769,
-          "name": "m_BoneIndices",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 191,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 192,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 193,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 194,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 195,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -2022,72 +2022,72 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 196,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "PackedBitVector",
+          "name": "m_Triangles",
           "version": 1,
           "is_array": false,
           "size": -1,
           "index": 197,
           "meta_flag": 32769,
-          "name": "m_Triangles",
-          "type": "PackedBitVector",
           "children": [
             {
+              "type": "unsigned int",
+              "name": "m_NumItems",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 198,
               "meta_flag": 1,
-              "name": "m_NumItems",
-              "type": "unsigned int",
               "children": []
             },
             {
+              "type": "vector",
+              "name": "m_Data",
               "version": 1,
               "is_array": false,
               "size": -1,
               "index": 199,
               "meta_flag": 32769,
-              "name": "m_Data",
-              "type": "vector",
               "children": [
                 {
+                  "type": "Array",
+                  "name": "Array",
                   "version": 1,
                   "is_array": true,
                   "size": -1,
                   "index": 200,
                   "meta_flag": 16385,
-                  "name": "Array",
-                  "type": "Array",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "size",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 201,
                       "meta_flag": 1,
-                      "name": "size",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "UInt8",
+                      "name": "data",
                       "version": 1,
                       "is_array": false,
                       "size": 1,
                       "index": 202,
                       "meta_flag": 1,
-                      "name": "data",
-                      "type": "UInt8",
                       "children": []
                     }
                   ]
@@ -2095,116 +2095,116 @@
               ]
             },
             {
+              "type": "UInt8",
+              "name": "m_BitSize",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 203,
               "meta_flag": 16385,
-              "name": "m_BitSize",
-              "type": "UInt8",
               "children": []
             }
           ]
         },
         {
+          "type": "unsigned int",
+          "name": "m_UVInfo",
           "version": 1,
           "is_array": false,
           "size": 4,
           "index": 204,
           "meta_flag": 1,
-          "name": "m_UVInfo",
-          "type": "unsigned int",
           "children": []
         }
       ]
     },
     {
+      "type": "AABB",
+      "name": "m_LocalAABB",
       "version": 1,
       "is_array": false,
       "size": 24,
       "index": 205,
       "meta_flag": 1,
-      "name": "m_LocalAABB",
-      "type": "AABB",
       "children": [
         {
+          "type": "Vector3f",
+          "name": "m_Center",
           "version": 1,
           "is_array": false,
           "size": 12,
           "index": 206,
           "meta_flag": 2097153,
-          "name": "m_Center",
-          "type": "Vector3f",
           "children": [
             {
+              "type": "float",
+              "name": "x",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 207,
               "meta_flag": 2097153,
-              "name": "x",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "y",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 208,
               "meta_flag": 2097153,
-              "name": "y",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "z",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 209,
               "meta_flag": 2097153,
-              "name": "z",
-              "type": "float",
               "children": []
             }
           ]
         },
         {
+          "type": "Vector3f",
+          "name": "m_Extent",
           "version": 1,
           "is_array": false,
           "size": 12,
           "index": 210,
           "meta_flag": 2097153,
-          "name": "m_Extent",
-          "type": "Vector3f",
           "children": [
             {
+              "type": "float",
+              "name": "x",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 211,
               "meta_flag": 2097153,
-              "name": "x",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "y",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 212,
               "meta_flag": 2097153,
-              "name": "y",
-              "type": "float",
               "children": []
             },
             {
+              "type": "float",
+              "name": "z",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 213,
               "meta_flag": 2097153,
-              "name": "z",
-              "type": "float",
               "children": []
             }
           ]
@@ -2212,51 +2212,51 @@
       ]
     },
     {
+      "type": "int",
+      "name": "m_MeshUsageFlags",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 214,
       "meta_flag": 1,
-      "name": "m_MeshUsageFlags",
-      "type": "int",
       "children": []
     },
     {
+      "type": "vector",
+      "name": "m_BakedConvexCollisionMesh",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 215,
       "meta_flag": 32769,
-      "name": "m_BakedConvexCollisionMesh",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 216,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 217,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "UInt8",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 218,
               "meta_flag": 1,
-              "name": "data",
-              "type": "UInt8",
               "children": []
             }
           ]
@@ -2264,41 +2264,41 @@
       ]
     },
     {
+      "type": "vector",
+      "name": "m_BakedTriangleCollisionMesh",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 219,
       "meta_flag": 32769,
-      "name": "m_BakedTriangleCollisionMesh",
-      "type": "vector",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 220,
           "meta_flag": 16385,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 221,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "UInt8",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 1,
               "index": 222,
               "meta_flag": 1,
-              "name": "data",
-              "type": "UInt8",
               "children": []
             }
           ]

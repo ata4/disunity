@@ -1,147 +1,147 @@
 {
+  "type": "NetworkManager",
+  "name": "Base",
   "version": 1,
   "is_array": false,
   "size": -1,
   "index": 0,
   "meta_flag": 0,
-  "name": "Base",
-  "type": "NetworkManager",
   "children": [
     {
+      "type": "int",
+      "name": "m_DebugLevel",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 1,
       "meta_flag": 0,
-      "name": "m_DebugLevel",
-      "type": "int",
       "children": []
     },
     {
+      "type": "float",
+      "name": "m_Sendrate",
       "version": 1,
       "is_array": false,
       "size": 4,
       "index": 2,
       "meta_flag": 0,
-      "name": "m_Sendrate",
-      "type": "float",
       "children": []
     },
     {
+      "type": "map",
+      "name": "m_AssetToPrefab",
       "version": 1,
       "is_array": false,
       "size": -1,
       "index": 3,
       "meta_flag": 1,
-      "name": "m_AssetToPrefab",
-      "type": "map",
       "children": [
         {
+          "type": "Array",
+          "name": "Array",
           "version": 1,
           "is_array": true,
           "size": -1,
           "index": 4,
           "meta_flag": 1,
-          "name": "Array",
-          "type": "Array",
           "children": [
             {
+              "type": "int",
+              "name": "size",
               "version": 1,
               "is_array": false,
               "size": 4,
               "index": 5,
               "meta_flag": 1,
-              "name": "size",
-              "type": "int",
               "children": []
             },
             {
+              "type": "pair",
+              "name": "data",
               "version": 1,
               "is_array": false,
               "size": 28,
               "index": 6,
               "meta_flag": 1,
-              "name": "data",
-              "type": "pair",
               "children": [
                 {
+                  "type": "GUID",
+                  "name": "first",
                   "version": 1,
                   "is_array": false,
                   "size": 16,
                   "index": 7,
                   "meta_flag": 1,
-                  "name": "first",
-                  "type": "GUID",
                   "children": [
                     {
+                      "type": "unsigned int",
+                      "name": "data[0]",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 8,
                       "meta_flag": 1,
-                      "name": "data[0]",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "data[1]",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 9,
                       "meta_flag": 1,
-                      "name": "data[1]",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "data[2]",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 10,
                       "meta_flag": 1,
-                      "name": "data[2]",
-                      "type": "unsigned int",
                       "children": []
                     },
                     {
+                      "type": "unsigned int",
+                      "name": "data[3]",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 11,
                       "meta_flag": 1,
-                      "name": "data[3]",
-                      "type": "unsigned int",
                       "children": []
                     }
                   ]
                 },
                 {
+                  "type": "PPtr<GameObject>",
+                  "name": "second",
                   "version": 1,
                   "is_array": false,
                   "size": 12,
                   "index": 12,
                   "meta_flag": 1,
-                  "name": "second",
-                  "type": "PPtr<GameObject>",
                   "children": [
                     {
+                      "type": "int",
+                      "name": "m_FileID",
                       "version": 1,
                       "is_array": false,
                       "size": 4,
                       "index": 13,
                       "meta_flag": 1,
-                      "name": "m_FileID",
-                      "type": "int",
                       "children": []
                     },
                     {
+                      "type": "SInt64",
+                      "name": "m_PathID",
                       "version": 1,
                       "is_array": false,
                       "size": 8,
                       "index": 14,
                       "meta_flag": 1,
-                      "name": "m_PathID",
-                      "type": "SInt64",
                       "children": []
                     }
                   ]
