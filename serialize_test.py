@@ -10,7 +10,7 @@ def main(argv):
     app = argv.pop(0)
     path = argv.pop(0)
 
-    for globpath in glob.iglob(path):
+    for globpath in glob.iglob(path, recursive=True):
         if os.path.isdir(globpath):
             continue
 
