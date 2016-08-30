@@ -14,7 +14,7 @@ METAFLAG_ALIGN = 0x4000
 
 class SerializedFile(AutoCloseable):
 
-    versions_tested = [9, 14, 15]
+    versions_tested = [8, 9, 14, 15]
     read_prim = {
         "bool": BinaryReader.read_bool8,
         "SInt8": BinaryReader.read_int8,
@@ -348,8 +348,8 @@ class SerializedFile(AutoCloseable):
             # arrays always need to be aligned in version 5 or newer
             if self.header.version > 5:
                 r.align(4)
-        elif obj_type.name != "Base" and not obj_type.children:
-            # no children and not a base -> primitive
+        elif obj_type.size > 0 and not obj_type.children:
+            # no children and size greater zero -> primitive
             if not obj_type.type in self.read_prim:
                 raise RuntimeError("Unknown primitive type %s" % obj_type.type)
             obj = self.read_prim[obj_type.type](r)
