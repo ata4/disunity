@@ -7,7 +7,7 @@ from pprint import pprint
 
 from BinaryReader import *
 from ObjectDict import *
-from ChunkedFileIO import *
+from UnityFile import *
 from AutoCloseable import *
 
 VERSION_MIN = 5
@@ -43,7 +43,7 @@ class SerializedFile(AutoCloseable):
         self.string_mapper = StringTableMapper()
 
         # open file and make some basic checks to make sure this is actually a serialized file
-        self.r = self._create_reader(path)
+        self.r = BinaryReader(UnityFile(path, "rb"))
         self.valid = self._validate(self.r)
 
         if not self.valid:
@@ -56,22 +56,6 @@ class SerializedFile(AutoCloseable):
         if self.header.version > 10:
             self.script_types = self._read_script_types(self.r)
         self.externals = self._read_externals(self.r)
-
-    def _create_reader(self, path):
-        fname, fext = os.path.splitext(path)
-
-        if fext == ".split0":
-            index = 0
-            splitpath = fname + fext
-            splitpaths = []
-            while os.path.exists(splitpath):
-                splitpaths.append(splitpath)
-                index += 1
-                splitpath = fname + ".split%d" % index
-
-            return BinaryReader(ChunkedFileIO(splitpaths, "rb"))
-        else:
-            return BinaryReader(open(path, "rb"))
 
     def _validate(self, r):
         r.be = True

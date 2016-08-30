@@ -1,10 +1,41 @@
 import io
+import os
 
-class ChunkedFileIO(io.BufferedIOBase):
+class UnityFile(io.BufferedIOBase):
 
-    def __init__(self, paths, mode):
+    def __init__(self, path, mode):
         self.chunks = []
         self.index = 0
+
+        if not os.path.exists(path):
+            # add ".split0" if the file doesn't exist in the normal path
+            if path[-7:] != ".split0":
+                path_split = path + ".split0"
+                if not os.path.exists(path_split):
+                    raise FileNotFoundError(path)
+                else:
+                    path = path_split
+            else:
+                raise FileNotFoundError(path)
+
+        fname, fext = os.path.splitext(path)
+        paths = []
+
+        # discover .splitXX parts
+        if fext[:6] == ".split":
+            index = 0
+            splitpath = fname + ".split0"
+            while os.path.exists(splitpath):
+                paths.append(splitpath)
+                index += 1
+                splitpath = fname + ".split%d" % index
+        else:
+            paths.append(path)
+
+        if not paths:
+            raise FileNotFoundError(path)
+
+        # open chunks
         pos = 0
         for path in paths:
             chunk = Chunk(path, mode, pos)
@@ -67,7 +98,7 @@ class ChunkedFileIO(io.BufferedIOBase):
     def close(self):
         for chunk in self.chunks:
             chunk.close()
-        super(ChunkedFileIO, self).close()
+        super(UnityFile, self).close()
 
 class Chunk():
 
