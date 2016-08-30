@@ -1,0 +1,154 @@
+{
+  "type": "CircleCollider2D",
+  "name": "Base",
+  "version": 2,
+  "is_array": false,
+  "size": 43,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "UInt8",
+      "name": "m_Enabled",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 4,
+      "meta_flag": 16641,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_Density",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 5,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<PhysicsMaterial2D>",
+      "name": "m_Material",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 6,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 7,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 8,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_IsTrigger",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 9,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_UsedByEffector",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 10,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "Vector2f",
+      "name": "m_Offset",
+      "version": 1,
+      "is_array": false,
+      "size": 8,
+      "index": 11,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 12,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 13,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_Radius",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 14,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}
