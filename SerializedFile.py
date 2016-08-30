@@ -326,6 +326,7 @@ class SerializedFile(AutoCloseable):
         return externals
 
     def _read_object_node(self, r, obj_type):
+        #print(r.tell(), obj_type.type, obj_type.name)
         if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
             type_size = obj_type.children[0]
