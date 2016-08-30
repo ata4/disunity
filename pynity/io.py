@@ -5,7 +5,16 @@ import binascii
 
 from uuid import UUID
 
-from .utils import AutoCloseable
+class AutoCloseable:
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def close(self):
+        pass
 
 class UnityFile(io.BufferedIOBase):
 
