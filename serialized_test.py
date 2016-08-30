@@ -14,11 +14,11 @@ def main(argv):
         if os.path.isdir(globpath):
             continue
 
-        with pynity.SerializedFile(path) as sf:
+        with pynity.SerializedFile(globpath) as sf:
             if not sf.valid:
-                return
+                continue
 
-            print(path)
+            print(globpath)
             sf.scan_types()
 
             for path_id in sf.objects:
