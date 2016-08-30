@@ -1,0 +1,254 @@
+{
+  "version": 2,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "TagManager",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 1,
+      "meta_flag": 34816,
+      "name": "tags",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 2,
+          "meta_flag": 34816,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 3,
+              "meta_flag": 2048,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 4,
+              "meta_flag": 34816,
+              "name": "data",
+              "type": "string",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": true,
+                  "size": -1,
+                  "index": 5,
+                  "meta_flag": 18433,
+                  "name": "Array",
+                  "type": "Array",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 6,
+                      "meta_flag": 2049,
+                      "name": "size",
+                      "type": "int",
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 1,
+                      "index": 7,
+                      "meta_flag": 2049,
+                      "name": "data",
+                      "type": "char",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 34816,
+      "name": "layers",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 34816,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 2048,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 11,
+              "meta_flag": 34816,
+              "name": "data",
+              "type": "string",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": true,
+                  "size": -1,
+                  "index": 12,
+                  "meta_flag": 18433,
+                  "name": "Array",
+                  "type": "Array",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 13,
+                      "meta_flag": 2049,
+                      "name": "size",
+                      "type": "int",
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 1,
+                      "index": 14,
+                      "meta_flag": 2049,
+                      "name": "data",
+                      "type": "char",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 15,
+      "meta_flag": 32768,
+      "name": "m_SortingLayers",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 16,
+          "meta_flag": 32768,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 17,
+              "meta_flag": 0,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 18,
+              "meta_flag": 32768,
+              "name": "data",
+              "type": "SortingLayerEntry",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 19,
+                  "meta_flag": 32768,
+                  "name": "name",
+                  "type": "string",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 20,
+                      "meta_flag": 16385,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 21,
+                          "meta_flag": 1,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 22,
+                          "meta_flag": 1,
+                          "name": "data",
+                          "type": "char",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 23,
+                  "meta_flag": 16384,
+                  "name": "uniqueID",
+                  "type": "unsigned int",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

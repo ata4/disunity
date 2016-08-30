@@ -1,0 +1,163 @@
+{
+  "version": 2,
+  "is_array": false,
+  "size": 50,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "NavMeshSettings",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "name": "m_ObjectHideFlags",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 2,
+      "is_array": false,
+      "size": 34,
+      "index": 2,
+      "meta_flag": 8421376,
+      "name": "m_BuildSettings",
+      "type": "NavMeshBuildSettings",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 8388608,
+          "name": "agentRadius",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 4,
+          "meta_flag": 8388608,
+          "name": "agentHeight",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 5,
+          "meta_flag": 8388608,
+          "name": "agentSlope",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 8388608,
+          "name": "agentClimb",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 7,
+          "meta_flag": 8388608,
+          "name": "ledgeDropHeight",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 8,
+          "meta_flag": 8388608,
+          "name": "maxJumpAcrossDistance",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 1,
+          "index": 9,
+          "meta_flag": 8404992,
+          "name": "accuratePlacement",
+          "type": "bool",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 10,
+          "meta_flag": 8388608,
+          "name": "minRegionArea",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 11,
+          "meta_flag": 8388608,
+          "name": "cellSize",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 1,
+          "index": 12,
+          "meta_flag": 8404992,
+          "name": "manualCellSize",
+          "type": "bool",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 13,
+      "meta_flag": 0,
+      "name": "m_NavMeshData",
+      "type": "PPtr<NavMeshData>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 14,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 15,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,520 @@
+{
+  "version": 6,
+  "is_array": false,
+  "size": 181,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "RenderSettings",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "name": "m_ObjectHideFlags",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 2,
+      "meta_flag": 18432,
+      "name": "m_Fog",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 3,
+      "meta_flag": 2099200,
+      "name": "m_FogColor",
+      "type": "ColorRGBA",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 4,
+          "meta_flag": 2099201,
+          "name": "r",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 5,
+          "meta_flag": 2099201,
+          "name": "g",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 2099201,
+          "name": "b",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 7,
+          "meta_flag": 2099201,
+          "name": "a",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 8,
+      "meta_flag": 2048,
+      "name": "m_FogMode",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 9,
+      "meta_flag": 2048,
+      "name": "m_FogDensity",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 10,
+      "meta_flag": 2048,
+      "name": "m_LinearFogStart",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 11,
+      "meta_flag": 2048,
+      "name": "m_LinearFogEnd",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 12,
+      "meta_flag": 2097152,
+      "name": "m_AmbientSkyColor",
+      "type": "ColorRGBA",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 13,
+          "meta_flag": 2097153,
+          "name": "r",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 14,
+          "meta_flag": 2097153,
+          "name": "g",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 15,
+          "meta_flag": 2097153,
+          "name": "b",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 16,
+          "meta_flag": 2097153,
+          "name": "a",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 17,
+      "meta_flag": 2097152,
+      "name": "m_AmbientEquatorColor",
+      "type": "ColorRGBA",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 18,
+          "meta_flag": 2097153,
+          "name": "r",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 19,
+          "meta_flag": 2097153,
+          "name": "g",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 20,
+          "meta_flag": 2097153,
+          "name": "b",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 21,
+          "meta_flag": 2097153,
+          "name": "a",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 22,
+      "meta_flag": 2097152,
+      "name": "m_AmbientGroundColor",
+      "type": "ColorRGBA",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 23,
+          "meta_flag": 2097153,
+          "name": "r",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 24,
+          "meta_flag": 2097153,
+          "name": "g",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 25,
+          "meta_flag": 2097153,
+          "name": "b",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 26,
+          "meta_flag": 2097153,
+          "name": "a",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 27,
+      "meta_flag": 0,
+      "name": "m_AmbientIntensity",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 28,
+      "meta_flag": 16384,
+      "name": "m_AmbientMode",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 29,
+      "meta_flag": 2048,
+      "name": "m_SkyboxMaterial",
+      "type": "PPtr<Material>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 30,
+          "meta_flag": 2049,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 31,
+          "meta_flag": 2049,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 32,
+      "meta_flag": 0,
+      "name": "m_HaloStrength",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 33,
+      "meta_flag": 0,
+      "name": "m_FlareStrength",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 34,
+      "meta_flag": 0,
+      "name": "m_FlareFadeSpeed",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 35,
+      "meta_flag": 0,
+      "name": "m_HaloTexture",
+      "type": "PPtr<Texture2D>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 36,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 37,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 38,
+      "meta_flag": 0,
+      "name": "m_SpotCookie",
+      "type": "PPtr<Texture2D>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 39,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 40,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 41,
+      "meta_flag": 0,
+      "name": "m_DefaultReflectionMode",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 42,
+      "meta_flag": 0,
+      "name": "m_DefaultReflectionResolution",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 43,
+      "meta_flag": 0,
+      "name": "m_ReflectionBounces",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 44,
+      "meta_flag": 0,
+      "name": "m_ReflectionIntensity",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 45,
+      "meta_flag": 2048,
+      "name": "m_CustomReflection",
+      "type": "PPtr<Cubemap>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 46,
+          "meta_flag": 2049,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 47,
+          "meta_flag": 2049,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 48,
+      "meta_flag": 0,
+      "name": "m_Sun",
+      "type": "PPtr<Light>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 49,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 50,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

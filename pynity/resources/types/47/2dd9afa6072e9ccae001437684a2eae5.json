@@ -1,0 +1,347 @@
+{
+  "version": 5,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "QualitySettings",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 2048,
+      "name": "m_CurrentQuality",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 2,
+      "meta_flag": 34816,
+      "name": "m_QualitySettings",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 3,
+          "meta_flag": 34816,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 4,
+              "meta_flag": 2048,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 2,
+              "is_array": false,
+              "size": -1,
+              "index": 5,
+              "meta_flag": 34816,
+              "name": "data",
+              "type": "QualitySetting",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 6,
+                  "meta_flag": 34816,
+                  "name": "name",
+                  "type": "string",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 7,
+                      "meta_flag": 18433,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 8,
+                          "meta_flag": 2049,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 9,
+                          "meta_flag": 2049,
+                          "name": "data",
+                          "type": "char",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 10,
+                  "meta_flag": 2048,
+                  "name": "pixelLightCount",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 11,
+                  "meta_flag": 2048,
+                  "name": "shadows",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 12,
+                  "meta_flag": 2048,
+                  "name": "shadowResolution",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 13,
+                  "meta_flag": 2048,
+                  "name": "shadowProjection",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 14,
+                  "meta_flag": 2048,
+                  "name": "shadowCascades",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 15,
+                  "meta_flag": 2048,
+                  "name": "shadowDistance",
+                  "type": "float",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 16,
+                  "meta_flag": 2048,
+                  "name": "shadowCascade2Split",
+                  "type": "float",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 17,
+                  "meta_flag": 2099200,
+                  "name": "shadowCascade4Split",
+                  "type": "Vector3f",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 18,
+                      "meta_flag": 2099200,
+                      "name": "x",
+                      "type": "float",
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 19,
+                      "meta_flag": 2099200,
+                      "name": "y",
+                      "type": "float",
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 20,
+                      "meta_flag": 2099200,
+                      "name": "z",
+                      "type": "float",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 21,
+                  "meta_flag": 2048,
+                  "name": "blendWeights",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 22,
+                  "meta_flag": 2048,
+                  "name": "textureQuality",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 23,
+                  "meta_flag": 2048,
+                  "name": "anisotropicTextures",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 24,
+                  "meta_flag": 2048,
+                  "name": "antiAliasing",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 25,
+                  "meta_flag": 2048,
+                  "name": "softParticles",
+                  "type": "bool",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 26,
+                  "meta_flag": 2049,
+                  "name": "softVegetation",
+                  "type": "bool",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 27,
+                  "meta_flag": 2048,
+                  "name": "realtimeReflectionProbes",
+                  "type": "bool",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 28,
+                  "meta_flag": 18432,
+                  "name": "billboardsFaceCameraPosition",
+                  "type": "bool",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 29,
+                  "meta_flag": 2048,
+                  "name": "vSyncCount",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 30,
+                  "meta_flag": 2048,
+                  "name": "lodBias",
+                  "type": "float",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 31,
+                  "meta_flag": 2048,
+                  "name": "maximumLODLevel",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 32,
+                  "meta_flag": 18432,
+                  "name": "particleRaycastBudget",
+                  "type": "int",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 33,
+      "meta_flag": 0,
+      "name": "m_StrippedMaximumLODLevel",
+      "type": "int",
+      "children": []
+    }
+  ]
+}

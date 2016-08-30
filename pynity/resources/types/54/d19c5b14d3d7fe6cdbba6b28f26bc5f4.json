@@ -1,0 +1,122 @@
+{
+  "version": 2,
+  "is_array": false,
+  "size": 35,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "Rigidbody",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 4,
+      "meta_flag": 2048,
+      "name": "m_Mass",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 5,
+      "meta_flag": 2048,
+      "name": "m_Drag",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 6,
+      "meta_flag": 2048,
+      "name": "m_AngularDrag",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 7,
+      "meta_flag": 2048,
+      "name": "m_UseGravity",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 8,
+      "meta_flag": 0,
+      "name": "m_IsKinematic",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 9,
+      "meta_flag": 16384,
+      "name": "m_Interpolate",
+      "type": "UInt8",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 10,
+      "meta_flag": 4194305,
+      "name": "m_Constraints",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 11,
+      "meta_flag": 0,
+      "name": "m_CollisionDetection",
+      "type": "int",
+      "children": []
+    }
+  ]
+}

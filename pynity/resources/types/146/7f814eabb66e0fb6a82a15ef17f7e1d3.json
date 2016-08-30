@@ -1,0 +1,306 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": 97,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "WheelCollider",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 4,
+      "meta_flag": 2097152,
+      "name": "m_Center",
+      "type": "Vector3f",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 5,
+          "meta_flag": 2097152,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 2097152,
+          "name": "y",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 7,
+          "meta_flag": 2097152,
+          "name": "z",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 8,
+      "meta_flag": 2048,
+      "name": "m_Radius",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 9,
+      "meta_flag": 2048,
+      "name": "m_SuspensionSpring",
+      "type": "JointSpring",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 10,
+          "meta_flag": 2048,
+          "name": "spring",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 11,
+          "meta_flag": 2048,
+          "name": "damper",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 12,
+          "meta_flag": 2048,
+          "name": "targetPosition",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 13,
+      "meta_flag": 2048,
+      "name": "m_SuspensionDistance",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 14,
+      "meta_flag": 2048,
+      "name": "m_ForceAppPointDistance",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 15,
+      "meta_flag": 2048,
+      "name": "m_Mass",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 16,
+      "meta_flag": 2048,
+      "name": "m_WheelDampingRate",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 20,
+      "index": 17,
+      "meta_flag": 0,
+      "name": "m_ForwardFriction",
+      "type": "WheelFrictionCurve",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 18,
+          "meta_flag": 2048,
+          "name": "m_ExtremumSlip",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 19,
+          "meta_flag": 2048,
+          "name": "m_ExtremumValue",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 20,
+          "meta_flag": 2048,
+          "name": "m_AsymptoteSlip",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 21,
+          "meta_flag": 2048,
+          "name": "m_AsymptoteValue",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 22,
+          "meta_flag": 2048,
+          "name": "m_Stiffness",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 20,
+      "index": 23,
+      "meta_flag": 0,
+      "name": "m_SidewaysFriction",
+      "type": "WheelFrictionCurve",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 24,
+          "meta_flag": 2048,
+          "name": "m_ExtremumSlip",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 25,
+          "meta_flag": 2048,
+          "name": "m_ExtremumValue",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 26,
+          "meta_flag": 2048,
+          "name": "m_AsymptoteSlip",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 27,
+          "meta_flag": 2048,
+          "name": "m_AsymptoteValue",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 28,
+          "meta_flag": 2048,
+          "name": "m_Stiffness",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 29,
+      "meta_flag": 16641,
+      "name": "m_Enabled",
+      "type": "bool",
+      "children": []
+    }
+  ]
+}

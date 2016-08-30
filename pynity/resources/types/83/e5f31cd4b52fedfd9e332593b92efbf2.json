@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "AudioClip",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 1,
+      "meta_flag": 32769,
+      "name": "m_Name",
+      "type": "string",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 2,
+          "meta_flag": 16385,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 3,
+              "meta_flag": 1,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 4,
+              "meta_flag": 1,
+              "name": "data",
+              "type": "char",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 5,
+      "meta_flag": 0,
+      "name": "m_LoadType",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 6,
+      "meta_flag": 0,
+      "name": "m_Channels",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 7,
+      "meta_flag": 0,
+      "name": "m_Frequency",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 8,
+      "meta_flag": 0,
+      "name": "m_BitsPerSample",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 9,
+      "meta_flag": 0,
+      "name": "m_Length",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 10,
+      "meta_flag": 16384,
+      "name": "m_IsTrackerFormat",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 11,
+      "meta_flag": 0,
+      "name": "m_SubsoundIndex",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 12,
+      "meta_flag": 0,
+      "name": "m_PreloadAudioData",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 13,
+      "meta_flag": 0,
+      "name": "m_LoadInBackground",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 14,
+      "meta_flag": 16384,
+      "name": "m_Legacy3D",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 15,
+      "meta_flag": 32768,
+      "name": "m_Resource",
+      "type": "StreamedResource",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 16,
+          "meta_flag": 32769,
+          "name": "m_Source",
+          "type": "string",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 17,
+              "meta_flag": 16385,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 18,
+                  "meta_flag": 1,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 19,
+                  "meta_flag": 1,
+                  "name": "data",
+                  "type": "char",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 20,
+          "meta_flag": 1,
+          "name": "m_Offset",
+          "type": "UInt64",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 21,
+          "meta_flag": 1,
+          "name": "m_Size",
+          "type": "UInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 22,
+      "meta_flag": 16384,
+      "name": "m_CompressionFormat",
+      "type": "int",
+      "children": []
+    }
+  ]
+}

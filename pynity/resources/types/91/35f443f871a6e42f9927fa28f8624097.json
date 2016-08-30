@@ -1,0 +1,2993 @@
+{
+  "version": 5,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "AnimatorController",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 1,
+      "meta_flag": 32769,
+      "name": "m_Name",
+      "type": "string",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 2,
+          "meta_flag": 16385,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 3,
+              "meta_flag": 1,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 4,
+              "meta_flag": 1,
+              "name": "data",
+              "type": "char",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 5,
+      "meta_flag": 0,
+      "name": "m_ControllerSize",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 6,
+      "meta_flag": 32768,
+      "name": "m_Controller",
+      "type": "ControllerConstant",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 7,
+          "meta_flag": 32768,
+          "name": "m_LayerArray",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 8,
+              "meta_flag": 32768,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 9,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 10,
+                  "meta_flag": 32768,
+                  "name": "data",
+                  "type": "OffsetPtr",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 11,
+                      "meta_flag": 32768,
+                      "name": "data",
+                      "type": "LayerConstant",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 12,
+                          "meta_flag": 0,
+                          "name": "m_StateMachineIndex",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 13,
+                          "meta_flag": 0,
+                          "name": "m_StateMachineMotionSetIndex",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 8,
+                          "index": 14,
+                          "meta_flag": 0,
+                          "name": "m_BodyMask",
+                          "type": "HumanPoseMask",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 15,
+                              "meta_flag": 0,
+                              "name": "word0",
+                              "type": "unsigned int",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 16,
+                              "meta_flag": 0,
+                              "name": "word1",
+                              "type": "unsigned int",
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 17,
+                          "meta_flag": 0,
+                          "name": "m_SkeletonMask",
+                          "type": "OffsetPtr",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": -1,
+                              "index": 18,
+                              "meta_flag": 0,
+                              "name": "data",
+                              "type": "SkeletonMask",
+                              "children": [
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": -1,
+                                  "index": 19,
+                                  "meta_flag": 0,
+                                  "name": "m_Data",
+                                  "type": "vector",
+                                  "children": [
+                                    {
+                                      "version": 1,
+                                      "is_array": true,
+                                      "size": -1,
+                                      "index": 20,
+                                      "meta_flag": 0,
+                                      "name": "Array",
+                                      "type": "Array",
+                                      "children": [
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 21,
+                                          "meta_flag": 0,
+                                          "name": "size",
+                                          "type": "int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 8,
+                                          "index": 22,
+                                          "meta_flag": 0,
+                                          "name": "data",
+                                          "type": "SkeletonMaskElement",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": false,
+                                              "size": 4,
+                                              "index": 23,
+                                              "meta_flag": 0,
+                                              "name": "m_PathHash",
+                                              "type": "unsigned int",
+                                              "children": []
+                                            },
+                                            {
+                                              "version": 1,
+                                              "is_array": false,
+                                              "size": 4,
+                                              "index": 24,
+                                              "meta_flag": 0,
+                                              "name": "m_Weight",
+                                              "type": "float",
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 25,
+                          "meta_flag": 0,
+                          "name": "m_Binding",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 26,
+                          "meta_flag": 0,
+                          "name": "(int&)m_LayerBlendingMode",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 27,
+                          "meta_flag": 0,
+                          "name": "m_DefaultWeight",
+                          "type": "float",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 28,
+                          "meta_flag": 0,
+                          "name": "m_IKPass",
+                          "type": "bool",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 29,
+                          "meta_flag": 16384,
+                          "name": "m_SyncedLayerAffectsTiming",
+                          "type": "bool",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 30,
+          "meta_flag": 32768,
+          "name": "m_StateMachineArray",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 31,
+              "meta_flag": 32768,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 32,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 33,
+                  "meta_flag": 32768,
+                  "name": "data",
+                  "type": "OffsetPtr",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": -1,
+                      "index": 34,
+                      "meta_flag": 32768,
+                      "name": "data",
+                      "type": "StateMachineConstant",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 35,
+                          "meta_flag": 32768,
+                          "name": "m_StateConstantArray",
+                          "type": "vector",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 36,
+                              "meta_flag": 32768,
+                              "name": "Array",
+                              "type": "Array",
+                              "children": [
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 37,
+                                  "meta_flag": 0,
+                                  "name": "size",
+                                  "type": "int",
+                                  "children": []
+                                },
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": -1,
+                                  "index": 38,
+                                  "meta_flag": 32768,
+                                  "name": "data",
+                                  "type": "OffsetPtr",
+                                  "children": [
+                                    {
+                                      "version": 2,
+                                      "is_array": false,
+                                      "size": -1,
+                                      "index": 39,
+                                      "meta_flag": 32768,
+                                      "name": "data",
+                                      "type": "StateConstant",
+                                      "children": [
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 40,
+                                          "meta_flag": 32768,
+                                          "name": "m_TransitionConstantArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 41,
+                                              "meta_flag": 32768,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 42,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": -1,
+                                                  "index": 43,
+                                                  "meta_flag": 32768,
+                                                  "name": "data",
+                                                  "type": "OffsetPtr",
+                                                  "children": [
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": -1,
+                                                      "index": 44,
+                                                      "meta_flag": 32768,
+                                                      "name": "data",
+                                                      "type": "TransitionConstant",
+                                                      "children": [
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": -1,
+                                                          "index": 45,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ConditionConstantArray",
+                                                          "type": "vector",
+                                                          "children": [
+                                                            {
+                                                              "version": 1,
+                                                              "is_array": true,
+                                                              "size": -1,
+                                                              "index": 46,
+                                                              "meta_flag": 0,
+                                                              "name": "Array",
+                                                              "type": "Array",
+                                                              "children": [
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": 4,
+                                                                  "index": 47,
+                                                                  "meta_flag": 0,
+                                                                  "name": "size",
+                                                                  "type": "int",
+                                                                  "children": []
+                                                                },
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": 16,
+                                                                  "index": 48,
+                                                                  "meta_flag": 0,
+                                                                  "name": "data",
+                                                                  "type": "OffsetPtr",
+                                                                  "children": [
+                                                                    {
+                                                                      "version": 1,
+                                                                      "is_array": false,
+                                                                      "size": 16,
+                                                                      "index": 49,
+                                                                      "meta_flag": 0,
+                                                                      "name": "data",
+                                                                      "type": "ConditionConstant",
+                                                                      "children": [
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 50,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ConditionMode",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 51,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_EventID",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 52,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_EventThreshold",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 53,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ExitTime",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 54,
+                                                          "meta_flag": 0,
+                                                          "name": "m_DestinationState",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 55,
+                                                          "meta_flag": 0,
+                                                          "name": "m_FullPathID",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 56,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ID",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 57,
+                                                          "meta_flag": 0,
+                                                          "name": "m_UserID",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 58,
+                                                          "meta_flag": 0,
+                                                          "name": "m_TransitionDuration",
+                                                          "type": "float",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 59,
+                                                          "meta_flag": 0,
+                                                          "name": "m_TransitionOffset",
+                                                          "type": "float",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 60,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ExitTime",
+                                                          "type": "float",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 1,
+                                                          "index": 61,
+                                                          "meta_flag": 16384,
+                                                          "name": "m_HasExitTime",
+                                                          "type": "bool",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 62,
+                                                          "meta_flag": 0,
+                                                          "name": "m_InterruptionSource",
+                                                          "type": "int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 1,
+                                                          "index": 63,
+                                                          "meta_flag": 0,
+                                                          "name": "m_OrderedInterruption",
+                                                          "type": "bool",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 1,
+                                                          "index": 64,
+                                                          "meta_flag": 16384,
+                                                          "name": "m_CanTransitionToSelf",
+                                                          "type": "bool",
+                                                          "children": []
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 65,
+                                          "meta_flag": 0,
+                                          "name": "m_BlendTreeConstantIndexArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 66,
+                                              "meta_flag": 0,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 67,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 68,
+                                                  "meta_flag": 0,
+                                                  "name": "data",
+                                                  "type": "int",
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 69,
+                                          "meta_flag": 0,
+                                          "name": "m_LeafInfoArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 70,
+                                              "meta_flag": 0,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 71,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": -1,
+                                                  "index": 72,
+                                                  "meta_flag": 0,
+                                                  "name": "data",
+                                                  "type": "LeafInfoConstant",
+                                                  "children": [
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": -1,
+                                                      "index": 73,
+                                                      "meta_flag": 0,
+                                                      "name": "m_IDArray",
+                                                      "type": "vector",
+                                                      "children": [
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": true,
+                                                          "size": -1,
+                                                          "index": 74,
+                                                          "meta_flag": 0,
+                                                          "name": "Array",
+                                                          "type": "Array",
+                                                          "children": [
+                                                            {
+                                                              "version": 1,
+                                                              "is_array": false,
+                                                              "size": 4,
+                                                              "index": 75,
+                                                              "meta_flag": 0,
+                                                              "name": "size",
+                                                              "type": "int",
+                                                              "children": []
+                                                            },
+                                                            {
+                                                              "version": 1,
+                                                              "is_array": false,
+                                                              "size": 4,
+                                                              "index": 76,
+                                                              "meta_flag": 0,
+                                                              "name": "data",
+                                                              "type": "unsigned int",
+                                                              "children": []
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": 4,
+                                                      "index": 77,
+                                                      "meta_flag": 0,
+                                                      "name": "m_IndexOffset",
+                                                      "type": "unsigned int",
+                                                      "children": []
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 78,
+                                          "meta_flag": 32768,
+                                          "name": "m_BlendTreeConstantArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 79,
+                                              "meta_flag": 32768,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 80,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": -1,
+                                                  "index": 81,
+                                                  "meta_flag": 32768,
+                                                  "name": "data",
+                                                  "type": "OffsetPtr",
+                                                  "children": [
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": -1,
+                                                      "index": 82,
+                                                      "meta_flag": 32768,
+                                                      "name": "data",
+                                                      "type": "BlendTreeConstant",
+                                                      "children": [
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": -1,
+                                                          "index": 83,
+                                                          "meta_flag": 32768,
+                                                          "name": "m_NodeArray",
+                                                          "type": "vector",
+                                                          "children": [
+                                                            {
+                                                              "version": 1,
+                                                              "is_array": true,
+                                                              "size": -1,
+                                                              "index": 84,
+                                                              "meta_flag": 32768,
+                                                              "name": "Array",
+                                                              "type": "Array",
+                                                              "children": [
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": 4,
+                                                                  "index": 85,
+                                                                  "meta_flag": 0,
+                                                                  "name": "size",
+                                                                  "type": "int",
+                                                                  "children": []
+                                                                },
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": -1,
+                                                                  "index": 86,
+                                                                  "meta_flag": 32768,
+                                                                  "name": "data",
+                                                                  "type": "OffsetPtr",
+                                                                  "children": [
+                                                                    {
+                                                                      "version": 2,
+                                                                      "is_array": false,
+                                                                      "size": -1,
+                                                                      "index": 87,
+                                                                      "meta_flag": 32768,
+                                                                      "name": "data",
+                                                                      "type": "BlendTreeNodeConstant",
+                                                                      "children": [
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 88,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_BlendType",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 89,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_BlendEventID",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 90,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_BlendEventYID",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": -1,
+                                                                          "index": 91,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ChildIndices",
+                                                                          "type": "vector",
+                                                                          "children": [
+                                                                            {
+                                                                              "version": 1,
+                                                                              "is_array": true,
+                                                                              "size": -1,
+                                                                              "index": 92,
+                                                                              "meta_flag": 0,
+                                                                              "name": "Array",
+                                                                              "type": "Array",
+                                                                              "children": [
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": 4,
+                                                                                  "index": 93,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "size",
+                                                                                  "type": "int",
+                                                                                  "children": []
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": 4,
+                                                                                  "index": 94,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "data",
+                                                                                  "type": "unsigned int",
+                                                                                  "children": []
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ]
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": -1,
+                                                                          "index": 95,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_Blend1dData",
+                                                                          "type": "OffsetPtr",
+                                                                          "children": [
+                                                                            {
+                                                                              "version": 1,
+                                                                              "is_array": false,
+                                                                              "size": -1,
+                                                                              "index": 96,
+                                                                              "meta_flag": 0,
+                                                                              "name": "data",
+                                                                              "type": "Blend1dDataConstant",
+                                                                              "children": [
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 97,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildThresholdArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 98,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 99,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 100,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "data",
+                                                                                          "type": "float",
+                                                                                          "children": []
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ]
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": -1,
+                                                                          "index": 101,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_Blend2dData",
+                                                                          "type": "OffsetPtr",
+                                                                          "children": [
+                                                                            {
+                                                                              "version": 1,
+                                                                              "is_array": false,
+                                                                              "size": -1,
+                                                                              "index": 102,
+                                                                              "meta_flag": 0,
+                                                                              "name": "data",
+                                                                              "type": "Blend2dDataConstant",
+                                                                              "children": [
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 103,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildPositionArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 104,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 105,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 8,
+                                                                                          "index": 106,
+                                                                                          "meta_flag": 2097152,
+                                                                                          "name": "data",
+                                                                                          "type": "Vector2f",
+                                                                                          "children": [
+                                                                                            {
+                                                                                              "version": 1,
+                                                                                              "is_array": false,
+                                                                                              "size": 4,
+                                                                                              "index": 107,
+                                                                                              "meta_flag": 2097152,
+                                                                                              "name": "x",
+                                                                                              "type": "float",
+                                                                                              "children": []
+                                                                                            },
+                                                                                            {
+                                                                                              "version": 1,
+                                                                                              "is_array": false,
+                                                                                              "size": 4,
+                                                                                              "index": 108,
+                                                                                              "meta_flag": 2097152,
+                                                                                              "name": "y",
+                                                                                              "type": "float",
+                                                                                              "children": []
+                                                                                            }
+                                                                                          ]
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 109,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildMagnitudeArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 110,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 111,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 112,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "data",
+                                                                                          "type": "float",
+                                                                                          "children": []
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 113,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildPairVectorArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 114,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 115,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 8,
+                                                                                          "index": 116,
+                                                                                          "meta_flag": 2097152,
+                                                                                          "name": "data",
+                                                                                          "type": "Vector2f",
+                                                                                          "children": [
+                                                                                            {
+                                                                                              "version": 1,
+                                                                                              "is_array": false,
+                                                                                              "size": 4,
+                                                                                              "index": 117,
+                                                                                              "meta_flag": 2097152,
+                                                                                              "name": "x",
+                                                                                              "type": "float",
+                                                                                              "children": []
+                                                                                            },
+                                                                                            {
+                                                                                              "version": 1,
+                                                                                              "is_array": false,
+                                                                                              "size": 4,
+                                                                                              "index": 118,
+                                                                                              "meta_flag": 2097152,
+                                                                                              "name": "y",
+                                                                                              "type": "float",
+                                                                                              "children": []
+                                                                                            }
+                                                                                          ]
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 119,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildPairAvgMagInvArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 120,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 121,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 122,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "data",
+                                                                                          "type": "float",
+                                                                                          "children": []
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 123,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildNeighborListArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 124,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 125,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": -1,
+                                                                                          "index": 126,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "data",
+                                                                                          "type": "MotionNeighborList",
+                                                                                          "children": [
+                                                                                            {
+                                                                                              "version": 1,
+                                                                                              "is_array": false,
+                                                                                              "size": -1,
+                                                                                              "index": 127,
+                                                                                              "meta_flag": 0,
+                                                                                              "name": "m_NeighborArray",
+                                                                                              "type": "vector",
+                                                                                              "children": [
+                                                                                                {
+                                                                                                  "version": 1,
+                                                                                                  "is_array": true,
+                                                                                                  "size": -1,
+                                                                                                  "index": 128,
+                                                                                                  "meta_flag": 0,
+                                                                                                  "name": "Array",
+                                                                                                  "type": "Array",
+                                                                                                  "children": [
+                                                                                                    {
+                                                                                                      "version": 1,
+                                                                                                      "is_array": false,
+                                                                                                      "size": 4,
+                                                                                                      "index": 129,
+                                                                                                      "meta_flag": 0,
+                                                                                                      "name": "size",
+                                                                                                      "type": "int",
+                                                                                                      "children": []
+                                                                                                    },
+                                                                                                    {
+                                                                                                      "version": 1,
+                                                                                                      "is_array": false,
+                                                                                                      "size": 4,
+                                                                                                      "index": 130,
+                                                                                                      "meta_flag": 0,
+                                                                                                      "name": "data",
+                                                                                                      "type": "unsigned int",
+                                                                                                      "children": []
+                                                                                                    }
+                                                                                                  ]
+                                                                                                }
+                                                                                              ]
+                                                                                            }
+                                                                                          ]
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ]
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": -1,
+                                                                          "index": 131,
+                                                                          "meta_flag": 32768,
+                                                                          "name": "m_BlendDirectData",
+                                                                          "type": "OffsetPtr",
+                                                                          "children": [
+                                                                            {
+                                                                              "version": 1,
+                                                                              "is_array": false,
+                                                                              "size": -1,
+                                                                              "index": 132,
+                                                                              "meta_flag": 32768,
+                                                                              "name": "data",
+                                                                              "type": "BlendDirectDataConstant",
+                                                                              "children": [
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": -1,
+                                                                                  "index": 133,
+                                                                                  "meta_flag": 0,
+                                                                                  "name": "m_ChildBlendEventIDArray",
+                                                                                  "type": "vector",
+                                                                                  "children": [
+                                                                                    {
+                                                                                      "version": 1,
+                                                                                      "is_array": true,
+                                                                                      "size": -1,
+                                                                                      "index": 134,
+                                                                                      "meta_flag": 0,
+                                                                                      "name": "Array",
+                                                                                      "type": "Array",
+                                                                                      "children": [
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 135,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "size",
+                                                                                          "type": "int",
+                                                                                          "children": []
+                                                                                        },
+                                                                                        {
+                                                                                          "version": 1,
+                                                                                          "is_array": false,
+                                                                                          "size": 4,
+                                                                                          "index": 136,
+                                                                                          "meta_flag": 0,
+                                                                                          "name": "data",
+                                                                                          "type": "unsigned int",
+                                                                                          "children": []
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                },
+                                                                                {
+                                                                                  "version": 1,
+                                                                                  "is_array": false,
+                                                                                  "size": 1,
+                                                                                  "index": 137,
+                                                                                  "meta_flag": 16384,
+                                                                                  "name": "m_NormalizedBlendValues",
+                                                                                  "type": "bool",
+                                                                                  "children": []
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ]
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 138,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ClipID",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 139,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_Duration",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 140,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_CycleOffset",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 1,
+                                                                          "index": 141,
+                                                                          "meta_flag": 16384,
+                                                                          "name": "m_Mirror",
+                                                                          "type": "bool",
+                                                                          "children": []
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 142,
+                                          "meta_flag": 0,
+                                          "name": "m_NameID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 143,
+                                          "meta_flag": 0,
+                                          "name": "m_PathID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 144,
+                                          "meta_flag": 0,
+                                          "name": "m_FullPathID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 145,
+                                          "meta_flag": 0,
+                                          "name": "m_TagID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 146,
+                                          "meta_flag": 0,
+                                          "name": "m_Speed",
+                                          "type": "float",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 147,
+                                          "meta_flag": 0,
+                                          "name": "m_CycleOffset",
+                                          "type": "float",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 148,
+                                          "meta_flag": 0,
+                                          "name": "m_IKOnFeet",
+                                          "type": "bool",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 149,
+                                          "meta_flag": 0,
+                                          "name": "m_WriteDefaultValues",
+                                          "type": "bool",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 150,
+                                          "meta_flag": 0,
+                                          "name": "m_Loop",
+                                          "type": "bool",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 151,
+                                          "meta_flag": 16384,
+                                          "name": "m_Mirror",
+                                          "type": "bool",
+                                          "children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 152,
+                          "meta_flag": 32768,
+                          "name": "m_AnyStateTransitionConstantArray",
+                          "type": "vector",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 153,
+                              "meta_flag": 32768,
+                              "name": "Array",
+                              "type": "Array",
+                              "children": [
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 154,
+                                  "meta_flag": 0,
+                                  "name": "size",
+                                  "type": "int",
+                                  "children": []
+                                },
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": -1,
+                                  "index": 155,
+                                  "meta_flag": 32768,
+                                  "name": "data",
+                                  "type": "OffsetPtr",
+                                  "children": [
+                                    {
+                                      "version": 1,
+                                      "is_array": false,
+                                      "size": -1,
+                                      "index": 156,
+                                      "meta_flag": 32768,
+                                      "name": "data",
+                                      "type": "TransitionConstant",
+                                      "children": [
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 157,
+                                          "meta_flag": 0,
+                                          "name": "m_ConditionConstantArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 158,
+                                              "meta_flag": 0,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 159,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 16,
+                                                  "index": 160,
+                                                  "meta_flag": 0,
+                                                  "name": "data",
+                                                  "type": "OffsetPtr",
+                                                  "children": [
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": 16,
+                                                      "index": 161,
+                                                      "meta_flag": 0,
+                                                      "name": "data",
+                                                      "type": "ConditionConstant",
+                                                      "children": [
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 162,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ConditionMode",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 163,
+                                                          "meta_flag": 0,
+                                                          "name": "m_EventID",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 164,
+                                                          "meta_flag": 0,
+                                                          "name": "m_EventThreshold",
+                                                          "type": "float",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 165,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ExitTime",
+                                                          "type": "float",
+                                                          "children": []
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 166,
+                                          "meta_flag": 0,
+                                          "name": "m_DestinationState",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 167,
+                                          "meta_flag": 0,
+                                          "name": "m_FullPathID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 168,
+                                          "meta_flag": 0,
+                                          "name": "m_ID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 169,
+                                          "meta_flag": 0,
+                                          "name": "m_UserID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 170,
+                                          "meta_flag": 0,
+                                          "name": "m_TransitionDuration",
+                                          "type": "float",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 171,
+                                          "meta_flag": 0,
+                                          "name": "m_TransitionOffset",
+                                          "type": "float",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 172,
+                                          "meta_flag": 0,
+                                          "name": "m_ExitTime",
+                                          "type": "float",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 173,
+                                          "meta_flag": 16384,
+                                          "name": "m_HasExitTime",
+                                          "type": "bool",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 174,
+                                          "meta_flag": 0,
+                                          "name": "m_InterruptionSource",
+                                          "type": "int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 175,
+                                          "meta_flag": 0,
+                                          "name": "m_OrderedInterruption",
+                                          "type": "bool",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 176,
+                                          "meta_flag": 16384,
+                                          "name": "m_CanTransitionToSelf",
+                                          "type": "bool",
+                                          "children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": -1,
+                          "index": 177,
+                          "meta_flag": 32768,
+                          "name": "m_SelectorStateConstantArray",
+                          "type": "vector",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": true,
+                              "size": -1,
+                              "index": 178,
+                              "meta_flag": 32768,
+                              "name": "Array",
+                              "type": "Array",
+                              "children": [
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 179,
+                                  "meta_flag": 0,
+                                  "name": "size",
+                                  "type": "int",
+                                  "children": []
+                                },
+                                {
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": -1,
+                                  "index": 180,
+                                  "meta_flag": 32768,
+                                  "name": "data",
+                                  "type": "OffsetPtr",
+                                  "children": [
+                                    {
+                                      "version": 1,
+                                      "is_array": false,
+                                      "size": -1,
+                                      "index": 181,
+                                      "meta_flag": 32768,
+                                      "name": "data",
+                                      "type": "SelectorStateConstant",
+                                      "children": [
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": -1,
+                                          "index": 182,
+                                          "meta_flag": 0,
+                                          "name": "m_TransitionConstantArray",
+                                          "type": "vector",
+                                          "children": [
+                                            {
+                                              "version": 1,
+                                              "is_array": true,
+                                              "size": -1,
+                                              "index": 183,
+                                              "meta_flag": 0,
+                                              "name": "Array",
+                                              "type": "Array",
+                                              "children": [
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": 4,
+                                                  "index": 184,
+                                                  "meta_flag": 0,
+                                                  "name": "size",
+                                                  "type": "int",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "version": 1,
+                                                  "is_array": false,
+                                                  "size": -1,
+                                                  "index": 185,
+                                                  "meta_flag": 0,
+                                                  "name": "data",
+                                                  "type": "OffsetPtr",
+                                                  "children": [
+                                                    {
+                                                      "version": 1,
+                                                      "is_array": false,
+                                                      "size": -1,
+                                                      "index": 186,
+                                                      "meta_flag": 0,
+                                                      "name": "data",
+                                                      "type": "SelectorTransitionConstant",
+                                                      "children": [
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": 4,
+                                                          "index": 187,
+                                                          "meta_flag": 0,
+                                                          "name": "m_Destination",
+                                                          "type": "unsigned int",
+                                                          "children": []
+                                                        },
+                                                        {
+                                                          "version": 1,
+                                                          "is_array": false,
+                                                          "size": -1,
+                                                          "index": 188,
+                                                          "meta_flag": 0,
+                                                          "name": "m_ConditionConstantArray",
+                                                          "type": "vector",
+                                                          "children": [
+                                                            {
+                                                              "version": 1,
+                                                              "is_array": true,
+                                                              "size": -1,
+                                                              "index": 189,
+                                                              "meta_flag": 0,
+                                                              "name": "Array",
+                                                              "type": "Array",
+                                                              "children": [
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": 4,
+                                                                  "index": 190,
+                                                                  "meta_flag": 0,
+                                                                  "name": "size",
+                                                                  "type": "int",
+                                                                  "children": []
+                                                                },
+                                                                {
+                                                                  "version": 1,
+                                                                  "is_array": false,
+                                                                  "size": 16,
+                                                                  "index": 191,
+                                                                  "meta_flag": 0,
+                                                                  "name": "data",
+                                                                  "type": "OffsetPtr",
+                                                                  "children": [
+                                                                    {
+                                                                      "version": 1,
+                                                                      "is_array": false,
+                                                                      "size": 16,
+                                                                      "index": 192,
+                                                                      "meta_flag": 0,
+                                                                      "name": "data",
+                                                                      "type": "ConditionConstant",
+                                                                      "children": [
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 193,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ConditionMode",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 194,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_EventID",
+                                                                          "type": "unsigned int",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 195,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_EventThreshold",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        },
+                                                                        {
+                                                                          "version": 1,
+                                                                          "is_array": false,
+                                                                          "size": 4,
+                                                                          "index": 196,
+                                                                          "meta_flag": 0,
+                                                                          "name": "m_ExitTime",
+                                                                          "type": "float",
+                                                                          "children": []
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 4,
+                                          "index": 197,
+                                          "meta_flag": 0,
+                                          "name": "m_FullPathID",
+                                          "type": "unsigned int",
+                                          "children": []
+                                        },
+                                        {
+                                          "version": 1,
+                                          "is_array": false,
+                                          "size": 1,
+                                          "index": 198,
+                                          "meta_flag": 16384,
+                                          "name": "m_IsEntry",
+                                          "type": "bool",
+                                          "children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 199,
+                          "meta_flag": 0,
+                          "name": "m_DefaultState",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 200,
+                          "meta_flag": 0,
+                          "name": "m_MotionSetCount",
+                          "type": "unsigned int",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 201,
+          "meta_flag": 0,
+          "name": "m_Values",
+          "type": "OffsetPtr",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 202,
+              "meta_flag": 0,
+              "name": "data",
+              "type": "ValueArrayConstant",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 203,
+                  "meta_flag": 0,
+                  "name": "m_ValueArray",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 204,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 205,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 16,
+                          "index": 206,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "ValueConstant",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 207,
+                              "meta_flag": 0,
+                              "name": "m_ID",
+                              "type": "unsigned int",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 208,
+                              "meta_flag": 0,
+                              "name": "m_TypeID",
+                              "type": "unsigned int",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 209,
+                              "meta_flag": 0,
+                              "name": "m_Type",
+                              "type": "unsigned int",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 210,
+                              "meta_flag": 0,
+                              "name": "m_Index",
+                              "type": "unsigned int",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 211,
+          "meta_flag": 32768,
+          "name": "m_DefaultValues",
+          "type": "OffsetPtr",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 212,
+              "meta_flag": 32768,
+              "name": "data",
+              "type": "ValueArray",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 213,
+                  "meta_flag": 49152,
+                  "name": "m_BoolValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 214,
+                      "meta_flag": 16384,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 215,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 216,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "bool",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 217,
+                  "meta_flag": 0,
+                  "name": "m_IntValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 218,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 219,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 220,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "int",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 221,
+                  "meta_flag": 0,
+                  "name": "m_FloatValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 222,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 223,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 224,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "float",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 225,
+                  "meta_flag": 0,
+                  "name": "m_PositionValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 226,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 227,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 16,
+                          "index": 228,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "float4",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 229,
+                              "meta_flag": 0,
+                              "name": "x",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 230,
+                              "meta_flag": 0,
+                              "name": "y",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 231,
+                              "meta_flag": 0,
+                              "name": "z",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 232,
+                              "meta_flag": 0,
+                              "name": "w",
+                              "type": "float",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 233,
+                  "meta_flag": 0,
+                  "name": "m_QuaternionValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 234,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 235,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 16,
+                          "index": 236,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "float4",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 237,
+                              "meta_flag": 0,
+                              "name": "x",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 238,
+                              "meta_flag": 0,
+                              "name": "y",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 239,
+                              "meta_flag": 0,
+                              "name": "z",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 240,
+                              "meta_flag": 0,
+                              "name": "w",
+                              "type": "float",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 241,
+                  "meta_flag": 0,
+                  "name": "m_ScaleValues",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 242,
+                      "meta_flag": 0,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 243,
+                          "meta_flag": 0,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 16,
+                          "index": 244,
+                          "meta_flag": 0,
+                          "name": "data",
+                          "type": "float4",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 245,
+                              "meta_flag": 0,
+                              "name": "x",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 246,
+                              "meta_flag": 0,
+                              "name": "y",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 247,
+                              "meta_flag": 0,
+                              "name": "z",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 248,
+                              "meta_flag": 0,
+                              "name": "w",
+                              "type": "float",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 249,
+      "meta_flag": 32768,
+      "name": "m_TOS",
+      "type": "map",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 250,
+          "meta_flag": 32768,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 251,
+              "meta_flag": 0,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 252,
+              "meta_flag": 32768,
+              "name": "data",
+              "type": "pair",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 253,
+                  "meta_flag": 0,
+                  "name": "first",
+                  "type": "unsigned int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 254,
+                  "meta_flag": 32768,
+                  "name": "second",
+                  "type": "string",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 255,
+                      "meta_flag": 16385,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 256,
+                          "meta_flag": 1,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 257,
+                          "meta_flag": 1,
+                          "name": "data",
+                          "type": "char",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 258,
+      "meta_flag": 0,
+      "name": "m_AnimationClips",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 259,
+          "meta_flag": 0,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 260,
+              "meta_flag": 0,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 12,
+              "index": 261,
+              "meta_flag": 0,
+              "name": "data",
+              "type": "PPtr<AnimationClip>",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 262,
+                  "meta_flag": 1,
+                  "name": "m_FileID",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 8,
+                  "index": 263,
+                  "meta_flag": 1,
+                  "name": "m_PathID",
+                  "type": "SInt64",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 264,
+      "meta_flag": 0,
+      "name": "m_StateMachineBehaviourVectorDescription",
+      "type": "StateMachineBehaviourVectorDescription",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 265,
+          "meta_flag": 0,
+          "name": "m_StateMachineBehaviourRanges",
+          "type": "map",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 266,
+              "meta_flag": 0,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 267,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 16,
+                  "index": 268,
+                  "meta_flag": 0,
+                  "name": "data",
+                  "type": "pair",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 8,
+                      "index": 269,
+                      "meta_flag": 0,
+                      "name": "first",
+                      "type": "StateKey",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 270,
+                          "meta_flag": 0,
+                          "name": "m_StateID",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 271,
+                          "meta_flag": 0,
+                          "name": "m_LayerIndex",
+                          "type": "int",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 8,
+                      "index": 272,
+                      "meta_flag": 0,
+                      "name": "second",
+                      "type": "StateRange",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 273,
+                          "meta_flag": 0,
+                          "name": "m_StartIndex",
+                          "type": "unsigned int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 274,
+                          "meta_flag": 0,
+                          "name": "m_Count",
+                          "type": "unsigned int",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 275,
+          "meta_flag": 0,
+          "name": "m_StateMachineBehaviourIndices",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 276,
+              "meta_flag": 0,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 277,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 278,
+                  "meta_flag": 0,
+                  "name": "data",
+                  "type": "unsigned int",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 279,
+      "meta_flag": 16384,
+      "name": "m_StateMachineBehaviours",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 280,
+          "meta_flag": 0,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 281,
+              "meta_flag": 0,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 12,
+              "index": 282,
+              "meta_flag": 0,
+              "name": "data",
+              "type": "PPtr<MonoBehaviour>",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 283,
+                  "meta_flag": 1,
+                  "name": "m_FileID",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 8,
+                  "index": 284,
+                  "meta_flag": 1,
+                  "name": "m_PathID",
+                  "type": "SInt64",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 285,
+      "meta_flag": 1,
+      "name": "m_MultiThreadedStateMachine",
+      "type": "bool",
+      "children": []
+    }
+  ]
+}

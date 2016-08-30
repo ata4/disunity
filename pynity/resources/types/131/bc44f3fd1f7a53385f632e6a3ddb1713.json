@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": 73,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "GUITexture",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 4,
+      "meta_flag": 16641,
+      "name": "m_Enabled",
+      "type": "UInt8",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 2048,
+      "name": "m_Texture",
+      "type": "PPtr<Texture>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 2049,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 2049,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 8,
+      "meta_flag": 2099200,
+      "name": "m_Color",
+      "type": "ColorRGBA",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 9,
+          "meta_flag": 2099201,
+          "name": "r",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 10,
+          "meta_flag": 2099201,
+          "name": "g",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 11,
+          "meta_flag": 2099201,
+          "name": "b",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 12,
+          "meta_flag": 2099201,
+          "name": "a",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 2,
+      "is_array": false,
+      "size": 16,
+      "index": 13,
+      "meta_flag": 0,
+      "name": "m_PixelInset",
+      "type": "Rectf",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 14,
+          "meta_flag": 0,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 15,
+          "meta_flag": 0,
+          "name": "y",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 16,
+          "meta_flag": 0,
+          "name": "width",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 17,
+          "meta_flag": 0,
+          "name": "height",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 18,
+      "meta_flag": 0,
+      "name": "m_LeftBorder",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 19,
+      "meta_flag": 0,
+      "name": "m_RightBorder",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 20,
+      "meta_flag": 0,
+      "name": "m_TopBorder",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 21,
+      "meta_flag": 0,
+      "name": "m_BottomBorder",
+      "type": "int",
+      "children": []
+    }
+  ]
+}

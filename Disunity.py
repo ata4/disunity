@@ -4,10 +4,10 @@ import glob
 import json
 from pprint import pprint
 
-from SerializedFile import *
+import pynity
 
 def process(path):
-    with SerializedFile(path) as sf:
+    with pynity.SerializedFile(path) as sf:
         if not sf.valid:
             return
 
@@ -15,7 +15,6 @@ def process(path):
 
         script_dir = os.path.dirname(__file__)
         types_dir = os.path.join(script_dir, "resources", "types")
-
         for class_id in sf.types.classes:
             if class_id <= 0:
                 continue
@@ -31,19 +30,24 @@ def process(path):
                         os.makedirs(path_dir)
 
                     if not os.path.exists(path_type):
-                        print(path_type)
+                        print("Added " + path_type)
                         with open(path_type, "w") as file:
                             json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
-                else:
+                elif not sf.types.embedded:
                     found = os.path.exists(path_type)
                     if not found:
-                        print("% 4d %s" % (class_id, bclass.old_type_hash))
+                        print("Missing type for %s, class ID %d" % (bclass.old_type_hash, class_id))
 
         for path_id in sf.objects:
             object = sf.read_object(path_id)
+            if not object:
+                continue
+            object_name = object.m_Name if "m_Name" in object else ""
+            class_name = object.__class__.__name__
+            print(path_id, class_name, object_name)
             #object_json = json.dumps(object, indent=2, separators=(',', ': '))
-            #print(path_id)
             #print(object_json)
+
 def main(argv):
     app = argv.pop(0)
     path = argv.pop(0)

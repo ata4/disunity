@@ -1,0 +1,548 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "Sprite",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 1,
+      "meta_flag": 32769,
+      "name": "m_Name",
+      "type": "string",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 2,
+          "meta_flag": 16385,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 3,
+              "meta_flag": 1,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 4,
+              "meta_flag": 1,
+              "name": "data",
+              "type": "char",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 2,
+      "is_array": false,
+      "size": 16,
+      "index": 5,
+      "meta_flag": 0,
+      "name": "m_Rect",
+      "type": "Rectf",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 0,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 7,
+          "meta_flag": 0,
+          "name": "y",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 8,
+          "meta_flag": 0,
+          "name": "width",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 9,
+          "meta_flag": 0,
+          "name": "height",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 8,
+      "index": 10,
+      "meta_flag": 2097152,
+      "name": "m_Offset",
+      "type": "Vector2f",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 11,
+          "meta_flag": 2097152,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 12,
+          "meta_flag": 2097152,
+          "name": "y",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 13,
+      "meta_flag": 2097152,
+      "name": "m_Border",
+      "type": "Vector4f",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 14,
+          "meta_flag": 2097152,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 15,
+          "meta_flag": 2097152,
+          "name": "y",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 16,
+          "meta_flag": 2097152,
+          "name": "z",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 17,
+          "meta_flag": 2097152,
+          "name": "w",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 18,
+      "meta_flag": 0,
+      "name": "m_PixelsToUnits",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 19,
+      "meta_flag": 0,
+      "name": "m_Extrude",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 20,
+      "meta_flag": 49152,
+      "name": "m_RD",
+      "type": "SpriteRenderData",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 12,
+          "index": 21,
+          "meta_flag": 0,
+          "name": "texture",
+          "type": "PPtr<Texture2D>",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 22,
+              "meta_flag": 1,
+              "name": "m_FileID",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 8,
+              "index": 23,
+              "meta_flag": 1,
+              "name": "m_PathID",
+              "type": "SInt64",
+              "children": []
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 12,
+          "index": 24,
+          "meta_flag": 0,
+          "name": "alphaTexture",
+          "type": "PPtr<Texture2D>",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 25,
+              "meta_flag": 1,
+              "name": "m_FileID",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 8,
+              "index": 26,
+              "meta_flag": 1,
+              "name": "m_PathID",
+              "type": "SInt64",
+              "children": []
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 27,
+          "meta_flag": 0,
+          "name": "vertices",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 28,
+              "meta_flag": 0,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 29,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 2,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 30,
+                  "meta_flag": 0,
+                  "name": "data",
+                  "type": "SpriteVertex",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "size": 12,
+                      "index": 31,
+                      "meta_flag": 2097152,
+                      "name": "pos",
+                      "type": "Vector3f",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 32,
+                          "meta_flag": 2097152,
+                          "name": "x",
+                          "type": "float",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 33,
+                          "meta_flag": 2097152,
+                          "name": "y",
+                          "type": "float",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 34,
+                          "meta_flag": 2097152,
+                          "name": "z",
+                          "type": "float",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 35,
+          "meta_flag": 16384,
+          "name": "indices",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 36,
+              "meta_flag": 0,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 37,
+                  "meta_flag": 0,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 2,
+                  "index": 38,
+                  "meta_flag": 0,
+                  "name": "data",
+                  "type": "UInt16",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 2,
+          "is_array": false,
+          "size": 16,
+          "index": 39,
+          "meta_flag": 0,
+          "name": "textureRect",
+          "type": "Rectf",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 40,
+              "meta_flag": 0,
+              "name": "x",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 41,
+              "meta_flag": 0,
+              "name": "y",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 42,
+              "meta_flag": 0,
+              "name": "width",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 43,
+              "meta_flag": 0,
+              "name": "height",
+              "type": "float",
+              "children": []
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 44,
+          "meta_flag": 2097152,
+          "name": "textureRectOffset",
+          "type": "Vector2f",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 45,
+              "meta_flag": 2097152,
+              "name": "x",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 46,
+              "meta_flag": 2097152,
+              "name": "y",
+              "type": "float",
+              "children": []
+            }
+          ]
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 47,
+          "meta_flag": 0,
+          "name": "settingsRaw",
+          "type": "unsigned int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 16,
+          "index": 48,
+          "meta_flag": 2097152,
+          "name": "uvTransform",
+          "type": "Vector4f",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 49,
+              "meta_flag": 2097152,
+              "name": "x",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 50,
+              "meta_flag": 2097152,
+              "name": "y",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 51,
+              "meta_flag": 2097152,
+              "name": "z",
+              "type": "float",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 52,
+              "meta_flag": 2097152,
+              "name": "w",
+              "type": "float",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

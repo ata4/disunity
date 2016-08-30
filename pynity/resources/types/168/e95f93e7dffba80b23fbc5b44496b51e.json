@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": 29,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "AudioEchoFilter",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 4,
+      "meta_flag": 16641,
+      "name": "m_Enabled",
+      "type": "UInt8",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 5,
+      "meta_flag": 0,
+      "name": "m_Delay",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 6,
+      "meta_flag": 0,
+      "name": "m_DecayRatio",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 7,
+      "meta_flag": 0,
+      "name": "m_WetMix",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 8,
+      "meta_flag": 0,
+      "name": "m_DryMix",
+      "type": "float",
+      "children": []
+    }
+  ]
+}

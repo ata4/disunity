@@ -1,0 +1,543 @@
+{
+  "version": 2,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "ParticleRenderer",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "name": "m_ObjectHideFlags",
+      "type": "unsigned int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "name": "m_PrefabParentObject",
+      "type": "PPtr<EditorExtension>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "name": "m_PrefabInternal",
+      "type": "PPtr<Prefab>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 8,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 9,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 10,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 11,
+      "meta_flag": 16385,
+      "name": "m_Enabled",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 12,
+      "meta_flag": 0,
+      "name": "m_CastShadows",
+      "type": "UInt8",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 13,
+      "meta_flag": 16384,
+      "name": "m_ReceiveShadows",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 14,
+      "meta_flag": 0,
+      "name": "m_Materials",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 15,
+          "meta_flag": 0,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 16,
+              "meta_flag": 0,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 12,
+              "index": 17,
+              "meta_flag": 0,
+              "name": "data",
+              "type": "PPtr<Material>",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 18,
+                  "meta_flag": 1,
+                  "name": "m_FileID",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 8,
+                  "index": 19,
+                  "meta_flag": 1,
+                  "name": "m_PathID",
+                  "type": "SInt64",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 20,
+      "meta_flag": 1,
+      "name": "m_SubsetIndices",
+      "type": "vector",
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 21,
+          "meta_flag": 1,
+          "name": "Array",
+          "type": "Array",
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 22,
+              "meta_flag": 1,
+              "name": "size",
+              "type": "int",
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 23,
+              "meta_flag": 1,
+              "name": "data",
+              "type": "unsigned int",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 24,
+      "meta_flag": 1,
+      "name": "m_StaticBatchRoot",
+      "type": "PPtr<Transform>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 25,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 26,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 27,
+      "meta_flag": 16384,
+      "name": "m_UseLightProbes",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 28,
+      "meta_flag": 0,
+      "name": "m_ReflectionProbeUsage",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 29,
+      "meta_flag": 0,
+      "name": "m_ProbeAnchor",
+      "type": "PPtr<Transform>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 30,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 31,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 32,
+      "meta_flag": 8388609,
+      "name": "m_ScaleInLightmap",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 33,
+      "meta_flag": 8388609,
+      "name": "m_PreserveUVs",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 34,
+      "meta_flag": 8388609,
+      "name": "m_IgnoreNormalsForChartDetection",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 35,
+      "meta_flag": 8404993,
+      "name": "m_ImportantGI",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 36,
+      "meta_flag": 8388609,
+      "name": "m_MinimumChartSize",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 37,
+      "meta_flag": 8388609,
+      "name": "m_AutoUVMaxDistance",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 38,
+      "meta_flag": 8388609,
+      "name": "m_AutoUVMaxAngle",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 39,
+      "meta_flag": 8404992,
+      "name": "m_LightmapParameters",
+      "type": "PPtr<LightmapParameters>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 40,
+          "meta_flag": 8388609,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 41,
+          "meta_flag": 8388609,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 42,
+      "meta_flag": 1,
+      "name": "m_SortingLayerID",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 2,
+      "index": 43,
+      "meta_flag": 16385,
+      "name": "m_SortingOrder",
+      "type": "SInt16",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 44,
+      "meta_flag": 0,
+      "name": "m_CameraVelocityScale",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 45,
+      "meta_flag": 2048,
+      "name": "m_StretchParticles",
+      "type": "int",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 46,
+      "meta_flag": 2048,
+      "name": "m_LengthScale",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 47,
+      "meta_flag": 0,
+      "name": "m_VelocityScale",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 48,
+      "meta_flag": 0,
+      "name": "m_MaxParticleSize",
+      "type": "float",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 49,
+      "meta_flag": 0,
+      "name": "UV Animation",
+      "type": "UVAnimation",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 50,
+          "meta_flag": 2048,
+          "name": "x Tile",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 51,
+          "meta_flag": 2048,
+          "name": "y Tile",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 52,
+          "meta_flag": 2048,
+          "name": "cycles",
+          "type": "float",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "name": "Base",
+  "type": "PolygonCollider2D",
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 1,
+      "meta_flag": 65601,
+      "name": "m_GameObject",
+      "type": "PPtr<GameObject>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 2,
+          "meta_flag": 65601,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 3,
+          "meta_flag": 65601,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 4,
+      "meta_flag": 16641,
+      "name": "m_Enabled",
+      "type": "UInt8",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 0,
+      "name": "m_Material",
+      "type": "PPtr<PhysicsMaterial2D>",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 1,
+          "name": "m_FileID",
+          "type": "int",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 1,
+          "name": "m_PathID",
+          "type": "SInt64",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 8,
+      "meta_flag": 0,
+      "name": "m_IsTrigger",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 9,
+      "meta_flag": 16384,
+      "name": "m_UsedByEffector",
+      "type": "bool",
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": 8,
+      "index": 10,
+      "meta_flag": 2097152,
+      "name": "m_Offset",
+      "type": "Vector2f",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 11,
+          "meta_flag": 2097152,
+          "name": "x",
+          "type": "float",
+          "children": []
+        },
+        {
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 12,
+          "meta_flag": 2097152,
+          "name": "y",
+          "type": "float",
+          "children": []
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 13,
+      "meta_flag": 16,
+      "name": "m_Points",
+      "type": "Polygon2D",
+      "children": [
+        {
+          "version": 1,
+          "is_array": false,
+          "size": -1,
+          "index": 14,
+          "meta_flag": 16,
+          "name": "m_Paths",
+          "type": "vector",
+          "children": [
+            {
+              "version": 1,
+              "is_array": true,
+              "size": -1,
+              "index": 15,
+              "meta_flag": 16,
+              "name": "Array",
+              "type": "Array",
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 16,
+                  "meta_flag": 16,
+                  "name": "size",
+                  "type": "int",
+                  "children": []
+                },
+                {
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 17,
+                  "meta_flag": 16,
+                  "name": "data",
+                  "type": "vector",
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 18,
+                      "meta_flag": 16,
+                      "name": "Array",
+                      "type": "Array",
+                      "children": [
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 19,
+                          "meta_flag": 16,
+                          "name": "size",
+                          "type": "int",
+                          "children": []
+                        },
+                        {
+                          "version": 1,
+                          "is_array": false,
+                          "size": 8,
+                          "index": 20,
+                          "meta_flag": 2097168,
+                          "name": "data",
+                          "type": "Vector2f",
+                          "children": [
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 21,
+                              "meta_flag": 2097168,
+                              "name": "x",
+                              "type": "float",
+                              "children": []
+                            },
+                            {
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 22,
+                              "meta_flag": 2097168,
+                              "name": "y",
+                              "type": "float",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
