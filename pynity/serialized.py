@@ -41,7 +41,7 @@ class SerializedFile(AutoCloseable):
         self.debug = False
 
         # open file and make some basic checks to make sure this is actually a serialized file
-        self.r = BinaryReader(UnityFile(path, "rb"))
+        self.r = BinaryReader(UnityFile.open(path, "rb"))
         self.valid = self._validate(self.r)
 
         if not self.valid:

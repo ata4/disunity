@@ -18,10 +18,8 @@ class AutoCloseable:
 
 class UnityFile(io.BufferedIOBase):
 
-    def __init__(self, path, mode):
-        self.chunks = []
-        self.index = 0
-
+    @staticmethod
+    def open(path, mode):
         if not os.path.exists(path):
             # add ".split0" if the file doesn't exist in the normal path
             if path[-7:] != ".split0":
@@ -49,6 +47,16 @@ class UnityFile(io.BufferedIOBase):
 
         if not paths:
             raise FileNotFoundError(path)
+        elif len(paths) == 1:
+            # open single files directly
+            return open(paths[0], mode)
+        else:
+            # open chunked files with UnityFile
+            return UnityFile(paths, mode)
+
+    def __init__(self, paths, mode):
+        self.chunks = []
+        self.index = 0
 
         # open chunks
         pos = 0
