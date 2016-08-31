@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{219bdbca-57cb-4c4d-8051-41d059a35507}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>Disunity.py</StartupFile>
+    <StartupFile>serialize_test.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -14,6 +14,9 @@
     <InterpreterId />
     <InterpreterVersion />
     <IsWindowsApplication>False</IsWindowsApplication>
+    <CommandLineArguments>
+    </CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -22,12 +25,14 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AutoCloseable.py" />
-    <Compile Include="BinaryReader.py" />
-    <Compile Include="ChunkedFileIO.py" />
-    <Compile Include="Disunity.py" />
-    <Compile Include="ObjectDict.py" />
-    <Compile Include="SerializedFile.py" />
+    <Folder Include="pynity\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="pynity\io.py" />
+    <Compile Include="pynity\serialize.py" />
+    <Compile Include="pynity\utils.py" />
+    <Compile Include="pynity\__init__.py" />
+    <Compile Include="serialize_test.py" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
