@@ -16,7 +16,7 @@ class AutoCloseable:
     def close(self):
         pass
 
-class UnityFile(io.BufferedIOBase):
+class ChunkedFileIO(io.BufferedIOBase):
 
     @staticmethod
     def open(path, mode):
@@ -51,8 +51,8 @@ class UnityFile(io.BufferedIOBase):
             # open single files directly
             return open(paths[0], mode)
         else:
-            # open chunked files with UnityFile
-            return UnityFile(paths, mode)
+            # open chunked files with ChunkedFileIO
+            return ChunkedFileIO(paths, mode)
 
     def __init__(self, paths, mode):
         self.chunks = []
@@ -147,7 +147,7 @@ class UnityFile(io.BufferedIOBase):
     def close(self):
         for chunk in self.chunks:
             chunk.close()
-        super(UnityFile, self).close()
+        super(ChunkedFileIO, self).close()
 
 class Chunk():
 
