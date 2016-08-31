@@ -1,0 +1,145 @@
+{
+  "type": "PhysicsMaterial2D",
+  "name": "Base",
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 11,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "friction",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 12,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "bounciness",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 13,
+      "meta_flag": 2048,
+      "children": []
+    }
+  ]
+}

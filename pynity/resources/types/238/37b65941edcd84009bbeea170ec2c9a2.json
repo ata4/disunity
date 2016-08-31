@@ -1,0 +1,947 @@
+{
+  "type": "NavMeshData",
+  "name": "Base",
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 11,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_NavMeshTiles",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 12,
+      "meta_flag": 32785,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 13,
+          "meta_flag": 32785,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 14,
+              "meta_flag": 17,
+              "children": []
+            },
+            {
+              "type": "NavMeshTileData",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 15,
+              "meta_flag": 32785,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "m_MeshData",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 16,
+                  "meta_flag": 32785,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 17,
+                      "meta_flag": 16401,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 18,
+                          "meta_flag": 17,
+                          "children": []
+                        },
+                        {
+                          "type": "UInt8",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 19,
+                          "meta_flag": 17,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "NavMeshParams",
+      "name": "m_NavMeshParams",
+      "version": 1,
+      "is_array": false,
+      "size": 20,
+      "index": 20,
+      "meta_flag": 16,
+      "children": [
+        {
+          "type": "float",
+          "name": "tileSize",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 21,
+          "meta_flag": 16,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "walkableHeight",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 22,
+          "meta_flag": 16,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "walkableRadius",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 23,
+          "meta_flag": 16,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "walkableClimb",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 24,
+          "meta_flag": 16,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "cellSize",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 25,
+          "meta_flag": 16,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_Heightmaps",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 26,
+      "meta_flag": 16,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 27,
+          "meta_flag": 16,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 28,
+              "meta_flag": 16,
+              "children": []
+            },
+            {
+              "type": "HeightmapData",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 24,
+              "index": 29,
+              "meta_flag": 16,
+              "children": [
+                {
+                  "type": "Vector3f",
+                  "name": "position",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 30,
+                  "meta_flag": 2097168,
+                  "children": [
+                    {
+                      "type": "float",
+                      "name": "x",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 31,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "y",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 32,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "z",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 33,
+                      "meta_flag": 2097168,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "PPtr<Object>",
+                  "name": "terrainData",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 34,
+                  "meta_flag": 16,
+                  "children": [
+                    {
+                      "type": "int",
+                      "name": "m_FileID",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 35,
+                      "meta_flag": 17,
+                      "children": []
+                    },
+                    {
+                      "type": "SInt64",
+                      "name": "m_PathID",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 8,
+                      "index": 36,
+                      "meta_flag": 17,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_HeightMeshes",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 37,
+      "meta_flag": 16,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 38,
+          "meta_flag": 16,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 39,
+              "meta_flag": 16,
+              "children": []
+            },
+            {
+              "type": "HeightMeshData",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 40,
+              "meta_flag": 16,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "m_Vertices",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 41,
+                  "meta_flag": 16,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 42,
+                      "meta_flag": 16,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 43,
+                          "meta_flag": 16,
+                          "children": []
+                        },
+                        {
+                          "type": "Vector3f",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 12,
+                          "index": 44,
+                          "meta_flag": 2097168,
+                          "children": [
+                            {
+                              "type": "float",
+                              "name": "x",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 45,
+                              "meta_flag": 2097168,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "y",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 46,
+                              "meta_flag": 2097168,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "z",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 47,
+                              "meta_flag": 2097168,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_Indices",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 48,
+                  "meta_flag": 16,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 49,
+                      "meta_flag": 16,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 50,
+                          "meta_flag": 16,
+                          "children": []
+                        },
+                        {
+                          "type": "int",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 51,
+                          "meta_flag": 16,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "AABB",
+                  "name": "m_Bounds",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 24,
+                  "index": 52,
+                  "meta_flag": 16,
+                  "children": [
+                    {
+                      "type": "Vector3f",
+                      "name": "m_Center",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 12,
+                      "index": 53,
+                      "meta_flag": 2097168,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 54,
+                          "meta_flag": 2097168,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 55,
+                          "meta_flag": 2097168,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 56,
+                          "meta_flag": 2097168,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Vector3f",
+                      "name": "m_Extent",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 12,
+                      "index": 57,
+                      "meta_flag": 2097168,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 58,
+                          "meta_flag": 2097168,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 59,
+                          "meta_flag": 2097168,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 60,
+                          "meta_flag": 2097168,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_Nodes",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 61,
+                  "meta_flag": 16,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 62,
+                      "meta_flag": 16,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 63,
+                          "meta_flag": 16,
+                          "children": []
+                        },
+                        {
+                          "type": "HeightMeshBVNode",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 32,
+                          "index": 64,
+                          "meta_flag": 16,
+                          "children": [
+                            {
+                              "type": "Vector3f",
+                              "name": "min",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 12,
+                              "index": 65,
+                              "meta_flag": 2097168,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 66,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 67,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 68,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Vector3f",
+                              "name": "max",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 12,
+                              "index": 69,
+                              "meta_flag": 2097168,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 70,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 71,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "version": 1,
+                                  "is_array": false,
+                                  "size": 4,
+                                  "index": 72,
+                                  "meta_flag": 2097168,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "int",
+                              "name": "i",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 73,
+                              "meta_flag": 16,
+                              "children": []
+                            },
+                            {
+                              "type": "int",
+                              "name": "n",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 74,
+                              "meta_flag": 16,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_OffMeshLinks",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 75,
+      "meta_flag": 16,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 76,
+          "meta_flag": 16,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 77,
+              "meta_flag": 16,
+              "children": []
+            },
+            {
+              "type": "AutoOffMeshLinkData",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 32,
+              "index": 78,
+              "meta_flag": 16,
+              "children": [
+                {
+                  "type": "Vector3f",
+                  "name": "m_Start",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 79,
+                  "meta_flag": 2097168,
+                  "children": [
+                    {
+                      "type": "float",
+                      "name": "x",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 80,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "y",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 81,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "z",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 82,
+                      "meta_flag": 2097168,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Vector3f",
+                  "name": "m_End",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 12,
+                  "index": 83,
+                  "meta_flag": 2097168,
+                  "children": [
+                    {
+                      "type": "float",
+                      "name": "x",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 84,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "y",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 85,
+                      "meta_flag": 2097168,
+                      "children": []
+                    },
+                    {
+                      "type": "float",
+                      "name": "z",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 86,
+                      "meta_flag": 2097168,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "float",
+                  "name": "m_Radius",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 87,
+                  "meta_flag": 16,
+                  "children": []
+                },
+                {
+                  "type": "UInt16",
+                  "name": "m_LinkType",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 2,
+                  "index": 88,
+                  "meta_flag": 16,
+                  "children": []
+                },
+                {
+                  "type": "UInt8",
+                  "name": "m_Area",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 89,
+                  "meta_flag": 16,
+                  "children": []
+                },
+                {
+                  "type": "UInt8",
+                  "name": "m_LinkDirection",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 90,
+                  "meta_flag": 16,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+{
+  "type": "Physics2DSettings",
+  "name": "Base",
+  "version": 2,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "Vector2f",
+      "name": "m_Gravity",
+      "version": 1,
+      "is_array": false,
+      "size": 8,
+      "index": 2,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 4,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<PhysicsMaterial2D>",
+      "name": "m_DefaultMaterial",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_VelocityIterations",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 8,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_PositionIterations",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 9,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_VelocityThreshold",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 10,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MaxLinearCorrection",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 11,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MaxAngularCorrection",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 12,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MaxTranslationSpeed",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 13,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MaxRotationSpeed",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 14,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MinPenetrationForPenalty",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 15,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_BaumgarteScale",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 16,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_BaumgarteTimeOfImpactScale",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 17,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_TimeToSleep",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 18,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_LinearSleepTolerance",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 19,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_AngularSleepTolerance",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 20,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_QueriesHitTriggers",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 21,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_QueriesStartInColliders",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 22,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ChangeStopsCallbacks",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 23,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_AlwaysShowColliders",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 24,
+      "meta_flag": 8388609,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ShowColliderSleep",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 25,
+      "meta_flag": 8388609,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ShowColliderContacts",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 26,
+      "meta_flag": 8404993,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_ContactArrowScale",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 27,
+      "meta_flag": 8388609,
+      "children": []
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "m_ColliderAwakeColor",
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 28,
+      "meta_flag": 10485761,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 29,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 30,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 31,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 32,
+          "meta_flag": 10485761,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "m_ColliderAsleepColor",
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 33,
+      "meta_flag": 10485761,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 34,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 35,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 36,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 37,
+          "meta_flag": 10485761,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "m_ColliderContactColor",
+      "version": 1,
+      "is_array": false,
+      "size": 16,
+      "index": 38,
+      "meta_flag": 10485761,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 39,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 40,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 41,
+          "meta_flag": 10485761,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 42,
+          "meta_flag": 10485761,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_LayerCollisionMatrix",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 43,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 44,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 45,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "unsigned int",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 46,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

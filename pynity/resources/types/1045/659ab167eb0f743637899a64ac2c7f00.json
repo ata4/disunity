@@ -1,0 +1,116 @@
+{
+  "type": "EditorBuildSettings",
+  "name": "Base",
+  "version": 2,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "vector",
+      "name": "m_Scenes",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 2,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 3,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 4,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "Scene",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 5,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "bool",
+                  "name": "enabled",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 1,
+                  "index": 6,
+                  "meta_flag": 16384,
+                  "children": []
+                },
+                {
+                  "type": "string",
+                  "name": "path",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 7,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 8,
+                      "meta_flag": 16385,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 9,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 10,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

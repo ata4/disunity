@@ -1,0 +1,656 @@
+{
+  "type": "AudioMixerController",
+  "name": "Base",
+  "version": 1,
+  "is_array": false,
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 2,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 3,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 4,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 5,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 6,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 7,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 8,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 9,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 10,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 1,
+              "index": 11,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<AudioMixerGroup>",
+      "name": "m_OutputGroup",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 12,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 13,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 14,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<AudioMixerGroup>",
+      "name": "m_MasterGroup",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 15,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 16,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 17,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_Snapshots",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 18,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 19,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 20,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "PPtr<AudioMixerSnapshot>",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": 12,
+              "index": 21,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "m_FileID",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 4,
+                  "index": 22,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "SInt64",
+                  "name": "m_PathID",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 8,
+                  "index": 23,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<AudioMixerSnapshot>",
+      "name": "m_StartSnapshot",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 24,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 25,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 26,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_SuspendThreshold",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 27,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_EnableSuspend",
+      "version": 1,
+      "is_array": false,
+      "size": 1,
+      "index": 28,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_UpdateMode",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 29,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "vector",
+      "name": "m_ExposedParameters",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 30,
+      "meta_flag": 8421377,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 31,
+          "meta_flag": 8421377,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 32,
+              "meta_flag": 8388609,
+              "children": []
+            },
+            {
+              "type": "ExposedAudioParameter",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 33,
+              "meta_flag": 8421377,
+              "children": [
+                {
+                  "type": "GUID",
+                  "name": "guid",
+                  "version": 1,
+                  "is_array": false,
+                  "size": 16,
+                  "index": 34,
+                  "meta_flag": 8388609,
+                  "children": [
+                    {
+                      "type": "unsigned int",
+                      "name": "data[0]",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 35,
+                      "meta_flag": 8388609,
+                      "children": []
+                    },
+                    {
+                      "type": "unsigned int",
+                      "name": "data[1]",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 36,
+                      "meta_flag": 8388609,
+                      "children": []
+                    },
+                    {
+                      "type": "unsigned int",
+                      "name": "data[2]",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 37,
+                      "meta_flag": 8388609,
+                      "children": []
+                    },
+                    {
+                      "type": "unsigned int",
+                      "name": "data[3]",
+                      "version": 1,
+                      "is_array": false,
+                      "size": 4,
+                      "index": 38,
+                      "meta_flag": 8388609,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "name",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 39,
+                  "meta_flag": 8421377,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 40,
+                      "meta_flag": 8404993,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 41,
+                          "meta_flag": 8388609,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 42,
+                          "meta_flag": 8388609,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_AudioMixerGroupViews",
+      "version": 1,
+      "is_array": false,
+      "size": -1,
+      "index": 43,
+      "meta_flag": 8421377,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "version": 1,
+          "is_array": true,
+          "size": -1,
+          "index": 44,
+          "meta_flag": 8421377,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "version": 1,
+              "is_array": false,
+              "size": 4,
+              "index": 45,
+              "meta_flag": 8388609,
+              "children": []
+            },
+            {
+              "type": "AudioMixerGroupView",
+              "name": "data",
+              "version": 1,
+              "is_array": false,
+              "size": -1,
+              "index": 46,
+              "meta_flag": 8421377,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "guids",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 47,
+                  "meta_flag": 8388609,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 48,
+                      "meta_flag": 8388609,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 49,
+                          "meta_flag": 8388609,
+                          "children": []
+                        },
+                        {
+                          "type": "GUID",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 16,
+                          "index": 50,
+                          "meta_flag": 8388609,
+                          "children": [
+                            {
+                              "type": "unsigned int",
+                              "name": "data[0]",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 51,
+                              "meta_flag": 8388609,
+                              "children": []
+                            },
+                            {
+                              "type": "unsigned int",
+                              "name": "data[1]",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 52,
+                              "meta_flag": 8388609,
+                              "children": []
+                            },
+                            {
+                              "type": "unsigned int",
+                              "name": "data[2]",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 53,
+                              "meta_flag": 8388609,
+                              "children": []
+                            },
+                            {
+                              "type": "unsigned int",
+                              "name": "data[3]",
+                              "version": 1,
+                              "is_array": false,
+                              "size": 4,
+                              "index": 54,
+                              "meta_flag": 8388609,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "name",
+                  "version": 1,
+                  "is_array": false,
+                  "size": -1,
+                  "index": 55,
+                  "meta_flag": 8421377,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "version": 1,
+                      "is_array": true,
+                      "size": -1,
+                      "index": 56,
+                      "meta_flag": 8404993,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 4,
+                          "index": 57,
+                          "meta_flag": 8388609,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "version": 1,
+                          "is_array": false,
+                          "size": 1,
+                          "index": 58,
+                          "meta_flag": 8388609,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_CurrentViewIndex",
+      "version": 1,
+      "is_array": false,
+      "size": 4,
+      "index": 59,
+      "meta_flag": 8388609,
+      "children": []
+    },
+    {
+      "type": "PPtr<AudioMixerSnapshot>",
+      "name": "m_TargetSnapshot",
+      "version": 1,
+      "is_array": false,
+      "size": 12,
+      "index": 60,
+      "meta_flag": 8404993,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "version": 1,
+          "is_array": false,
+          "size": 4,
+          "index": 61,
+          "meta_flag": 8388609,
+          "children": []
+        },
+        {
+          "type": "SInt64",
+          "name": "m_PathID",
+          "version": 1,
+          "is_array": false,
+          "size": 8,
+          "index": 62,
+          "meta_flag": 8388609,
+          "children": []
+        }
+      ]
+    }
+  ]
+}
