@@ -36,9 +36,9 @@ class SerializedFile(AutoCloseable):
         "double": BinaryReader.read_double,
     }
 
-    def __init__(self, path):
+    def __init__(self, path, debug=False):
         self.string_mapper = StringTableMapper()
-        self.debug = False
+        self.debug = debug
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = BinaryReader(ChunkedFileIO.open(path, "rb"))
@@ -154,8 +154,7 @@ class SerializedFile(AutoCloseable):
                         with open(path_type) as file:
                             bclass.type_tree = OrderedMunch.fromDict(json.load(file))
                     else:
-                        if self.debug:
-                            print("Type %s not found in file or database" % bclass.old_type_hash)
+                        print("Type %s not found in file or database" % bclass.old_type_hash)
                         bclass.type_tree = None
             else:
                 bclass.type_tree = self._read_type_node_old(r)
