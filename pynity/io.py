@@ -77,7 +77,9 @@ class UnityFile(io.BufferedIOBase):
             return None
 
         self.index += 1
-        return self.chunk()
+        c = self.chunk()
+        c.seek(c.start)
+        return c
 
     def chunk_find(self, pos):
         for self.index, chunk in enumerate(self.chunks):
@@ -86,14 +88,38 @@ class UnityFile(io.BufferedIOBase):
         return chunk
 
     def read(self, size=-1):
+        if size == -1 or size == None:
+            raise NotImplementedError("readall()")
+
+        if size == 0:
+            return bytes()
+
         chunk = self.chunk()
         data = chunk.read(size)
 
-        # get next chunk if required
-        if size > 0 and not data:
-            chunk = self.chunk_next()
-            if chunk:
-                data = chunk.read(size)
+        # get next chunks if required
+        if len(data) < size:
+            # can't extend "byte" objects, so make current buffer mutable
+            data = bytearray(data)
+
+            # extend data while it's smaller than size
+            while len(data) < size:
+                size2 = size - len(data)
+                data2 = chunk.read(size2)
+                if not data2:
+                    # no data, try next chunk
+                    chunk = self.chunk_next()
+                    if chunk:
+                        # new chunk, continue reading
+                        continue
+                    else:
+                        # no remaining chunks, cancel
+                        break
+
+                data.extend(data2)
+
+            # make buffer immutable again
+            data = bytes(data)
 
         return data
 
