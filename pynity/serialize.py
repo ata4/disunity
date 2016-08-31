@@ -87,7 +87,7 @@ class SerializedFile(AutoCloseable):
         # the header always uses big-endian byte order
         r.be = True
 
-        header = OrderedMunch()
+        header = ObjectDict()
         header.metadata_size = r.read_int32()
         header.file_size = r.read_int32()
         header.version = r.read_int32()
@@ -114,7 +114,7 @@ class SerializedFile(AutoCloseable):
         return header
 
     def _read_types(self, r):
-        types = OrderedMunch()
+        types = ObjectDict()
 
         # older formats store the object data before the structure data
         if self.header.version < 9:
@@ -132,7 +132,7 @@ class SerializedFile(AutoCloseable):
 
         num_classes = r.read_int32()
         for i in range(0, num_classes):
-            bclass = OrderedMunch()
+            bclass = ObjectDict()
 
             class_id = r.read_int32()
 
@@ -152,7 +152,7 @@ class SerializedFile(AutoCloseable):
                         if self.debug:
                             print("Type %s loaded from database" % bclass.old_type_hash)
                         with open(path_type) as file:
-                            bclass.type_tree = OrderedMunch.fromDict(json.load(file))
+                            bclass.type_tree = ObjectDict.from_dict(json.load(file))
                     else:
                         print("Type %s not found in file or database" % bclass.old_type_hash)
                         bclass.type_tree = None
@@ -177,7 +177,7 @@ class SerializedFile(AutoCloseable):
 
         # read field list
         for i in range(num_fields):
-            field = OrderedMunch()
+            field = ObjectDict()
             field.type = None
             field.name = None
             field.version = r.read_int16()
@@ -242,7 +242,7 @@ class SerializedFile(AutoCloseable):
         return node_root
 
     def _read_type_node_old(self, r):
-        field = OrderedMunch()
+        field = ObjectDict()
         field.type = r.read_cstring()
         field.name = r.read_cstring()
         field.size = r.read_int32()
@@ -270,7 +270,7 @@ class SerializedFile(AutoCloseable):
             else:
                 path_id = r.read_uint32()
 
-            obj = OrderedMunch()
+            obj = ObjectDict()
             obj.byte_start = r.read_uint32()
             obj.byte_size = r.read_uint32()
             obj.type_id = r.read_int32()
@@ -299,7 +299,7 @@ class SerializedFile(AutoCloseable):
         for i in range(0, num_entries):
             r.align(4)
 
-            script_type = OrderedMunch()
+            script_type = ObjectDict()
             script_type.serialized_file_index = r.read_int32()
             script_type.identifier_in_file = r.read_int64()
 
@@ -312,7 +312,7 @@ class SerializedFile(AutoCloseable):
 
         num_entries = r.read_int32()
         for i in range(0, num_entries):
-            external = OrderedMunch()
+            external = ObjectDict()
 
             if self.header.version > 5:
                 external.asset_path = r.read_cstring()
@@ -358,7 +358,7 @@ class SerializedFile(AutoCloseable):
                 r.align(4)
         else:
             # complex object with children
-            obj_class = type(obj_type.type, (OrderedMunch,), {})
+            obj_class = type(obj_type.type, (ObjectDict,), {})
             obj = obj_class()
             for child in obj_type.children:
                 obj[child.name] = self._read_object_node(r, child)
