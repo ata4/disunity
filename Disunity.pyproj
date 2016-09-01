@@ -28,8 +28,14 @@
     <Folder Include="pynity\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="pynity\archive.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pynity\io.py" />
     <Compile Include="pynity\serialize.py" />
+    <Compile Include="archive_test.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pynity\utils.py" />
     <Compile Include="pynity\__init__.py" />
     <Compile Include="serialize_test.py" />
