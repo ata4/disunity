@@ -14,7 +14,7 @@ METAFLAG_ALIGN = 0x4000
 
 class SerializedFile(AutoCloseable):
 
-    versions_tested = [8, 9, 14, 15]
+    versions_tested = [5, 6, 8, 9, 14, 15]
     read_prim = {
         "bool": BinaryReader.read_bool8,
         "SInt8": BinaryReader.read_int8,
