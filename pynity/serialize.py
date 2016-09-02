@@ -99,7 +99,7 @@ class SerializedFile(AutoCloseable):
         if header.metadata_size > header.file_size:
             raise RuntimeError("Invalid metadata_size %d" % header.metadata_size)
 
-        if header.version >= 9:
+        if header.version > 8:
             header.endianness = r.read_int8()
             r.read(3) # reserved
 
@@ -145,17 +145,10 @@ class SerializedFile(AutoCloseable):
                 if types.embedded:
                     bclass.type_tree = self._read_type_node(r)
                 else:
-                    path_script_dir = os.path.dirname(__file__)
-                    path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
-                    path_type = os.path.join(path_type_dir, bclass.old_type_hash + ".json")
-                    if os.path.exists(path_type):
-                        if self.debug:
-                            print("Type %s loaded from database" % bclass.old_type_hash)
-                        with open(path_type) as file:
-                            bclass.type_tree = ObjectDict.from_dict(json.load(file))
-                    else:
-                        print("Type %s not found in file or database" % bclass.old_type_hash)
-                        bclass.type_tree = None
+                    bclass.type_tree = self._read_type_node_db(bclass, class_id)
+
+                if not bclass.type_tree:
+                    print("Type %s not found in file or database" % bclass.old_type_hash)
             else:
                 bclass.type_tree = self._read_type_node_old(r)
 
@@ -169,6 +162,20 @@ class SerializedFile(AutoCloseable):
             r.read_int32()
 
         return types
+
+    def _read_type_node_db(self, bclass, class_id):
+        path_script_dir = os.path.dirname(__file__)
+        path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
+        path_type = os.path.join(path_type_dir, bclass.old_type_hash + ".json")
+
+        if not os.path.exists(path_type):
+            return
+
+        if self.debug:
+            print("Type %s loaded from database" % bclass.old_type_hash)
+
+        with open(path_type) as file:
+            return ObjectDict.from_dict(json.load(file))
 
     def _read_type_node(self, r):
         fields = []
@@ -335,7 +342,7 @@ class SerializedFile(AutoCloseable):
             type_data = obj_type.children[1]
 
             size = self._read_object_node(r, type_size)
-            if type_data.type == "SInt8" or type_data.type == "UInt8" or type_data.type == "char":
+            if type_data.type in ("SInt8", "UInt8", "char"):
                 # read byte array
                 obj = r.read(size)
             else:
