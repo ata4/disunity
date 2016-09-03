@@ -14,9 +14,13 @@ import info.ata4.io.DataReaders;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.READ;
 import java.util.List;
+
+import info.ata4.util.lz4.LZ4FastDecompressor;
+import info.ata4.util.lz4.LZ4JavaSafeFastDecompressor;
 import net.contrapunctus.lzma.LzmaInputStream;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.io.input.CountingInputStream;
@@ -50,22 +54,76 @@ public class BundleReader implements Closeable {
             throw new BundleException("Invalid signature");
         }
 
-        long dataHeaderSize = header.dataHeaderSize();
-        if (dataHeaderSize == 0) {
-            // old stream versions don't store the data header size, so use a large
-            // fixed number instead
-            dataHeaderSize = 4096;
-        }
-
         List<BundleEntryInfo> entryInfos = bundle.entryInfos();
-        InputStream is = dataInputStream(0, dataHeaderSize);
-        DataReader inData = DataReaders.forInputStream(is);
-        int files = inData.readInt();
+        if (header.compressedDataHeaderSize() > 0) {
+            // UnityFS stream type 6 header
 
-        for (int i = 0; i < files; i++) {
-            BundleEntryInfo entryInfo = new BundleEntryInfo();
-            inData.readStruct(entryInfo);
-            entryInfos.add(entryInfo);
+            if (header.dataHeaderAtEndOfFile()) {
+                in.position(header.completeFileSize() - header.compressedDataHeaderSize());
+            }
+
+            // build an input stream for the uncompressed data header
+            InputStream headerIn = new BoundedInputStream(in.stream(), header.compressedDataHeaderSize());
+            DataReader inData;
+            switch(header.dataHeaderCompressionScheme()) {
+                default:
+                case 0:
+                    // Not compressed
+                    inData = DataReaders.forInputStream(headerIn);
+
+                case 1:
+                    // LZMA
+                    inData = DataReaders.forInputStream(
+                            new CountingInputStream(new LzmaInputStream(headerIn)));
+
+                case 3:
+                    // LZ4
+                    byte[] compressed = new byte[header.compressedDataHeaderSize()];
+                    byte[] decompressed = new byte[(int)header.dataHeaderSize()];
+                    headerIn.read(compressed);
+                    LZ4JavaSafeFastDecompressor.INSTANCE.decompress(compressed, decompressed);
+                    inData = DataReaders.forByteBuffer(ByteBuffer.wrap(decompressed));
+            }
+
+            // Block info: not captured for now
+            {
+                // 16 bytes unknown
+                byte[] unknown = new byte[16];
+                inData.readBytes(unknown);
+
+                int storageBlocks = inData.readInt();
+                for (int i = 0; i < storageBlocks; ++i) {
+                    inData.readUnsignedInt();
+                    inData.readUnsignedInt();
+                    inData.readUnsignedShort();
+                }
+            }
+
+            int files = inData.readInt();
+
+            for (int i = 0; i < files; i++) {
+                BundleEntryInfo entryInfo = new BundleEntryInfoFS();
+                inData.readStruct(entryInfo);
+                entryInfos.add(entryInfo);
+            }
+        } else {
+            // raw or web header
+            long dataHeaderSize = header.dataHeaderSize();
+            if (dataHeaderSize == 0) {
+                // old stream versions don't store the data header size, so use a large
+                // fixed number instead
+                dataHeaderSize = 4096;
+            }
+
+            InputStream is = dataInputStream(0, dataHeaderSize);
+            DataReader inData = DataReaders.forInputStream(is);
+            int files = inData.readInt();
+
+            for (int i = 0; i < files; i++) {
+                BundleEntryInfo entryInfo = new BundleEntryInfo();
+                inData.readStruct(entryInfo);
+                entryInfos.add(entryInfo);
+            }
         }
 
         // sort entries by offset so that they're in the order in which they
