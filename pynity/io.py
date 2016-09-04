@@ -69,23 +69,26 @@ class ChunkedFileIO(io.BufferedIOBase):
             pos += chunk.size
             self.chunks.append(chunk)
 
-    def chunk(self):
+    def _chunk(self):
         return self.chunks[self.index]
 
-    def chunk_next(self):
+    def _chunk_next(self):
         if self.index + 1 >= len(self.chunks):
             return None
 
         self.index += 1
-        c = self.chunk()
+        c = self._chunk()
         c.seek(c.start)
         return c
 
-    def chunk_find(self, pos):
+    def _chunk_find(self, pos):
         for self.index, chunk in enumerate(self.chunks):
             if chunk.end >= pos:
                 break
         return chunk
+
+    def readable(self):
+        return True
 
     def read(self, size=-1):
         if size == -1 or size == None:
@@ -94,7 +97,7 @@ class ChunkedFileIO(io.BufferedIOBase):
         if size == 0:
             return bytes()
 
-        chunk = self.chunk()
+        chunk = self._chunk()
         data = chunk.read(size)
 
         # get next chunks if required
@@ -108,7 +111,7 @@ class ChunkedFileIO(io.BufferedIOBase):
                 data2 = chunk.read(size2)
                 if not data2:
                     # no data, try next chunk
-                    chunk = self.chunk_next()
+                    chunk = self._chunk_next()
                     if chunk:
                         # new chunk, continue reading
                         continue
@@ -124,7 +127,7 @@ class ChunkedFileIO(io.BufferedIOBase):
         return data
 
     def seek(self, offset, whence=io.SEEK_SET):
-        chunk = self.chunk()
+        chunk = self._chunk()
 
         # convert relative offset to absolute position
         pos = offset
@@ -137,12 +140,12 @@ class ChunkedFileIO(io.BufferedIOBase):
 
         # find new chunk if absolute position is outside current chunk
         if pos < chunk.start or pos > chunk.end:
-            chunk = self.chunk_find(pos)
+            chunk = self._chunk_find(pos)
 
         chunk.seek(pos)
 
     def tell(self):
-        return self.chunk().tell()
+        return self._chunk().tell()
 
     def close(self):
         for chunk in self.chunks:
