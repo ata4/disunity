@@ -41,22 +41,22 @@ class SerializedFile(AutoCloseable):
         self.debug = debug
 
         # open file and make some basic checks to make sure this is actually a serialized file
-        self.r = BinaryReader(ChunkedFileIO.open(path, "rb"))
-        self.valid = self._validate(self.r)
+        self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
+        self.valid = self._validate()
 
         if not self.valid:
             return
 
         # read metadata
-        self.header = self._read_header(self.r)
-        self.types = self._read_types(self.r)
-        self.objects = self._read_object_info(self.r)
+        self._read_header()
+        self._read_types()
+        self._read_object_info()
         if self.header.version > 10:
-            self.script_types = self._read_script_types(self.r)
-        self.externals = self._read_externals(self.r)
+            self._read_script_types()
+        self._read_externals()
 
-    def _validate(self, r):
-        r.be = True
+    def _validate(self):
+        r = self.r
 
         # get file size
         r.seek(0, io.SEEK_END)
@@ -83,11 +83,10 @@ class SerializedFile(AutoCloseable):
         # check file size
         return file_size == header_file_size
 
-    def _read_header(self, r):
-        # the header always uses big-endian byte order
-        r.be = True
+    def _read_header(self):
+        r = self.r
 
-        header = ObjectDict()
+        header = self.header = ObjectDict()
         header.metadata_size = r.read_int32()
         header.file_size = r.read_int32()
         header.version = r.read_int32()
@@ -111,10 +110,10 @@ class SerializedFile(AutoCloseable):
             raise NotImplementedError("Unsupported format version %d"
                                       % header.version)
 
-        return header
+    def _read_types(self):
+        r = self.r
 
-    def _read_types(self, r):
-        types = ObjectDict()
+        types = self.types = ObjectDict()
 
         # older formats store the object data before the structure data
         if self.header.version < 9:
@@ -161,8 +160,6 @@ class SerializedFile(AutoCloseable):
         if self.header.version > 6 and self.header.version < 13:
             r.read_int32()
 
-        return types
-
     def _read_type_node_db(self, bclass, class_id):
         path_script_dir = os.path.dirname(__file__)
         path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
@@ -177,7 +174,9 @@ class SerializedFile(AutoCloseable):
         with open(path_type) as file:
             return ObjectDict.from_dict(json.load(file))
 
-    def _read_type_node(self, r):
+    def _read_type_node(self):
+        r = self.r
+
         fields = []
         num_fields = r.read_int32()
         string_table_len = r.read_int32()
@@ -248,7 +247,9 @@ class SerializedFile(AutoCloseable):
 
         return node_root
 
-    def _read_type_node_old(self, r):
+    def _read_type_node_old(self):
+        r = self.r
+
         field = ObjectDict()
         field.type = r.read_cstring()
         field.name = r.read_cstring()
@@ -261,12 +262,14 @@ class SerializedFile(AutoCloseable):
 
         num_children = r.read_int32()
         for i in range(num_children):
-            field.children.append(self._read_type_node_old(r))
+            field.children.append(self._read_type_node_old())
 
         return field
 
-    def _read_object_info(self, r):
-        objects = {}
+    def _read_object_info(self):
+        r = self.r
+
+        objects = self.objects = {}
 
         num_entries = r.read_int32()
 
@@ -296,10 +299,10 @@ class SerializedFile(AutoCloseable):
 
             objects[path_id] = obj
 
-        return objects
+    def _read_script_types(self):
+        r = self.r
 
-    def _read_script_types(self, r):
-        script_types = []
+        script_types = self.script_types = []
 
         num_entries = r.read_int32()
 
@@ -312,10 +315,10 @@ class SerializedFile(AutoCloseable):
 
             script_types.append(script_type)
 
-        return script_types
+    def _read_externals(self):
+        r = self.r
 
-    def _read_externals(self, r):
-        externals = []
+        externals = self.externals = []
 
         num_entries = r.read_int32()
         for i in range(0, num_entries):
@@ -330,9 +333,9 @@ class SerializedFile(AutoCloseable):
 
             externals.append(external)
 
-        return externals
+    def _read_object_node(self, obj_type):
+        r = self.r
 
-    def _read_object_node(self, r, obj_type):
         if self.debug:
             print(r.tell(), obj_type.type, obj_type.name)
 
@@ -341,7 +344,7 @@ class SerializedFile(AutoCloseable):
             type_size = obj_type.children[0]
             type_data = obj_type.children[1]
 
-            size = self._read_object_node(r, type_size)
+            size = self._read_object_node(type_size)
             if type_data.type in ("SInt8", "UInt8", "char"):
                 # read byte array
                 obj = r.read(size)
@@ -349,7 +352,7 @@ class SerializedFile(AutoCloseable):
                 # read generic array
                 obj = []
                 for i in range(size):
-                    obj.append(self._read_object_node(r, type_data))
+                    obj.append(self._read_object_node(type_data))
 
             # arrays always need to be aligned in version 5 or newer
             if self.header.version > 5:
@@ -368,7 +371,7 @@ class SerializedFile(AutoCloseable):
             obj_class = type(obj_type.type, (ObjectDict,), {})
             obj = obj_class()
             for child in obj_type.children:
-                obj[child.name] = self._read_object_node(r, child)
+                obj[child.name] = self._read_object_node(child)
 
         if obj_type.type == "string":
             # convert string objects to native Python strings
@@ -392,7 +395,7 @@ class SerializedFile(AutoCloseable):
         if not object_type:
             return None
 
-        obj = self._read_object_node(self.r, object_type)
+        obj = self._read_object_node(object_type)
 
         # check if all bytes were read correctly
         obj_size = self.r.tell() - object_pos
