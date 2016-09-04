@@ -132,27 +132,35 @@ class Archive(AutoCloseable):
             entry.path = rb.read_cstring()
             entries.append(entry)
 
-        # TODO: properly implement block-based decompression
+        # check if there's one large LZMA block
         compression_method = blocks_info.storage_blocks[0].flags.compression_method
-        if compression_method != Compression.LZMA:
-            raise NotImplementedError()
+        if len(blocks_info.storage_blocks) == 1 and compression_method == Compression.LZMA:
+            # in newer archive formats, the LZMA stream header no longer includes
+            # the uncompressed size, since it's already part of the archive header,
+            # so the props need to be read manually and supplied to a custom filter
+            r.be = False
+            prop = r.read_uint8()
+            dict_size = r.read_uint32()
 
-        # in newer archive formats, the LZMA stream header no longer includes
-        # the uncompressed size, since it's already part of the archive header,
-        # so the props need to be read manually and supplied to a custom filter
-        r.be = False
-        prop = r.read_uint8()
-        dict_size = r.read_uint32()
+            filter = ObjectDict()
+            filter.id = lzma.FILTER_LZMA1
+            filter.dict_size = dict_size
+            filter.lc = prop % 9
+            prop //= 9
+            filter.lp = prop % 5
+            filter.pb = prop // 5
 
-        filter = ObjectDict()
-        filter.id = lzma.FILTER_LZMA1
-        filter.dict_size = dict_size
-        filter.lc = prop % 9
-        prop //= 9
-        filter.lp = prop % 5
-        filter.pb = prop // 5
+            fp = lzma.open(self.r.fp, "rb", format=lzma.FORMAT_RAW, filters=[filter])
+        else:
+            # TODO: implement as stream instead of decompressing all blocks in
+            # memory at once
+            data = bytearray()
+            for block in blocks_info.storage_blocks:
+                data.extend(self._read_block(block.flags.compression_method,
+                    block.compressed_size, block.uncompressed_size))
 
-        fp = lzma.open(self.r.fp, "rb", format=lzma.FORMAT_RAW, filters=[filter])
+            fp = io.BytesIO(data)
+
         self.rd = BinaryReader(fp, be=True)
 
     def _read_block(self, method, compressed_size, uncompressed_size):
