@@ -213,9 +213,8 @@ class BinaryReader(AutoCloseable):
         return struct.unpack(format, data)
 
     def read_num(self, type):
-        if self.be:
-            type = ">" + type
-        return self.read_struct(type)[0]
+        tag = ("<", ">")[self.be]
+        return self.read_struct(tag + type)[0]
 
     def read_uuid(self):
         data = self.read(16)
