@@ -50,8 +50,7 @@ class SerializedFile(AutoCloseable):
         self._read_header()
         self._read_types()
         self._read_object_info()
-        if self.header.version > 10:
-            self._read_script_types()
+        self._read_script_types()
         self._read_externals()
 
     def _validate(self):
@@ -305,6 +304,10 @@ class SerializedFile(AutoCloseable):
         r = self.r
 
         script_types = self.script_types = []
+
+        # script types exist in newer versions only
+        if self.header.version < 11:
+            return
 
         num_entries = r.read_int32()
 
