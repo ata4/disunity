@@ -3,7 +3,6 @@ import lz4
 import io
 
 from enum import Enum
-from pprint import pprint
 
 from .io import *
 from .utils import *
@@ -182,7 +181,6 @@ class Archive(AutoCloseable):
             entries = self.entries
 
         for entry in entries:
-            print(entry.path)
             entry_path = os.path.join(dir, entry.path)
             os.makedirs(os.path.dirname(entry_path), exist_ok=True)
             fileobj_slice(self.rd.fp, entry_path, entry.offset, entry.size)

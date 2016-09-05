@@ -2,10 +2,9 @@ import io
 import os
 import json
 
-from pprint import pprint
-
 from .io import *
 from .utils import *
+from .log import *
 
 VERSION_MIN = 5
 VERSION_MAX = 15
@@ -36,9 +35,9 @@ class SerializedFile(AutoCloseable):
         "double": BinaryReader.read_double,
     }
 
-    def __init__(self, path, debug=False):
+    def __init__(self, path):
         self.string_mapper = StringTableMapper()
-        self.debug = debug
+        self.types_db = {}
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
@@ -131,48 +130,51 @@ class SerializedFile(AutoCloseable):
 
         num_classes = r.read_int32()
         for _ in range(num_classes):
-            bclass = ObjectDict()
-
+            class_type = ObjectDict()
             class_id = r.read_int32()
 
             if self.header.version > 13:
                 if class_id < 0:
-                    bclass.script_id = r.read_hash128()
+                    class_type.script_id = r.read_hash128()
 
-                bclass.old_type_hash = r.read_hash128()
+                class_type.old_type_hash = r.read_hash128()
 
                 if types.embedded:
-                    bclass.type_tree = self._read_type_node()
+                    class_type.type_tree = self._read_type_node()
                 else:
-                    bclass.type_tree = self._read_type_node_db(bclass, class_id)
-
-                if not bclass.type_tree:
-                    print("Type %s not found in file or database" % bclass.old_type_hash)
+                    class_type.type_tree = None
             else:
-                bclass.type_tree = self._read_type_node_old()
+                class_type.type_tree = self._read_type_node_old()
 
             if class_id in types.classes:
                 raise RuntimeError("Duplicate class ID %d" % class_id)
 
-            types.classes[class_id] = bclass
+            types.classes[class_id] = class_type
 
         # padding
         if self.header.version > 6 and self.header.version < 13:
             r.read_int32()
 
-    def _read_type_node_db(self, bclass, class_id):
+    def _read_type_node_db(self, hash, class_id):
+        # load from cache if possible
+        if hash in self.types_db:
+            return self.types_db[hash]
+
         path_script_dir = os.path.dirname(__file__)
         path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
-        path_type = os.path.join(path_type_dir, bclass.old_type_hash + ".json")
+        path_type = os.path.join(path_type_dir, hash + ".json")
 
         if not os.path.exists(path_type):
+            Log.warning("Type %s not found in file or database" % hash)
+            self.types_db[hash] = None
             return
 
-        if self.debug:
-            print("Type %s loaded from database" % bclass.old_type_hash)
+        Log.trace("Type %s loaded from database" % hash)
 
         with open(path_type) as file:
-            return ObjectDict.from_dict(json.load(file))
+            type_tree = ObjectDict.from_dict(json.load(file))
+            self.types_db[hash] = type_tree
+            return type_tree
 
     def _read_type_node(self):
         r = self.r
@@ -336,8 +338,7 @@ class SerializedFile(AutoCloseable):
     def _read_object_node(self, obj_type):
         r = self.r
 
-        if self.debug:
-            print(r.tell(), obj_type.type, obj_type.name)
+        Log.trace(r.tell(), obj_type.type, obj_type.name)
 
         if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
@@ -383,27 +384,33 @@ class SerializedFile(AutoCloseable):
         return obj
 
     def read_object(self, path_id):
-        object_info = self.objects[path_id]
+        object_info = self.objects.get(path_id)
+        if not object_info:
+            raise ValueError("Invalid path ID " + path_id)
 
-        if not object_info.type_id in self.types.classes:
-            return None
+        object_class = self.types.classes.get(object_info.type_id)
+        if not object_class:
+            return
         
         object_pos = self.header.data_offset + object_info.byte_start
         self.r.seek(object_pos, io.SEEK_SET)
 
-        object_type = self.types.classes[object_info.type_id].type_tree
+        object_type = object_class.type_tree
         if not object_type:
-            return None
+            object_type = self._read_type_node_db(object_class.old_type_hash, object_info.type_id)
 
-        obj = self._read_object_node(object_type)
+        if not object_type:
+            return
+
+        object = self._read_object_node(object_type)
 
         # check if all bytes were read correctly
-        obj_size = self.r.tell() - object_pos
-        if obj_size != object_info.byte_size:
+        object_size = self.r.tell() - object_pos
+        if object_size != object_info.byte_size:
             raise RuntimeError("Wrong object size for path %d: %d != %d"
-                               % (path_id, obj_size, object_info.byte_size))
+                               % (path_id, object_size, object_info.byte_size))
 
-        return obj
+        return object
 
     def scan_types(self):
         script_dir = os.path.dirname(__file__)
@@ -414,19 +421,19 @@ class SerializedFile(AutoCloseable):
             if class_id <= 0:
                 continue
 
-            bclass = self.types.classes[class_id]
+            class_type = self.types.classes[class_id]
 
-            if "old_type_hash" in bclass and self.types.embedded and bclass.type_tree:
+            if "old_type_hash" in class_type and self.types.embedded and class_type.type_tree:
                 # create type files that don't exist yet
                 path_dir = os.path.join(types_dir, str(class_id))
                 if not os.path.exists(path_dir):
                     os.makedirs(path_dir)
 
-                path_type = os.path.join(path_dir, bclass.old_type_hash + ".json")
+                path_type = os.path.join(path_dir, class_type.old_type_hash + ".json")
                 if not os.path.exists(path_type):
-                    print("Added " + path_type)
+                    Log.info("Added type " + class_type.old_type_hash)
                     with open(path_type, "w") as file:
-                        json.dump(bclass.type_tree, file, indent=2, separators=(',', ': '))
+                        json.dump(class_type.type_tree, file, indent=2, separators=(',', ': '))
 
 
     def close(self):
