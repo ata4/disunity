@@ -1,10 +1,9 @@
 import sys
 import os
 import glob
-import json
-from pprint import pprint
-
 import pynity
+
+from pprint import pprint
 
 def main(argv):
     app = argv.pop(0)
@@ -17,8 +16,7 @@ def main(argv):
         with pynity.Archive(globpath) as archive:
             pprint(archive.header)
             pprint(archive.entries)
-            extract_path, _ = os.path.splitext(globpath)
-            archive.extract(extract_path)
+            pprint(archive.blocks_info)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

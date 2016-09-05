@@ -75,6 +75,9 @@ class Archive(AutoCloseable):
             entry.size = rd.read_uint32()
             entries.append(entry)
 
+        # unused
+        self.blocks_info = None
+
     def _read_header_fs(self):
         r = self.r
 
