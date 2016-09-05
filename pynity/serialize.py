@@ -130,7 +130,7 @@ class SerializedFile(AutoCloseable):
         types.classes = {}
 
         num_classes = r.read_int32()
-        for i in range(0, num_classes):
+        for _ in range(num_classes):
             bclass = ObjectDict()
 
             class_id = r.read_int32()
@@ -182,7 +182,7 @@ class SerializedFile(AutoCloseable):
         string_table_len = r.read_int32()
 
         # read field list
-        for i in range(num_fields):
+        for _ in range(num_fields):
             field = ObjectDict()
             field.type = None
             field.name = None
@@ -239,7 +239,7 @@ class SerializedFile(AutoCloseable):
                 node_prev.children.append(node)
                 node_stack.append(node_prev)
             else:
-                for i in range(-tree_level_diff):
+                for _ in range(-tree_level_diff):
                     node_stack.pop()
                 node_stack[-1].children.append(node)
 
@@ -261,7 +261,7 @@ class SerializedFile(AutoCloseable):
         field.children = []
 
         num_children = r.read_int32()
-        for i in range(num_children):
+        for _ in range(num_children):
             field.children.append(self._read_type_node_old())
 
         return field
@@ -273,7 +273,7 @@ class SerializedFile(AutoCloseable):
 
         num_entries = r.read_int32()
 
-        for i in range(0, num_entries):
+        for _ in range(num_entries):
             if self.header.version > 13:
                 r.align(4)
                 path_id = r.read_uint64()
@@ -306,7 +306,7 @@ class SerializedFile(AutoCloseable):
 
         num_entries = r.read_int32()
 
-        for i in range(0, num_entries):
+        for _ in range(num_entries):
             r.align(4)
 
             script_type = ObjectDict()
@@ -321,7 +321,7 @@ class SerializedFile(AutoCloseable):
         externals = self.externals = []
 
         num_entries = r.read_int32()
-        for i in range(0, num_entries):
+        for _ in range(num_entries):
             external = ObjectDict()
 
             if self.header.version > 5:
@@ -351,7 +351,7 @@ class SerializedFile(AutoCloseable):
             else:
                 # read generic array
                 obj = []
-                for i in range(size):
+                for _ in range(size):
                     obj.append(self._read_object_node(type_data))
 
             # arrays always need to be aligned in version 5 or newer
