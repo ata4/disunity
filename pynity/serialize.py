@@ -35,9 +35,11 @@ class SerializedFile(AutoCloseable):
         "double": BinaryReader.read_double,
     }
 
+    types_db = {}
+    types_cache = {}
+
     def __init__(self, path):
         self.string_mapper = StringTableMapper()
-        self.types_db = {}
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
@@ -372,7 +374,9 @@ class SerializedFile(AutoCloseable):
                 r.align(4)
         else:
             # complex object with children
-            obj_class = type(obj_type.type, (ObjectDict,), {})
+            obj_class = self.types_cache.get(obj_type.type)
+            if not obj_class:
+                obj_class = self.types_cache[obj_type.type] = type(obj_type.type, (ObjectDict,), {})
             obj = obj_class()
             for child in obj_type.children:
                 obj[child.name] = self._read_object_node(child)
