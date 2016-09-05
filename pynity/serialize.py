@@ -142,14 +142,14 @@ class SerializedFile(AutoCloseable):
                 bclass.old_type_hash = r.read_hash128()
 
                 if types.embedded:
-                    bclass.type_tree = self._read_type_node(r)
+                    bclass.type_tree = self._read_type_node()
                 else:
                     bclass.type_tree = self._read_type_node_db(bclass, class_id)
 
                 if not bclass.type_tree:
                     print("Type %s not found in file or database" % bclass.old_type_hash)
             else:
-                bclass.type_tree = self._read_type_node_old(r)
+                bclass.type_tree = self._read_type_node_old()
 
             if class_id in types.classes:
                 raise RuntimeError("Duplicate class ID %d" % class_id)
