@@ -37,7 +37,7 @@ class ChunkedFileIO(io.BufferedIOBase):
         # discover .splitXX parts
         if fext[:6] == ".split":
             index = 0
-            splitpath = fname + ".split0"
+            splitpath = fname + fext
             while os.path.exists(splitpath):
                 paths.append(splitpath)
                 index += 1
