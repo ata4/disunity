@@ -92,11 +92,14 @@ class SerializedFile(AutoCloseable):
         header.version = r.read_int32()
         header.data_offset = r.read_int32()
 
+        if not header.version in self.versions_tested:
+            raise NotImplementedError("Unsupported format version: " + header.version)
+
         if header.data_offset > header.file_size:
-            raise RuntimeError("Invalid data_offset %d" % header.data_offset)
+            raise SerializedFileError("Invalid data offset: " + header.data_offset)
 
         if header.metadata_size > header.file_size:
-            raise RuntimeError("Invalid metadata_size %d" % header.metadata_size)
+            raise SerializedFileError("Invalid metadata size: " + header.metadata_size)
 
         if header.version > 8:
             header.endianness = r.read_int8()
@@ -105,10 +108,6 @@ class SerializedFile(AutoCloseable):
         # newer formats use little-endian for the rest of the file
         if header.version > 5:
             r.be = False
-
-        if not header.version in self.versions_tested:
-            raise NotImplementedError("Unsupported format version %d"
-                                      % header.version)
 
     def _read_types(self):
         r = self.r
@@ -148,7 +147,7 @@ class SerializedFile(AutoCloseable):
                 class_type.type_tree = self._read_type_node_old()
 
             if class_id in types.classes:
-                raise RuntimeError("Duplicate class ID %d" % class_id)
+                raise SerializedFileError("Duplicate class ID %d" % class_id)
 
             types.classes[class_id] = class_type
 
@@ -212,8 +211,13 @@ class SerializedFile(AutoCloseable):
 
         for field in fields:
             # assign strings
-            field.name = string_table[field.name_offset]
-            field.type = string_table[field.type_offset]
+            field.name = string_table.get(field.name_offset)
+            if not field.name:
+                raise SerializedFileError("Invalid field name offset: " + field.name_offset)
+
+            field.type = string_table.get(field.type_offset)
+            if not field.type:
+                raise SerializedFileError("Invalid field type offset: " + field.type_offset)
 
             # don't need those offsets anymore
             del field.name_offset
@@ -237,6 +241,10 @@ class SerializedFile(AutoCloseable):
 
             # don't need the tree level now either
             del field.tree_level
+
+            # the level can only raise by one per node at most
+            if tree_level_diff > 1:
+                raise SerializedFileError("Unexpected tree level shift: " + tree_level_diff)
 
             if tree_level_diff > 0:
                 node_prev.children.append(node)
@@ -289,6 +297,12 @@ class SerializedFile(AutoCloseable):
             obj.type_id = r.read_int32()
             obj.class_id = r.read_int16()
 
+            if obj.byte_start > self.header.file_size:
+                raise SerializedFileError("Invalid byte start: " + obj.byte_start)
+
+            if obj.byte_size > self.header.file_size:
+                raise SerializedFileError("Invalid byte size: " + obj.byte_start)
+
             if self.header.version > 13:
                 obj.script_type_index = r.read_int16()
             else:
@@ -298,7 +312,7 @@ class SerializedFile(AutoCloseable):
                 obj.stripped = r.read_bool8()
 
             if path_id in objects:
-                raise RuntimeError("Duplicate path ID %d" % path_id)
+                raise SerializedFileError("Duplicate path ID %d" % path_id)
 
             objects[path_id] = obj
 
@@ -366,7 +380,8 @@ class SerializedFile(AutoCloseable):
         elif obj_type.size > 0 and not obj_type.children:
             # no children and size greater zero -> primitive
             if not obj_type.type in self.read_prim:
-                raise RuntimeError("Unknown primitive type %s" % obj_type.type)
+                raise SerializationError("Unknown primitive type %s" % obj_type.type)
+
             obj = self.read_prim[obj_type.type](r)
 
             # align if flagged
@@ -376,8 +391,11 @@ class SerializedFile(AutoCloseable):
             # complex object with children
             obj_class = self.types_cache.get(obj_type.type)
             if not obj_class:
-                obj_class = self.types_cache[obj_type.type] = type(obj_type.type, (ObjectDict,), {})
+                obj_class = type(obj_type.type, (ObjectDict,), {})
+                self.types_cache[obj_type.type] = obj_class
+
             obj = obj_class()
+
             for child in obj_type.children:
                 obj[child.name] = self._read_object_node(child)
 
@@ -391,30 +409,36 @@ class SerializedFile(AutoCloseable):
         return obj
 
     def read_object(self, path_id):
+        # get object info
         object_info = self.objects.get(path_id)
         if not object_info:
             raise ValueError("Invalid path ID " + path_id)
 
+        # get object type class
         object_class = self.types.classes.get(object_info.type_id)
         if not object_class:
             return
-        
+
+        # seek to object data start position
         object_pos = self.header.data_offset + object_info.byte_start
         self.r.seek(object_pos, io.SEEK_SET)
 
+        # get type, either from embedded data or from the database
         object_type = object_class.type_tree
         if not object_type:
             object_type = self._read_type_node_db(object_class.old_type_hash, object_info.type_id)
 
+        # cancel if there's no type information available
         if not object_type:
             return
 
+        # deserialize all type nodes
         object = self._read_object_node(object_type)
 
         # check if all bytes were read correctly
         object_size = self.r.tell() - object_pos
         if object_size != object_info.byte_size:
-            raise RuntimeError("Wrong object size for path %d: %d != %d"
+            raise SerializationError("Wrong object size for path %d: %d != %d"
                                % (path_id, object_size, object_info.byte_size))
 
         return object
@@ -430,6 +454,7 @@ class SerializedFile(AutoCloseable):
 
             class_type = self.types.classes[class_id]
 
+            # TODO: add database support for Unity 4.x and older
             if "old_type_hash" in class_type and self.types.embedded and class_type.type_tree:
                 # create type files that don't exist yet
                 path_dir = os.path.join(types_dir, str(class_id))
@@ -445,6 +470,12 @@ class SerializedFile(AutoCloseable):
 
     def close(self):
         self.r.close()
+
+class SerializedFileError(Exception):
+    pass
+
+class SerializationError(Exception):
+    pass
 
 class StringTableMapper:
 
