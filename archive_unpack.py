@@ -11,14 +11,18 @@ def main(argv):
 
     path = argv.pop(0)
 
+    if argv:
+        path_out = argv.pop(0)
+    else:
+        path_out, _ = os.path.splitext(path)
+
     with pynity.Archive(path) as archive:
-        extract_path, _ = os.path.splitext(path)
         for entry in archive.entries:
             print(entry.path)
-            archive.extract(extract_path, [entry])
+            archive.extract(path_out, [entry])
 
 def usage(app):
-    print("usage: %s <path>" % os.path.basename(app))
+    print("usage: %s <archive path> [output dir]" % os.path.basename(app))
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
