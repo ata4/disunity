@@ -2,7 +2,6 @@ import sys
 import os
 import glob
 import json
-from pprint import pprint
 
 import pynity
 
@@ -40,9 +39,6 @@ def main(argv):
                         object_name = object.m_Name if "m_Name" in object else ""
                         class_name = object.__class__.__name__
                         print(path_id, class_name, object_name)
-
-                        #object_json = json.dumps(object, indent=2, separators=(',', ': '))
-                        #print(object_json)
 
                         num_objects_passed += 1
                     except Exception as e:
