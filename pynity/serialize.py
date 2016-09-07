@@ -39,7 +39,7 @@ class SerializedFile(AutoCloseable):
     types_cache = {}
 
     def __init__(self, path):
-        self.string_mapper = StringTableMapper()
+        self.string_mapper = StringMapper()
 
         # open file and make some basic checks to make sure this is actually a serialized file
         self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
@@ -477,27 +477,35 @@ class SerializedFileError(Exception):
 class SerializationError(Exception):
     pass
 
-class StringTableMapper:
+class StringMapper:
 
-    strings_global = None
+    strings_global = {}
 
     def __init__(self):
-        if not self.strings_global:
-            script_dir = os.path.dirname(__file__)
-            strings_path = os.path.join(script_dir, "resources", "strings.bin")
-            with open(strings_path, "rb") as file:
-                self.strings_global = self.map(file.read(), 1 << 31)
+        if self.strings_global:
+            return
+
+        script_dir = os.path.dirname(__file__)
+        strings_path = os.path.join(script_dir, "resources", "strings.json")
+
+        with open(strings_path) as f:
+            json_strings = json.load(f)
+
+        self.strings_global = self._create_map(json_strings, offset=1 << 31)
+
+    def _create_map(self, strings, offset=0):
+        string_map = {}
+        p = 0
+        for string in strings:
+            if not string:
+                continue
+
+            string_map[p + offset] = string
+            p += len(string) + 1
+        return string_map
 
     def get(self, buf):
-        strings = self.strings_global.copy()
-        strings.update(self.map(buf, 0))
-        return strings
-
-    def map(self, buf, base):
-        strings = {}
-        p = 0
-        for i, c in enumerate(buf):
-            if c == 0:
-                strings[base + p] = buf[p:i].decode('ascii')
-                p = i + 1
-        return strings
+        strings = [string.decode("ascii") for string in buf.split(b'\0')]
+        string_map = self.strings_global.copy()
+        string_map.update(self._create_map(strings))
+        return string_map
