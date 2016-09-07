@@ -93,13 +93,13 @@ class SerializedFile(AutoCloseable):
         header.data_offset = r.read_int32()
 
         if not header.version in self.versions_tested:
-            raise NotImplementedError("Unsupported format version: " + header.version)
+            raise NotImplementedError("Unsupported format version: %d" % header.version)
 
         if header.data_offset > header.file_size:
-            raise SerializedFileError("Invalid data offset: " + header.data_offset)
+            raise SerializedFileError("Invalid data offset: %d" % header.data_offset)
 
         if header.metadata_size > header.file_size:
-            raise SerializedFileError("Invalid metadata size: " + header.metadata_size)
+            raise SerializedFileError("Invalid metadata size: %d" % header.metadata_size)
 
         if header.version > 8:
             header.endianness = r.read_int8()
@@ -213,11 +213,11 @@ class SerializedFile(AutoCloseable):
             # assign strings
             field.name = string_table.get(field.name_offset)
             if not field.name:
-                raise SerializedFileError("Invalid field name offset: " + field.name_offset)
+                raise SerializedFileError("Invalid field name offset: %d" % field.name_offset)
 
             field.type = string_table.get(field.type_offset)
             if not field.type:
-                raise SerializedFileError("Invalid field type offset: " + field.type_offset)
+                raise SerializedFileError("Invalid field type offset: %d" % field.type_offset)
 
             # don't need those offsets anymore
             del field.name_offset
@@ -244,7 +244,7 @@ class SerializedFile(AutoCloseable):
 
             # the level can only raise by one per node at most
             if tree_level_diff > 1:
-                raise SerializedFileError("Unexpected tree level shift: " + tree_level_diff)
+                raise SerializedFileError("Unexpected tree level shift: %d" % tree_level_diff)
 
             if tree_level_diff > 0:
                 node_prev.children.append(node)
@@ -298,10 +298,10 @@ class SerializedFile(AutoCloseable):
             obj.class_id = r.read_int16()
 
             if obj.byte_start > self.header.file_size:
-                raise SerializedFileError("Invalid byte start: " + obj.byte_start)
+                raise SerializedFileError("Invalid byte start: %d" % obj.byte_start)
 
             if obj.byte_size > self.header.file_size:
-                raise SerializedFileError("Invalid byte size: " + obj.byte_start)
+                raise SerializedFileError("Invalid byte size: %d" % obj.byte_start)
 
             if self.header.version > 13:
                 obj.script_type_index = r.read_int16()
@@ -312,7 +312,7 @@ class SerializedFile(AutoCloseable):
                 obj.stripped = r.read_bool8()
 
             if path_id in objects:
-                raise SerializedFileError("Duplicate path ID %d" % path_id)
+                raise SerializedFileError("Duplicate path ID: %d" % path_id)
 
             objects[path_id] = obj
 
@@ -380,7 +380,7 @@ class SerializedFile(AutoCloseable):
         elif obj_type.size > 0 and not obj_type.children:
             # no children and size greater zero -> primitive
             if not obj_type.type in self.read_prim:
-                raise SerializationError("Unknown primitive type %s" % obj_type.type)
+                raise SerializationError("Unknown primitive type: " + obj_type.type)
 
             obj = self.read_prim[obj_type.type](r)
 
@@ -412,7 +412,7 @@ class SerializedFile(AutoCloseable):
         # get object info
         object_info = self.objects.get(path_id)
         if not object_info:
-            raise ValueError("Invalid path ID " + path_id)
+            raise ValueError("Invalid path ID: %d" % path_id)
 
         # get object type class
         object_class = self.types.classes.get(object_info.type_id)
