@@ -20,22 +20,11 @@ class ChunkedFileIO(io.BufferedIOBase):
 
     @staticmethod
     def open(path, mode):
-        if not os.path.exists(path):
-            # add ".split0" if the file doesn't exist in the normal path
-            if path[-7:] != ".split0":
-                path_split = path + ".split0"
-                if not os.path.exists(path_split):
-                    raise FileNotFoundError(path)
-                else:
-                    path = path_split
-            else:
-                raise FileNotFoundError(path)
-
         fname, fext = os.path.splitext(path)
         paths = []
 
         # discover .splitXX parts
-        if fext[:6] == ".split":
+        if fext == ".split0":
             index = 0
             splitpath = fname + fext
             while os.path.exists(splitpath):
