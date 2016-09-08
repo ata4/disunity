@@ -1,30 +1,28 @@
-import sys
-import colorama
+import logging
 
-class Log:
+log = logging.getLogger()
 
-    colorama.init(autoreset=True)
+try:
+    # use optional colorlog dependency
+    import colorlog
 
-    trace_enabled = False
+    formatter = colorlog.ColoredFormatter(
+        "%(log_color)s%(levelname)-8s%(reset)s %(message)s",
+        log_colors={
+            'DEBUG':    'bold_cyan',
+            'INFO':     'bold_green',
+            'WARNING':  'bold_yellow',
+            'ERROR':    'bold_red',
+            'CRITICAL': 'bold_purple',
+        }
+    )
 
-    @staticmethod
-    def _print(*args, color, file=sys.stdout):
-        msg = " ".join(str(a) for a in args)
-        print(color + colorama.Style.BRIGHT + msg, file=file)
+    handler = colorlog.StreamHandler()
+    handler.setFormatter(formatter)
 
-    @staticmethod
-    def info(*args):
-        Log._print(*args, color=colorama.Fore.WHITE)
+    log.addHandler(handler)
+except ImportError:
+    # use basic format
+    logging.basicConfig(format="%(levelname)-8s %(message)s")
 
-    @staticmethod
-    def trace(*args):
-        if Log.trace_enabled:
-            Log._print(*args, color=colorama.Fore.CYAN)
-
-    @staticmethod
-    def warning(*args):
-        Log._print(*args, color=colorama.Fore.YELLOW, file=sys.stderr)
-
-    @staticmethod
-    def error(*args):
-        Log._print(*args, color=colorama.Fore.RED, file=sys.stderr)
+log.setLevel(logging.INFO)

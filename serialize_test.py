@@ -2,8 +2,11 @@ import sys
 import os
 import glob
 import json
+import logging
 
 import pynity
+
+log = logging.getLogger()
 
 def main(argv):
     app = argv.pop(0)
@@ -41,13 +44,13 @@ def main(argv):
                         print(path_id, class_name, object_name)
 
                         num_objects_passed += 1
-                    except Exception as e:
-                        print(e)
+                    except Exception:
+                        log.exception("Failed deserialization for path ID %d" % path_id)
                         num_objects_failed += 1
 
                 num_files_passed += 1
-        except Exception as e:
-            print(e)
+        except Exception:
+            log.exception("Failed reading " + globpath)
             num_files_failed += 1
 
     print()

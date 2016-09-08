@@ -1,6 +1,7 @@
 import io
 import os
 import json
+import logging
 
 from .io import *
 from .utils import *
@@ -10,6 +11,8 @@ VERSION_MIN = 5
 VERSION_MAX = 15
 
 METAFLAG_ALIGN = 0x4000
+
+log = logging.getLogger("pynity.serialize")
 
 class SerializedFile(AutoCloseable):
 
@@ -165,11 +168,11 @@ class SerializedFile(AutoCloseable):
         path_type = os.path.join(path_type_dir, hash + ".json")
 
         if not os.path.exists(path_type):
-            Log.warning("Type %s not found in file or database" % hash)
+            log.warning("Type %s not found in file or database" % hash)
             self.types_db[hash] = None
             return
 
-        Log.trace("Type %s loaded from database" % hash)
+        log.debug("Type %s loaded from database" % hash)
 
         with open(path_type) as file:
             type_tree = ObjectDict.from_dict(json.load(file))
@@ -357,7 +360,8 @@ class SerializedFile(AutoCloseable):
     def _read_object_node(self, obj_type):
         r = self.r
 
-        Log.trace(r.tell(), obj_type.type, obj_type.name)
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("%d %s %s" % (r.tell(), obj_type.type, obj_type.name))
 
         if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
@@ -463,7 +467,7 @@ class SerializedFile(AutoCloseable):
 
                 path_type = os.path.join(path_dir, class_type.old_type_hash + ".json")
                 if not os.path.exists(path_type):
-                    Log.info("Added type " + class_type.old_type_hash)
+                    log.info("Added type " + class_type.old_type_hash)
                     with open(path_type, "w") as file:
                         json.dump(class_type.type_tree, file, indent=2, separators=(',', ': '))
 
