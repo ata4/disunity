@@ -28,16 +28,23 @@
     <Folder Include="pynity\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="archive_test.py" />
     <Compile Include="pynity\archive.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\io.py" />
+    <Compile Include="pynity\log.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pynity\serialize.py" />
-    <Compile Include="archive_test.py">
+    <Compile Include="archive_unpack.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\utils.py" />
     <Compile Include="pynity\__init__.py" />
+    <Compile Include="serialize_dump.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="serialize_test.py" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
