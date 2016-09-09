@@ -1,0 +1,266 @@
+{
+  "type": "QualitySettings",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 5,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "int",
+      "name": "m_CurrentQuality",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "vector",
+      "name": "m_QualitySettings",
+      "size": -1,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 3,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 34816,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 4,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 2048,
+              "children": []
+            },
+            {
+              "type": "QualitySetting",
+              "name": "data",
+              "size": -1,
+              "index": 5,
+              "is_array": false,
+              "version": 2,
+              "meta_flag": 34816,
+              "children": [
+                {
+                  "type": "string",
+                  "name": "name",
+                  "size": -1,
+                  "index": 6,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 34816,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 7,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 18433,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 8,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 9,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "int",
+                  "name": "pixelLightCount",
+                  "size": 4,
+                  "index": 10,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "shadows",
+                  "size": 4,
+                  "index": 11,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "shadowResolution",
+                  "size": 4,
+                  "index": 12,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "shadowProjection",
+                  "size": 4,
+                  "index": 13,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "shadowCascades",
+                  "size": 4,
+                  "index": 14,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "shadowDistance",
+                  "size": 4,
+                  "index": 15,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "blendWeights",
+                  "size": 4,
+                  "index": 16,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "textureQuality",
+                  "size": 4,
+                  "index": 17,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "anisotropicTextures",
+                  "size": 4,
+                  "index": 18,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "antiAliasing",
+                  "size": 4,
+                  "index": 19,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "softParticles",
+                  "size": 1,
+                  "index": 20,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "softVegetation",
+                  "size": 1,
+                  "index": 21,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 18433,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "vSyncCount",
+                  "size": 4,
+                  "index": 22,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "lodBias",
+                  "size": 4,
+                  "index": 23,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "maximumLODLevel",
+                  "size": 4,
+                  "index": 24,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 18432,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_StrippedMaximumLODLevel",
+      "size": 4,
+      "index": 25,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

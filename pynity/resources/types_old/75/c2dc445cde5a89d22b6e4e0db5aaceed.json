@@ -1,0 +1,216 @@
+{
+  "type": "ConstantForce",
+  "name": "Base",
+  "size": 57,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65633,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_Enabled",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16385,
+      "children": []
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_Force",
+      "size": 12,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 8192,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_RelativeForce",
+      "size": 12,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 8192,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 11,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 12,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_Torque",
+      "size": 12,
+      "index": 13,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 8192,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 15,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_RelativeTorque",
+      "size": 12,
+      "index": 17,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 8192,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 19,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 8192,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

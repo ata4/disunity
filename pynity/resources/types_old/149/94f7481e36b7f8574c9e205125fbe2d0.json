@@ -1,0 +1,156 @@
+{
+  "type": "NetworkManager",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 0,
+  "children": [
+    {
+      "type": "int",
+      "name": "m_DebugLevel",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_Sendrate",
+      "size": 4,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "map",
+      "name": "m_AssetToPrefab",
+      "size": -1,
+      "index": 3,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 4,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 5,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "pair",
+              "name": "data",
+              "size": 24,
+              "index": 6,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": [
+                {
+                  "type": "GUID",
+                  "name": "first",
+                  "size": 16,
+                  "index": 7,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": [
+                    {
+                      "type": "UInt32",
+                      "name": "data[0]",
+                      "size": 4,
+                      "index": 8,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "UInt32",
+                      "name": "data[1]",
+                      "size": 4,
+                      "index": 9,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "UInt32",
+                      "name": "data[2]",
+                      "size": 4,
+                      "index": 10,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "UInt32",
+                      "name": "data[3]",
+                      "size": 4,
+                      "index": 11,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "PPtr<GameObject>",
+                  "name": "second",
+                  "size": 8,
+                  "index": 12,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": [
+                    {
+                      "type": "SInt32",
+                      "name": "m_FileID",
+                      "size": 4,
+                      "index": 13,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "SInt32",
+                      "name": "m_PathID",
+                      "size": 4,
+                      "index": 14,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

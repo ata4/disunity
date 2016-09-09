@@ -1,0 +1,2347 @@
+{
+  "type": "NavMeshLayers",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "NavMeshLayerData",
+      "name": "Built-in Layer 0",
+      "size": -1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32784,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 3,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16401,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 4,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 5,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "Built-in Layer 1",
+      "size": -1,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 9,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32784,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 10,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16401,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 11,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 12,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 13,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 16,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "Built-in Layer 2",
+      "size": -1,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32784,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 17,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16401,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 18,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 19,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 17,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 21,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 0",
+      "size": -1,
+      "index": 22,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 23,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 24,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 25,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 26,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 27,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 28,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 1",
+      "size": -1,
+      "index": 29,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 30,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 31,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 32,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 33,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 34,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 35,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 2",
+      "size": -1,
+      "index": 36,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 37,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 38,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 39,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 40,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 41,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 42,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 3",
+      "size": -1,
+      "index": 43,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 44,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 45,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 46,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 47,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 48,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 49,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 4",
+      "size": -1,
+      "index": 50,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 51,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 52,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 53,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 54,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 55,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 56,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 5",
+      "size": -1,
+      "index": 57,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 58,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 59,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 60,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 61,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 62,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 63,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 6",
+      "size": -1,
+      "index": 64,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 65,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 66,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 67,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 68,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 69,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 70,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 7",
+      "size": -1,
+      "index": 71,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 72,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 73,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 74,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 75,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 76,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 77,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 8",
+      "size": -1,
+      "index": 78,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 79,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 80,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 81,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 82,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 83,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 84,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 9",
+      "size": -1,
+      "index": 85,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 86,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 87,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 88,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 89,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 90,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 91,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 10",
+      "size": -1,
+      "index": 92,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 93,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 94,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 95,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 96,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 97,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 98,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 11",
+      "size": -1,
+      "index": 99,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 100,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 101,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 102,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 103,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 104,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 105,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 12",
+      "size": -1,
+      "index": 106,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 107,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 108,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 109,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 110,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 111,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 112,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 13",
+      "size": -1,
+      "index": 113,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 114,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 115,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 116,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 117,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 118,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 119,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 14",
+      "size": -1,
+      "index": 120,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 121,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 122,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 123,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 124,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 125,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 126,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 15",
+      "size": -1,
+      "index": 127,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 128,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 129,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 130,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 131,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 132,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 133,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 16",
+      "size": -1,
+      "index": 134,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 135,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 136,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 137,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 138,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 139,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 140,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 17",
+      "size": -1,
+      "index": 141,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 142,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 143,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 144,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 145,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 146,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 147,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 18",
+      "size": -1,
+      "index": 148,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 149,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 150,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 151,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 152,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 153,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 154,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 19",
+      "size": -1,
+      "index": 155,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 156,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 157,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 158,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 159,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 160,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 161,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 20",
+      "size": -1,
+      "index": 162,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 163,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 164,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 165,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 166,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 167,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 168,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 21",
+      "size": -1,
+      "index": 169,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 170,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 171,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 172,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 173,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 174,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 175,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 22",
+      "size": -1,
+      "index": 176,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 177,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 178,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 179,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 180,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 181,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 182,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 23",
+      "size": -1,
+      "index": 183,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 184,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 185,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 186,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 187,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 188,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 189,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 24",
+      "size": -1,
+      "index": 190,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 191,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 192,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 193,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 194,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 195,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 196,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 25",
+      "size": -1,
+      "index": 197,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 198,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 199,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 200,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 201,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 202,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 203,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 26",
+      "size": -1,
+      "index": 204,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 205,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 206,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 207,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 208,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 209,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 210,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 27",
+      "size": -1,
+      "index": 211,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 212,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 213,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 214,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 215,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 216,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 217,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "NavMeshLayerData",
+      "name": "User Layer 28",
+      "size": -1,
+      "index": 218,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "string",
+          "name": "name",
+          "size": -1,
+          "index": 219,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 220,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 16385,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 221,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "char",
+                  "name": "data",
+                  "size": 1,
+                  "index": 222,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "float",
+          "name": "cost",
+          "size": 4,
+          "index": 223,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "editType",
+          "size": 4,
+          "index": 224,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 17,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

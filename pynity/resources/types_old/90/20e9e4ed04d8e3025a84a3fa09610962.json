@@ -1,0 +1,3068 @@
+{
+  "type": "Avatar",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "string",
+      "name": "m_Name",
+      "size": -1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 2,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 3,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 4,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "UInt32",
+      "name": "m_AvatarSize",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "AvatarConstant",
+      "name": "m_Avatar",
+      "size": -1,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "OffsetPtr",
+          "name": "m_Skeleton",
+          "size": -1,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "Skeleton",
+              "name": "data",
+              "size": -1,
+              "index": 8,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "m_Node",
+                  "size": -1,
+                  "index": 9,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 10,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 11,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "Node",
+                          "name": "data",
+                          "size": 8,
+                          "index": 12,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "SInt32",
+                              "name": "m_ParentId",
+                              "size": 4,
+                              "index": 13,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "SInt32",
+                              "name": "m_AxesId",
+                              "size": 4,
+                              "index": 14,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_ID",
+                  "size": -1,
+                  "index": 15,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 16,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 17,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "UInt32",
+                          "name": "data",
+                          "size": 4,
+                          "index": 18,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_AxesArray",
+                  "size": -1,
+                  "index": 19,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 20,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 21,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "Axes",
+                          "name": "data",
+                          "size": 88,
+                          "index": 22,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "float4",
+                              "name": "m_PreQ",
+                              "size": 16,
+                              "index": 23,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 24,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 25,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 26,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 27,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "m_PostQ",
+                              "size": 16,
+                              "index": 28,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 29,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 30,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 31,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 32,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "m_Sgn",
+                              "size": 16,
+                              "index": 33,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 34,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 35,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 36,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 37,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Limit",
+                              "name": "m_Limit",
+                              "size": 32,
+                              "index": 38,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float4",
+                                  "name": "m_Min",
+                                  "size": 16,
+                                  "index": 39,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 40,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 41,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 42,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 43,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "float4",
+                                  "name": "m_Max",
+                                  "size": 16,
+                                  "index": 44,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 45,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 46,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 47,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 48,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float",
+                              "name": "m_Length",
+                              "size": 4,
+                              "index": 49,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_Type",
+                              "size": 4,
+                              "index": 50,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "OffsetPtr",
+          "name": "m_SkeletonPose",
+          "size": -1,
+          "index": 51,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "SkeletonPose",
+              "name": "data",
+              "size": -1,
+              "index": 52,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "m_X",
+                  "size": -1,
+                  "index": 53,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 54,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 55,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "xform",
+                          "name": "data",
+                          "size": 48,
+                          "index": 56,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "float4",
+                              "name": "t",
+                              "size": 16,
+                              "index": 57,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 58,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 59,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 60,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 61,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "q",
+                              "size": 16,
+                              "index": 62,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 63,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 64,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 65,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 66,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "s",
+                              "size": 16,
+                              "index": 67,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 68,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 69,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 70,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 71,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "OffsetPtr",
+          "name": "m_DefaultPose",
+          "size": -1,
+          "index": 72,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "SkeletonPose",
+              "name": "data",
+              "size": -1,
+              "index": 73,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "vector",
+                  "name": "m_X",
+                  "size": -1,
+                  "index": 74,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 75,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 76,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "xform",
+                          "name": "data",
+                          "size": 48,
+                          "index": 77,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "float4",
+                              "name": "t",
+                              "size": 16,
+                              "index": 78,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 79,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 80,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 81,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 82,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "q",
+                              "size": 16,
+                              "index": 83,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 84,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 85,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 86,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 87,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "float4",
+                              "name": "s",
+                              "size": 16,
+                              "index": 88,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float",
+                                  "name": "x",
+                                  "size": 4,
+                                  "index": 89,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "y",
+                                  "size": 4,
+                                  "index": 90,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "z",
+                                  "size": 4,
+                                  "index": 91,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "float",
+                                  "name": "w",
+                                  "size": 4,
+                                  "index": 92,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "OffsetPtr",
+          "name": "m_Human",
+          "size": -1,
+          "index": 93,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "Human",
+              "name": "data",
+              "size": -1,
+              "index": 94,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "xform",
+                  "name": "m_RootX",
+                  "size": 48,
+                  "index": 95,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "float4",
+                      "name": "t",
+                      "size": 16,
+                      "index": 96,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "size": 4,
+                          "index": 97,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "size": 4,
+                          "index": 98,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "size": 4,
+                          "index": 99,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "w",
+                          "size": 4,
+                          "index": 100,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "float4",
+                      "name": "q",
+                      "size": 16,
+                      "index": 101,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "size": 4,
+                          "index": 102,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "size": 4,
+                          "index": 103,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "size": 4,
+                          "index": 104,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "w",
+                          "size": 4,
+                          "index": 105,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "float4",
+                      "name": "s",
+                      "size": 16,
+                      "index": 106,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "float",
+                          "name": "x",
+                          "size": 4,
+                          "index": 107,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "y",
+                          "size": 4,
+                          "index": 108,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "z",
+                          "size": 4,
+                          "index": 109,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "w",
+                          "size": 4,
+                          "index": 110,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "OffsetPtr",
+                  "name": "m_Skeleton",
+                  "size": -1,
+                  "index": 111,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Skeleton",
+                      "name": "data",
+                      "size": -1,
+                      "index": 112,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "vector",
+                          "name": "m_Node",
+                          "size": -1,
+                          "index": 113,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 114,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 115,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "Node",
+                                  "name": "data",
+                                  "size": 8,
+                                  "index": 116,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "SInt32",
+                                      "name": "m_ParentId",
+                                      "size": 4,
+                                      "index": 117,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "SInt32",
+                                      "name": "m_AxesId",
+                                      "size": 4,
+                                      "index": 118,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "vector",
+                          "name": "m_ID",
+                          "size": -1,
+                          "index": 119,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 120,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 121,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "UInt32",
+                                  "name": "data",
+                                  "size": 4,
+                                  "index": 122,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "vector",
+                          "name": "m_AxesArray",
+                          "size": -1,
+                          "index": 123,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 124,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 125,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "Axes",
+                                  "name": "data",
+                                  "size": 88,
+                                  "index": 126,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float4",
+                                      "name": "m_PreQ",
+                                      "size": 16,
+                                      "index": 127,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 128,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 129,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 130,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 131,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "float4",
+                                      "name": "m_PostQ",
+                                      "size": 16,
+                                      "index": 132,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 133,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 134,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 135,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 136,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "float4",
+                                      "name": "m_Sgn",
+                                      "size": 16,
+                                      "index": 137,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 138,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 139,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 140,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 141,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Limit",
+                                      "name": "m_Limit",
+                                      "size": 32,
+                                      "index": 142,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float4",
+                                          "name": "m_Min",
+                                          "size": 16,
+                                          "index": 143,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": [
+                                            {
+                                              "type": "float",
+                                              "name": "x",
+                                              "size": 4,
+                                              "index": 144,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "y",
+                                              "size": 4,
+                                              "index": 145,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "z",
+                                              "size": 4,
+                                              "index": 146,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "w",
+                                              "size": 4,
+                                              "index": 147,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "float4",
+                                          "name": "m_Max",
+                                          "size": 16,
+                                          "index": 148,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": [
+                                            {
+                                              "type": "float",
+                                              "name": "x",
+                                              "size": 4,
+                                              "index": 149,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "y",
+                                              "size": 4,
+                                              "index": 150,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "z",
+                                              "size": 4,
+                                              "index": 151,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "float",
+                                              "name": "w",
+                                              "size": 4,
+                                              "index": 152,
+                                              "is_array": false,
+                                              "version": 1,
+                                              "meta_flag": 0,
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "m_Length",
+                                      "size": 4,
+                                      "index": 153,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "UInt32",
+                                      "name": "m_Type",
+                                      "size": 4,
+                                      "index": 154,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "OffsetPtr",
+                  "name": "m_SkeletonPose",
+                  "size": -1,
+                  "index": 155,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "SkeletonPose",
+                      "name": "data",
+                      "size": -1,
+                      "index": 156,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "vector",
+                          "name": "m_X",
+                          "size": -1,
+                          "index": 157,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 158,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 159,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "xform",
+                                  "name": "data",
+                                  "size": 48,
+                                  "index": 160,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float4",
+                                      "name": "t",
+                                      "size": 16,
+                                      "index": 161,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 162,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 163,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 164,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 165,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "float4",
+                                      "name": "q",
+                                      "size": 16,
+                                      "index": 166,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 167,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 168,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 169,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 170,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "float4",
+                                      "name": "s",
+                                      "size": 16,
+                                      "index": 171,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": [
+                                        {
+                                          "type": "float",
+                                          "name": "x",
+                                          "size": 4,
+                                          "index": 172,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "y",
+                                          "size": 4,
+                                          "index": 173,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "z",
+                                          "size": 4,
+                                          "index": 174,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        },
+                                        {
+                                          "type": "float",
+                                          "name": "w",
+                                          "size": 4,
+                                          "index": 175,
+                                          "is_array": false,
+                                          "version": 1,
+                                          "meta_flag": 0,
+                                          "children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "OffsetPtr",
+                  "name": "m_LeftHand",
+                  "size": -1,
+                  "index": 176,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Hand",
+                      "name": "data",
+                      "size": -1,
+                      "index": 177,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "staticvector",
+                          "name": "m_HandBoneIndex",
+                          "size": -1,
+                          "index": 178,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 179,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 180,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "SInt32",
+                                  "name": "data",
+                                  "size": 4,
+                                  "index": 181,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "OffsetPtr",
+                  "name": "m_RightHand",
+                  "size": -1,
+                  "index": 182,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Hand",
+                      "name": "data",
+                      "size": -1,
+                      "index": 183,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "staticvector",
+                          "name": "m_HandBoneIndex",
+                          "size": -1,
+                          "index": 184,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "Array",
+                              "name": "Array",
+                              "size": -1,
+                              "index": 185,
+                              "is_array": true,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "SInt32",
+                                  "name": "size",
+                                  "size": 4,
+                                  "index": 186,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                },
+                                {
+                                  "type": "SInt32",
+                                  "name": "data",
+                                  "size": 4,
+                                  "index": 187,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_Handles",
+                  "size": -1,
+                  "index": 188,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 189,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 190,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "Handle",
+                          "name": "data",
+                          "size": 56,
+                          "index": 191,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "xform",
+                              "name": "m_X",
+                              "size": 48,
+                              "index": 192,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float4",
+                                  "name": "t",
+                                  "size": 16,
+                                  "index": 193,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 194,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 195,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 196,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 197,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "float4",
+                                  "name": "q",
+                                  "size": 16,
+                                  "index": 198,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 199,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 200,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 201,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 202,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "float4",
+                                  "name": "s",
+                                  "size": 16,
+                                  "index": 203,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 204,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 205,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 206,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 207,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_ParentHumanIndex",
+                              "size": 4,
+                              "index": 208,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_ID",
+                              "size": 4,
+                              "index": 209,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "m_ColliderArray",
+                  "size": -1,
+                  "index": 210,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 211,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 212,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "Collider",
+                          "name": "data",
+                          "size": 80,
+                          "index": 213,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": [
+                            {
+                              "type": "xform",
+                              "name": "m_X",
+                              "size": 48,
+                              "index": 214,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": [
+                                {
+                                  "type": "float4",
+                                  "name": "t",
+                                  "size": 16,
+                                  "index": 215,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 216,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 217,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 218,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 219,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "float4",
+                                  "name": "q",
+                                  "size": 16,
+                                  "index": 220,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 221,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 222,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 223,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 224,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "float4",
+                                  "name": "s",
+                                  "size": 16,
+                                  "index": 225,
+                                  "is_array": false,
+                                  "version": 1,
+                                  "meta_flag": 0,
+                                  "children": [
+                                    {
+                                      "type": "float",
+                                      "name": "x",
+                                      "size": 4,
+                                      "index": 226,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "y",
+                                      "size": 4,
+                                      "index": 227,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "z",
+                                      "size": 4,
+                                      "index": 228,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    },
+                                    {
+                                      "type": "float",
+                                      "name": "w",
+                                      "size": 4,
+                                      "index": 229,
+                                      "is_array": false,
+                                      "version": 1,
+                                      "meta_flag": 0,
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_Type",
+                              "size": 4,
+                              "index": 230,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_XMotionType",
+                              "size": 4,
+                              "index": 231,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_YMotionType",
+                              "size": 4,
+                              "index": 232,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "UInt32",
+                              "name": "m_ZMotionType",
+                              "size": 4,
+                              "index": 233,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "m_MinLimitX",
+                              "size": 4,
+                              "index": 234,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "m_MaxLimitX",
+                              "size": 4,
+                              "index": 235,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "m_MaxLimitY",
+                              "size": 4,
+                              "index": 236,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            },
+                            {
+                              "type": "float",
+                              "name": "m_MaxLimitZ",
+                              "size": 4,
+                              "index": 237,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 0,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "staticvector",
+                  "name": "m_HumanBoneIndex",
+                  "size": -1,
+                  "index": 238,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 239,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 240,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "SInt32",
+                          "name": "data",
+                          "size": 4,
+                          "index": 241,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "staticvector",
+                  "name": "m_HumanBoneMass",
+                  "size": -1,
+                  "index": 242,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 243,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 244,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "float",
+                          "name": "data",
+                          "size": 4,
+                          "index": 245,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "staticvector",
+                  "name": "m_ColliderIndex",
+                  "size": -1,
+                  "index": 246,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 247,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 248,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        },
+                        {
+                          "type": "SInt32",
+                          "name": "data",
+                          "size": 4,
+                          "index": 249,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 0,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "float",
+                  "name": "m_Scale",
+                  "size": 4,
+                  "index": 250,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_ArmTwist",
+                  "size": 4,
+                  "index": 251,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_ForeArmTwist",
+                  "size": 4,
+                  "index": 252,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_UpperLegTwist",
+                  "size": 4,
+                  "index": 253,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_LegTwist",
+                  "size": 4,
+                  "index": 254,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_ArmStretch",
+                  "size": 4,
+                  "index": 255,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_LegStretch",
+                  "size": 4,
+                  "index": 256,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "m_FeetSpacing",
+                  "size": 4,
+                  "index": 257,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "m_HasLeftHand",
+                  "size": 1,
+                  "index": 258,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "m_HasRightHand",
+                  "size": 1,
+                  "index": 259,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 16384,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "vector",
+          "name": "m_HumanSkeletonIndexArray",
+          "size": -1,
+          "index": 260,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 261,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 262,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "SInt32",
+                  "name": "data",
+                  "size": 4,
+                  "index": 263,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "vector",
+          "name": "m_SkeletonToTransformBindingArray",
+          "size": -1,
+          "index": 264,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 265,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "SInt32",
+                  "name": "size",
+                  "size": 4,
+                  "index": 266,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "SkeletonToTransformBinding",
+                  "name": "data",
+                  "size": 8,
+                  "index": 267,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": [
+                    {
+                      "type": "UInt32",
+                      "name": "skeletonIndex",
+                      "size": 4,
+                      "index": 268,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": []
+                    },
+                    {
+                      "type": "UInt32",
+                      "name": "transformPath",
+                      "size": 4,
+                      "index": 269,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 0,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SInt32",
+          "name": "m_RootMotionBoneIndex",
+          "size": 4,
+          "index": 270,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "xform",
+          "name": "m_RootMotionBoneX",
+          "size": 48,
+          "index": 271,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": [
+            {
+              "type": "float4",
+              "name": "t",
+              "size": 16,
+              "index": 272,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "float",
+                  "name": "x",
+                  "size": 4,
+                  "index": 273,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "y",
+                  "size": 4,
+                  "index": 274,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "z",
+                  "size": 4,
+                  "index": 275,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "w",
+                  "size": 4,
+                  "index": 276,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "float4",
+              "name": "q",
+              "size": 16,
+              "index": 277,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "float",
+                  "name": "x",
+                  "size": 4,
+                  "index": 278,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "y",
+                  "size": 4,
+                  "index": 279,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "z",
+                  "size": 4,
+                  "index": 280,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "w",
+                  "size": 4,
+                  "index": 281,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "float4",
+              "name": "s",
+              "size": 16,
+              "index": 282,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": [
+                {
+                  "type": "float",
+                  "name": "x",
+                  "size": 4,
+                  "index": 283,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "y",
+                  "size": 4,
+                  "index": 284,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "z",
+                  "size": 4,
+                  "index": 285,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "w",
+                  "size": 4,
+                  "index": 286,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "m_TOS",
+      "size": -1,
+      "index": 287,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 288,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 289,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "type": "pair",
+              "name": "data",
+              "size": -1,
+              "index": 290,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "type": "UInt32",
+                  "name": "first",
+                  "size": 4,
+                  "index": 291,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 0,
+                  "children": []
+                },
+                {
+                  "type": "string",
+                  "name": "second",
+                  "size": -1,
+                  "index": 292,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 32768,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 293,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 16385,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 294,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 295,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

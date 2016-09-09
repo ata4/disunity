@@ -1,0 +1,296 @@
+{
+  "type": "Camera",
+  "name": "Base",
+  "size": 83,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "UInt8",
+      "name": "m_Enabled",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16641,
+      "children": []
+    },
+    {
+      "type": "unsigned int",
+      "name": "m_ClearFlags",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "m_BackGroundColor",
+      "size": 16,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2099200,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099201,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099201,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "size": 4,
+          "index": 9,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099201,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099201,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Rectf",
+      "name": "m_NormalizedViewPortRect",
+      "size": 16,
+      "index": 11,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 12,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 13,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "width",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "height",
+          "size": 4,
+          "index": 15,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "near clip plane",
+      "size": 4,
+      "index": 16,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "far clip plane",
+      "size": 4,
+      "index": 17,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "field of view",
+      "size": 4,
+      "index": 18,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "orthographic",
+      "size": 1,
+      "index": 19,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "orthographic size",
+      "size": 4,
+      "index": 20,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_Depth",
+      "size": 4,
+      "index": 21,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "BitField",
+      "name": "m_CullingMask",
+      "size": 4,
+      "index": 22,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "UInt32",
+          "name": "m_Bits",
+          "size": 4,
+          "index": 23,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 4194305,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_RenderingPath",
+      "size": 4,
+      "index": 24,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "PPtr<RenderTexture>",
+      "name": "m_TargetTexture",
+      "size": 8,
+      "index": 25,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 26,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 27,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_HDR",
+      "size": 1,
+      "index": 28,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

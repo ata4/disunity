@@ -1,0 +1,103 @@
+{
+  "type": "WorldParticleCollider",
+  "name": "Base",
+  "size": 25,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65633,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_BounceFactor",
+      "size": 4,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_CollisionEnergyLoss",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "BitField",
+      "name": "m_CollidesWith",
+      "size": 4,
+      "index": 6,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "UInt32",
+          "name": "m_Bits",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_SendCollisionMessage",
+      "size": 1,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_MinKillVelocity",
+      "size": 4,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "type": "HingeJoint2D",
+  "name": "Base",
+  "size": 52,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "UInt8",
+      "name": "m_Enabled",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16641,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_CollideConnected",
+      "size": 1,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "PPtr<Rigidbody2D>",
+      "name": "m_ConnectedRigidBody",
+      "size": 8,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector2f",
+      "name": "m_Anchor",
+      "size": 8,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 11,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector2f",
+      "name": "m_ConnectedAnchor",
+      "size": 8,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 13,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_UseMotor",
+      "size": 1,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "JointMotor2D",
+      "name": "m_Motor",
+      "size": 8,
+      "index": 16,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "float",
+          "name": "m_MotorSpeed",
+          "size": 4,
+          "index": 17,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_MaximumMotorForce",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_UseLimits",
+      "size": 1,
+      "index": 19,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "JointAngleLimit2D",
+      "name": "m_AngleLimits",
+      "size": 8,
+      "index": 20,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "float",
+          "name": "m_LowerAngle",
+          "size": 4,
+          "index": 21,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_UpperAngle",
+          "size": 4,
+          "index": 22,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

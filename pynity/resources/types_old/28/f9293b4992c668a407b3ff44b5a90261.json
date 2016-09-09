@@ -1,0 +1,245 @@
+{
+  "type": "Texture2D",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "string",
+      "name": "m_Name",
+      "size": -1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 49153,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 2,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 3,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 4,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "SInt32",
+      "name": "m_Width",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_Height",
+      "size": 4,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_CompleteImageSize",
+      "size": 4,
+      "index": 7,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_TextureFormat",
+      "size": 4,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_MipMap",
+      "size": 1,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_IsReadable",
+      "size": 1,
+      "index": 10,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ReadAllowed",
+      "size": 1,
+      "index": 11,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16400,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_ImageCount",
+      "size": 4,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_TextureDimension",
+      "size": 4,
+      "index": 13,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "GLTextureSettings",
+      "name": "m_TextureSettings",
+      "size": 16,
+      "index": 14,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FilterMode",
+          "size": 4,
+          "index": 15,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_Aniso",
+          "size": 4,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_MipBias",
+          "size": 4,
+          "index": 17,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_WrapMode",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "SInt32",
+      "name": "m_LightmapFormat",
+      "size": 4,
+      "index": 19,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_ColorSpace",
+      "size": 4,
+      "index": 20,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "TypelessData",
+      "name": "image data",
+      "size": -1,
+      "index": 21,
+      "is_array": true,
+      "version": 1,
+      "meta_flag": 16385,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "size",
+          "size": 4,
+          "index": 22,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "UInt8",
+          "name": "data",
+          "size": 1,
+          "index": 23,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

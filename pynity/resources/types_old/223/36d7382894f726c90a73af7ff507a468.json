@@ -1,0 +1,163 @@
+{
+  "type": "Canvas",
+  "name": "Base",
+  "size": 35,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "UInt8",
+      "name": "m_Enabled",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16641,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_RenderMode",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "PPtr<Camera>",
+      "name": "m_Camera",
+      "size": 8,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_PlaneDistance",
+      "size": 4,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_PixelPerfect",
+      "size": 1,
+      "index": 10,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ReceivesEvents",
+      "size": 1,
+      "index": 11,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_OverrideSorting",
+      "size": 1,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_OverridePixelPerfect",
+      "size": 1,
+      "index": 13,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "unsigned int",
+      "name": "m_SortingLayerID",
+      "size": 4,
+      "index": 14,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "SInt16",
+      "name": "m_SortingOrder",
+      "size": 2,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    }
+  ]
+}

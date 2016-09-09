@@ -1,0 +1,361 @@
+{
+  "type": "ParticleAnimator",
+  "name": "Base",
+  "size": 87,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "Does Animate Color?",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "colorAnimation[0]",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "unsigned int",
+          "name": "rgba",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "colorAnimation[1]",
+      "size": 4,
+      "index": 7,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "unsigned int",
+          "name": "rgba",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "colorAnimation[2]",
+      "size": 4,
+      "index": 9,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "unsigned int",
+          "name": "rgba",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "colorAnimation[3]",
+      "size": 4,
+      "index": 11,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "unsigned int",
+          "name": "rgba",
+          "size": 4,
+          "index": 12,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "colorAnimation[4]",
+      "size": 4,
+      "index": 13,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "unsigned int",
+          "name": "rgba",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "worldRotationAxis",
+      "size": 12,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 17,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "localRotationAxis",
+      "size": 12,
+      "index": 19,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 21,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 22,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "sizeGrow",
+      "size": 4,
+      "index": 23,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "Vector3f",
+      "name": "rndForce",
+      "size": 12,
+      "index": 24,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2099200,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 25,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 26,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 27,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "force",
+      "size": 12,
+      "index": 28,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2099200,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 29,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 30,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 31,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2099200,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "damping",
+      "size": 4,
+      "index": 32,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "stopSimulation",
+      "size": 1,
+      "index": 33,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "autodestruct",
+      "size": 1,
+      "index": 34,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

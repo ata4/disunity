@@ -1,0 +1,145 @@
+{
+  "type": "Physics2DSettings",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "Vector2f",
+      "name": "m_Gravity",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<PhysicsMaterial2D>",
+      "name": "m_DefaultMaterial",
+      "size": 8,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 5,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "SInt32",
+      "name": "m_VelocityIterations",
+      "size": 4,
+      "index": 7,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_PositionIterations",
+      "size": 4,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_RaycastsHitTriggers",
+      "size": 1,
+      "index": 9,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "vector",
+      "name": "m_LayerCollisionMatrix",
+      "size": -1,
+      "index": 10,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 11,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 12,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "UInt32",
+              "name": "data",
+              "size": 4,
+              "index": 13,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

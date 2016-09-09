@@ -1,0 +1,357 @@
+{
+  "type": "Light",
+  "name": "Base",
+  "size": 103,
+  "index": 0,
+  "is_array": false,
+  "version": 3,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65633,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65633,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "UInt8",
+      "name": "m_Enabled",
+      "size": 1,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16641,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_Type",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "m_Color",
+      "size": 16,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 10240,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 10241,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 10241,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "size": 4,
+          "index": 9,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 10241,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 10241,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "float",
+      "name": "m_Intensity",
+      "size": 4,
+      "index": 11,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_Range",
+      "size": 4,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_SpotAngle",
+      "size": 4,
+      "index": 13,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_CookieSize",
+      "size": 4,
+      "index": 14,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "ShadowSettings",
+      "name": "m_Shadows",
+      "size": 28,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_Type",
+          "size": 4,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_Resolution",
+          "size": 4,
+          "index": 17,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_Strength",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_Projection",
+          "size": 4,
+          "index": 19,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_Bias",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_Softness",
+          "size": 4,
+          "index": 21,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "m_SoftnessFade",
+          "size": 4,
+          "index": 22,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Texture>",
+      "name": "m_Cookie",
+      "size": 8,
+      "index": 23,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 24,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 25,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_DrawHalo",
+      "size": 1,
+      "index": 26,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_ActuallyLightmapped",
+      "size": 1,
+      "index": 27,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "PPtr<Flare>",
+      "name": "m_Flare",
+      "size": 8,
+      "index": 28,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 29,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 30,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_RenderMode",
+      "size": 4,
+      "index": 31,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "BitField",
+      "name": "m_CullingMask",
+      "size": 4,
+      "index": 32,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "UInt32",
+          "name": "m_Bits",
+          "size": 4,
+          "index": 33,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_Lightmapping",
+      "size": 4,
+      "index": 34,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

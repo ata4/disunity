@@ -1,0 +1,378 @@
+{
+  "type": "PlayerSettings",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "bool",
+      "name": "AndroidProfiler",
+      "size": 1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "defaultScreenOrientation",
+      "size": 4,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "targetDevice",
+      "size": 4,
+      "index": 3,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "targetPlatform",
+      "size": 4,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "targetResolution",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "string",
+      "name": "companyName",
+      "size": -1,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 7,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 8,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 9,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "productName",
+      "size": -1,
+      "index": 10,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 11,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 12,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 13,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "AndroidLicensePublicKey",
+      "size": -1,
+      "index": 14,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 15,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 16,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 17,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "defaultScreenWidth",
+      "size": 4,
+      "index": 18,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "defaultScreenHeight",
+      "size": 4,
+      "index": 19,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "defaultScreenWidthWeb",
+      "size": 4,
+      "index": 20,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "defaultScreenHeightWeb",
+      "size": 4,
+      "index": 21,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_RenderingPath",
+      "size": 4,
+      "index": 22,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "displayResolutionDialog",
+      "size": 4,
+      "index": 23,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "defaultIsFullScreen",
+      "size": 1,
+      "index": 24,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "useAlphaInDashboard",
+      "size": 1,
+      "index": 25,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "runInBackground",
+      "size": 1,
+      "index": 26,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "captureSingleScreen",
+      "size": 1,
+      "index": 27,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "alwaysDisplayWatermark",
+      "size": 1,
+      "index": 28,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "Override IPod Music",
+      "size": 1,
+      "index": 29,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "usePlayerLog",
+      "size": 1,
+      "index": 30,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "AspectRatios",
+      "name": "m_SupportedAspectRatios",
+      "size": 5,
+      "index": 31,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "bool",
+          "name": "4:3",
+          "size": 1,
+          "index": 32,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "5:4",
+          "size": 1,
+          "index": 33,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "16:10",
+          "size": 1,
+          "index": 34,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "16:9",
+          "size": 1,
+          "index": 35,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "Others",
+          "size": 1,
+          "index": 36,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 16384,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "type": "OcclusionArea",
+  "name": "Base",
+  "size": 38,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_GameObject",
+      "size": 8,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65601,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 2,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65601,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_Size",
+      "size": 12,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 5,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_Center",
+      "size": 12,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 9,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 11,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_IsViewVolume",
+      "size": 1,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_IsTargetVolume",
+      "size": 1,
+      "index": 13,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_TargetResolution",
+      "size": 4,
+      "index": 14,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

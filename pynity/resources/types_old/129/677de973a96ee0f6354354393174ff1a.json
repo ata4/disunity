@@ -1,0 +1,904 @@
+{
+  "type": "PlayerSettings",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "bool",
+      "name": "AndroidProfiler",
+      "size": 1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "defaultScreenOrientation",
+      "size": 4,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "targetDevice",
+      "size": 4,
+      "index": 3,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "targetGlesGraphics",
+      "size": 4,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "targetResolution",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "accelerometerFrequency",
+      "size": 4,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "string",
+      "name": "companyName",
+      "size": -1,
+      "index": 7,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 8,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 9,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 10,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "productName",
+      "size": -1,
+      "index": 11,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 12,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 13,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 14,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Texture2D>",
+      "name": "defaultCursor",
+      "size": 8,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "SInt32",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "SInt32",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 17,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector2f",
+      "name": "cursorHotspot",
+      "size": 8,
+      "index": 18,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 19,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097152,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "SInt32",
+      "name": "defaultScreenWidth",
+      "size": 4,
+      "index": 21,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "defaultScreenHeight",
+      "size": 4,
+      "index": 22,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "defaultScreenWidthWeb",
+      "size": 4,
+      "index": 23,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "defaultScreenHeightWeb",
+      "size": 4,
+      "index": 24,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_RenderingPath",
+      "size": 4,
+      "index": 25,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_MobileRenderingPath",
+      "size": 4,
+      "index": 26,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "m_ActiveColorSpace",
+      "size": 4,
+      "index": 27,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_MTRendering",
+      "size": 1,
+      "index": 28,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_UseDX11",
+      "size": 1,
+      "index": 29,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "iosShowActivityIndicatorOnLoading",
+      "size": 4,
+      "index": 30,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "androidShowActivityIndicatorOnLoading",
+      "size": 4,
+      "index": 31,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "displayResolutionDialog",
+      "size": 4,
+      "index": 32,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "allowedAutorotateToPortrait",
+      "size": 1,
+      "index": 33,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "allowedAutorotateToPortraitUpsideDown",
+      "size": 1,
+      "index": 34,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "allowedAutorotateToLandscapeRight",
+      "size": 1,
+      "index": 35,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "allowedAutorotateToLandscapeLeft",
+      "size": 1,
+      "index": 36,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "useOSAutorotation",
+      "size": 1,
+      "index": 37,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "use32BitDisplayBuffer",
+      "size": 1,
+      "index": 38,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "use24BitDepthBuffer",
+      "size": 1,
+      "index": 39,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "defaultIsFullScreen",
+      "size": 1,
+      "index": 40,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "defaultIsNativeResolution",
+      "size": 1,
+      "index": 41,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "runInBackground",
+      "size": 1,
+      "index": 42,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "captureSingleScreen",
+      "size": 1,
+      "index": 43,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "Override IPod Music",
+      "size": 1,
+      "index": 44,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "Prepare IOS For Recording",
+      "size": 1,
+      "index": 45,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "enableHWStatistics",
+      "size": 1,
+      "index": 46,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "usePlayerLog",
+      "size": 1,
+      "index": 47,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "stripPhysics",
+      "size": 1,
+      "index": 48,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "forceSingleInstance",
+      "size": 1,
+      "index": 49,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "resizableWindow",
+      "size": 1,
+      "index": 50,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "useMacAppStoreValidation",
+      "size": 1,
+      "index": 51,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "gpuSkinning",
+      "size": 1,
+      "index": 52,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxPIXTextureCapture",
+      "size": 1,
+      "index": 53,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableAvatar",
+      "size": 1,
+      "index": 54,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableKinect",
+      "size": 1,
+      "index": 55,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableKinectAutoTracking",
+      "size": 1,
+      "index": 56,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableFitness",
+      "size": 1,
+      "index": 57,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "macFullscreenMode",
+      "size": 4,
+      "index": 58,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "UInt32",
+      "name": "xboxSpeechDB",
+      "size": 4,
+      "index": 59,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableHeadOrientation",
+      "size": 1,
+      "index": 60,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "xboxEnableGuest",
+      "size": 1,
+      "index": 61,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "wiiHio2Usage",
+      "size": 4,
+      "index": 62,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "SInt32",
+      "name": "wiiLoadingScreenRectPlacement",
+      "size": 4,
+      "index": 63,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "ColorRGBA",
+      "name": "wiiLoadingScreenBackground",
+      "size": 16,
+      "index": 64,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097152,
+      "children": [
+        {
+          "type": "float",
+          "name": "r",
+          "size": 4,
+          "index": 65,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "g",
+          "size": 4,
+          "index": 66,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "b",
+          "size": 4,
+          "index": 67,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "a",
+          "size": 4,
+          "index": 68,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "SInt32",
+      "name": "wiiLoadingScreenPeriod",
+      "size": 4,
+      "index": 69,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "string",
+      "name": "wiiLoadingScreenFileName",
+      "size": -1,
+      "index": 70,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 71,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 72,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 73,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Rectf",
+      "name": "wiiLoadingScreenRect",
+      "size": 16,
+      "index": 74,
+      "is_array": false,
+      "version": 2,
+      "meta_flag": 0,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 75,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 76,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "width",
+          "size": 4,
+          "index": 77,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "height",
+          "size": 4,
+          "index": 78,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "AspectRatios",
+      "name": "m_SupportedAspectRatios",
+      "size": 5,
+      "index": 79,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "bool",
+          "name": "4:3",
+          "size": 1,
+          "index": 80,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "5:4",
+          "size": 1,
+          "index": 81,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "16:10",
+          "size": 1,
+          "index": 82,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "16:9",
+          "size": 1,
+          "index": 83,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 0,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "Others",
+          "size": 1,
+          "index": 84,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 16384,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "iPhoneBundleIdentifier",
+      "size": -1,
+      "index": 85,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 86,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 87,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 88,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

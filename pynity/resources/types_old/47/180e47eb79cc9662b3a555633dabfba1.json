@@ -1,0 +1,827 @@
+{
+  "type": "QualitySettings",
+  "name": "Base",
+  "size": 246,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "int",
+      "name": "m_DefaultStandaloneQuality",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_DefaultWebPlayerQuality",
+      "size": 4,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_EditorQuality",
+      "size": 4,
+      "index": 3,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Fastest",
+      "size": 39,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 5,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 8,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 9,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 10,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 11,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 12,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 13,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 15,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 16,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Fast",
+      "size": 39,
+      "index": 17,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 18,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 19,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 20,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 21,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 22,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 23,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 24,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 25,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 26,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 27,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 28,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 29,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Simple",
+      "size": 39,
+      "index": 30,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 31,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 32,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 33,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 34,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 35,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 36,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 37,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 38,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 39,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 40,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 41,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 42,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Good",
+      "size": 39,
+      "index": 43,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 44,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 45,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 46,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 47,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 48,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 49,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 50,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 51,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 52,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 53,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 54,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 55,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Beautiful",
+      "size": 39,
+      "index": 56,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 57,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 58,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 59,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 60,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 61,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 62,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 63,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 64,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 65,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 66,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 67,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 68,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "QualitySetting",
+      "name": "Fantastic",
+      "size": 39,
+      "index": 69,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 34816,
+      "children": [
+        {
+          "type": "int",
+          "name": "pixelLightCount",
+          "size": 4,
+          "index": 70,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadows",
+          "size": 4,
+          "index": 71,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowResolution",
+          "size": 4,
+          "index": 72,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "shadowCascades",
+          "size": 4,
+          "index": 73,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "shadowDistance",
+          "size": 4,
+          "index": 74,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "blendWeights",
+          "size": 4,
+          "index": 75,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "textureQuality",
+          "size": 4,
+          "index": 76,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "anisotropicTextures",
+          "size": 4,
+          "index": 77,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "antiAliasing",
+          "size": 4,
+          "index": 78,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softParticles",
+          "size": 1,
+          "index": 79,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "softVegetation",
+          "size": 1,
+          "index": 80,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2049,
+          "children": []
+        },
+        {
+          "type": "bool",
+          "name": "syncToVBL",
+          "size": 1,
+          "index": 81,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 18432,
+          "children": []
+        }
+      ]
+    }
+  ]
+}
