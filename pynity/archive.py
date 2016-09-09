@@ -4,8 +4,8 @@ import io
 
 from enum import Enum
 
-from .io import *
-from .utils import *
+from .io import AutoCloseable, BinaryReader
+from .utils import ObjectDict
 
 class Archive(AutoCloseable):
 
