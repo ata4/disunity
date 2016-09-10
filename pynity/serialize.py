@@ -17,24 +17,24 @@ class SerializedFile(AutoCloseable):
 
     versions_tested = [5, 6, 8, 9, 14, 15]
     read_prim = {
-        "bool": BinaryReader.read_bool8,
-        "SInt8": BinaryReader.read_int8,
-        "UInt8": BinaryReader.read_uint8,
-        "char": BinaryReader.read_uint8,
-        "SInt16": BinaryReader.read_int16,
-        "short": BinaryReader.read_int16,
-        "UInt16": BinaryReader.read_int16,
-        "unsigned short": BinaryReader.read_int16,
-        "SInt32": BinaryReader.read_int32,
-        "int": BinaryReader.read_int32,
-        "UInt32": BinaryReader.read_uint32,
-        "unsigned int": BinaryReader.read_uint32,
-        "SInt64": BinaryReader.read_int64,
-        "long": BinaryReader.read_int64,
-        "UInt64": BinaryReader.read_uint64,
-        "unsigned long": BinaryReader.read_uint64,
-        "float": BinaryReader.read_float,
-        "double": BinaryReader.read_double,
+        "bool":             BinaryReader.read_bool8,
+        "SInt8":            BinaryReader.read_int8,
+        "UInt8":            BinaryReader.read_uint8,
+        "char":             BinaryReader.read_uint8,
+        "SInt16":           BinaryReader.read_int16,
+        "short":            BinaryReader.read_int16,
+        "UInt16":           BinaryReader.read_uint16,
+        "unsigned short":   BinaryReader.read_uint16,
+        "SInt32":           BinaryReader.read_int32,
+        "int":              BinaryReader.read_int32,
+        "UInt32":           BinaryReader.read_uint32,
+        "unsigned int":     BinaryReader.read_uint32,
+        "SInt64":           BinaryReader.read_int64,
+        "long":             BinaryReader.read_int64,
+        "UInt64":           BinaryReader.read_uint64,
+        "unsigned long":    BinaryReader.read_uint64,
+        "float":            BinaryReader.read_float,
+        "double":           BinaryReader.read_double,
     }
 
     types_db = {}
@@ -42,8 +42,10 @@ class SerializedFile(AutoCloseable):
 
     def __init__(self, path):
         self.string_mapper = StringMapper()
+        self.type_db = TypeDatabase()
 
-        # open file and make some basic checks to make sure this is actually a serialized file
+        # open file and make some basic checks to make sure this is actually a
+        # serialized file
         self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
         self.valid = self._validate()
 
@@ -95,13 +97,16 @@ class SerializedFile(AutoCloseable):
         header.data_offset = r.read_int32()
 
         if not header.version in self.versions_tested:
-            raise NotImplementedError("Unsupported format version: %d" % header.version)
+            raise NotImplementedError("Unsupported format version: %d"
+                                      % header.version)
 
         if header.data_offset > header.file_size:
-            raise SerializedFileError("Invalid data offset: %d" % header.data_offset)
+            raise SerializedFileError("Invalid data offset: %d"
+                                      % header.data_offset)
 
         if header.metadata_size > header.file_size:
-            raise SerializedFileError("Invalid metadata size: %d" % header.metadata_size)
+            raise SerializedFileError("Invalid metadata size: %d"
+                                      % header.metadata_size)
 
         if header.version > 8:
             header.endianness = r.read_int8()
@@ -157,27 +162,6 @@ class SerializedFile(AutoCloseable):
         if self.header.version > 6 and self.header.version < 13:
             r.read_int32()
 
-    def _read_type_node_db(self, hash, class_id):
-        # load from cache if possible
-        if hash in self.types_db:
-            return self.types_db[hash]
-
-        path_script_dir = os.path.dirname(__file__)
-        path_type_dir = os.path.join(path_script_dir, "resources", "types", str(class_id))
-        path_type = os.path.join(path_type_dir, hash + ".json")
-
-        if not os.path.exists(path_type):
-            log.warning("Type %s not found in file or database" % hash)
-            self.types_db[hash] = None
-            return
-
-        log.debug("Type %s loaded from database" % hash)
-
-        with open(path_type) as file:
-            type_tree = ObjectDict.from_dict(json.load(file))
-            self.types_db[hash] = type_tree
-            return type_tree
-
     def _read_type_node(self):
         r = self.r
 
@@ -215,11 +199,13 @@ class SerializedFile(AutoCloseable):
             # assign strings
             field.name = string_table.get(field.name_offset)
             if not field.name:
-                raise SerializedFileError("Invalid field name offset: %d" % field.name_offset)
+                raise SerializedFileError("Invalid field name offset: %d"
+                                          % field.name_offset)
 
             field.type = string_table.get(field.type_offset)
             if not field.type:
-                raise SerializedFileError("Invalid field type offset: %d" % field.type_offset)
+                raise SerializedFileError("Invalid field type offset: %d"
+                                          % field.type_offset)
 
             # don't need those offsets anymore
             del field.name_offset
@@ -246,7 +232,8 @@ class SerializedFile(AutoCloseable):
 
             # the level can only raise by one per node at most
             if tree_level_diff > 1:
-                raise SerializedFileError("Unexpected tree level shift: %d" % tree_level_diff)
+                raise SerializedFileError("Unexpected tree level shift: %d"
+                                          % tree_level_diff)
 
             if tree_level_diff > 0:
                 node_prev.children.append(node)
@@ -419,21 +406,26 @@ class SerializedFile(AutoCloseable):
 
         # get object type class
         object_class = self.types.classes.get(object_info.type_id)
-        if not object_class:
+
+        # get object type from the embedded data, otherwise from database
+        if self.header.version > 13:
+            if self.types.embedded:
+                object_type = object_class.type_tree
+            else:
+                object_type = self.type_db.get(object_info.type_id,
+                                               object_class.old_type_hash)
+        else:
+            if not object_class:
+                object_type = self.type_db.get_old(object_info.type_id,
+                                                   self.types.signature[0:5])
+
+        # cancel if there's no type information available
+        if not object_type:
             return
 
         # seek to object data start position
         object_pos = self.header.data_offset + object_info.byte_start
         self.r.seek(object_pos, io.SEEK_SET)
-
-        # get type, either from embedded data or from the database
-        object_type = object_class.type_tree
-        if not object_type:
-            object_type = self._read_type_node_db(object_class.old_type_hash, object_info.type_id)
-
-        # cancel if there's no type information available
-        if not object_type:
-            return
 
         # deserialize all type nodes
         object = self._read_object_node(object_type)
@@ -442,7 +434,7 @@ class SerializedFile(AutoCloseable):
         object_size = self.r.tell() - object_pos
         if object_size != object_info.byte_size:
             raise SerializationError("Wrong object size for path %d: %d != %d"
-                               % (path_id, object_size, object_info.byte_size))
+                                     % (path_id, object_size, object_info.byte_size))
 
         return object
 
@@ -457,19 +449,13 @@ class SerializedFile(AutoCloseable):
 
             class_type = self.types.classes[class_id]
 
-            # TODO: add database support for Unity 4.x and older
-            if "old_type_hash" in class_type and self.types.embedded and class_type.type_tree:
-                # create type files that don't exist yet
-                path_dir = os.path.join(types_dir, str(class_id))
-                if not os.path.exists(path_dir):
-                    os.makedirs(path_dir)
-
-                path_type = os.path.join(path_dir, class_type.old_type_hash + ".json")
-                if not os.path.exists(path_type):
-                    log.info("Added type " + class_type.old_type_hash)
-                    with open(path_type, "w") as file:
-                        json.dump(class_type.type_tree, file, indent=2, separators=(',', ': '))
-
+            # create type files that don't exist yet
+            if self.header.version > 13:
+                if self.types.embedded:
+                    self.type_db.add(class_type.type_tree, class_type.old_type_hash)
+            else:
+                if class_type:
+                    self.type_db.add_old(class_type.type_tree, class_id, self.types.signature[0:5])
 
     def close(self):
         self.r.close()
@@ -491,8 +477,8 @@ class StringMapper:
         script_dir = os.path.dirname(__file__)
         strings_path = os.path.join(script_dir, "resources", "strings.json")
 
-        with open(strings_path) as f:
-            json_strings = json.load(f)
+        with open(strings_path) as fp:
+            json_strings = json.load(fp)
 
         self.strings_global = self._create_map(json_strings, offset=1 << 31)
 
@@ -512,3 +498,79 @@ class StringMapper:
         string_map = self.strings_global.copy()
         string_map.update(self._create_map(strings))
         return string_map
+
+class TypeDatabase:
+
+    def __init__(self):
+        self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
+        self.path_types = os.path.join(self.path_resources, "types")
+        self.path_types_old = os.path.join(self.path_resources, "types_old")
+        self.cache = {}
+        self.cache_old = {}
+
+    def add(self, type_tree, hash):
+        path_dir = os.path.join(types_dir, str(class_id))
+        if not os.path.exists(path_dir):
+            os.makedirs(path_dir)
+
+        path_type = os.path.join(path_dir, hash + ".json")
+        if not os.path.exists(path_type):
+            log.info("Added type " + hash)
+            with open(path_type, "w") as fp:
+                json.dump(type_tree, fp, indent=2, separators=(',', ': '))
+
+    def add_old(self, type_tree, class_id, version):
+        pass
+
+    def get(self, class_id, hash):
+        # load from cache if possible
+        if hash in self.cache:
+            return self.cache[hash]
+
+        path_type_dir = os.path.join(self.path_types, str(class_id))
+        path_type = os.path.join(path_type_dir, hash + ".json")
+
+        if not os.path.exists(path_type):
+            log.warning("Type %s not found in file or database" % hash)
+            self.cache[hash] = None
+            return
+
+        log.debug("Type %s loaded from database" % hash)
+
+        with open(path_type) as fp:
+            type_tree = ObjectDict.from_dict(json.load(fp))
+            self.cache[hash] = type_tree
+            return type_tree
+
+    def get_old(self, class_id, version):
+        # script types are never saved in database
+        if class_id < 0:
+            return
+
+        # load from cache if possible
+        if class_id in self.cache_old:
+            return self.cache_old[class_id]
+
+        # no hash available, assume old type
+        path_type_dir = os.path.join(self.path_types_old, str(class_id))
+        path_index = os.path.join(path_type_dir, "index.json")
+
+        with open(path_index) as fp:
+            index = json.load(fp)
+            for hash, versions in index.items():
+                if version in versions:
+                    break
+            else:
+                log.warning("Type for class ID %d not found in file or database"
+                            % class_id)
+                self.cache_old[class_id] = None
+                return
+
+        path_type = os.path.join(path_type_dir, hash + ".json")
+
+        log.debug("Type %s loaded from database" % hash)
+
+        with open(path_type) as fp:
+            type_tree = ObjectDict.from_dict(json.load(fp))
+            self.cache_old[class_id] = type_tree
+            return type_tree
