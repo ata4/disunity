@@ -5,6 +5,7 @@ import logging
 
 from .io import AutoCloseable, BinaryReader, ChunkedFileIO
 from .utils import ObjectDict
+from .typedb import TypeDatabase
 
 VERSION_MIN = 5
 VERSION_MAX = 15
@@ -415,9 +416,11 @@ class SerializedFile(AutoCloseable):
                 object_type = self.type_db.get(object_info.type_id,
                                                object_class.old_type_hash)
         else:
-            if not object_class:
+            if object_class:
+                object_type = object_class.type_tree
+            else:
                 object_type = self.type_db.get_old(object_info.type_id,
-                                                   self.types.signature[0:5])
+                                                   self.types.signature)
 
         # cancel if there's no type information available
         if not object_type:
@@ -452,10 +455,10 @@ class SerializedFile(AutoCloseable):
             # create type files that don't exist yet
             if self.header.version > 13:
                 if self.types.embedded:
-                    self.type_db.add(class_type.type_tree, class_type.old_type_hash)
+                    self.type_db.add(class_type.type_tree, class_id, class_type.old_type_hash)
             else:
                 if class_type:
-                    self.type_db.add_old(class_type.type_tree, class_id, self.types.signature[0:5])
+                    self.type_db.add_old(class_type.type_tree, class_id, self.types.signature)
 
     def close(self):
         self.r.close()
@@ -498,79 +501,3 @@ class StringMapper:
         string_map = self.strings_global.copy()
         string_map.update(self._create_map(strings))
         return string_map
-
-class TypeDatabase:
-
-    def __init__(self):
-        self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
-        self.path_types = os.path.join(self.path_resources, "types")
-        self.path_types_old = os.path.join(self.path_resources, "types_old")
-        self.cache = {}
-        self.cache_old = {}
-
-    def add(self, type_tree, hash):
-        path_dir = os.path.join(types_dir, str(class_id))
-        if not os.path.exists(path_dir):
-            os.makedirs(path_dir)
-
-        path_type = os.path.join(path_dir, hash + ".json")
-        if not os.path.exists(path_type):
-            log.info("Added type " + hash)
-            with open(path_type, "w") as fp:
-                json.dump(type_tree, fp, indent=2, separators=(',', ': '))
-
-    def add_old(self, type_tree, class_id, version):
-        pass
-
-    def get(self, class_id, hash):
-        # load from cache if possible
-        if hash in self.cache:
-            return self.cache[hash]
-
-        path_type_dir = os.path.join(self.path_types, str(class_id))
-        path_type = os.path.join(path_type_dir, hash + ".json")
-
-        if not os.path.exists(path_type):
-            log.warning("Type %s not found in file or database" % hash)
-            self.cache[hash] = None
-            return
-
-        log.debug("Type %s loaded from database" % hash)
-
-        with open(path_type) as fp:
-            type_tree = ObjectDict.from_dict(json.load(fp))
-            self.cache[hash] = type_tree
-            return type_tree
-
-    def get_old(self, class_id, version):
-        # script types are never saved in database
-        if class_id < 0:
-            return
-
-        # load from cache if possible
-        if class_id in self.cache_old:
-            return self.cache_old[class_id]
-
-        # no hash available, assume old type
-        path_type_dir = os.path.join(self.path_types_old, str(class_id))
-        path_index = os.path.join(path_type_dir, "index.json")
-
-        with open(path_index) as fp:
-            index = json.load(fp)
-            for hash, versions in index.items():
-                if version in versions:
-                    break
-            else:
-                log.warning("Type for class ID %d not found in file or database"
-                            % class_id)
-                self.cache_old[class_id] = None
-                return
-
-        path_type = os.path.join(path_type_dir, hash + ".json")
-
-        log.debug("Type %s loaded from database" % hash)
-
-        with open(path_type) as fp:
-            type_tree = ObjectDict.from_dict(json.load(fp))
-            self.cache_old[class_id] = type_tree
-            return type_tree
