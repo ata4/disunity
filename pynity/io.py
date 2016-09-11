@@ -258,12 +258,3 @@ class BinaryReader(AutoCloseable):
 
     def read_bool32(self):
         return self.read_uint32() != 0
-
-def fileobj_slice(fp, path, start, length, bufsize=0x4000000):
-    fp.seek(start)
-    with open(path, "wb") as fp_out:
-        while length:
-            data_len = min(bufsize, length)
-            data = fp.read(data_len)
-            fp_out.write(data)
-            length -= data_len

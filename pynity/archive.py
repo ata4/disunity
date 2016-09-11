@@ -1,6 +1,7 @@
 import lzma
 import lz4
 import io
+import os
 
 from enum import Enum
 
@@ -186,7 +187,17 @@ class Archive(AutoCloseable):
         for entry in entries:
             entry_path = os.path.join(dir, entry.path)
             os.makedirs(os.path.dirname(entry_path), exist_ok=True)
-            fileobj_slice(self.rd.fp, entry_path, entry.offset, entry.size)
+
+            fp = self.rd.fp
+            fp.seek(entry.offset)
+
+            with open(entry_path, "wb") as fp_out:
+                length = entry.size
+                while length:
+                    data_len = min(4096, length)
+                    data = fp.read(data_len)
+                    fp_out.write(data)
+                    length -= data_len
 
     def close(self):
         self.rd.close()
