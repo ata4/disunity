@@ -181,7 +181,7 @@ class Archive(AutoCloseable):
         else:
             raise NotImplementedError("_read_block with " + method)
 
-    def extract(self, dir, entries=None):
+    def extract(self, dir, *entries):
         if not entries:
             entries = self.entries
 

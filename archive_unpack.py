@@ -1,28 +1,29 @@
 import sys
 import os
+
+import disunity
 import pynity
 
-def main(argv):
-    app = argv.pop(0)
+class ArchiveUnpack(disunity.CommandLineApp):
 
-    if not argv:
-        usage(app)
-        return 1
+    def __init__(self):
+        self.debug = False
 
-    path = argv.pop(0)
-
-    if argv:
-        path_out = argv.pop(0)
-    else:
+    def process(self, path):
         path_out, _ = os.path.splitext(path)
+        if path_out == path:
+            path_out += "_"
 
-    with pynity.Archive(path) as archive:
-        for entry in archive.entries:
-            print(entry.path)
-            archive.extract(path_out, [entry])
-
-def usage(app):
-    print("usage: %s <archive path> [output dir]" % os.path.basename(app))
+        print(path)
+        with pynity.Archive(path) as archive:
+            if self.debug:
+                pprint(archive.header)
+                pprint(archive.entries)
+                pprint(archive.blocks_info)
+            else:
+                for entry in archive.entries:
+                    print(entry.path)
+                    archive.extract(path_out, entry)
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(ArchiveUnpack().main(sys.argv))

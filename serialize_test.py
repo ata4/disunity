@@ -1,67 +1,67 @@
 import sys
-import os
-import glob
-import json
-import logging
 
+import disunity
 import pynity
 
-log = logging.getLogger()
+class SerializeTest(disunity.CommandLineApp):
 
-def main(argv):
-    app = argv.pop(0)
-    path = argv.pop(0)
+    def __init__(self):
+        self.num_files_passed = 0
+        self.num_files_failed = 0
+        self.num_files_skipped = 0
+        self.num_objects_passed = 0
+        self.num_objects_failed = 0
+        self.num_objects_typeless = 0
 
-    num_files_passed = 0
-    num_files_failed = 0
-    num_files_skipped = 0
-    num_objects_passed = 0
-    num_objects_failed = 0
-    num_objects_typeless = 0
+        self.scan_types = True
+        self.deserialize = True
 
-    for globpath in glob.iglob(path, recursive=True):
-        if os.path.isdir(globpath):
-            continue
+    def main(self, argv):
+        super(SerializeTest, self).main(argv)
 
+        print()
+        print("Files passed:     %d" % self.num_files_passed)
+        print("Files failed:     %d" % self.num_files_failed)
+        print("Files skipped:    %d" % self.num_files_skipped)
+
+        if self.deserialize:
+            print("Objects passed:   %d" % self.num_objects_passed)
+            print("Objects failed:   %d" % self.num_objects_failed)
+            print("Objects typeless: %d" % self.num_objects_typeless)
+
+    def process(self, path):
         try:
-            with pynity.SerializedFile(globpath) as sf:
+            with pynity.SerializedFile(path) as sf:
                 if not sf.valid:
-                    num_files_skipped += 1
-                    continue
+                    self.num_files_skipped += 1
+                    return
 
-                print(globpath)
-                sf.scan_types()
+                print(path)
 
-                for path_id in sf.objects:
-                    try:
-                        object = sf.read_object(path_id)
-                        if not object:
-                            num_objects_typeless += 1
-                            continue
+                if self.scan_types:
+                    sf.scan_types()
 
-                        object_name = object.m_Name if "m_Name" in object else ""
-                        class_name = object.__class__.__name__
-                        print(path_id, class_name, object_name)
+                if self.deserialize:
+                    for path_id in sf.objects:
+                        try:
+                            object = sf.read_object(path_id)
+                            if not object:
+                                self.num_objects_typeless += 1
+                                continue
 
-                        num_objects_passed += 1
-                    except Exception:
-                        log.exception("Failed deserialization for path ID %d" % path_id)
-                        num_objects_failed += 1
+                            object_name = object.m_Name if "m_Name" in object else ""
+                            class_name = object.__class__.__name__
+                            print(path_id, class_name, object_name)
 
-                num_files_passed += 1
+                            self.num_objects_passed += 1
+                        except Exception:
+                            self.log.exception("Failed deserialization for path ID %d" % path_id)
+                            self.num_objects_failed += 1
+
+                self.num_files_passed += 1
         except Exception:
-            log.exception("Failed reading " + globpath)
-            num_files_failed += 1
-
-    print()
-    print("Files passed:     %d" % num_files_passed)
-    print("Files failed:     %d" % num_files_failed)
-    print("Files skipped:    %d" % num_files_skipped)
-    print("Objects passed:   %d" % num_objects_passed)
-    print("Objects failed:   %d" % num_objects_failed)
-    print("Objects typeless: %d" % num_objects_typeless)
-
-    return 0
+            self.log.exception("Failed reading " + path)
+            self.num_files_failed += 1
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(SerializeTest().main(sys.argv))

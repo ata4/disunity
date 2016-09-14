@@ -1,3 +1,5 @@
+from .app import CommandLineApp
+
 import logging
 
 log = logging.getLogger()

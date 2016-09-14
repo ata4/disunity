@@ -25,15 +25,19 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="disunity\" />
     <Folder Include="pynity\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="archive_test.py" />
+    <Compile Include="disunity\app.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="disunity\__init__.py" />
     <Compile Include="pynity\archive.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\io.py" />
-    <Compile Include="pynity\log.py">
+    <Compile Include="disunity\log.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\serialize.py" />
