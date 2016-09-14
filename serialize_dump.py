@@ -2,6 +2,8 @@ import sys
 import os
 import json
 import collections
+import base64
+import textwrap
 
 import disunity
 import pynity
@@ -58,7 +60,12 @@ class SerializeDump(disunity.CommandLineApp):
     def json_dump(self, object):
         class JSONEncoderImpl(json.JSONEncoder):
             def default(self, o):
-                return str(o)
+                if type(o) in [bytearray, bytes]:
+                    # encode binary data to base64
+                    return textwrap.wrap(base64.b64encode(o).decode("ascii"))
+                else:
+                    # use default string representation
+                    return str(o)
 
         json.dump(object, sys.stdout, indent=2, separators=(',', ': '), cls=JSONEncoderImpl)
 
