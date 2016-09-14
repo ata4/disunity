@@ -5,6 +5,8 @@ import logging
 
 from collections import OrderedDict
 
+from .utils import ObjectDict
+
 log = logging.getLogger("pynity.typedb")
 
 class TypeDatabase:

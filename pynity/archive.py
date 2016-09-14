@@ -2,6 +2,7 @@ import lzma
 import lz4
 import io
 import os
+import struct
 
 from enum import Enum
 
