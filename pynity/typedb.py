@@ -141,10 +141,12 @@ class TypeDatabase:
 
         def search(self, version, num_chars=0):
             if num_chars == 0:
+                # search for exact version
                 for hash, versions in self.data.items():
                     if version in versions:
                         return hash
             else:
+                # search for version substring
                 for hash, versions in self.data.items():
                     for version_index in versions:
                         if version_index[:num_chars] == version[:num_chars]:
