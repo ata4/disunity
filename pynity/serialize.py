@@ -3,7 +3,7 @@ import os
 import json
 import logging
 
-from .io import AutoCloseable, BinaryReader, ChunkedFileIO
+from .io import AutoCloseable, BinaryReader, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
 from .typedb import TypeDatabase
 
@@ -47,7 +47,7 @@ class SerializedFile(AutoCloseable):
 
         # open file and make some basic checks to make sure this is actually a
         # serialized file
-        self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), be=True)
+        self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
         self.valid = self._validate()
 
         if not self.valid:
@@ -115,7 +115,7 @@ class SerializedFile(AutoCloseable):
 
         # newer formats use little-endian for the rest of the file
         if header.version > 5:
-            r.be = False
+            r.order = ByteOrder.LITTLE_ENDIAN
 
     def _read_types(self):
         r = self.r

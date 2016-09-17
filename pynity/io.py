@@ -4,6 +4,7 @@ import struct
 import binascii
 
 from uuid import UUID
+from enum import IntEnum
 
 class AutoCloseable:
 
@@ -165,30 +166,34 @@ class Chunk():
 
     def close(self):
         self.handle.close()
-        
-class BinaryReader(AutoCloseable):
 
-    def __init__(self, fp, be=False):
-        self.be = be
-        self.fp = fp
+class ByteOrder(IntEnum):
+    LITTLE_ENDIAN = 0
+    BIG_ENDIAN = 1
 
-    def close(self):
-        self.fp.close()
+class BinaryReader():
 
-    def tell(self):
-        return self.fp.tell()
+    def __init__(self, fp, order=ByteOrder.LITTLE_ENDIAN):
+        self.order = order
+        self._fp = fp
 
-    def seek(self, offset, whence=0):
-        self.fp.seek(offset, whence)
+    def __getattr__(self, attr):
+        return getattr(self._fp, attr)
+
+    @property
+    def order(self):
+        return self._order
+
+    @order.setter
+    def order(self, value):
+        self._order = value
+        self._tag = ("<", ">")[int(value)]
 
     def align(self, pad):
         pos = self.tell()
         newpos = (pos + pad - 1) // pad * pad
         if newpos != pos:
             self.seek(newpos)
-
-    def read(self, size):
-        return self.fp.read(size)
 
     def read_cstring(self):
         buf = bytearray()
@@ -197,16 +202,18 @@ class BinaryReader(AutoCloseable):
             buf.append(b)
             b = self.read_byte()
 
+        if b is None:
+            raise IOError("Unexpected EOF while reading C string")
+
         return buf.decode("ascii")
 
     def read_struct(self, format):
         size = struct.calcsize(format)
-        data = self.fp.read(size)
+        data = self.read(size)
         return struct.unpack(format, data)
 
     def read_num(self, type):
-        tag = ("<", ">")[self.be]
-        return self.read_struct(tag + type)[0]
+        return self.read_struct(self._tag + type)[0]
 
     def read_uuid(self):
         data = self.read(16)
@@ -217,8 +224,11 @@ class BinaryReader(AutoCloseable):
         return binascii.hexlify(data).decode("ascii")
 
     def read_byte(self):
-        b = self.fp.read(1)
-        return b[0] if b else None
+        b = self.read(1)
+        if b == b"":
+            return None
+        else:
+            return b[0]
 
     def read_int8(self):
         return self.read_num("b")

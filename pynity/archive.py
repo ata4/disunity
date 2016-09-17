@@ -6,8 +6,15 @@ import struct
 
 from enum import Enum
 
-from .io import AutoCloseable, BinaryReader
+from .io import AutoCloseable, BinaryReader, ByteOrder
 from .utils import ObjectDict
+
+class Compression(Enum):
+    NONE = 0
+    LZMA = 1
+    LZ4 = 2
+    LZ4HC = 3
+    LZHAM = 4
 
 class Archive(AutoCloseable):
 
@@ -15,7 +22,7 @@ class Archive(AutoCloseable):
     signatures = ["UnityWeb", "UnityRaw", "UnityFS"]
 
     def __init__(self, path):
-        self.r = self.rd = BinaryReader(open(path, "rb"), be=True)
+        self.r = self.rd = BinaryReader(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
         self._read_header()
 
     def _read_header(self):
@@ -65,7 +72,7 @@ class Archive(AutoCloseable):
 
         # open data stream
         if self.header.signature == "UnityWeb":
-            rd = self.rd = BinaryReader(lzma.open(r.fp, "rb"), be=True)
+            rd = self.rd = BinaryReader(lzma.open(r, "rb"), order=ByteOrder.BIG_ENDIAN)
 
         # read StreamingInfo structs
         entries = self.entries = []
@@ -106,7 +113,7 @@ class Archive(AutoCloseable):
 
         blocks_info_data = self._read_block(method, blocks_info_size_c, blocks_info_size_u)
 
-        rb = BinaryReader(io.BytesIO(blocks_info_data), be=True)
+        rb = BinaryReader(io.BytesIO(blocks_info_data), order=ByteOrder.BIG_ENDIAN)
 
         # read ArchiveStorageHeader::BlocksInfo
         self.blocks_info = blocks_info = ObjectDict()
@@ -142,7 +149,7 @@ class Archive(AutoCloseable):
             # in newer archive formats, the LZMA stream header no longer includes
             # the uncompressed size, since it's already part of the archive header,
             # so the props need to be read manually and supplied to a custom filter
-            r.be = False
+            r.order = ByteOrder.LITTLE_ENDIAN
             prop = r.read_uint8()
             dict_size = r.read_uint32()
 
@@ -154,7 +161,7 @@ class Archive(AutoCloseable):
             filter.lp = prop % 5
             filter.pb = prop // 5
 
-            fp = lzma.open(self.r.fp, "rb", format=lzma.FORMAT_RAW, filters=[filter])
+            fp = lzma.open(self.r, "rb", format=lzma.FORMAT_RAW, filters=[filter])
         else:
             # TODO: implement as stream instead of decompressing all blocks in
             # memory at once
@@ -165,7 +172,7 @@ class Archive(AutoCloseable):
 
             fp = io.BytesIO(data)
 
-        self.rd = BinaryReader(fp, be=True)
+        self.rd = BinaryReader(fp, order=ByteOrder.BIG_ENDIAN)
 
     def _read_block(self, method, compressed_size, uncompressed_size):
         block = self.r.read(compressed_size)
@@ -189,24 +196,16 @@ class Archive(AutoCloseable):
             entry_path = os.path.join(dir, entry.path)
             os.makedirs(os.path.dirname(entry_path), exist_ok=True)
 
-            fp = self.rd.fp
-            fp.seek(entry.offset)
+            self.rd.seek(entry.offset)
 
-            with open(entry_path, "wb") as fp_out:
+            with open(entry_path, "wb") as fp:
                 length = entry.size
                 while length:
                     data_len = min(4096, length)
-                    data = fp.read(data_len)
-                    fp_out.write(data)
+                    data = self.rd.read(data_len)
+                    fp.write(data)
                     length -= data_len
 
     def close(self):
         self.rd.close()
         self.r.close()
-
-class Compression(Enum):
-    NONE = 0
-    LZMA = 1
-    LZ4 = 2
-    LZ4HC = 3
-    LZHAM = 4
