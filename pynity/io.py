@@ -251,10 +251,10 @@ class BinaryReader(AutoCloseable):
         return self.read_num("d")
 
     def read_bool8(self):
-        return self.read_uint8() != 0
+        return bool(self.read_uint8())
 
     def read_bool16(self):
-        return self.read_uint16() != 0
+        return bool(self.read_uint16())
 
     def read_bool32(self):
-        return self.read_uint32() != 0
+        return bool(self.read_uint32())
