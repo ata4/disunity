@@ -193,7 +193,7 @@ class BinaryReader(AutoCloseable):
     def read_cstring(self):
         buf = bytearray()
         b = self.read_byte()
-        while b and b != 0:
+        while b:
             buf.append(b)
             b = self.read_byte()
 
