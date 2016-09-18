@@ -432,7 +432,7 @@ class SerializedFile(AutoCloseable):
                 if self.types.embedded:
                     self.type_db.add(class_type.type_tree, class_id, class_type.old_type_hash)
             else:
-                if class_type:
+                if class_type and "signature" in self.types:
                     self.type_db.add_old(class_type.type_tree, class_id, self.types.signature)
 
     def close(self):
