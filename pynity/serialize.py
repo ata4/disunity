@@ -154,7 +154,7 @@ class SerializedFile(AutoCloseable):
             types.classes[class_id] = class_type
 
         # padding
-        if self.header.version > 6 and self.header.version < 13:
+        if 6 < self.header.version < 13:
             r.read_int32()
 
     def _read_type_node(self):
