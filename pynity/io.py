@@ -207,13 +207,14 @@ class BinaryReader():
 
         return buf.decode("ascii")
 
-    def read_struct(self, format):
-        size = struct.calcsize(format)
+    def read_struct(self, format, size=None):
+        if size is None:
+            size = struct.calcsize(format)
         data = self.read(size)
         return struct.unpack(format, data)
 
-    def read_num(self, type):
-        return self.read_struct(self._tag + type)[0]
+    def read_num(self, type, size=None):
+        return self.read_struct(self._tag + type, size)[0]
 
     def read_uuid(self):
         data = self.read(16)
@@ -231,34 +232,34 @@ class BinaryReader():
             return b[0]
 
     def read_int8(self):
-        return self.read_num("b")
+        return self.read_num("b", 1)
 
     def read_uint8(self):
-        return self.read_num("B")
+        return self.read_num("B", 1)
 
     def read_int16(self):
-        return self.read_num("h")
+        return self.read_num("h", 2)
 
     def read_uint16(self):
-        return self.read_num("H")
+        return self.read_num("H", 2)
 
     def read_int32(self):
-        return self.read_num("i")
+        return self.read_num("i", 4)
 
     def read_uint32(self):
-        return self.read_num("I")
+        return self.read_num("I", 4)
 
     def read_int64(self):
-        return self.read_num("q")
+        return self.read_num("q", 8)
 
     def read_uint64(self):
-        return self.read_num("Q")
+        return self.read_num("Q", 8)
 
     def read_float(self):
-        return self.read_num("f")
+        return self.read_num("f", 4)
 
     def read_double(self):
-        return self.read_num("d")
+        return self.read_num("d", 8)
 
     def read_bool8(self):
         return bool(self.read_uint8())
