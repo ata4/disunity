@@ -42,37 +42,40 @@ class ChunkedFileIO(io.BufferedIOBase):
             return open(paths[0], mode)
         else:
             # open chunked files
+            if "w" in mode:
+                raise NotImplementedError("chunked write access")
+
             return cls(paths, mode)
 
     def __init__(self, paths, mode):
-        self.chunks = []
-        self.index = 0
+        self._chunks = []
+        self._index = 0
+        self._size = 0
 
         # open chunks
-        pos = 0
         for path in paths:
-            chunk = Chunk(path, mode, pos)
+            chunk = self.Chunk(path, mode, self._size)
             # filter out empty chunks
             if chunk.size == 0:
                 chunk.close()
                 continue
-            pos += chunk.size
-            self.chunks.append(chunk)
+            self._size += chunk.size
+            self._chunks.append(chunk)
 
     def _chunk(self):
-        return self.chunks[self.index]
+        return self._chunks[self._index]
 
     def _chunk_next(self):
-        if self.index + 1 >= len(self.chunks):
+        if self._index + 1 >= len(self._chunks):
             return None
 
-        self.index += 1
+        self._index += 1
         c = self._chunk()
         c.seek(c.start)
         return c
 
     def _chunk_find(self, pos):
-        for self.index, chunk in enumerate(self.chunks):
+        for self._index, chunk in enumerate(self._chunks):
             if chunk.end >= pos:
                 break
         return chunk
@@ -80,9 +83,15 @@ class ChunkedFileIO(io.BufferedIOBase):
     def readable(self):
         return True
 
+    def writable(self):
+        return False
+
+    def seekable(self):
+        return True
+
     def read(self, size=-1):
         if size == -1 or size == None:
-            raise NotImplementedError("readall()")
+            size = self._size - self.tell()
 
         if size == 0:
             return bytes()
@@ -124,7 +133,7 @@ class ChunkedFileIO(io.BufferedIOBase):
         if whence == io.SEEK_CUR:
             pos += chunk.tell()
         elif whence == io.SEEK_END:
-            pos += self.chunks[-1].end
+            pos += self._chunks[-1].end
         elif whence != io.SEEK_SET:
             raise NotImplementedError()
 
@@ -138,34 +147,34 @@ class ChunkedFileIO(io.BufferedIOBase):
         return self._chunk().tell()
 
     def close(self):
-        for chunk in self.chunks:
+        for chunk in self._chunks:
             chunk.close()
         super(ChunkedFileIO, self).close()
 
-class Chunk():
+    class Chunk():
 
-    def __init__(self, path, mode, pos):
-        self.handle = open(path, mode)
-        self.handle.seek(0, io.SEEK_END)
-        self.size = self.handle.tell()
-        self.handle.seek(0, io.SEEK_SET)
-        self.start = pos
-        self.end = pos + self.size
+        def __init__(self, path, mode, pos):
+            self.handle = open(path, mode)
+            self.handle.seek(0, io.SEEK_END)
+            self.size = self.handle.tell()
+            self.handle.seek(0, io.SEEK_SET)
+            self.start = pos
+            self.end = pos + self.size
 
-    def tell(self):
-        return self.start + self.handle.tell()
+        def tell(self):
+            return self.start + self.handle.tell()
 
-    def read(self, size=-1):
-        return self.handle.read(size)
+        def read(self, size=-1):
+            return self.handle.read(size)
 
-    def seek(self, offset):
-        offset -= self.start
-        if offset < 0 or offset > self.size:
-            raise ValueError("Offset out of range:", offset)
-        self.handle.seek(offset, io.SEEK_SET)
+        def seek(self, offset):
+            offset -= self.start
+            if offset < 0 or offset > self.size:
+                raise ValueError("Offset out of range:", offset)
+            self.handle.seek(offset, io.SEEK_SET)
 
-    def close(self):
-        self.handle.close()
+        def close(self):
+            self.handle.close()
 
 class ByteOrder(IntEnum):
     LITTLE_ENDIAN = 0
