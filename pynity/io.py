@@ -19,8 +19,8 @@ class AutoCloseable:
 
 class ChunkedFileIO(io.BufferedIOBase):
 
-    @staticmethod
-    def open(path, mode):
+    @classmethod
+    def open(cls, path, mode):
         fname, fext = os.path.splitext(path)
         paths = []
 
@@ -41,8 +41,8 @@ class ChunkedFileIO(io.BufferedIOBase):
             # open single files directly
             return open(paths[0], mode)
         else:
-            # open chunked files with ChunkedFileIO
-            return ChunkedFileIO(paths, mode)
+            # open chunked files
+            return cls(paths, mode)
 
     def __init__(self, paths, mode):
         self.chunks = []
