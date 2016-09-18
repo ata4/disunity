@@ -16,7 +16,7 @@ log = logging.getLogger("pynity.serialize")
 
 class SerializedFile(AutoCloseable):
 
-    versions_tested = [5, 6, 8, 9, 14, 15]
+    versions = [5, 6, 8, 9, 14, 15]
     read_prim = {
         "bool":             BinaryReader.read_bool8,
         "SInt8":            BinaryReader.read_int8,
@@ -97,7 +97,7 @@ class SerializedFile(AutoCloseable):
         header.version = r.read_int32()
         header.data_offset = r.read_int32()
 
-        if not header.version in self.versions_tested:
+        if not header.version in self.versions:
             raise NotImplementedError("Unsupported format version: %d"
                                       % header.version)
 
@@ -109,12 +109,12 @@ class SerializedFile(AutoCloseable):
             raise SerializedFileError("Invalid metadata size: %d"
                                       % header.metadata_size)
 
+        # newer formats usually use little-endian for the rest of the file
         if header.version > 8:
             header.endianness = r.read_int8()
             r.read(3) # reserved
-
-        # newer formats use little-endian for the rest of the file
-        if header.version > 5:
+            r.order = ByteOrder(header.endianness)
+        elif header.version > 5:
             r.order = ByteOrder.LITTLE_ENDIAN
 
     def _read_types(self):
