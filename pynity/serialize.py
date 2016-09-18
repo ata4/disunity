@@ -7,9 +7,6 @@ from .io import AutoCloseable, BinaryReader, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
 from .typedb import TypeDatabase
 
-VERSION_MIN = 5
-VERSION_MAX = 15
-
 METAFLAG_ALIGN = 0x4000
 
 log = logging.getLogger("pynity.serialize")
@@ -79,10 +76,7 @@ class SerializedFile(AutoCloseable):
         r.seek(0, io.SEEK_SET)
 
         # check version range
-        if header_version < VERSION_MIN:
-            return False
-
-        if header_version > VERSION_MAX:
+        if not (self.versions[0] <= header_version <= self.versions[-1]):
             return False
 
         # check file size
