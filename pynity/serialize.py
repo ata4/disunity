@@ -166,87 +166,68 @@ class SerializedFile(AutoCloseable):
     def _read_type_node(self):
         r = self.r
 
-        fields = []
+        # read sizes
         num_fields = r.read_int32()
         string_table_len = r.read_int32()
 
-        # read field list
+        # read local string table first so the strings can be assigned in one go
+        tree_pos = r.tell()
+        tree_len = 24 * num_fields
+        r.seek(tree_len, io.SEEK_CUR)
+        string_table_buf = r.read(string_table_len)
+        string_table = self.string_mapper.get(string_table_buf)
+        r.seek(tree_pos)
+
+        # read type tree
+        field_stack = []
+        field_root = None
+
         for _ in range(num_fields):
             field = ObjectDict()
-            field.type = None
-            field.name = None
+            field.children = []
             field.version = r.read_int16()
-            field.tree_level = r.read_uint8()
+
+            level = r.read_uint8()
+
+            # pop redundant entries from stack if required
+            while len(field_stack) > level:
+                field_stack.pop()
+
+            # add current node as child for topmost (previous) node
+            if field_stack:
+                field_stack[-1].children.append(field)
+
+            # add current node on top of stack
+            field_stack.append(field)
+
             field.is_array = r.read_bool8()
-            field.type_offset = r.read_uint32()
-            field.name_offset = r.read_uint32()
+
+            # assign type string
+            type_offset = r.read_uint32()
+            field.type = string_table.get(type_offset)
+            if not field.type:
+                raise SerializedFileError("Invalid field type string offset: %d"
+                                          % type_offset)
+
+            # assign name string
+            name_offset = r.read_uint32()
+            field.name = string_table.get(name_offset)
+            if not field.name:
+                raise SerializedFileError("Invalid field name string offset: %d"
+                                          % name_offset)
+
             field.size = r.read_int32()
             field.index = r.read_int32()
             field.meta_flag = r.read_int32()
 
-            fields.append(field)
+            # save first node, which is the root
+            if not field_root:
+                field_root = field
 
-        # read local string table
-        string_table_buf = r.read(string_table_len)
-        string_table = self.string_mapper.get(string_table_buf)
+        # correct end position
+        r.seek(string_table_len, io.SEEK_CUR)
 
-        # convert list to tree structure
-        node_stack = []
-        node_prev = None
-        node_root = None
-        tree_level_prev = 0
-
-        for field in fields:
-            # assign strings
-            field.name = string_table.get(field.name_offset)
-            if not field.name:
-                raise SerializedFileError("Invalid field name offset: %d"
-                                          % field.name_offset)
-
-            field.type = string_table.get(field.type_offset)
-            if not field.type:
-                raise SerializedFileError("Invalid field type offset: %d"
-                                          % field.type_offset)
-
-            # don't need those offsets anymore
-            del field.name_offset
-            del field.type_offset
-
-            # convert to node
-            node = field
-            node.children = []
-
-            # set root node
-            if not node_root:
-                node_root = node_prev = node
-                node_stack.append(node)
-                tree_level_prev = field.tree_level
-                del field.tree_level
-                continue
-
-            # get tree level difference and move node up or down if required
-            tree_level_diff = field.tree_level - tree_level_prev
-            tree_level_prev = field.tree_level
-
-            # don't need the tree level now either
-            del field.tree_level
-
-            # the level can only raise by one per node at most
-            if tree_level_diff > 1:
-                raise SerializedFileError("Unexpected tree level shift: %d"
-                                          % tree_level_diff)
-
-            if tree_level_diff > 0:
-                node_prev.children.append(node)
-                node_stack.append(node_prev)
-            else:
-                for _ in range(-tree_level_diff):
-                    node_stack.pop()
-                node_stack[-1].children.append(node)
-
-            node_prev = node
-
-        return node_root
+        return field_root
 
     def _read_type_node_old(self):
         r = self.r
