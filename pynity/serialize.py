@@ -373,7 +373,13 @@ class SerializedFile(AutoCloseable):
 
         if obj_type.type == "string":
             # convert string objects to native Python strings
-            obj = obj.Array.decode("utf-8")
+            try:
+                obj = obj.Array.decode("utf-8")
+            except UnicodeDecodeError:
+                # could be a TextAsset that contains binary data, return raw string
+                log.warn("Can't decode string at %d as UTF-8, "
+                         "using raw data instead" % r.tell())
+                obj = obj.Array
         elif obj_type.type == "vector":
             # unpack collection containers
             obj = obj.Array
