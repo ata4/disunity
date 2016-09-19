@@ -97,7 +97,7 @@ class SerializedFile(AutoCloseable):
         header.version = r.read_int32()
         header.data_offset = r.read_int32()
 
-        if not header.version in self.versions:
+        if header.version not in self.versions:
             raise NotImplementedError("Unsupported format version: %d"
                                       % header.version)
 
@@ -351,7 +351,7 @@ class SerializedFile(AutoCloseable):
                 r.align(4)
         elif obj_type.size > 0 and not obj_type.children:
             # no children and size greater zero -> primitive
-            if not obj_type.type in self.read_prim:
+            if obj_type.type not in self.read_prim:
                 raise SerializationError("Unknown primitive type: " + obj_type.type)
 
             obj = self.read_prim[obj_type.type](r)

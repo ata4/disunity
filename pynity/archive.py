@@ -27,7 +27,7 @@ class Archive(AutoCloseable):
             if fp.read(5) != b"Unity":
                 return False
 
-            if not fp.read(3) in (b"Web", b"Raw", b"FS\0"):
+            if fp.read(3) not in (b"Web", b"Raw", b"FS\0"):
                 return False
 
         return True
@@ -42,11 +42,11 @@ class Archive(AutoCloseable):
         header = self.header = ObjectDict()
 
         header.signature = r.read_cstring()
-        if not header.signature in self.signatures:
+        if header.signature not in self.signatures:
             raise RuntimeError("Invalid signature")
 
         header.version = r.read_int32()
-        if not header.version in self.versions:
+        if header.version not in self.versions:
             raise NotImplementedError("Unsupported format version %d"
                                       % header.version)
 
