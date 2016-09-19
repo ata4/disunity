@@ -154,8 +154,7 @@ class TypeDatabase:
 
         def add(self, version, hash):
             # catch potential silly mistakes
-            if len(hash) != 32:
-                raise ValueError("Invalid hash string: " + hash)
+            assert len(hash) == 32
 
             # cancel if version is already in index
             if hash in self.data and version in self.data[hash]:
