@@ -21,6 +21,17 @@ class Archive(AutoCloseable):
     versions = [1, 2, 3, 6]
     signatures = ["UnityWeb", "UnityRaw", "UnityFS"]
 
+    @classmethod
+    def probe(cls, path):
+        with open(path, "rb") as fp:
+            if fp.read(5) != b"Unity":
+                return False
+
+            if not fp.read(3) in (b"Web", b"Raw", b"FS\0"):
+                return False
+
+        return True
+
     def __init__(self, path):
         self.r = self.rd = BinaryReader(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
         self._read_header()
@@ -187,6 +198,10 @@ class Archive(AutoCloseable):
             return lz4.decompress(hdr + block)
         else:
             raise NotImplementedError("_read_block with " + method)
+
+    def read(self, entry):
+        self.rd.seek(entry.offset)
+        return self.rd.read(entry.size)
 
     def extract(self, dir, *entries):
         if not entries:

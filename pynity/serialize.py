@@ -35,30 +35,16 @@ class SerializedFile(AutoCloseable):
         "double":           BinaryReader.read_double,
     }
 
-    types_db = {}
     types_cache = {}
 
-    def __init__(self, path):
-        self.string_mapper = StringMapper()
-        self.type_db = TypeDatabase()
+    @classmethod
+    def probe_path(cls, path):
+        with ChunkedFileIO.open(path, "rb") as fp:
+            return cls.probe_file(fp)
 
-        # open file and make some basic checks to make sure this is actually a
-        # serialized file
-        self.r = BinaryReader(ChunkedFileIO.open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
-        self.valid = self._validate()
-
-        if not self.valid:
-            return
-
-        # read metadata
-        self._read_header()
-        self._read_types()
-        self._read_object_info()
-        self._read_script_types()
-        self._read_externals()
-
-    def _validate(self):
-        r = self.r
+    @classmethod
+    def probe_file(cls, file):
+        r = BinaryReader(file, order=ByteOrder.BIG_ENDIAN)
 
         # get file size
         r.seek(0, io.SEEK_END)
@@ -76,11 +62,31 @@ class SerializedFile(AutoCloseable):
         r.seek(0, io.SEEK_SET)
 
         # check version range
-        if not (self.versions[0] <= header_version <= self.versions[-1]):
+        if not (cls.versions[0] <= header_version <= cls.versions[-1]):
             return False
 
         # check file size
         return file_size == header_file_size
+
+    def __init__(self, file):
+        self.string_mapper = StringMapper()
+        self.type_db = TypeDatabase()
+
+        # open file and make some basic checks to make sure this is actually a
+        # serialized file
+        if isinstance(file, str):
+            fp = ChunkedFileIO.open(file, "rb")
+        else:
+            fp = file
+
+        self.r = BinaryReader(fp, order=ByteOrder.BIG_ENDIAN)
+
+        # read metadata
+        self._read_header()
+        self._read_types()
+        self._read_object_info()
+        self._read_script_types()
+        self._read_externals()
 
     def _read_header(self):
         r = self.r
