@@ -23,7 +23,9 @@ class ArchiveUnpack(disunity.CommandLineApp):
             else:
                 for entry in archive.entries:
                     print(entry.path)
-                    archive.extract(path_out, entry)
+                    entry_path = os.path.join(path_out, entry.path)
+                    os.makedirs(os.path.dirname(entry_path), exist_ok=True)
+                    archive.extract(entry, entry_path)
 
 if __name__ == "__main__":
     sys.exit(ArchiveUnpack().main(sys.argv))

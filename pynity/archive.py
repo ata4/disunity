@@ -203,23 +203,15 @@ class Archive(AutoCloseable):
         self.rd.seek(entry.offset)
         return self.rd.read(entry.size)
 
-    def extract(self, dir, *entries):
-        if not entries:
-            entries = self.entries
-
-        for entry in entries:
-            entry_path = os.path.join(dir, entry.path)
-            os.makedirs(os.path.dirname(entry_path), exist_ok=True)
-
-            self.rd.seek(entry.offset)
-
-            with open(entry_path, "wb") as fp:
-                length = entry.size
-                while length:
-                    data_len = min(4096, length)
-                    data = self.rd.read(data_len)
-                    fp.write(data)
-                    length -= data_len
+    def extract(self, entry, path):
+        self.rd.seek(entry.offset)
+        with open(path, "wb") as fp:
+            length = entry.size
+            while length:
+                data_len = min(4096, length)
+                data = self.rd.read(data_len)
+                fp.write(data)
+                length -= data_len
 
     def close(self):
         self.rd.close()
