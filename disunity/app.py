@@ -1,8 +1,11 @@
 import os
+import io
 import glob
 import logging
 
-class CommandLineApp:
+import pynity
+
+class RecursiveFileApp:
 
     def main(self, argv):
         self.log = logging.getLogger()
@@ -27,3 +30,24 @@ class CommandLineApp:
 
     def usage(self):
         return "usage: %s <file>" % os.path.basename(self.path)
+
+class SerializedFileApp(RecursiveFileApp):
+
+    def process(self, path):
+        if pynity.Archive.probe(path):
+            with pynity.Archive(path) as archive:
+                self.process_archive(path, archive)
+        elif pynity.SerializedFile.probe_path(path):
+            with pynity.SerializedFile(path) as sf:
+                self.process_serialized(path, sf)
+
+    def process_archive(self, path, archive):
+        for entry in archive.entries:
+            entry_data = archive.read(entry)
+            entry_file = io.BytesIO(entry_data)
+            if pynity.SerializedFile.probe_file(entry_file):
+                with pynity.SerializedFile(entry_file) as sf:
+                    self.process_serialized(path + ":" + entry.path, sf)
+
+    def process_serialized(self, path, sf):
+        pass

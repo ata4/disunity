@@ -4,7 +4,7 @@ import os
 import disunity
 import pynity
 
-class ArchiveUnpack(disunity.CommandLineApp):
+class ArchiveUnpack(disunity.RecursiveFileApp):
 
     def __init__(self):
         self.debug = False

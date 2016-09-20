@@ -8,7 +8,7 @@ import textwrap
 import disunity
 import pynity
 
-class SerializeDump(disunity.CommandLineApp):
+class SerializeDump(disunity.SerializedFileApp):
 
     def __init__(self):
         self.cmds = {
@@ -22,9 +22,9 @@ class SerializeDump(disunity.CommandLineApp):
 
         self.cmd = ""
 
-    def process(self, path):
-        with pynity.SerializedFile(path) as sf:
-            self.cmds[self.cmd](sf)
+    def process_serialized(self, path, sf):
+        print(path)
+        self.cmds[self.cmd](sf)
 
     def parse_args(self, argv):
         if not argv:
@@ -67,7 +67,7 @@ class SerializeDump(disunity.CommandLineApp):
                     # use default string representation
                     return str(o)
 
-        json.dump(object, sys.stdout, indent=2, separators=(',', ': '), cls=JSONEncoderImpl)
+        json.dump(object, sys.stdout, indent=2, cls=JSONEncoderImpl)
 
 if __name__ == "__main__":
     sys.exit(SerializeDump().main(sys.argv))
