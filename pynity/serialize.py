@@ -178,7 +178,6 @@ class SerializedFile(AutoCloseable):
 
         for _ in range(num_fields):
             field = ObjectDict()
-            field.children = []
             field.version = r.read_int16()
 
             level = r.read_uint8()
@@ -213,6 +212,7 @@ class SerializedFile(AutoCloseable):
             field.size = r.read_int32()
             field.index = r.read_int32()
             field.meta_flag = r.read_int32()
+            field.children = []
 
             # save first node, which is the root
             if not field_root:
