@@ -2,6 +2,7 @@ import io
 import os
 import json
 import logging
+import hashlib
 
 from .io import AutoCloseable, BinaryReader, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
@@ -152,7 +153,14 @@ class SerializedFile(AutoCloseable):
                 else:
                     class_type.type_tree = None
             else:
+                type_pos = r.tell()
                 class_type.type_tree = self._read_type_node_old()
+                type_size = r.tell() - type_pos
+
+                # create hash from binary type
+                r.seek(type_pos)
+                type_tree_raw = r.read(type_size)
+                class_type.old_type_hash = hashlib.md5(type_tree_raw).hexdigest()
 
             if class_id in types.classes:
                 raise SerializedFileError("Duplicate class ID %d" % class_id)
@@ -428,7 +436,7 @@ class SerializedFile(AutoCloseable):
 
         return object
 
-    def scan_types(self):
+    def scan_types(self, signature=None):
         script_dir = os.path.dirname(__file__)
         types_dir = os.path.join(script_dir, "resources", "types")
 
@@ -442,10 +450,16 @@ class SerializedFile(AutoCloseable):
             # create type files that don't exist yet
             if self.header.version > 13:
                 if self.types.embedded:
-                    self.type_db.add(class_type.type_tree, class_id, class_type.old_type_hash)
+                    self.type_db.add(class_type.type_tree, class_id,
+                                     class_type.old_type_hash)
             else:
-                if class_type and "signature" in self.types:
-                    self.type_db.add_old(class_type.type_tree, class_id, self.types.signature)
+                if not signature:
+                    signature = self.types.get("signature")
+
+                if class_type and signature:
+                    self.type_db.add_old(class_type.type_tree, class_id,
+                                         class_type.old_type_hash,
+                                         signature)
 
     def close(self):
         self.r.close()
