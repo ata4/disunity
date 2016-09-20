@@ -11,12 +11,13 @@ log = logging.getLogger("pynity.typedb")
 
 class TypeDatabase:
 
+    cache = {}
+    cache_old = {}
+
     def __init__(self):
         self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
         self.path_types = os.path.join(self.path_resources, "types")
         self.path_types_old = os.path.join(self.path_resources, "types_old")
-        self.cache = {}
-        self.cache_old = {}
 
     def add(self, type_tree, class_id, hash):
         path_dir = os.path.join(self.path_types, str(class_id))
