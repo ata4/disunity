@@ -1,5 +1,7 @@
 import sys
+import os
 import io
+import getopt
 
 import disunity
 import pynity
@@ -14,12 +16,35 @@ class SerializeTest(disunity.SerializedFileApp):
         self.num_objects_typeless = 0
         self.num_types_added = 0
 
-        self.update_type_db = True
+        self.update_type_db = False
         self.deserialize = False
         self.signature = None
 
+    def parse_args(self, argv):
+        try:
+            opts, argv = getopt.getopt(argv, 'du', ["deserialize", "update-db"])
+        except getopt.GetoptError as e:
+            print("Error:", e, file=sys.stderr)
+            return False
+
+        for o, a in opts:
+            if o in ("-d", "--deserialize"):
+                self.deserialize = True
+            elif o in ("-u", "--update-db"):
+                self.update_type_db = True
+
+        return len(argv) > 0
+
+    def usage(self):
+        print("Usage: %s [OPTION...] [FILE...]" % os.path.basename(self.path))
+        print("Performs various tests on serialized Unity files.")
+        print()
+        print("  -d, --deserialize          deserialize all objects")
+        print("  -u, --update-db            update database with embedded types")
+
     def main(self, argv):
-        super(SerializeTest, self).main(argv)
+        if super(SerializeTest, self).main(argv):
+            return
 
         print()
         print("Files passed:     %d" % self.num_files_passed)

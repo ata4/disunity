@@ -12,7 +12,7 @@ class RecursiveFileApp:
         self.path = argv.pop(0)
 
         if not self.parse_args(argv):
-            print(self.usage())
+            self.usage()
             return 1
 
         for path in argv:
@@ -29,7 +29,7 @@ class RecursiveFileApp:
         pass
 
     def usage(self):
-        return "usage: %s <file>" % os.path.basename(self.path)
+        print("Usage: %s [FILE...]" % os.path.basename(self.path))
 
 class SerializedFileApp(RecursiveFileApp):
 

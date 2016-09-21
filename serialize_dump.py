@@ -37,8 +37,8 @@ class SerializeDump(disunity.SerializedFileApp):
         return len(argv) > 0
 
     def usage(self):
-        return "usage: %s <%s> <path>" % (
-            os.path.basename(self.path), "|".join(self.cmds.keys()))
+        cmds =  "|".join(self.cmds.keys())
+        print("Usage: %s [%s] [FILE...]" % (os.path.basename(self.path), cmds))
 
     def dump_objects(self, sf):
         objects = []
