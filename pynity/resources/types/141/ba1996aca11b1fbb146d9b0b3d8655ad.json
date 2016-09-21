@@ -1,0 +1,425 @@
+{
+  "version": 2,
+  "is_array": false,
+  "type": "BuildSettings",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "size": 4,
+      "index": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "vector",
+      "name": "scenes",
+      "size": -1,
+      "index": 2,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 3,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 4,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "string",
+              "name": "data",
+              "size": -1,
+              "index": 5,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": true,
+                  "type": "Array",
+                  "name": "Array",
+                  "size": -1,
+                  "index": 6,
+                  "meta_flag": 16385,
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "int",
+                      "name": "size",
+                      "size": 4,
+                      "index": 7,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "char",
+                      "name": "data",
+                      "size": 1,
+                      "index": 8,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "vector",
+      "name": "preloadedPlugins",
+      "size": -1,
+      "index": 9,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 10,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 11,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "string",
+              "name": "data",
+              "size": -1,
+              "index": 12,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": true,
+                  "type": "Array",
+                  "name": "Array",
+                  "size": -1,
+                  "index": 13,
+                  "meta_flag": 16385,
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "int",
+                      "name": "size",
+                      "size": 4,
+                      "index": 14,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "char",
+                      "name": "data",
+                      "size": 1,
+                      "index": 15,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "vector",
+      "name": "enabledVRDevices",
+      "size": -1,
+      "index": 16,
+      "meta_flag": 32768,
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 17,
+          "meta_flag": 32768,
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 18,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "string",
+              "name": "data",
+              "size": -1,
+              "index": 19,
+              "meta_flag": 32768,
+              "children": [
+                {
+                  "version": 1,
+                  "is_array": true,
+                  "type": "Array",
+                  "name": "Array",
+                  "size": -1,
+                  "index": 20,
+                  "meta_flag": 16385,
+                  "children": [
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "int",
+                      "name": "size",
+                      "size": 4,
+                      "index": 21,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "version": 1,
+                      "is_array": false,
+                      "type": "char",
+                      "name": "data",
+                      "size": 1,
+                      "index": 22,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasPROVersion",
+      "size": 1,
+      "index": 23,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "isNoWatermarkBuild",
+      "size": 1,
+      "index": 24,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "isPrototypingBuild",
+      "size": 1,
+      "index": 25,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "isEducationalBuild",
+      "size": 1,
+      "index": 26,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "isEmbedded",
+      "size": 1,
+      "index": 27,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasPublishingRights",
+      "size": 1,
+      "index": 28,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasShadows",
+      "size": 1,
+      "index": 29,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasSoftShadows",
+      "size": 1,
+      "index": 30,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasLocalLightShadows",
+      "size": 1,
+      "index": 31,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasAdvancedVersion",
+      "size": 1,
+      "index": 32,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "enableDynamicBatching",
+      "size": 1,
+      "index": 33,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "isDebugBuild",
+      "size": 1,
+      "index": 34,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "usesOnMouseEvents",
+      "size": 1,
+      "index": 35,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "bool",
+      "name": "hasClusterRendering",
+      "size": 1,
+      "index": 36,
+      "meta_flag": 16384,
+      "children": []
+    },
+    {
+      "version": 1,
+      "is_array": false,
+      "type": "vector",
+      "name": "m_GraphicsAPIs",
+      "size": -1,
+      "index": 37,
+      "meta_flag": 0,
+      "children": [
+        {
+          "version": 1,
+          "is_array": true,
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 38,
+          "meta_flag": 0,
+          "children": [
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 39,
+              "meta_flag": 0,
+              "children": []
+            },
+            {
+              "version": 1,
+              "is_array": false,
+              "type": "int",
+              "name": "data",
+              "size": 4,
+              "index": 40,
+              "meta_flag": 0,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,397 @@
+{
+  "type": "Prefab",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PrefabModification",
+      "name": "m_Modification",
+      "size": -1,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "PPtr<Transform>",
+          "name": "m_TransformParent",
+          "size": 8,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "int",
+              "name": "m_FileID",
+              "size": 4,
+              "index": 4,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "int",
+              "name": "m_PathID",
+              "size": 4,
+              "index": 5,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "vector",
+          "name": "m_Modifications",
+          "size": -1,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 32769,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 7,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 32769,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "size": 4,
+                  "index": 8,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "PropertyModification",
+                  "name": "data",
+                  "size": -1,
+                  "index": 9,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 32769,
+                  "children": [
+                    {
+                      "type": "PPtr<Object>",
+                      "name": "target",
+                      "size": 8,
+                      "index": 10,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "m_FileID",
+                          "size": 4,
+                          "index": 11,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "int",
+                          "name": "m_PathID",
+                          "size": 4,
+                          "index": 12,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "name": "propertyPath",
+                      "size": -1,
+                      "index": 13,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 32769,
+                      "children": [
+                        {
+                          "type": "Array",
+                          "name": "Array",
+                          "size": -1,
+                          "index": 14,
+                          "is_array": true,
+                          "version": 1,
+                          "meta_flag": 16385,
+                          "children": [
+                            {
+                              "type": "int",
+                              "name": "size",
+                              "size": 4,
+                              "index": 15,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 1,
+                              "children": []
+                            },
+                            {
+                              "type": "char",
+                              "name": "data",
+                              "size": 1,
+                              "index": 16,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 1,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "name": "value",
+                      "size": -1,
+                      "index": 17,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 32769,
+                      "children": [
+                        {
+                          "type": "Array",
+                          "name": "Array",
+                          "size": -1,
+                          "index": 18,
+                          "is_array": true,
+                          "version": 1,
+                          "meta_flag": 16385,
+                          "children": [
+                            {
+                              "type": "int",
+                              "name": "size",
+                              "size": 4,
+                              "index": 19,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 1,
+                              "children": []
+                            },
+                            {
+                              "type": "char",
+                              "name": "data",
+                              "size": 1,
+                              "index": 20,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 1,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "PPtr<Object>",
+                      "name": "objectReference",
+                      "size": 8,
+                      "index": 21,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "m_FileID",
+                          "size": 4,
+                          "index": 22,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        },
+                        {
+                          "type": "int",
+                          "name": "m_PathID",
+                          "size": 4,
+                          "index": 23,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "vector",
+          "name": "m_RemovedComponents",
+          "size": -1,
+          "index": 24,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "Array",
+              "name": "Array",
+              "size": -1,
+              "index": 25,
+              "is_array": true,
+              "version": 1,
+              "meta_flag": 1,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "size",
+                  "size": 4,
+                  "index": 26,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": []
+                },
+                {
+                  "type": "PPtr<Object>",
+                  "name": "data",
+                  "size": 8,
+                  "index": 27,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 1,
+                  "children": [
+                    {
+                      "type": "int",
+                      "name": "m_FileID",
+                      "size": 4,
+                      "index": 28,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "int",
+                      "name": "m_PathID",
+                      "size": 4,
+                      "index": 29,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_ParentPrefab",
+      "size": 8,
+      "index": 30,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 31,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 32,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<GameObject>",
+      "name": "m_RootGameObject",
+      "size": 8,
+      "index": 33,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 34,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 35,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 1,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "bool",
+      "name": "m_IsPrefabParent",
+      "size": 1,
+      "index": 36,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_IsExploded",
+      "size": 1,
+      "index": 37,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 16385,
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "type": "AudioManager",
+  "name": "Base",
+  "size": 29,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 0,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_Volume",
+      "size": 4,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "Rolloff Scale",
+      "size": 4,
+      "index": 3,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "m_SpeedOfSound",
+      "size": 4,
+      "index": 4,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "float",
+      "name": "Doppler Factor",
+      "size": 4,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "Default Speaker Mode",
+      "size": 4,
+      "index": 6,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "int",
+      "name": "m_DSPBufferSize",
+      "size": 4,
+      "index": 7,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    },
+    {
+      "type": "bool",
+      "name": "m_DisableAudio",
+      "size": 1,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 0,
+      "children": []
+    }
+  ]
+}

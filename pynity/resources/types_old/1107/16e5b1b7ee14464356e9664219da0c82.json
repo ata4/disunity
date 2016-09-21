@@ -1,0 +1,584 @@
+{
+  "type": "StateMachine",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 2,
+  "meta_flag": 32768,
+  "children": [
+    {
+      "type": "unsigned int",
+      "name": "m_ObjectHideFlags",
+      "size": 4,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "PPtr<EditorExtension>",
+      "name": "m_PrefabParentObject",
+      "size": 8,
+      "index": 2,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 3,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 4,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "PPtr<Prefab>",
+      "name": "m_PrefabInternal",
+      "size": 8,
+      "index": 5,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65537,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 6,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65537,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 7,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65537,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "name": "m_Name",
+      "size": -1,
+      "index": 8,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 32769,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 9,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 16385,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 10,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "char",
+              "name": "data",
+              "size": 1,
+              "index": 11,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "PPtr<State>",
+      "name": "m_DefaultState",
+      "size": 8,
+      "index": 12,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65,
+      "children": [
+        {
+          "type": "int",
+          "name": "m_FileID",
+          "size": 4,
+          "index": 13,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65,
+          "children": []
+        },
+        {
+          "type": "int",
+          "name": "m_PathID",
+          "size": 4,
+          "index": 14,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 65,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_States",
+      "size": -1,
+      "index": 15,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 16,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 65,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 17,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": []
+            },
+            {
+              "type": "PPtr<State>",
+              "name": "data",
+              "size": 8,
+              "index": 18,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "m_FileID",
+                  "size": 4,
+                  "index": 19,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "m_PathID",
+                  "size": 4,
+                  "index": 20,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_ChildStateMachine",
+      "size": -1,
+      "index": 21,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 22,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 65,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 23,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": []
+            },
+            {
+              "type": "PPtr<StateMachine>",
+              "name": "data",
+              "size": 8,
+              "index": 24,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": [
+                {
+                  "type": "int",
+                  "name": "m_FileID",
+                  "size": 4,
+                  "index": 25,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "m_PathID",
+                  "size": 4,
+                  "index": 26,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "vector",
+      "name": "m_ChildStateMachinePosition",
+      "size": -1,
+      "index": 27,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 28,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 1,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 29,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 1,
+              "children": []
+            },
+            {
+              "type": "Vector3f",
+              "name": "data",
+              "size": 12,
+              "index": 30,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 2097153,
+              "children": [
+                {
+                  "type": "float",
+                  "name": "x",
+                  "size": 4,
+                  "index": 31,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2097153,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "y",
+                  "size": 4,
+                  "index": 32,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2097153,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "z",
+                  "size": 4,
+                  "index": 33,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2097153,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "m_OrderedTransitions",
+      "size": -1,
+      "index": 34,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 65,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 35,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 65,
+          "children": [
+            {
+              "type": "int",
+              "name": "size",
+              "size": 4,
+              "index": 36,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": []
+            },
+            {
+              "type": "pair",
+              "name": "data",
+              "size": -1,
+              "index": 37,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 65,
+              "children": [
+                {
+                  "type": "PPtr<State>",
+                  "name": "first",
+                  "size": 8,
+                  "index": 38,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": [
+                    {
+                      "type": "int",
+                      "name": "m_FileID",
+                      "size": 4,
+                      "index": 39,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 65,
+                      "children": []
+                    },
+                    {
+                      "type": "int",
+                      "name": "m_PathID",
+                      "size": 4,
+                      "index": 40,
+                      "is_array": false,
+                      "version": 1,
+                      "meta_flag": 65,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "vector",
+                  "name": "second",
+                  "size": -1,
+                  "index": 41,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 65,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 42,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 65,
+                      "children": [
+                        {
+                          "type": "int",
+                          "name": "size",
+                          "size": 4,
+                          "index": 43,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 65,
+                          "children": []
+                        },
+                        {
+                          "type": "PPtr<Transition>",
+                          "name": "data",
+                          "size": 8,
+                          "index": 44,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 65,
+                          "children": [
+                            {
+                              "type": "int",
+                              "name": "m_FileID",
+                              "size": 4,
+                              "index": 45,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 65,
+                              "children": []
+                            },
+                            {
+                              "type": "int",
+                              "name": "m_PathID",
+                              "size": 4,
+                              "index": 46,
+                              "is_array": false,
+                              "version": 1,
+                              "meta_flag": 65,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "int",
+      "name": "m_MotionSetCount",
+      "size": 4,
+      "index": 47,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 1,
+      "children": []
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_AnyStatePosition",
+      "size": 12,
+      "index": 48,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097153,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 49,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 50,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 51,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "Vector3f",
+      "name": "m_ParentStateMachinePosition",
+      "size": 12,
+      "index": 52,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2097153,
+      "children": [
+        {
+          "type": "float",
+          "name": "x",
+          "size": 4,
+          "index": 53,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "size": 4,
+          "index": 54,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "size": 4,
+          "index": 55,
+          "is_array": false,
+          "version": 1,
+          "meta_flag": 2097153,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

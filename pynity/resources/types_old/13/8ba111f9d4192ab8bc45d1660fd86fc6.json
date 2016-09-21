@@ -1,0 +1,428 @@
+{
+  "type": "InputManager",
+  "name": "Base",
+  "size": -1,
+  "index": 0,
+  "is_array": false,
+  "version": 1,
+  "meta_flag": 0,
+  "children": [
+    {
+      "type": "vector",
+      "name": "m_Axes",
+      "size": -1,
+      "index": 1,
+      "is_array": false,
+      "version": 1,
+      "meta_flag": 2048,
+      "children": [
+        {
+          "type": "Array",
+          "name": "Array",
+          "size": -1,
+          "index": 2,
+          "is_array": true,
+          "version": 1,
+          "meta_flag": 2048,
+          "children": [
+            {
+              "type": "SInt32",
+              "name": "size",
+              "size": 4,
+              "index": 3,
+              "is_array": false,
+              "version": 1,
+              "meta_flag": 2048,
+              "children": []
+            },
+            {
+              "type": "InputAxis",
+              "name": "data",
+              "size": -1,
+              "index": 4,
+              "is_array": false,
+              "version": 3,
+              "meta_flag": 2048,
+              "children": [
+                {
+                  "type": "string",
+                  "name": "m_Name",
+                  "size": -1,
+                  "index": 5,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 6,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 7,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 8,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "descriptiveName",
+                  "size": -1,
+                  "index": 9,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 10,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 11,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 12,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "descriptiveNegativeName",
+                  "size": -1,
+                  "index": 13,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 14,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 15,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 16,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "negativeButton",
+                  "size": -1,
+                  "index": 17,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 18,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 19,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 20,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "positiveButton",
+                  "size": -1,
+                  "index": 21,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 22,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 23,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 24,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "altNegativeButton",
+                  "size": -1,
+                  "index": 25,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 26,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 27,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 28,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "name": "altPositiveButton",
+                  "size": -1,
+                  "index": 29,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": [
+                    {
+                      "type": "Array",
+                      "name": "Array",
+                      "size": -1,
+                      "index": 30,
+                      "is_array": true,
+                      "version": 1,
+                      "meta_flag": 2049,
+                      "children": [
+                        {
+                          "type": "SInt32",
+                          "name": "size",
+                          "size": 4,
+                          "index": 31,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        },
+                        {
+                          "type": "char",
+                          "name": "data",
+                          "size": 1,
+                          "index": 32,
+                          "is_array": false,
+                          "version": 1,
+                          "meta_flag": 2049,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "float",
+                  "name": "gravity",
+                  "size": 4,
+                  "index": 33,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "dead",
+                  "size": 4,
+                  "index": 34,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "float",
+                  "name": "sensitivity",
+                  "size": 4,
+                  "index": 35,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "snap",
+                  "size": 1,
+                  "index": 36,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "bool",
+                  "name": "invert",
+                  "size": 1,
+                  "index": 37,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "type",
+                  "size": 4,
+                  "index": 38,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "axis",
+                  "size": 4,
+                  "index": 39,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                },
+                {
+                  "type": "int",
+                  "name": "joyNum",
+                  "size": 4,
+                  "index": 40,
+                  "is_array": false,
+                  "version": 1,
+                  "meta_flag": 2048,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
