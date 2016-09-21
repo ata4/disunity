@@ -29,6 +29,9 @@ class TypeDatabase:
             log.info("Added type %s for class %d" % (hash, class_id))
             with open(path_type, "w") as fp:
                 json.dump(type_tree, fp, indent=2)
+            return True
+        else:
+            return False
 
     def add_old(self, type_tree, class_id, hash, version):
         path_dir = os.path.join(self.path_types_old, str(class_id))
@@ -38,7 +41,7 @@ class TypeDatabase:
         # check if the version already has a hash
         index = self.VersionIndex(path_dir, class_id)
         if index.get(version, exact=True):
-            return
+            return False
 
         # write missing type files
         path_type = os.path.join(path_dir, hash + ".json")
@@ -46,9 +49,13 @@ class TypeDatabase:
             log.info("Added type %s for class %d" % (hash, class_id))
             with open(path_type, "w") as fp:
                 json.dump(type_tree, fp, indent=2)
+            return True
 
         # update version index
-        index.add(version, hash)
+        if index.add(version, hash):
+            return True
+
+        return False
 
     def get(self, class_id, hash):
         # load from cache if possible
@@ -156,7 +163,7 @@ class TypeDatabase:
 
             # cancel if version is already in index
             if hash in self.data and version in self.data[hash]:
-                return
+                return False
 
             # insert version and hash
             if hash in self.data:
@@ -169,6 +176,8 @@ class TypeDatabase:
 
             # update index file
             self.save()
+
+            return True
 
         def save(self):
             # sort version strings

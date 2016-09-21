@@ -12,8 +12,9 @@ class SerializeTest(disunity.SerializedFileApp):
         self.num_objects_passed = 0
         self.num_objects_failed = 0
         self.num_objects_typeless = 0
+        self.num_types_added = 0
 
-        self.scan_types = True
+        self.update_type_db = True
         self.deserialize = False
         self.signature = None
 
@@ -28,6 +29,9 @@ class SerializeTest(disunity.SerializedFileApp):
             print("Objects passed:   %d" % self.num_objects_passed)
             print("Objects failed:   %d" % self.num_objects_failed)
             print("Objects typeless: %d" % self.num_objects_typeless)
+
+        if self.update_type_db:
+            print("Types added:      %d" % self.num_types_added)
 
     def process(self, path):
         try:
@@ -44,8 +48,8 @@ class SerializeTest(disunity.SerializedFileApp):
     def process_serialized(self, path, sf):
         print(path)
 
-        if self.scan_types:
-            sf.scan_types(self.signature)
+        if self.update_type_db:
+            self.num_types_added += sf.update_type_db(self.signature)
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))

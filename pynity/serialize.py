@@ -436,9 +436,10 @@ class SerializedFile(AutoCloseable):
 
         return object
 
-    def scan_types(self, signature=None):
+    def update_type_db(self, signature=None):
         script_dir = os.path.dirname(__file__)
         types_dir = os.path.join(script_dir, "resources", "types")
+        types_added = 0
 
         for class_id in self.types.classes:
             # ignore script types
@@ -449,17 +450,20 @@ class SerializedFile(AutoCloseable):
 
             # create type files that don't exist yet
             if self.header.version > 13:
-                if self.types.embedded:
+                if (self.types.embedded and 
                     self.type_db.add(class_type.type_tree, class_id,
-                                     class_type.old_type_hash)
+                                     class_type.old_type_hash)):
+                        types_added += 1
             else:
                 if not signature:
                     signature = self.types.get("signature")
 
-                if class_type and signature:
+                if (class_type and signature and
                     self.type_db.add_old(class_type.type_tree, class_id,
-                                         class_type.old_type_hash,
-                                         signature)
+                                         class_type.old_type_hash, signature)):
+                    types_added += 1
+
+        return types_added
 
     def close(self):
         self.r.close()
