@@ -168,8 +168,8 @@ class ChunkedFileIO(io.BufferedIOBase):
 
         def seek(self, offset):
             offset -= self.start
-            if offset < 0 or offset > self.size:
-                raise ValueError("Offset out of range:", offset)
+            if offset < 0:
+                raise ValueError("Negative offset: %d" % offset)
             self.handle.seek(offset, io.SEEK_SET)
 
         def close(self):
