@@ -3,6 +3,7 @@ import os
 import json
 import logging
 import hashlib
+import uuid
 
 from .io import AutoCloseable, BinaryReader, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
@@ -148,9 +149,9 @@ class SerializedFile(AutoCloseable):
 
             if self.header.version > 13:
                 if class_id < 0:
-                    class_type.script_id = r.read_hash128()
+                    class_type.script_id = r.read_hex(16)
 
-                class_type.old_type_hash = r.read_hash128()
+                class_type.old_type_hash = r.read_hex(16)
 
                 if types.embedded:
                     class_type.type_tree = self._read_type_node()
@@ -331,7 +332,7 @@ class SerializedFile(AutoCloseable):
             if self.header.version > 5:
                 external.asset_path = r.read_cstring()
 
-            external.guid = r.read_uuid()
+            external.guid = uuid.UUID(bytes=r.read(16))
             external.type = r.read_int32()
             external.file_path = r.read_cstring()
 

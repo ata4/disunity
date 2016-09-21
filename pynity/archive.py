@@ -128,7 +128,7 @@ class Archive(AutoCloseable):
 
         # read ArchiveStorageHeader::BlocksInfo
         self.blocks_info = blocks_info = ObjectDict()
-        blocks_info.uncompressed_data_hash = rb.read_hash128()
+        blocks_info.uncompressed_data_hash = rb.read_hex(16)
         blocks_info.storage_blocks = []
 
         num_blocks = rb.read_int32()

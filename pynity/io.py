@@ -3,7 +3,6 @@ import os
 import struct
 import binascii
 
-from uuid import UUID
 from enum import IntEnum
 
 class AutoCloseable:
@@ -225,12 +224,8 @@ class BinaryReader():
     def read_num(self, type, size=None):
         return self.read_struct(self._tag + type, size)[0]
 
-    def read_uuid(self):
-        data = self.read(16)
-        return UUID(bytes=data)
-
-    def read_hash128(self):
-        data = self.read(16)
+    def read_hex(self, length):
+        data = self.read(length)
         return binascii.hexlify(data).decode("ascii")
 
     def read_byte(self):
