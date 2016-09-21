@@ -73,8 +73,6 @@ class SerializedFile(AutoCloseable):
         self.string_mapper = StringMapper()
         self.type_db = TypeDatabase()
 
-        # open file and make some basic checks to make sure this is actually a
-        # serialized file
         if isinstance(file, str):
             fp = ChunkedFileIO.open(file, "rb")
         else:
@@ -88,6 +86,12 @@ class SerializedFile(AutoCloseable):
         self._read_object_info()
         self._read_script_types()
         self._read_externals()
+
+    def __iter__(self):
+        for path_id in self.objects:
+            object = self.read_object(path_id)
+            if object:
+                yield path_id, object
 
     def _read_header(self):
         r = self.r

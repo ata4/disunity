@@ -43,11 +43,7 @@ class SerializeDump(disunity.SerializedFileApp):
     def dump_objects(self, sf):
         objects = []
 
-        for path_id in sf.objects:
-            object = sf.read_object(path_id)
-            if not object:
-                continue
-
+        for path_id, object in sf:
             object_data = collections.OrderedDict()
             object_data["path"] = path_id
             object_data["class"] = object.__class__.__name__
