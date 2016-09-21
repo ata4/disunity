@@ -337,7 +337,7 @@ class SerializedFile(AutoCloseable):
 
             externals.append(external)
 
-    def _read_object_node(self, obj_type):
+    def _read_object_node(self, obj_type, obj_end):
         r = self.r
 
         if log.isEnabledFor(logging.DEBUG):
@@ -348,15 +348,19 @@ class SerializedFile(AutoCloseable):
             type_size = obj_type.children[0]
             type_data = obj_type.children[1]
 
-            size = self._read_object_node(type_size)
+            size = self._read_object_node(type_size, obj_end)
             if type_data.type in ("SInt8", "UInt8", "char"):
+                # fix size for AudioClips that are linked with .resS files
+                if self.header.version <= 13:
+                    size = min(size, obj_end - r.tell())
+
                 # read byte array
                 obj = r.read(size)
             else:
                 # read generic array
                 obj = []
                 for _ in range(size):
-                    obj.append(self._read_object_node(type_data))
+                    obj.append(self._read_object_node(type_data, obj_end))
 
             # arrays always need to be aligned in version 5 or newer
             if self.header.version > 5:
@@ -381,7 +385,7 @@ class SerializedFile(AutoCloseable):
             obj = obj_class()
 
             for child in obj_type.children:
-                obj[child.name] = self._read_object_node(child)
+                obj[child.name] = self._read_object_node(child, obj_end)
 
         if obj_type.type == "string":
             # convert string objects to native Python strings
@@ -427,10 +431,11 @@ class SerializedFile(AutoCloseable):
 
         # seek to object data start position
         object_pos = self.header.data_offset + object_info.byte_start
+        object_end = object_pos + object_info.byte_size
         self.r.seek(object_pos, io.SEEK_SET)
 
         # deserialize all type nodes
-        object = self._read_object_node(object_type)
+        object = self._read_object_node(object_type, object_end)
 
         # check if all bytes were read correctly
         object_size = self.r.tell() - object_pos
