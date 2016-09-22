@@ -27,6 +27,7 @@
   <ItemGroup>
     <Folder Include="disunity\" />
     <Folder Include="pynity\" />
+    <Folder Include="pynity\tests\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="disunity\app.py">
@@ -41,6 +42,8 @@
     <Compile Include="archive_unpack.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="pynity\tests\test_io.py" />
+    <Compile Include="pynity\tests\__init__.py" />
     <Compile Include="pynity\typedb.py">
       <SubType>Code</SubType>
     </Compile>
