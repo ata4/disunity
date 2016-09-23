@@ -159,7 +159,7 @@ class TypeDatabase:
                 for hash, versions in self.data.items():
                     for version_index in versions:
                         if version_index[:num_chars] == version[:num_chars]:
-                            return hash, version
+                            return hash, version_index
 
             return None, None
 
