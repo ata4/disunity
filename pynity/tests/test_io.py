@@ -2,7 +2,7 @@ import os
 import io
 import unittest
 
-from pynity.io import ChunkedFileIO, BinaryReader, ByteOrder
+from pynity.io import ChunkedFileIO, BinaryIO, ByteOrder
 
 class ChunkedFileIOTest(unittest.TestCase):
 
@@ -102,37 +102,37 @@ class ChunkedFileIOTest(unittest.TestCase):
         result = self.file.read()
         self.assertEqual(result, self.file_data)
 
-class BinaryReaderTest(unittest.TestCase):
+class BinaryIOTest(unittest.TestCase):
 
     def test_read_cstring(self):
         string = "Just a string"
         data = string.encode("ascii") + b"\0"
-        r = BinaryReader(io.BytesIO(data))
+        r = BinaryIO(io.BytesIO(data))
 
         self.assertEqual(r.read_cstring(), string)
 
     def test_read_cstring_eof(self):
         string = "Just a string"
         data = string.encode("ascii")
-        r = BinaryReader(io.BytesIO(data))
+        r = BinaryIO(io.BytesIO(data))
 
         self.assertRaises(IOError, r.read_cstring)
 
-    def test_read_byte(self):
+    def test_read_uint8(self):
         data = b"\x18"
-        r = BinaryReader(io.BytesIO(data))
+        r = BinaryIO(io.BytesIO(data))
 
-        self.assertEqual(r.read_byte(), 0x18)
+        self.assertEqual(r.read_uint8(), 0x18)
 
-    def test_read_byte_eof(self):
+    def test_read_uint8_eof(self):
         data = b""
-        r = BinaryReader(io.BytesIO(data))
+        r = BinaryIO(io.BytesIO(data))
 
-        self.assertEqual(r.read_byte(), None)
+        self.assertEqual(r.read_uint8(), None)
 
     def test_align(self):
         data = b"\0" * 64
-        r = BinaryReader(io.BytesIO(data))
+        r = BinaryIO(io.BytesIO(data))
 
         r.align(4)
         self.assertEqual(r.tell(), 0)
@@ -150,7 +150,7 @@ class BinaryReaderTest(unittest.TestCase):
         self.assertEqual(r.tell(), 32)
 
     def test_byteorder(self):
-        r = BinaryReader(io.BytesIO(b"\x12\x34"))
+        r = BinaryIO(io.BytesIO(b"\x12\x34"))
 
         self.assertEqual(r.order, ByteOrder.LITTLE_ENDIAN)
         self.assertEqual(r.read_int16(), 13330)

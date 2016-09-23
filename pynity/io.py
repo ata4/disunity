@@ -179,11 +179,17 @@ class ByteOrder(IntEnum):
     LITTLE_ENDIAN = 0
     BIG_ENDIAN = 1
 
-class BinaryReader():
+class BinaryIO():
 
     def __init__(self, fp, order=ByteOrder.LITTLE_ENDIAN):
         self.order = order
         self._fp = fp
+
+    def __enter__(self, *args, **kwargs):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self._fp.__exit__(*args, **kwargs)
 
     def __getattr__(self, attr):
         return getattr(self._fp, attr)
@@ -205,10 +211,10 @@ class BinaryReader():
 
     def read_cstring(self):
         buf = bytearray()
-        b = self.read_byte()
+        b = self.read_uint8()
         while b:
             buf.append(b)
-            b = self.read_byte()
+            b = self.read_uint8()
 
         if b is None:
             raise IOError("Unexpected EOF while reading C string")
@@ -219,21 +225,17 @@ class BinaryReader():
         if size is None:
             size = struct.calcsize(format)
         data = self.read(size)
-        return struct.unpack(format, data)
+        if len(data) == size:
+            return struct.unpack(format, data)
 
     def read_num(self, type, size=None):
-        return self.read_struct(self._tag + type, size)[0]
+        data = self.read_struct(self._tag + type, size)
+        if data:
+            return data[0]
 
     def read_hex(self, length):
         data = self.read(length)
         return binascii.hexlify(data).decode("ascii")
-
-    def read_byte(self):
-        b = self.read(1)
-        if b == b"":
-            return None
-        else:
-            return b[0]
 
     def read_int8(self):
         return self.read_num("b", 1)
@@ -273,3 +275,55 @@ class BinaryReader():
 
     def read_bool32(self):
         return bool(self.read_uint32())
+
+    def write_cstring(self, string):
+        return self.write(string.encode("ascii")) + self.write(b"\0")
+
+    def write_struct(self, format, *values):
+        return self.write(struct.pack(format, *values))
+
+    def write_num(self, type, value):
+        return self.write_struct(self._tag + type, value)
+
+    def write_hex(self, hex):
+        data = binascii.unhexlify(hex.encode("ascii"))
+        return self.write(data)
+
+    def write_int8(self, value):
+        return self.write_num("b", value)
+
+    def write_uint8(self, value):
+        return self.write_num("B", value)
+
+    def write_int16(self, value):
+        return self.write_num("h", value)
+
+    def write_uint16(self, value):
+        return self.write_num("H", value)
+
+    def write_int32(self, value):
+        return self.write_num("i", value)
+
+    def write_uint32(self, value):
+        return self.write_num("I", value)
+
+    def write_int64(self, value):
+        return self.write_num("q", value)
+
+    def write_uint64(self, value):
+        return self.write_num("Q", value)
+
+    def write_float(self, value):
+        return self.write_num("f", value)
+
+    def write_double(self, value):
+        return self.write_num("d", value)
+
+    def write_bool8(self, value):
+        return self.write_uint8(int(value))
+
+    def write_bool16(self, value):
+        return self.write_uint16(int(value))
+
+    def write_bool32(self, value):
+        return self.write_uint32(int(value))

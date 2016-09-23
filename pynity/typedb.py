@@ -1,93 +1,102 @@
 import os
 import json
 import logging
+import hashlib
 
 from collections import OrderedDict
 
 from .utils import ObjectDict
+from .io import BinaryIO
 
 log = logging.getLogger("pynity.typedb")
 
 class TypeDatabase:
 
-    cache = {}
-    cache_old = {}
+    type_ext = ".unitytype"
 
     def __init__(self):
         self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
         self.path_types = os.path.join(self.path_resources, "types")
         self.path_types_old = os.path.join(self.path_resources, "types_old")
 
-    def add(self, type_tree, class_id, hash):
+        self.signature = ""
+        self.version = None
+        self.order = None
+
+    def add(self, type_tree_raw, class_id, hash):
+        if class_id < 0:
+            return False
+
         path_dir = os.path.join(self.path_types, str(class_id))
         if not os.path.exists(path_dir):
             os.makedirs(path_dir)
 
         # write missing type files
-        path_type = os.path.join(path_dir, hash + ".json")
-        if not os.path.exists(path_type):
+        path_type = os.path.join(path_dir, hash + self.type_ext)
+        added = self._write_type(type_tree_raw, path_type)
+        if added:
             log.info("Added type %s for class %d" % (hash, class_id))
-            with open(path_type, "w") as fp:
-                json.dump(type_tree, fp, indent=2)
-            return True
-        else:
+
+        return added
+
+    def add_old(self, type_tree_raw, class_id):
+        if class_id < 0:
             return False
 
-    def add_old(self, type_tree, class_id, hash, version):
         path_dir = os.path.join(self.path_types_old, str(class_id))
         if not os.path.exists(path_dir):
             os.makedirs(path_dir)
 
-        # check if the version already has a hash
+        # check if the signature already has a hash
         index = self.VersionIndex(path_dir, class_id)
-        if index.get(version, exact=True):
+        if index.get(self.signature, exact=True):
             return False
 
+        hash = hashlib.md5(type_tree_raw).hexdigest()
+
         # write missing type files
-        path_type = os.path.join(path_dir, hash + ".json")
-        if not os.path.exists(path_type):
+        path_type = os.path.join(path_dir, hash + self.type_ext)
+        added = self._write_type(type_tree_raw, path_type)
+        if added:
             log.info("Added type %s for class %d" % (hash, class_id))
-            with open(path_type, "w") as fp:
-                json.dump(type_tree, fp, indent=2)
-            return True
 
         # update version index
-        if index.add(version, hash):
-            return True
+        if index.add(self.signature, hash):
+            added = True
 
-        return False
+        return added
+
+    def _write_type(self, data, path):
+        if os.path.exists(path):
+            return False
+
+        with BinaryIO(open(path, "wb"), order=self.order) as w:
+            w.write_int8(int(self.order))
+            w.write_int32(self.version)
+            w.write(data)
+
+        return True
 
     def get(self, class_id, hash):
-        # load from cache if possible
-        if hash in self.cache:
-            return self.cache[hash]
-
         path_type_dir = os.path.join(self.path_types, str(class_id))
-        path_type = os.path.join(path_type_dir, hash + ".json")
+        path_type = os.path.join(path_type_dir, hash + self.type_ext)
 
         # bail out if the type file doesn't exist
         if not os.path.exists(path_type):
             log.warning("Type %s for class %d not found in file or database" %
                         (hash, class_id))
-            self.cache[hash] = None
             return
 
         # load type file
         log.debug("Type %s for class %d loaded from database" % (hash, class_id))
 
-        with open(path_type) as fp:
-            type_tree = ObjectDict.from_dict(json.load(fp))
-            self.cache[hash] = type_tree
-            return type_tree
+        with open(path_type, "rb") as fp:
+            return fp.read()
 
     def get_old(self, class_id, version):
         # script types are never saved in database
         if class_id < 0:
             return
-
-        # load from cache if possible
-        if class_id in self.cache_old:
-            return self.cache_old[class_id]
 
         # load version index and find type hash for version
         path_type_dir = os.path.join(self.path_types_old, str(class_id))
@@ -99,18 +108,15 @@ class TypeDatabase:
         if not hash:
             log.warning("Type for class %d not found in file or database"
                         % class_id)
-            self.cache_old[class_id] = None
             return
 
         # load type file
-        path_type = os.path.join(path_type_dir, hash + ".json")
+        path_type = os.path.join(path_type_dir, hash + self.type_ext)
 
         log.debug("Type %s for class %d loaded from database" % (hash, class_id))
 
-        with open(path_type) as fp:
-            type_tree = ObjectDict.from_dict(json.load(fp))
-            self.cache_old[class_id] = type_tree
-            return type_tree
+        with open(path_type, "rb") as fp:
+            return fp.read()
 
     class VersionIndex:
 

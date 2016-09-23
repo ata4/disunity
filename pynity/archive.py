@@ -6,7 +6,7 @@ import struct
 
 from enum import Enum
 
-from .io import AutoCloseable, BinaryReader, ByteOrder
+from .io import AutoCloseable, BinaryIO, ByteOrder
 from .utils import ObjectDict
 
 class Compression(Enum):
@@ -33,7 +33,7 @@ class Archive(AutoCloseable):
         return True
 
     def __init__(self, path):
-        self.r = self.rd = BinaryReader(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
+        self.r = self.rd = BinaryIO(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
         self._read_header()
 
     def _read_header(self):
@@ -83,7 +83,7 @@ class Archive(AutoCloseable):
 
         # open data stream
         if self.header.signature == "UnityWeb":
-            rd = self.rd = BinaryReader(lzma.open(r, "rb"), order=ByteOrder.BIG_ENDIAN)
+            rd = self.rd = BinaryIO(lzma.open(r, "rb"), order=ByteOrder.BIG_ENDIAN)
 
         # read StreamingInfo structs
         entries = self.entries = []
@@ -124,7 +124,7 @@ class Archive(AutoCloseable):
 
         blocks_info_data = self._read_block(method, blocks_info_size_c, blocks_info_size_u)
 
-        rb = BinaryReader(io.BytesIO(blocks_info_data), order=ByteOrder.BIG_ENDIAN)
+        rb = BinaryIO(io.BytesIO(blocks_info_data), order=ByteOrder.BIG_ENDIAN)
 
         # read ArchiveStorageHeader::BlocksInfo
         self.blocks_info = blocks_info = ObjectDict()
@@ -183,7 +183,7 @@ class Archive(AutoCloseable):
 
             fp = io.BytesIO(data)
 
-        self.rd = BinaryReader(fp, order=ByteOrder.BIG_ENDIAN)
+        self.rd = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
 
     def _read_block(self, method, compressed_size, uncompressed_size):
         block = self.r.read(compressed_size)

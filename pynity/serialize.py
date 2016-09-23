@@ -1,11 +1,11 @@
 import io
 import os
 import json
+import io
 import logging
-import hashlib
 import uuid
 
-from .io import AutoCloseable, BinaryReader, ChunkedFileIO, ByteOrder
+from .io import AutoCloseable, BinaryIO, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
 from .typedb import TypeDatabase
 
@@ -17,24 +17,24 @@ class SerializedFile(AutoCloseable):
 
     versions = [5, 6, 8, 9, 14, 15]
     read_prim = {
-        "bool":             BinaryReader.read_bool8,
-        "SInt8":            BinaryReader.read_int8,
-        "UInt8":            BinaryReader.read_uint8,
-        "char":             BinaryReader.read_uint8,
-        "SInt16":           BinaryReader.read_int16,
-        "short":            BinaryReader.read_int16,
-        "UInt16":           BinaryReader.read_uint16,
-        "unsigned short":   BinaryReader.read_uint16,
-        "SInt32":           BinaryReader.read_int32,
-        "int":              BinaryReader.read_int32,
-        "UInt32":           BinaryReader.read_uint32,
-        "unsigned int":     BinaryReader.read_uint32,
-        "SInt64":           BinaryReader.read_int64,
-        "long":             BinaryReader.read_int64,
-        "UInt64":           BinaryReader.read_uint64,
-        "unsigned long":    BinaryReader.read_uint64,
-        "float":            BinaryReader.read_float,
-        "double":           BinaryReader.read_double,
+        "bool":             BinaryIO.read_bool8,
+        "SInt8":            BinaryIO.read_int8,
+        "UInt8":            BinaryIO.read_uint8,
+        "char":             BinaryIO.read_uint8,
+        "SInt16":           BinaryIO.read_int16,
+        "short":            BinaryIO.read_int16,
+        "UInt16":           BinaryIO.read_uint16,
+        "unsigned short":   BinaryIO.read_uint16,
+        "SInt32":           BinaryIO.read_int32,
+        "int":              BinaryIO.read_int32,
+        "UInt32":           BinaryIO.read_uint32,
+        "unsigned int":     BinaryIO.read_uint32,
+        "SInt64":           BinaryIO.read_int64,
+        "long":             BinaryIO.read_int64,
+        "UInt64":           BinaryIO.read_uint64,
+        "unsigned long":    BinaryIO.read_uint64,
+        "float":            BinaryIO.read_float,
+        "double":           BinaryIO.read_double,
     }
 
     types_cache = {}
@@ -46,7 +46,7 @@ class SerializedFile(AutoCloseable):
 
     @classmethod
     def probe_file(cls, file):
-        r = BinaryReader(file, order=ByteOrder.BIG_ENDIAN)
+        r = BinaryIO(file, order=ByteOrder.BIG_ENDIAN)
 
         # get file size
         r.seek(0, io.SEEK_END)
@@ -79,7 +79,7 @@ class SerializedFile(AutoCloseable):
         else:
             fp = file
 
-        self.r = BinaryReader(fp, order=ByteOrder.BIG_ENDIAN)
+        self.r = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
 
         # read metadata
         self._read_header()
@@ -94,8 +94,9 @@ class SerializedFile(AutoCloseable):
             if object:
                 yield path_id, object
 
-    def _read_header(self):
-        r = self.r
+    def _read_header(self, r=None):
+        if not r:
+            r = self.r
 
         header = self.header = ObjectDict()
         header.metadata_size = r.read_int32()
@@ -123,8 +124,9 @@ class SerializedFile(AutoCloseable):
         elif header.version > 5:
             r.order = ByteOrder.LITTLE_ENDIAN
 
-    def _read_types(self):
-        r = self.r
+    def _read_types(self, r=None):
+        if not r:
+            r = self.r
 
         types = self.types = ObjectDict()
 
@@ -141,6 +143,7 @@ class SerializedFile(AutoCloseable):
             types.embedded = r.read_bool8()
 
         types.classes = {}
+        types_raw = self.types_raw = {}
 
         num_classes = r.read_int32()
         for _ in range(num_classes):
@@ -154,18 +157,19 @@ class SerializedFile(AutoCloseable):
                 class_type.old_type_hash = r.read_hex(16)
 
                 if types.embedded:
+                    type_pos = r.tell()
                     class_type.type_tree = self._read_type_node()
-                else:
-                    class_type.type_tree = None
+                    type_size = r.tell() - type_pos
+
+                    r.seek(type_pos)
+                    types_raw[class_id] = r.read(type_size)
             else:
                 type_pos = r.tell()
                 class_type.type_tree = self._read_type_node_old()
                 type_size = r.tell() - type_pos
 
-                # create hash from binary type
                 r.seek(type_pos)
-                type_tree_raw = r.read(type_size)
-                class_type.old_type_hash = hashlib.md5(type_tree_raw).hexdigest()
+                types_raw[class_id] = r.read(type_size)
 
             if class_id in types.classes:
                 raise SerializedFileError("Duplicate class ID %d" % class_id)
@@ -176,8 +180,9 @@ class SerializedFile(AutoCloseable):
         if 6 < self.header.version < 13:
             r.read_int32()
 
-    def _read_type_node(self):
-        r = self.r
+    def _read_type_node(self, r=None):
+        if not r:
+            r = self.r
 
         # read sizes
         num_fields = r.read_int32()
@@ -242,8 +247,9 @@ class SerializedFile(AutoCloseable):
 
         return field_root
 
-    def _read_type_node_old(self):
-        r = self.r
+    def _read_type_node_old(self, r=None):
+        if not r:
+            r = self.r
 
         field = ObjectDict()
         field.type = r.read_cstring()
@@ -257,12 +263,13 @@ class SerializedFile(AutoCloseable):
 
         num_children = r.read_int32()
         for _ in range(num_children):
-            field.children.append(self._read_type_node_old())
+            field.children.append(self._read_type_node_old(r))
 
         return field
 
-    def _read_object_info(self):
-        r = self.r
+    def _read_object_info(self, r=None):
+        if not r:
+            r = self.r
 
         objects = self.objects = {}
 
@@ -300,8 +307,9 @@ class SerializedFile(AutoCloseable):
 
             objects[path_id] = obj
 
-    def _read_script_types(self):
-        r = self.r
+    def _read_script_types(self, r=None):
+        if not r:
+            r = self.r
 
         script_types = self.script_types = []
 
@@ -320,8 +328,9 @@ class SerializedFile(AutoCloseable):
 
             script_types.append(script_type)
 
-    def _read_externals(self):
-        r = self.r
+    def _read_externals(self, r=None):
+        if not r:
+            r = self.r
 
         externals = self.externals = []
 
@@ -338,8 +347,9 @@ class SerializedFile(AutoCloseable):
 
             externals.append(external)
 
-    def _read_object_node(self, obj_type, obj_end):
-        r = self.r
+    def _read_object_node(self, obj_type, obj_end, r=None):
+        if not r:
+            r = self.r
 
         if log.isEnabledFor(logging.DEBUG):
             log.debug("%d %s %s" % (r.tell(), obj_type.type, obj_type.name))
@@ -403,7 +413,10 @@ class SerializedFile(AutoCloseable):
 
         return obj
 
-    def read_object(self, path_id):
+    def read_object(self, path_id, r=None):
+        if not r:
+            r = self.r
+
         # get object info
         object_info = self.objects.get(path_id)
         if not object_info:
@@ -412,34 +425,54 @@ class SerializedFile(AutoCloseable):
         # get object type class
         object_class = self.types.classes.get(object_info.type_id)
 
-        # get object type from the embedded data, otherwise from database
+        # use embedded object type tree or load it from database otherwise
         if self.header.version > 13:
-            if self.types.embedded:
-                object_type = object_class.type_tree
-            else:
-                object_type = self.type_db.get(object_info.type_id,
-                                               object_class.old_type_hash)
-        else:
-            if object_class:
-                object_type = object_class.type_tree
-            else:
-                object_type = self.type_db.get_old(object_info.type_id,
-                                                   self.types.signature)
+            if not self.types.embedded:
+                # object_class should always be defined in newer formats
+                assert object_class
 
-        # cancel if there's no type information available
+                type_data = self.type_db.get(object_info.type_id,
+                                             object_class.old_type_hash)
+                if data:
+                    rt = BinaryIO(io.BytesIO(type_data))
+                    rt.order = ByteOrder(rt.read_int8())
+
+                    # currently unused, may be helpful in future
+                    version = rt.read_int32()
+
+                    object_class.type_tree = self._read_type_node(rt)
+        elif not object_class:
+            type_data = self.type_db.get_old(object_info.type_id,
+                                                self.types.signature)
+            if type_data:
+                rt = BinaryIO(io.BytesIO(type_data))
+                rt.order = ByteOrder(rt.read_int8())
+
+                # currently unused, may be helpful in future
+                version = rt.read_int32()
+
+                object_class = ObjectDict()
+                object_class.type_tree = self._read_type_node_old(rt)
+                self.types.classes[object_info.type_id] = object_class
+
+        # cancel if there's no type tree available
+        if not object_class:
+            return
+
+        object_type = object_class.type_tree
         if not object_type:
             return
 
         # seek to object data start position
         object_pos = self.header.data_offset + object_info.byte_start
         object_end = object_pos + object_info.byte_size
-        self.r.seek(object_pos, io.SEEK_SET)
+        r.seek(object_pos, io.SEEK_SET)
 
         # deserialize all type nodes
         object = self._read_object_node(object_type, object_end)
 
         # check if all bytes were read correctly
-        object_size = self.r.tell() - object_pos
+        object_size = r.tell() - object_pos
         if object_size != object_info.byte_size:
             raise SerializationError("Wrong object size for path %d: %d != %d"
                                      % (path_id, object_size, object_info.byte_size))
@@ -451,26 +484,35 @@ class SerializedFile(AutoCloseable):
         types_dir = os.path.join(script_dir, "resources", "types")
         types_added = 0
 
+        # skip scan entirely if there are no embedded types
+        if not self.types_raw:
+            return types_added
+
+        if not signature:
+            signature = self.types.get("signature")
+
+        self.type_db.signature = signature
+        self.type_db.version = self.header.version
+        self.type_db.order = self.r.order
+
         for class_id in self.types.classes:
             # ignore script types
             if class_id <= 0:
+                continue
+
+            if class_id not in self.types_raw:
                 continue
 
             class_type = self.types.classes[class_id]
 
             # create type files that don't exist yet
             if self.header.version > 13:
-                if (self.types.embedded and 
-                    self.type_db.add(class_type.type_tree, class_id,
-                                     class_type.old_type_hash)):
+                if self.type_db.add(self.types_raw[class_id], class_id,
+                                     class_type.old_type_hash):
                         types_added += 1
             else:
-                if not signature:
-                    signature = self.types.get("signature")
-
                 if (class_type and signature and
-                    self.type_db.add_old(class_type.type_tree, class_id,
-                                         class_type.old_type_hash, signature)):
+                    self.type_db.add_old(self.types_raw[class_id], class_id)):
                     types_added += 1
 
         return types_added
