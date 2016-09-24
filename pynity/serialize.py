@@ -8,6 +8,7 @@ import uuid
 from .io import AutoCloseable, BinaryIO, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
 from .typedb import TypeDatabase
+from .stringtable import StringTable
 
 METAFLAG_ALIGN = 0x4000
 
@@ -71,7 +72,6 @@ class SerializedFile(AutoCloseable):
         return file_size == header_file_size
 
     def __init__(self, file):
-        self.string_mapper = StringMapper()
         self.type_db = TypeDatabase()
 
         if isinstance(file, str):
@@ -193,7 +193,7 @@ class SerializedFile(AutoCloseable):
         tree_len = 24 * num_fields
         r.seek(tree_len, io.SEEK_CUR)
         string_table_buf = r.read(string_table_len)
-        string_table = self.string_mapper.get(string_table_buf)
+        string_table = StringTable.load(string_table_buf)
         r.seek(tree_pos)
 
         # read type tree
@@ -433,7 +433,7 @@ class SerializedFile(AutoCloseable):
 
                 type_data = self.type_db.get(object_info.type_id,
                                              object_class.old_type_hash)
-                if data:
+                if type_data:
                     rt = BinaryIO(io.BytesIO(type_data))
                     rt.order = ByteOrder(rt.read_int8())
 
@@ -525,36 +525,3 @@ class SerializedFileError(Exception):
 
 class SerializationError(Exception):
     pass
-
-class StringMapper:
-
-    strings_global = {}
-
-    def __init__(self):
-        if self.strings_global:
-            return
-
-        script_dir = os.path.dirname(__file__)
-        strings_path = os.path.join(script_dir, "resources", "strings.json")
-
-        with open(strings_path) as fp:
-            json_strings = json.load(fp)
-
-        self.strings_global = self._create_map(json_strings, offset=1 << 31)
-
-    def _create_map(self, strings, offset=0):
-        string_map = {}
-        p = 0
-        for string in strings:
-            if not string:
-                continue
-
-            string_map[p + offset] = string
-            p += len(string) + 1
-        return string_map
-
-    def get(self, buf):
-        strings = [string.decode("ascii") for string in buf.split(b'\0')]
-        string_map = self.strings_global.copy()
-        string_map.update(self._create_map(strings))
-        return string_map
