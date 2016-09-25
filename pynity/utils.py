@@ -7,10 +7,10 @@ class ObjectDict(OrderedDict):
     __delattr__ = OrderedDict.__delitem__
 
     @classmethod
-    def from_dict(cls, d):
-        if isinstance(d, dict):
-            return cls((k, cls.from_dict(v)) for k,v in d.items())
-        elif isinstance(d, (list, tuple)):
-            return type(d)(cls.from_dict(v) for v in d)
+    def from_dict(cls, dict_src):
+        if isinstance(dict_src, dict):
+            return cls((k, cls.from_dict(v)) for k, v in dict_src.items())
+        elif isinstance(dict_src, (list, tuple)):
+            return type(dict_src)(cls.from_dict(v) for v in dict_src)
         else:
-            return d
+            return dict_src

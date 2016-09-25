@@ -47,6 +47,8 @@ class ChunkedFileIO(io.BufferedIOBase):
             return cls(paths, mode)
 
     def __init__(self, paths, mode):
+        super(ChunkedFileIO, self).__init__()
+
         self._chunks = []
         self._index = 0
         self._size = 0
@@ -69,11 +71,12 @@ class ChunkedFileIO(io.BufferedIOBase):
             return None
 
         self._index += 1
-        c = self._chunk()
-        c.seek(c.start)
-        return c
+        chunk = self._chunk()
+        chunk.seek(chunk.start)
+        return chunk
 
     def _chunk_find(self, pos):
+        chunk = None
         for self._index, chunk in enumerate(self._chunks):
             if chunk.end >= pos:
                 break
@@ -89,7 +92,7 @@ class ChunkedFileIO(io.BufferedIOBase):
         return True
 
     def read(self, size=-1):
-        if size == -1 or size == None:
+        if size == -1 or size is None:
             size = self._size - self.tell()
 
         if size == 0:
@@ -120,7 +123,7 @@ class ChunkedFileIO(io.BufferedIOBase):
                 data.extend(data2)
 
             # make buffer immutable again
-            data = bytes(data)
+            #data = bytes(data)
 
         return data
 
@@ -182,8 +185,11 @@ class ByteOrder(IntEnum):
 class BinaryIO():
 
     def __init__(self, fp, order=ByteOrder.LITTLE_ENDIAN):
-        self.order = order
+        self._order = None
+        self._tag = None
         self._fp = fp
+
+        self.order = order
 
     def __enter__(self, *args, **kwargs):
         return self
@@ -211,25 +217,25 @@ class BinaryIO():
 
     def read_cstring(self):
         buf = bytearray()
-        b = self.read_uint8()
-        while b:
-            buf.append(b)
-            b = self.read_uint8()
+        byte = self.read_uint8()
+        while byte:
+            buf.append(byte)
+            byte = self.read_uint8()
 
-        if b is None:
+        if byte is None:
             raise IOError("Unexpected EOF while reading C string")
 
         return buf.decode("ascii")
 
-    def read_struct(self, format, size=None):
+    def read_struct(self, fmt, size=None):
         if size is None:
-            size = struct.calcsize(format)
+            size = struct.calcsize(fmt)
         data = self.read(size)
         if len(data) == size:
-            return struct.unpack(format, data)
+            return struct.unpack(fmt, data)
 
-    def read_num(self, type, size=None):
-        data = self.read_struct(self._tag + type, size)
+    def read_num(self, stype, size=None):
+        data = self.read_struct(self._tag + stype, size)
         if data:
             return data[0]
 
@@ -279,14 +285,14 @@ class BinaryIO():
     def write_cstring(self, string):
         return self.write(string.encode("ascii")) + self.write(b"\0")
 
-    def write_struct(self, format, *values):
-        return self.write(struct.pack(format, *values))
+    def write_struct(self, fmt, *values):
+        return self.write(struct.pack(fmt, *values))
 
-    def write_num(self, type, value):
-        return self.write_struct(self._tag + type, value)
+    def write_num(self, stype, value):
+        return self.write_struct(self._tag + stype, value)
 
-    def write_hex(self, hex):
-        data = binascii.unhexlify(hex.encode("ascii"))
+    def write_hex(self, hexstr):
+        data = binascii.unhexlify(hexstr.encode("ascii"))
         return self.write(data)
 
     def write_int8(self, value):

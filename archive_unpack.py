@@ -1,12 +1,16 @@
 import sys
 import os
 
+from pprint import pprint
+
 import disunity
 import pynity
 
 class ArchiveUnpack(disunity.RecursiveFileApp):
 
     def __init__(self):
+        super(ArchiveUnpack, self).__init__()
+
         self.debug = False
 
     def process(self, path):

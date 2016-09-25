@@ -1,14 +1,14 @@
 import sys
 import os
-import io
 import getopt
 
 import disunity
-import pynity
 
 class SerializeTest(disunity.SerializedFileApp):
 
     def __init__(self):
+        super(SerializeTest, self).__init__()
+
         self.num_files_passed = 0
         self.num_files_failed = 0
         self.num_objects_passed = 0
@@ -93,7 +93,7 @@ class SerializeTest(disunity.SerializedFileApp):
 
                     self.num_objects_passed += 1
                 except Exception:
-                    self.log.exception("Failed deserialization for path ID %d" % path_id)
+                    self.log.exception("Failed deserialization for path ID %d", path_id)
                     self.num_objects_failed += 1
 
         self.num_files_passed += 1

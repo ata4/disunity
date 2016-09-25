@@ -1,7 +1,6 @@
 import lzma
 import lz4
 import io
-import os
 import struct
 
 from enum import Enum
@@ -34,6 +33,8 @@ class Archive(AutoCloseable):
 
     def __init__(self, path):
         self.r = self.rd = BinaryIO(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
+        self.entries = None
+        self.blocks_info = None
         self._read_header()
 
     def _read_header(self):
@@ -69,7 +70,7 @@ class Archive(AutoCloseable):
         header.num_levels = r.read_uint32()
 
         header.scene_byte_end = []
-        for i in range(header.num_levels):
+        for _ in range(header.num_levels):
             byte_end = (r.read_uint32(), r.read_uint32())
             header.scene_byte_end.append(byte_end)
 
@@ -88,15 +89,12 @@ class Archive(AutoCloseable):
         # read StreamingInfo structs
         entries = self.entries = []
         num_entries = rd.read_uint32()
-        for i in range(num_entries):
+        for _ in range(num_entries):
             entry = ObjectDict()
             entry.path = rd.read_cstring()
             entry.offset = rd.read_uint32()
             entry.size = rd.read_uint32()
             entries.append(entry)
-
-        # unused
-        self.blocks_info = None
 
     def _read_header_fs(self):
         r = self.r
@@ -164,22 +162,23 @@ class Archive(AutoCloseable):
             prop = r.read_uint8()
             dict_size = r.read_uint32()
 
-            filter = ObjectDict()
-            filter.id = lzma.FILTER_LZMA1
-            filter.dict_size = dict_size
-            filter.lc = prop % 9
+            fprop = ObjectDict()
+            fprop.id = lzma.FILTER_LZMA1
+            fprop.dict_size = dict_size
+            fprop.lc = prop % 9
             prop //= 9
-            filter.lp = prop % 5
-            filter.pb = prop // 5
+            fprop.lp = prop % 5
+            fprop.pb = prop // 5
 
-            fp = lzma.open(self.r, "rb", format=lzma.FORMAT_RAW, filters=[filter])
+            fp = lzma.open(self.r, "rb", format=lzma.FORMAT_RAW, filters=[fprop])
         else:
             # TODO: implement as stream instead of decompressing all blocks in
             # memory at once
             data = bytearray()
             for block in blocks_info.storage_blocks:
                 data.extend(self._read_block(block.flags.compression_method,
-                    block.compressed_size, block.uncompressed_size))
+                                             block.compressed_size,
+                                             block.uncompressed_size))
 
             fp = io.BytesIO(data)
 

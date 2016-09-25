@@ -6,11 +6,12 @@ import base64
 import textwrap
 
 import disunity
-import pynity
 
 class SerializeDump(disunity.SerializedFileApp):
 
     def __init__(self):
+        super(SerializeTest, self).__init__()
+
         self.cmds = {
             "header": lambda sf: self.json_dump(sf.header),
             "types": lambda sf: self.json_dump(sf.types),
@@ -31,39 +32,39 @@ class SerializeDump(disunity.SerializedFileApp):
             return False
 
         self.cmd = argv.pop(0)
-        if not self.cmd in self.cmds:
+        if self.cmd not in self.cmds:
             return False
 
         return len(argv) > 0
 
     def usage(self):
-        cmds =  "|".join(self.cmds.keys())
+        cmds = "|".join(self.cmds.keys())
         print("Usage: %s [%s] [FILE...]" % (os.path.basename(self.path), cmds))
 
     def dump_objects(self, sf):
         objects = []
 
-        for path_id, object in sf:
-            object_data = collections.OrderedDict()
-            object_data["path"] = path_id
-            object_data["class"] = object.__class__.__name__
-            object_data["object"] = object
+        for path_id, obj in sf:
+            obj_data = collections.OrderedDict()
+            obj_data["path"] = path_id
+            obj_data["class"] = obj.__class__.__name__
+            obj_data["object"] = obj
 
-            objects.append(object_data)
+            objects.append(obj_data)
 
         self.json_dump(objects)
 
-    def json_dump(self, object):
+    def json_dump(self, obj):
         class JSONEncoderImpl(json.JSONEncoder):
             def default(self, o):
-                if type(o) in [bytearray, bytes]:
+                if isinstance(o, (bytearray, bytes)):
                     # encode binary data to base64
                     return textwrap.wrap(base64.b64encode(o).decode("ascii"))
                 else:
                     # use default string representation
                     return str(o)
 
-        json.dump(object, sys.stdout, indent=2, cls=JSONEncoderImpl)
+        json.dump(obj, sys.stdout, indent=2, cls=JSONEncoderImpl)
 
 if __name__ == "__main__":
     sys.exit(SerializeDump().main(sys.argv))

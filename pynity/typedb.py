@@ -5,7 +5,6 @@ import hashlib
 
 from collections import OrderedDict
 
-from .utils import ObjectDict
 from .io import BinaryIO, ByteOrder
 
 log = logging.getLogger("pynity.typedb")
@@ -31,8 +30,8 @@ class TypeDatabase:
         r = BinaryIO(open(path, "rb"))
         r.order = ByteOrder(r.read_int8())
 
-        # currently unused, may be helpful in future
-        version = r.read_int32()
+        # file version, currently unused but may be helpful in future
+        r.read_int32()
 
         return r
 
@@ -47,7 +46,7 @@ class TypeDatabase:
 
         return True
 
-    def add(self, type_tree_raw, class_id, hash):
+    def add(self, type_tree_raw, class_id, type_hash):
         if class_id < 0:
             return False
 
@@ -56,10 +55,10 @@ class TypeDatabase:
             os.makedirs(path_dir)
 
         # write missing type files
-        path_type = os.path.join(path_dir, hash + self.type_ext)
+        path_type = os.path.join(path_dir, type_hash + self.type_ext)
         added = self._type_write(type_tree_raw, path_type)
         if added:
-            log.info("Added type %s for class %d" % (hash, class_id))
+            log.info("Added type %s for class %d", type_hash, class_id)
 
         return added
 
@@ -76,32 +75,32 @@ class TypeDatabase:
         if index.get(self.signature, exact=True):
             return False
 
-        hash = hashlib.md5(type_tree_raw).hexdigest()
+        type_hash = hashlib.md5(type_tree_raw).hexdigest()
 
         # write missing type files
-        path_type = os.path.join(path_dir, hash + self.type_ext)
+        path_type = os.path.join(path_dir, type_hash + self.type_ext)
         added = self._type_write(type_tree_raw, path_type)
         if added:
-            log.info("Added type %s for class %d" % (hash, class_id))
+            log.info("Added type %s for class %d", type_hash, class_id)
 
         # update version index
-        if index.add(self.signature, hash):
+        if index.add(self.signature, type_hash):
             added = True
 
         return added
 
-    def open(self, class_id, hash):
+    def open(self, class_id, type_hash):
         path_type_dir = os.path.join(self.path_types, str(class_id))
-        path_type = os.path.join(path_type_dir, hash + self.type_ext)
+        path_type = os.path.join(path_type_dir, type_hash + self.type_ext)
 
         # bail out if the type file doesn't exist
         if not os.path.exists(path_type):
             raise TypeException(
-                "Type %s for class %d not found in file or database" % 
-                (hash, class_id))
+                "Type %s for class %d not found in file or database",
+                type_hash, class_id)
 
         # open type file
-        log.debug("Type %s for class %d loaded from database" % (hash, class_id))
+        log.debug("Type %s for class %d loaded from database", type_hash, class_id)
 
         return self._type_open(path_type)
 
@@ -114,17 +113,17 @@ class TypeDatabase:
         path_type_dir = os.path.join(self.path_types_old, str(class_id))
 
         index = self.VersionIndex(path_type_dir, class_id)
-        hash = index.get(version)
+        type_hash = index.get(version)
 
         # bail out if there's no match inside the index
-        if not hash:
-            raise TypeException("Type for class %d not found in file or database"
-                                % class_id)
+        if not type_hash:
+            raise TypeException("Type for class %d not found in file or database",
+                                class_id)
 
         # open type file
-        path_type = os.path.join(path_type_dir, hash + self.type_ext)
+        path_type = os.path.join(path_type_dir, type_hash + self.type_ext)
 
-        log.debug("Type %s for class %d loaded from database" % (hash, class_id))
+        log.debug("Type %s for class %d loaded from database", type_hash, class_id)
 
         return self._type_open(path_type)
 
@@ -141,54 +140,54 @@ class TypeDatabase:
 
         def get(self, version, exact=False):
             # search for direct match
-            hash, version_match = self.search(version)
-            if hash or exact:
-                return hash
+            type_hash, version_match = self.search(version)
+            if type_hash or exact:
+                return type_hash
 
             # search for major, minor and patch (first 5 chars)
-            hash, version_match = self.search(version, 5)
-            if hash:
-                return hash
+            type_hash, version_match = self.search(version, 5)
+            if type_hash:
+                return type_hash
 
             # search for major and minor only (first 3 chars)
-            hash, version_match = self.search(version, 3)
-            if hash:
+            type_hash, version_match = self.search(version, 3)
+            if type_hash:
                 log.warning("Using database type %s for version %s instead of %s, "
-                            "deserializing objects using class %d may fail!"
-                             % (hash, version_match, version, self.class_id))
-                return hash
+                            "deserializing objects using class %d may fail!",
+                            type_hash, version_match, version, self.class_id)
+                return type_hash
 
         def search(self, version, num_chars=0):
             if num_chars == 0:
                 # search for exact version
-                for hash, versions in self.data.items():
+                for type_hash, versions in self.data.items():
                     if version in versions:
-                        return hash, version
+                        return type_hash, version
             else:
                 # search for version substring
-                for hash, versions in self.data.items():
+                for type_hash, versions in self.data.items():
                     for version_index in versions:
                         if version_index[:num_chars] == version[:num_chars]:
-                            return hash, version_index
+                            return type_hash, version_index
 
             return None, None
 
-        def add(self, version, hash):
+        def add(self, version, type_hash):
             # catch potential silly mistakes
-            assert len(hash) == 32
+            assert len(type_hash) == 32
 
             # cancel if version is already in index
-            if hash in self.data and version in self.data[hash]:
+            if type_hash in self.data and version in self.data[type_hash]:
                 return False
 
             # insert version and hash
-            if hash in self.data:
-                self.data[hash].append(version)
+            if type_hash in self.data:
+                self.data[type_hash].append(version)
             else:
-                self.data[hash] = [version]
+                self.data[type_hash] = [version]
 
-            log.info("Added version %s to type %s for class %d" %
-                     (version, hash, self.class_id))
+            log.info("Added version %s to type %s for class %d",
+                     version, type_hash, self.class_id)
 
             # update index file
             self.save()

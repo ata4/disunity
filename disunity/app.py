@@ -7,8 +7,11 @@ import pynity
 
 class RecursiveFileApp:
 
-    def main(self, argv):
+    def __init__(self):
         self.log = logging.getLogger()
+        self.path = None
+
+    def main(self, argv):
         self.path = argv.pop(0)
 
         if not self.parse_args(argv):

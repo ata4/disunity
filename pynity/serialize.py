@@ -1,7 +1,4 @@
 import io
-import os
-import json
-import io
 import logging
 import uuid
 
@@ -65,7 +62,7 @@ class SerializedFile(AutoCloseable):
         r.seek(0, io.SEEK_SET)
 
         # check version range
-        if not (cls.versions[0] <= header_version <= cls.versions[-1]):
+        if not cls.versions[0] <= header_version <= cls.versions[-1]:
             return False
 
         # check file size
@@ -90,9 +87,9 @@ class SerializedFile(AutoCloseable):
 
     def __iter__(self):
         for path_id in self.objects:
-            object = self.read_object(path_id)
-            if object:
-                yield path_id, object
+            obj = self.read_object(path_id)
+            if obj:
+                yield path_id, obj
 
     def _read_header(self, r=None):
         if not r:
@@ -352,7 +349,7 @@ class SerializedFile(AutoCloseable):
             r = self.r
 
         if log.isEnabledFor(logging.DEBUG):
-            log.debug("%d %s %s" % (r.tell(), obj_type.type, obj_type.name))
+            log.debug("%d %s %s", r.tell(), obj_type.type, obj_type.name)
 
         if obj_type.is_array:
             # unpack "Array" objects to native Python arrays
@@ -404,8 +401,8 @@ class SerializedFile(AutoCloseable):
                 obj = obj.Array.decode("utf-8")
             except UnicodeDecodeError:
                 # could be a TextAsset that contains binary data, return raw string
-                log.warn("Can't decode string at %d as UTF-8, "
-                         "using raw data instead" % r.tell())
+                log.warning("Can't decode string at %d as UTF-8, "
+                            "using raw data instead", r.tell())
                 obj = obj.Array
         elif obj_type.type == "vector":
             # unpack collection containers
@@ -418,62 +415,60 @@ class SerializedFile(AutoCloseable):
             r = self.r
 
         # get object info
-        object_info = self.objects.get(path_id)
-        if not object_info:
+        obj_info = self.objects.get(path_id)
+        if not obj_info:
             raise ValueError("Invalid path ID: %d" % path_id)
 
         # get object type class
-        object_class = self.types.classes.get(object_info.type_id)
+        obj_class = self.types.classes.get(obj_info.type_id)
 
         # use embedded object type tree or load it from database otherwise
         if self.header.version > 13:
             if not self.types.embedded:
                 # object_class should always be defined in newer formats
-                assert object_class
+                assert obj_class
 
                 try:
-                    with self.type_db.open(object_info.type_id,
-                                           object_class.old_type_hash) as fp:
-                        object_class.type_tree = self._read_type_node(fp)
+                    with self.type_db.open(obj_info.type_id,
+                                           obj_class.old_type_hash) as fp:
+                        obj_class.type_tree = self._read_type_node(fp)
                 except TypeException as ex:
-                    log.warn(ex)
-        elif not object_class:
+                    log.warning(ex)
+        elif not obj_class:
             try:
-                with self.type_db.open_old(object_info.type_id,
+                with self.type_db.open_old(obj_info.type_id,
                                            self.types.signature) as fp:
-                    object_class = ObjectDict()
-                    object_class.type_tree = self._read_type_node_old(rt)
-                    self.types.classes[object_info.type_id] = object_class
+                    obj_class = ObjectDict()
+                    obj_class.type_tree = self._read_type_node_old(fp)
+                    self.types.classes[obj_info.type_id] = obj_class
             except TypeException as ex:
-                log.warn(ex)
+                log.warning(ex)
 
         # cancel if there's no type tree available
-        if not object_class or "type_tree" not in object_class:
+        if not obj_class or "type_tree" not in obj_class:
             return
 
-        object_type = object_class.type_tree
-        if not object_type:
+        obj_type = obj_class.type_tree
+        if not obj_type:
             return
 
         # seek to object data start position
-        object_pos = self.header.data_offset + object_info.byte_start
-        object_end = object_pos + object_info.byte_size
-        r.seek(object_pos, io.SEEK_SET)
+        obj_pos = self.header.data_offset + obj_info.byte_start
+        obj_end = obj_pos + obj_info.byte_size
+        r.seek(obj_pos, io.SEEK_SET)
 
         # deserialize all type nodes
-        object = self._read_object_node(object_type, object_end)
+        obj = self._read_object_node(obj_type, obj_end)
 
         # check if all bytes were read correctly
-        object_size = r.tell() - object_pos
-        if object_size != object_info.byte_size:
+        obj_size = r.tell() - obj_pos
+        if obj_size != obj_info.byte_size:
             raise SerializationError("Wrong object size for path %d: %d != %d"
-                                     % (path_id, object_size, object_info.byte_size))
+                                     % (path_id, obj_size, obj_info.byte_size))
 
-        return object
+        return obj
 
     def update_type_db(self, signature=None):
-        script_dir = os.path.dirname(__file__)
-        types_dir = os.path.join(script_dir, "resources", "types")
         types_added = 0
 
         # skip scan entirely if there are no embedded types
@@ -492,6 +487,7 @@ class SerializedFile(AutoCloseable):
             if class_id <= 0:
                 continue
 
+            # ignore types
             if class_id not in self.types_raw:
                 continue
 
@@ -500,11 +496,11 @@ class SerializedFile(AutoCloseable):
             # create type files that don't exist yet
             if self.header.version > 13:
                 if self.type_db.add(self.types_raw[class_id], class_id,
-                                     class_type.old_type_hash):
-                        types_added += 1
+                                    class_type.old_type_hash):
+                    types_added += 1
             else:
                 if (class_type and signature and
-                    self.type_db.add_old(self.types_raw[class_id], class_id)):
+                        self.type_db.add_old(self.types_raw[class_id], class_id)):
                     types_added += 1
 
         return types_added

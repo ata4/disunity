@@ -1,6 +1,6 @@
-from .app import RecursiveFileApp, SerializedFileApp
-
 import logging
+
+from .app import RecursiveFileApp, SerializedFileApp
 
 log = logging.getLogger()
 
