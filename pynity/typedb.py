@@ -6,7 +6,7 @@ import hashlib
 from collections import OrderedDict
 
 from .utils import ObjectDict
-from .io import BinaryIO
+from .io import BinaryIO, ByteOrder
 
 log = logging.getLogger("pynity.typedb")
 
@@ -14,14 +14,38 @@ class TypeDatabase:
 
     type_ext = ".unitytype"
 
-    def __init__(self):
-        self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
+    def __init__(self, path_resources=None):
+        if path_resources:
+            self.path_resources = path_resources
+        else:
+            self.path_resources = os.path.join(os.path.dirname(__file__), "resources")
+
         self.path_types = os.path.join(self.path_resources, "types")
         self.path_types_old = os.path.join(self.path_resources, "types_old")
 
         self.signature = ""
-        self.version = None
-        self.order = None
+        self.version = 0
+        self.order = ByteOrder.LITTLE_ENDIAN
+
+    def _type_open(self, path):
+        r = BinaryIO(open(path, "rb"))
+        r.order = ByteOrder(r.read_int8())
+
+        # currently unused, may be helpful in future
+        version = r.read_int32()
+
+        return r
+
+    def _type_write(self, data, path):
+        if os.path.exists(path):
+            return False
+
+        with BinaryIO(open(path, "wb"), order=self.order) as w:
+            w.write_int8(int(self.order))
+            w.write_int32(self.version)
+            w.write(data)
+
+        return True
 
     def add(self, type_tree_raw, class_id, hash):
         if class_id < 0:
@@ -33,7 +57,7 @@ class TypeDatabase:
 
         # write missing type files
         path_type = os.path.join(path_dir, hash + self.type_ext)
-        added = self._write_type(type_tree_raw, path_type)
+        added = self._type_write(type_tree_raw, path_type)
         if added:
             log.info("Added type %s for class %d" % (hash, class_id))
 
@@ -56,7 +80,7 @@ class TypeDatabase:
 
         # write missing type files
         path_type = os.path.join(path_dir, hash + self.type_ext)
-        added = self._write_type(type_tree_raw, path_type)
+        added = self._type_write(type_tree_raw, path_type)
         if added:
             log.info("Added type %s for class %d" % (hash, class_id))
 
@@ -66,34 +90,22 @@ class TypeDatabase:
 
         return added
 
-    def _write_type(self, data, path):
-        if os.path.exists(path):
-            return False
-
-        with BinaryIO(open(path, "wb"), order=self.order) as w:
-            w.write_int8(int(self.order))
-            w.write_int32(self.version)
-            w.write(data)
-
-        return True
-
-    def get(self, class_id, hash):
+    def open(self, class_id, hash):
         path_type_dir = os.path.join(self.path_types, str(class_id))
         path_type = os.path.join(path_type_dir, hash + self.type_ext)
 
         # bail out if the type file doesn't exist
         if not os.path.exists(path_type):
-            log.warning("Type %s for class %d not found in file or database" %
-                        (hash, class_id))
-            return
+            raise TypeException(
+                "Type %s for class %d not found in file or database" % 
+                (hash, class_id))
 
-        # load type file
+        # open type file
         log.debug("Type %s for class %d loaded from database" % (hash, class_id))
 
-        with open(path_type, "rb") as fp:
-            return fp.read()
+        return self._type_open(path_type)
 
-    def get_old(self, class_id, version):
+    def open_old(self, class_id, version):
         # script types are never saved in database
         if class_id < 0:
             return
@@ -106,17 +118,15 @@ class TypeDatabase:
 
         # bail out if there's no match inside the index
         if not hash:
-            log.warning("Type for class %d not found in file or database"
-                        % class_id)
-            return
+            raise TypeException("Type for class %d not found in file or database"
+                                % class_id)
 
-        # load type file
+        # open type file
         path_type = os.path.join(path_type_dir, hash + self.type_ext)
 
         log.debug("Type %s for class %d loaded from database" % (hash, class_id))
 
-        with open(path_type, "rb") as fp:
-            return fp.read()
+        return self._type_open(path_type)
 
     class VersionIndex:
 
@@ -143,9 +153,9 @@ class TypeDatabase:
             # search for major and minor only (first 3 chars)
             hash, version_match = self.search(version, 3)
             if hash:
-                log.warn("Using database type %s for version %s instead of %s, "
-                         "deserializing objects using class %d may fail!"
-                         % (hash, version_match, version, self.class_id))
+                log.warning("Using database type %s for version %s instead of %s, "
+                            "deserializing objects using class %d may fail!"
+                             % (hash, version_match, version, self.class_id))
                 return hash
 
         def search(self, version, num_chars=0):
@@ -196,3 +206,6 @@ class TypeDatabase:
             # write file
             with open(self.path, "w") as fp:
                 json.dump(self.data, fp, indent=2)
+
+class TypeException(Exception):
+    pass

@@ -7,7 +7,7 @@ import uuid
 
 from .io import AutoCloseable, BinaryIO, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
-from .typedb import TypeDatabase
+from .typedb import TypeDatabase, TypeException
 from .stringtable import StringTable
 
 METAFLAG_ALIGN = 0x4000
@@ -431,32 +431,24 @@ class SerializedFile(AutoCloseable):
                 # object_class should always be defined in newer formats
                 assert object_class
 
-                type_data = self.type_db.get(object_info.type_id,
-                                             object_class.old_type_hash)
-                if type_data:
-                    rt = BinaryIO(io.BytesIO(type_data))
-                    rt.order = ByteOrder(rt.read_int8())
-
-                    # currently unused, may be helpful in future
-                    version = rt.read_int32()
-
-                    object_class.type_tree = self._read_type_node(rt)
+                try:
+                    with self.type_db.open(object_info.type_id,
+                                           object_class.old_type_hash) as fp:
+                        object_class.type_tree = self._read_type_node(fp)
+                except TypeException as ex:
+                    log.warn(ex)
         elif not object_class:
-            type_data = self.type_db.get_old(object_info.type_id,
-                                                self.types.signature)
-            if type_data:
-                rt = BinaryIO(io.BytesIO(type_data))
-                rt.order = ByteOrder(rt.read_int8())
-
-                # currently unused, may be helpful in future
-                version = rt.read_int32()
-
-                object_class = ObjectDict()
-                object_class.type_tree = self._read_type_node_old(rt)
-                self.types.classes[object_info.type_id] = object_class
+            try:
+                with self.type_db.open_old(object_info.type_id,
+                                           self.types.signature) as fp:
+                    object_class = ObjectDict()
+                    object_class.type_tree = self._read_type_node_old(rt)
+                    self.types.classes[object_info.type_id] = object_class
+            except TypeException as ex:
+                log.warn(ex)
 
         # cancel if there's no type tree available
-        if not object_class:
+        if not object_class or "type_tree" not in object_class:
             return
 
         object_type = object_class.type_tree
