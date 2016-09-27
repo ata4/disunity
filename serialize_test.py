@@ -85,11 +85,8 @@ class SerializeTest(disunity.SerializedFileApp):
                         self.num_objects_typeless += 1
                         continue
 
-                    object_name = object.get("m_Name")
-                    if not object_name:
-                        object_name = ""
                     class_name = object.__class__.__name__
-                    print("%016x  % -24s  %s" % (path_id, class_name, object_name))
+                    print("%016x  % -24s  %s" % (path_id, class_name, object))
 
                     self.num_objects_passed += 1
                 except Exception:

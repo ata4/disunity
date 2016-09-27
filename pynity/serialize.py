@@ -6,6 +6,7 @@ from .io import AutoCloseable, BinaryIO, ChunkedFileIO, ByteOrder
 from .utils import ObjectDict
 from .typedb import TypeDatabase, TypeException
 from .stringtable import StringTable
+from . import engine
 
 METAFLAG_ALIGN = 0x4000
 
@@ -387,7 +388,7 @@ class SerializedFile(AutoCloseable):
             # complex object with children
             obj_class = self.types_cache.get(obj_type.type)
             if not obj_class:
-                obj_class = type(obj_type.type, (ObjectDict,), {})
+                obj_class = type(obj_type.type, (engine.Object,), {})
                 self.types_cache[obj_type.type] = obj_class
 
             obj = obj_class()
