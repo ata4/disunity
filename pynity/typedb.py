@@ -95,9 +95,8 @@ class TypeDatabase:
 
         # bail out if the type file doesn't exist
         if not os.path.exists(path_type):
-            raise TypeException(
-                "Type %s for class %d not found in file or database",
-                type_hash, class_id)
+            raise TypeException("Type %s for class %d not found in file or database"
+                                % (type_hash, class_id))
 
         # open type file
         log.debug("Type %s for class %d loaded from database", type_hash, class_id)
@@ -117,8 +116,8 @@ class TypeDatabase:
 
         # bail out if there's no match inside the index
         if not type_hash:
-            raise TypeException("Type for class %d not found in file or database",
-                                class_id)
+            raise TypeException("Type for class %d not found in file or database"
+                                % class_id)
 
         # open type file
         path_type = os.path.join(path_type_dir, type_hash + self.type_ext)
