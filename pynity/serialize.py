@@ -82,12 +82,12 @@ class SerializedFile(AutoCloseable):
         # read metadata
         self._read_header()
         self._read_types()
-        self._read_object_info()
+        self._read_object_infos()
         self._read_script_types()
         self._read_externals()
 
     def __iter__(self):
-        for path_id in self.objects:
+        for path_id in self.object_infos:
             obj = self.read_object(path_id)
             if obj:
                 yield path_id, obj
@@ -265,11 +265,11 @@ class SerializedFile(AutoCloseable):
 
         return field
 
-    def _read_object_info(self, r=None):
+    def _read_object_infos(self, r=None):
         if not r:
             r = self.r
 
-        objects = self.objects = {}
+        object_infos = self.object_infos = {}
 
         num_entries = r.read_int32()
 
@@ -300,10 +300,10 @@ class SerializedFile(AutoCloseable):
             if self.header.version > 14:
                 obj.stripped = r.read_bool8()
 
-            if path_id in objects:
+            if path_id in object_infos:
                 raise SerializedFileError("Duplicate path ID: %d" % path_id)
 
-            objects[path_id] = obj
+            object_infos[path_id] = obj
 
     def _read_script_types(self, r=None):
         if not r:
@@ -416,7 +416,7 @@ class SerializedFile(AutoCloseable):
             r = self.r
 
         # get object info
-        obj_info = self.objects.get(path_id)
+        obj_info = self.object_infos.get(path_id)
         if not obj_info:
             raise ValueError("Invalid path ID: %d" % path_id)
 

@@ -15,7 +15,7 @@ class SerializeDump(disunity.SerializedFileApp):
         self.cmds = {
             "header": lambda sf: self.json_dump(sf.header),
             "types": lambda sf: self.json_dump(sf.types),
-            "object_info": lambda sf: self.json_dump(sf.objects),
+            "object_infos": lambda sf: self.json_dump(sf.object_infos),
             "script_types": lambda sf: self.json_dump(sf.script_types),
             "externals": lambda sf: self.json_dump(sf.externals),
             "objects": self.dump_objects

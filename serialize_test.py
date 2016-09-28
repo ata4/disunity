@@ -78,7 +78,7 @@ class SerializeTest(disunity.SerializedFileApp):
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))
-            for path_id in sf.objects:
+            for path_id in sf.object_infos:
                 try:
                     object = sf.read_object(path_id)
                     if not object:
