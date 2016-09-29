@@ -47,7 +47,7 @@ class SerializeDump(disunity.SerializedFileApp):
         for path_id, obj in sf.objects.items():
             obj_data = collections.OrderedDict()
             obj_data["path"] = path_id
-            obj_data["class"] = obj.__class__.__name__
+            obj_data["class"] = obj.instance.__class__.__name__
             obj_data["object"] = obj.instance
 
             objects.append(obj_data)
