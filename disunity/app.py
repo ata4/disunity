@@ -49,7 +49,7 @@ class SerializedFileApp(RecursiveFileApp):
             entry_data = archive.read(entry)
             entry_file = io.BytesIO(entry_data)
             if pynity.SerializedFile.probe_file(entry_file):
-                with pynity.SerializedFile(entry_file) as sf:
+                with pynity.SerializedFile(entry_file, archive) as sf:
                     self.process_serialized(path + ":" + entry.path, sf)
 
     def process_serialized(self, path, sf):

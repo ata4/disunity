@@ -65,16 +65,11 @@ class SerializeTest(disunity.SerializedFileApp):
             self.log.exception("Failed reading " + path)
             self.num_files_failed += 1
 
-    def process_archive(self, path, archive):
-        self.signature = archive.header.unity_revision
-        super(SerializeTest, self).process_archive(path, archive)
-        self.signature = None
-
     def process_serialized(self, path, sf):
         print(path)
 
         if self.update_type_db:
-            self.num_types_added += sf.update_type_db(self.signature)
+            self.num_types_added += sf.update_type_db()
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))

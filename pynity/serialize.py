@@ -45,8 +45,9 @@ class SerializedFile(AutoCloseable):
         # check file size
         return file_size == header_file_size
 
-    def __init__(self, file):
+    def __init__(self, file, archive=None):
         self._cached_types = {}
+        self._archive = archive
 
         self.type_db = TypeDatabase()
 
@@ -109,6 +110,8 @@ class SerializedFile(AutoCloseable):
         if self.header.version > 6:
             types.signature = r.read_cstring()
             types.attributes = r.read_int32()
+        elif self._archive:
+            types.signature = self._archive.header.unity_revision
 
         if self.header.version > 13:
             types.embedded = r.read_bool8()
@@ -117,6 +120,10 @@ class SerializedFile(AutoCloseable):
         types_raw = self.types_raw = {}
 
         num_classes = r.read_int32()
+
+        if self.header.version <= 13:
+            types.embedded = num_classes > 0
+
         for _ in range(num_classes):
             class_type = ObjectDict()
             class_id = r.read_int32()
@@ -357,17 +364,14 @@ class SerializedFile(AutoCloseable):
 
             objects[path_id] = SerializedObject(self, path_id, obj_info, obj_type)
 
-    def update_type_db(self, signature=None):
+    def update_type_db(self):
         types_added = 0
 
         # skip scan entirely if there are no embedded types
         if not self.types_raw:
             return types_added
 
-        if not signature:
-            signature = self.types.get("signature")
-
-        self.type_db.signature = signature
+        self.type_db.signature = self.types.get("signature")
         self.type_db.version = self.header.version
         self.type_db.order = self.r.order
 
