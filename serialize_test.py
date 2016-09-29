@@ -78,15 +78,15 @@ class SerializeTest(disunity.SerializedFileApp):
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))
-            for path_id in sf.object_infos:
+            for path_id, obj in sf.objects.items():
                 try:
-                    object = sf.read_object(path_id)
-                    if not object:
+                    if not obj.instance:
                         self.num_objects_typeless += 1
                         continue
 
-                    class_name = object.__class__.__name__
-                    print("%016x  % -24s  %s" % (path_id, class_name, object))
+                    class_name = obj.instance.__class__.__name__
+                    object_name = obj.instance.name
+                    print("%016x  % -24s  %s" % (path_id, class_name, object_name))
 
                     self.num_objects_passed += 1
                 except Exception:

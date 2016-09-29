@@ -10,7 +10,7 @@ import disunity
 class SerializeDump(disunity.SerializedFileApp):
 
     def __init__(self):
-        super(SerializeTest, self).__init__()
+        super(SerializeDump, self).__init__()
 
         self.cmds = {
             "header": lambda sf: self.json_dump(sf.header),
@@ -44,11 +44,11 @@ class SerializeDump(disunity.SerializedFileApp):
     def dump_objects(self, sf):
         objects = []
 
-        for path_id, obj in sf:
+        for path_id, obj in sf.objects.items():
             obj_data = collections.OrderedDict()
             obj_data["path"] = path_id
             obj_data["class"] = obj.__class__.__name__
-            obj_data["object"] = obj
+            obj_data["object"] = obj.instance
 
             objects.append(obj_data)
 

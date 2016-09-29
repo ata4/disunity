@@ -8,35 +8,11 @@ from .typedb import TypeDatabase, TypeException
 from .stringtable import StringTable
 from . import engine
 
-METAFLAG_ALIGN = 0x4000
-
 log = logging.getLogger("pynity.serialize")
 
 class SerializedFile(AutoCloseable):
 
     versions = [5, 6, 8, 9, 14, 15]
-    read_prim = {
-        "bool":             BinaryIO.read_bool8,
-        "SInt8":            BinaryIO.read_int8,
-        "UInt8":            BinaryIO.read_uint8,
-        "char":             BinaryIO.read_uint8,
-        "SInt16":           BinaryIO.read_int16,
-        "short":            BinaryIO.read_int16,
-        "UInt16":           BinaryIO.read_uint16,
-        "unsigned short":   BinaryIO.read_uint16,
-        "SInt32":           BinaryIO.read_int32,
-        "int":              BinaryIO.read_int32,
-        "UInt32":           BinaryIO.read_uint32,
-        "unsigned int":     BinaryIO.read_uint32,
-        "SInt64":           BinaryIO.read_int64,
-        "long":             BinaryIO.read_int64,
-        "UInt64":           BinaryIO.read_uint64,
-        "unsigned long":    BinaryIO.read_uint64,
-        "float":            BinaryIO.read_float,
-        "double":           BinaryIO.read_double,
-    }
-
-    types_cache = {}
 
     @classmethod
     def probe_path(cls, path):
@@ -70,6 +46,8 @@ class SerializedFile(AutoCloseable):
         return file_size == header_file_size
 
     def __init__(self, file):
+        self._cached_types = {}
+
         self.type_db = TypeDatabase()
 
         if isinstance(file, str):
@@ -85,12 +63,7 @@ class SerializedFile(AutoCloseable):
         self._read_object_infos()
         self._read_script_types()
         self._read_externals()
-
-    def __iter__(self):
-        for path_id in self.object_infos:
-            obj = self.read_object(path_id)
-            if obj:
-                yield path_id, obj
+        self._read_objects()
 
     def _read_header(self, r=None):
         if not r:
@@ -280,30 +253,30 @@ class SerializedFile(AutoCloseable):
             else:
                 path_id = r.read_uint32()
 
-            obj = ObjectDict()
-            obj.byte_start = r.read_uint32()
-            obj.byte_size = r.read_uint32()
-            obj.type_id = r.read_int32()
-            obj.class_id = r.read_int16()
+            obj_info = ObjectDict()
+            obj_info.byte_start = r.read_uint32()
+            obj_info.byte_size = r.read_uint32()
+            obj_info.type_id = r.read_int32()
+            obj_info.class_id = r.read_int16()
 
-            if obj.byte_start > self.header.file_size:
-                raise SerializedFileError("Invalid byte start: %d" % obj.byte_start)
+            if obj_info.byte_start > self.header.file_size:
+                raise SerializedFileError("Invalid byte start: %d" % obj_info.byte_start)
 
-            if obj.byte_size > self.header.file_size:
-                raise SerializedFileError("Invalid byte size: %d" % obj.byte_start)
+            if obj_info.byte_size > self.header.file_size:
+                raise SerializedFileError("Invalid byte size: %d" % obj_info.byte_start)
 
             if self.header.version > 13:
-                obj.script_type_index = r.read_int16()
+                obj_info.script_type_index = r.read_int16()
             else:
-                obj.is_destroyed = r.read_bool16()
+                obj_info.is_destroyed = r.read_bool16()
 
             if self.header.version > 14:
-                obj.stripped = r.read_bool8()
+                obj_info.stripped = r.read_bool8()
 
             if path_id in object_infos:
                 raise SerializedFileError("Duplicate path ID: %d" % path_id)
 
-            object_infos[path_id] = obj
+            object_infos[path_id] = obj_info
 
     def _read_script_types(self, r=None):
         if not r:
@@ -345,129 +318,44 @@ class SerializedFile(AutoCloseable):
 
             externals.append(external)
 
-    def _read_object_node(self, obj_type, obj_end, r=None):
-        if not r:
-            r = self.r
+    def _read_objects(self, r=None):
+        objects = self.objects = {}
 
-        if log.isEnabledFor(logging.DEBUG):
-            log.debug("%d %s %s", r.tell(), obj_type.type, obj_type.name)
+        for path_id, obj_info in self.object_infos.items():
+            # get object type class
+            obj_type = None
+            obj_class = self.types.classes.get(obj_info.type_id)
 
-        if obj_type.is_array:
-            # unpack "Array" objects to native Python arrays
-            type_size = obj_type.children[0]
-            type_data = obj_type.children[1]
-
-            size = self._read_object_node(type_size, obj_end)
-            if type_data.type in ("SInt8", "UInt8", "char"):
-                # fix size for AudioClips that are linked with .resS files
-                if self.header.version <= 13:
-                    size = min(size, obj_end - r.tell())
-
-                # read byte array
-                obj = r.read(size)
+            if obj_class and "type_tree" in obj_class:
+                obj_type = obj_class.type_tree
+            elif obj_info.type_id in self._cached_types:
+                obj_type = self._cached_types[obj_info.type_id]
             else:
-                # read generic array
-                obj = []
-                for _ in range(size):
-                    obj.append(self._read_object_node(type_data, obj_end))
+                # use embedded object type tree or load it from database otherwise
+                if self.header.version > 13:
+                    # object_class should always be defined in newer formats
+                    assert obj_class
 
-            # arrays always need to be aligned in version 5 or newer
-            if self.header.version > 5:
-                r.align(4)
-        elif obj_type.size > 0 and not obj_type.children:
-            # no children and size greater zero -> primitive
-            if obj_type.type not in self.read_prim:
-                raise SerializationError("Unknown primitive type: " + obj_type.type)
+                    try:
+                        with self.type_db.open(obj_info.type_id,
+                                                obj_class.old_type_hash) as fp:
+                            obj_type = self._read_type_node(fp)
+                    except TypeException as ex:
+                        log.warning(ex)
+                else:
+                    try:
+                        with self.type_db.open_old(obj_info.type_id,
+                                                   self.types.signature) as fp:
+                            obj_type = self._read_type_node_old(fp)
+                    except TypeException as ex:
+                        log.warning(ex)
 
-            obj = self.read_prim[obj_type.type](r)
+                self._cached_types[obj_info.type_id] = obj_type
 
-            # align if flagged
-            if obj_type.meta_flag & METAFLAG_ALIGN != 0:
-                r.align(4)
-        else:
-            # complex object with children
-            obj_class = self.types_cache.get(obj_type.type)
-            if not obj_class:
-                obj_class = type(obj_type.type, (engine.Object,), {})
-                self.types_cache[obj_type.type] = obj_class
+            if not obj_type:
+                continue
 
-            obj = obj_class()
-
-            for child in obj_type.children:
-                obj[child.name] = self._read_object_node(child, obj_end)
-
-        if obj_type.type == "string":
-            # convert string objects to native Python strings
-            try:
-                obj = obj.Array.decode("utf-8")
-            except UnicodeDecodeError:
-                # could be a TextAsset that contains binary data, return raw string
-                log.warning("Can't decode string at %d as UTF-8, "
-                            "using raw data instead", r.tell())
-                obj = obj.Array
-        elif obj_type.type == "vector":
-            # unpack collection containers
-            obj = obj.Array
-
-        return obj
-
-    def read_object(self, path_id, r=None):
-        if not r:
-            r = self.r
-
-        # get object info
-        obj_info = self.object_infos.get(path_id)
-        if not obj_info:
-            raise ValueError("Invalid path ID: %d" % path_id)
-
-        # get object type class
-        obj_class = self.types.classes.get(obj_info.type_id)
-
-        # use embedded object type tree or load it from database otherwise
-        if self.header.version > 13:
-            if not self.types.embedded:
-                # object_class should always be defined in newer formats
-                assert obj_class
-
-                try:
-                    with self.type_db.open(obj_info.type_id,
-                                           obj_class.old_type_hash) as fp:
-                        obj_class.type_tree = self._read_type_node(fp)
-                except TypeException as ex:
-                    log.warning(ex)
-        elif not obj_class:
-            try:
-                with self.type_db.open_old(obj_info.type_id,
-                                           self.types.signature) as fp:
-                    obj_class = ObjectDict()
-                    obj_class.type_tree = self._read_type_node_old(fp)
-                    self.types.classes[obj_info.type_id] = obj_class
-            except TypeException as ex:
-                log.warning(ex)
-
-        # cancel if there's no type tree available
-        if not obj_class or "type_tree" not in obj_class:
-            return
-
-        obj_type = obj_class.type_tree
-        if not obj_type:
-            return
-
-        # seek to object data start position
-        obj_pos = self.header.data_offset + obj_info.byte_start
-        obj_end = obj_pos + obj_info.byte_size
-        r.seek(obj_pos, io.SEEK_SET)
-
-        # deserialize all type nodes
-        obj = self._read_object_node(obj_type, obj_end)
-
-        # check if all bytes were read correctly
-        obj_size = r.tell() - obj_pos
-        if obj_size != obj_info.byte_size:
-            raise SerializationError("Wrong object size for path %d: %d != %d"
-                                     % (path_id, obj_size, obj_info.byte_size))
-
-        return obj
+            objects[path_id] = SerializedObject(self, path_id, obj_info, obj_type)
 
     def update_type_db(self, signature=None):
         types_added = 0
@@ -512,5 +400,120 @@ class SerializedFile(AutoCloseable):
 class SerializedFileError(Exception):
     pass
 
-class SerializationError(Exception):
+class SerializedObject():
+
+    _read_prim = {
+        "bool":             BinaryIO.read_bool8,
+        "SInt8":            BinaryIO.read_int8,
+        "UInt8":            BinaryIO.read_uint8,
+        "char":             BinaryIO.read_uint8,
+        "SInt16":           BinaryIO.read_int16,
+        "short":            BinaryIO.read_int16,
+        "UInt16":           BinaryIO.read_uint16,
+        "unsigned short":   BinaryIO.read_uint16,
+        "SInt32":           BinaryIO.read_int32,
+        "int":              BinaryIO.read_int32,
+        "UInt32":           BinaryIO.read_uint32,
+        "unsigned int":     BinaryIO.read_uint32,
+        "SInt64":           BinaryIO.read_int64,
+        "long":             BinaryIO.read_int64,
+        "UInt64":           BinaryIO.read_uint64,
+        "unsigned long":    BinaryIO.read_uint64,
+        "float":            BinaryIO.read_float,
+        "double":           BinaryIO.read_double,
+    }
+
+    _cached_classes = {}
+
+    def __init__(self, file, path_id, info, type):
+        self._instance = None
+        self._file = file
+        self._path_id = path_id
+        self._info = info
+        self._type = type
+
+        self._start = self._file.header.data_offset + self._info.byte_start
+        self._end = self._start + self._info.byte_size
+
+    def _deserialize(self, r, obj_type):
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("%d %s %s", r.tell(), obj_type.type, obj_type.name)
+
+        if obj_type.is_array:
+            # unpack "Array" objects to native Python arrays
+            type_size = obj_type.children[0]
+            type_data = obj_type.children[1]
+
+            size = self._deserialize(r, type_size)
+            if type_data.type in ("SInt8", "UInt8", "char"):
+                # fix size for AudioClips that are linked with .resS files
+                if self._file.header.version <= 13:
+                    size = min(size, self._end - r.tell())
+
+                # read byte array
+                obj = r.read(size)
+            else:
+                # read generic array
+                obj = []
+                for _ in range(size):
+                    obj.append(self._deserialize(r, type_data))
+
+            # arrays always need to be aligned in version 5 or newer
+            if self._file.header.version > 5:
+                r.align(4)
+        elif obj_type.size > 0 and not obj_type.children:
+            # no children and size greater zero -> primitive
+            if obj_type.type not in self._read_prim:
+                raise SerializedObjectError("Unknown primitive type: " + obj_type.type)
+
+            obj = self._read_prim[obj_type.type](r)
+
+            # align if flagged
+            if obj_type.meta_flag & 0x4000 != 0:
+                r.align(4)
+        else:
+            # complex object with children
+            obj_class = self._cached_classes.get(obj_type.type)
+            if not obj_class:
+                obj_class = type(obj_type.type, (engine.Object,), {})
+                self._cached_classes[obj_type.type] = obj_class
+
+            obj = obj_class()
+
+            for child in obj_type.children:
+                obj[child.name] = self._deserialize(r, child)
+
+        if obj_type.type == "string":
+            # convert string objects to native Python strings
+            try:
+                obj = obj.Array.decode("utf-8")
+            except UnicodeDecodeError:
+                # could be a TextAsset that contains binary data, return raw string
+                log.warning("Can't decode string at %d as UTF-8, "
+                            "using raw data instead", r.tell())
+                obj = obj.Array
+        elif obj_type.type == "vector":
+            # unpack collection containers
+            obj = obj.Array
+
+        return obj
+
+    @property
+    def instance(self):
+        if self._instance:
+            return self._instance
+
+        r = self._file.r
+        r.seek(self._start, io.SEEK_SET)
+
+        self._instance = self._deserialize(r, self._type)
+
+        obj_size = r.tell() - self._start
+        if obj_size != self._info.byte_size:
+            raise SerializedObjectError("Wrong object size for path %d: %d != %d"
+                                        % (self._path_id, obj_size, obj_info.byte_size))
+
+        return self._instance
+
+class SerializedObjectError(Exception):
     pass

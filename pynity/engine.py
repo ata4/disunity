@@ -8,6 +8,3 @@ class Object(ObjectDict):
         if name_str is None:
             name_str = ""
         return name_str
-
-    def __str__(self):
-        return self.name
