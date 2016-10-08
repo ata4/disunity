@@ -335,6 +335,9 @@ class SerializedFile(AutoCloseable):
 
             if obj_class and "type_tree" in obj_class:
                 obj_type = obj_class.type_tree
+            elif obj_info.type_id <= 0:
+                # script types are never stored in database, so don't even try
+                continue
             elif obj_info.type_id in self._cached_types:
                 obj_type = self._cached_types[obj_info.type_id]
             else:
