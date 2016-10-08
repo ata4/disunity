@@ -21,7 +21,7 @@ class StringTable:
     def load(cls, buf):
         if not cls.strings_global:
             script_dir = os.path.dirname(__file__)
-            strings_path = os.path.join(script_dir, "resources", "strings.bin")
+            strings_path = os.path.join(script_dir, "resources", "types", "common.unitystrings")
 
             with open(strings_path, "rb") as fp:
                 cls.strings_global = cls.map(fp.read(), offset=1<<31)
