@@ -9,7 +9,7 @@ try:
     import colorlog
 
     formatter = colorlog.ColoredFormatter(
-        "%(log_color)s%(levelname)s:%(reset)s %(message)s",
+        "%(log_color)s%(message)s%(reset)s",
         log_colors={
             'DEBUG':    'bold_cyan',
             'INFO':     'bold_green',
