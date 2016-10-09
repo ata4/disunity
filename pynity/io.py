@@ -5,6 +5,14 @@ import binascii
 
 from enum import IntEnum
 
+# re-implementation of shutil.copyfileobj with separate length and buffer size
+# parameters
+def copyfileobj(fsrc, fdst, length, bufsize=8192):
+    while length:
+        read_len = min(bufsize, length)
+        fdst.write(fsrc.read(read_len))
+        length -= read_len
+
 class AutoCloseable:
 
     def __enter__(self):

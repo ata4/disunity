@@ -5,7 +5,7 @@ import struct
 
 from enum import Enum
 
-from .io import AutoCloseable, BinaryIO, ByteOrder
+from .io import AutoCloseable, BinaryIO, ByteOrder, copyfileobj
 from .utils import ObjectDict
 
 class Compression(Enum):
@@ -205,12 +205,7 @@ class Archive(AutoCloseable):
     def extract(self, entry, path):
         self.rd.seek(entry.offset)
         with open(path, "wb") as fp:
-            length = entry.size
-            while length:
-                data_len = min(4096, length)
-                data = self.rd.read(data_len)
-                fp.write(data)
-                length -= data_len
+            copyfileobj(self.rd, fp, entry.size)
 
     def close(self):
         self.rd.close()
