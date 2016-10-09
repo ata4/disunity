@@ -4,10 +4,10 @@ import getopt
 
 import disunity
 
-class SerializeTest(disunity.SerializedFileApp):
+class AssetScanApp(disunity.SerializedFileApp):
 
     def __init__(self):
-        super(SerializeTest, self).__init__()
+        super(AssetScanApp, self).__init__()
 
         self.num_files_passed = 0
         self.num_files_failed = 0
@@ -37,13 +37,13 @@ class SerializeTest(disunity.SerializedFileApp):
 
     def usage(self):
         print("Usage: %s [OPTION...] [FILE...]" % os.path.basename(self.path))
-        print("Performs various tests on serialized Unity files.")
+        print("Scans objects and object types inside serialized Unity files.")
         print()
         print("  -d, --deserialize          deserialize all objects")
         print("  -u, --update-db            update database with embedded types")
 
     def main(self, argv):
-        if super(SerializeTest, self).main(argv):
+        if super(AssetScanApp, self).main(argv):
             return
 
         print()
@@ -60,7 +60,7 @@ class SerializeTest(disunity.SerializedFileApp):
 
     def process(self, path):
         try:
-            super(SerializeTest, self).process(path)
+            super(AssetScanApp, self).process(path)
         except Exception:
             self.log.exception("Failed reading " + path)
             self.num_files_failed += 1
@@ -91,4 +91,4 @@ class SerializeTest(disunity.SerializedFileApp):
         self.num_files_passed += 1
 
 if __name__ == "__main__":
-    sys.exit(SerializeTest().main(sys.argv))
+    sys.exit(AssetScanApp().main(sys.argv))

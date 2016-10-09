@@ -7,10 +7,10 @@ import textwrap
 
 import disunity
 
-class SerializeDump(disunity.SerializedFileApp):
+class AssetDumpApp(disunity.SerializedFileApp):
 
     def __init__(self):
-        super(SerializeDump, self).__init__()
+        super(AssetDumpApp, self).__init__()
 
         self.cmds = {
             "header": lambda sf: self.json_dump(sf.header),
@@ -67,4 +67,4 @@ class SerializeDump(disunity.SerializedFileApp):
         json.dump(obj, sys.stdout, indent=2, cls=JSONEncoderImpl)
 
 if __name__ == "__main__":
-    sys.exit(SerializeDump().main(sys.argv))
+    sys.exit(AssetDumpApp().main(sys.argv))

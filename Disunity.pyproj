@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{219bdbca-57cb-4c4d-8051-41d059a35507}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>serialize_test.py</StartupFile>
+    <StartupFile>asset_scan.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -62,10 +62,10 @@
     </Compile>
     <Compile Include="pynity\utils.py" />
     <Compile Include="pynity\__init__.py" />
-    <Compile Include="serialize_dump.py">
+    <Compile Include="asset_dump.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="serialize_test.py" />
+    <Compile Include="asset_scan.py" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
