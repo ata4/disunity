@@ -43,5 +43,5 @@ class TestSerialize(unittest.TestCase, metaclass=TestSerializeMeta):
 
     def _test_deserialize(self, file):
         with SerializedFile(file) as sf:
-            for path_id, obj_info in sf.objects.items():
-                self.assertIsNotNone(obj_info.instance)
+            for obj in sf.objects.values():
+                self.assertIsNotNone(obj.instance)

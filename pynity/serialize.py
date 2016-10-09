@@ -401,6 +401,11 @@ class SerializedFile(AutoCloseable):
 
         return types_added
 
+    def objects_by_class(self, *class_id):
+        for obj in self.objects.values():
+            if obj.info.class_id in class_id:
+                yield obj
+
     def close(self):
         self.r.close()
 
@@ -435,12 +440,13 @@ class SerializedObject():
     def __init__(self, file, path_id, info, type):
         self._instance = None
         self._file = file
-        self._path_id = path_id
-        self._info = info
-        self._type = type
 
-        self._start = self._file.header.data_offset + self._info.byte_start
-        self._end = self._start + self._info.byte_size
+        self.path_id = path_id
+        self.info = info
+        self.type = type
+
+        self._start = self._file.header.data_offset + self.info.byte_start
+        self._end = self._start + self.info.byte_size
 
     def _deserialize(self, r, obj_type):
         if log.isEnabledFor(logging.DEBUG):
@@ -513,12 +519,12 @@ class SerializedObject():
         r = self._file.r
         r.seek(self._start, io.SEEK_SET)
 
-        self._instance = self._deserialize(r, self._type)
+        self._instance = self._deserialize(r, self.type)
 
         obj_size = r.tell() - self._start
-        if obj_size != self._info.byte_size:
+        if obj_size != self.info.byte_size:
             raise SerializedObjectError("Wrong object size for path %d: %d != %d"
-                                        % (self._path_id, obj_size, obj_info.byte_size))
+                                        % (self.path_id, obj_size, obj_info.byte_size))
 
         return self._instance
 

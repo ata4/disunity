@@ -44,9 +44,9 @@ class AssetDumpApp(disunity.SerializedFileApp):
     def dump_objects(self, sf):
         objects = []
 
-        for path_id, obj in sf.objects.items():
+        for obj in sf.objects.values():
             obj_data = collections.OrderedDict()
-            obj_data["path"] = path_id
+            obj_data["path"] = obj.path_id
             obj_data["class"] = obj.instance.__class__.__name__
             obj_data["object"] = obj.instance
 
