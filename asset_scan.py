@@ -74,12 +74,13 @@ class AssetScanApp(disunity.SerializedFileApp):
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))
             for obj in sf.objects.values():
+                path_id = obj.path_id
+
                 try:
                     if not obj.instance:
                         self.num_objects_typeless += 1
                         continue
 
-                    path_id = obj.path_id
                     class_name = obj.instance.__class__.__name__
                     object_name = obj.instance.name
 
