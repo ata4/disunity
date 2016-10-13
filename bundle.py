@@ -33,7 +33,7 @@ class BundleApp(disunity.RecursiveFileApp):
         if path_out == path:
             path_out += "_"
 
-        with pynity.Archive(path) as archive:
+        with pynity.Archive.open(path) as archive:
             if self.cmd == "l":
                 # list files
                 print("% 12s  %s" % ("Size", "Name"))
@@ -45,8 +45,7 @@ class BundleApp(disunity.RecursiveFileApp):
                 for entry in archive.entries:
                     print(entry.path)
                     entry_path = os.path.join(path_out, entry.path)
-                    os.makedirs(os.path.dirname(entry_path), exist_ok=True)
-                    archive.extract(entry, entry_path)
+                    entry.extract(entry_path)
             else:
                 # validation went wrong
                 assert False

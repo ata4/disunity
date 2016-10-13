@@ -1,6 +1,7 @@
 import lzma
 import lz4
 import io
+import os
 import struct
 
 from enum import Enum
@@ -8,17 +9,30 @@ from enum import Enum
 from .io import AutoCloseable, BinaryIO, ByteOrder, copyfileobj
 from .utils import ObjectDict
 
-class Compression(Enum):
-    NONE = 0
-    LZMA = 1
-    LZ4 = 2
-    LZ4HC = 3
-    LZHAM = 4
-
 class Archive(AutoCloseable):
 
     versions = [1, 2, 3, 6]
     signatures = ["UnityWeb", "UnityRaw", "UnityFS"]
+
+    @classmethod
+    def open(cls, path):
+        r = BinaryIO(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
+
+        signature = r.read_cstring()
+        if signature not in cls.signatures:
+            raise ArchiveError("Invalid signature")
+
+        version = r.read_int32()
+        if version not in cls.versions:
+            raise NotImplementedError("Unsupported format version %d"
+                                      % header.version)
+
+        # Note: Unity 5.3 uses "UnityWeb" signature for web builds, but the files
+        # are actually in UnityFS format, so check the format version instead.
+        if version > 3:
+            return ArchiveFS(r, signature, version)
+        else:
+            return ArchiveWeb(r, signature, version)
 
     @classmethod
     def probe(cls, path):
@@ -31,36 +45,45 @@ class Archive(AutoCloseable):
 
         return True
 
-    def __init__(self, path):
-        self.r = self.rd = BinaryIO(open(path, "rb"), order=ByteOrder.BIG_ENDIAN)
-        self.entries = None
-        self.blocks_info = None
+    def __init__(self, r, signature, version):
+        self.r = self.rd = r
+        self.header = ObjectDict()
+        self.header.signature = signature
+        self.header.version = version
+        self.entries = []
+
         self._read_header()
+        self._read_entries()
 
     def _read_header(self):
         r = self.r
 
-        header = self.header = ObjectDict()
-
-        header.signature = r.read_cstring()
-        if header.signature not in self.signatures:
-            raise RuntimeError("Invalid signature")
-
-        header.version = r.read_int32()
-        if header.version not in self.versions:
-            raise NotImplementedError("Unsupported format version %d"
-                                      % header.version)
-
+        header = self.header
         header.unity_version = r.read_cstring()
         header.unity_revision = r.read_cstring()
 
-        # read more header information based on format version
-        if header.version > 3:
-            self._read_header_fs()
-        else:
-            self._read_header_web()
+    def _read_entries(self):
+        pass
 
-    def _read_header_web(self):
+    def _entry_read(self, entry):
+        self.rd.seek(entry.offset)
+        return self.rd.read(entry.size)
+
+    def _entry_extract(self, entry, path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        self.rd.seek(entry.offset)
+        with open(path, "wb") as fp:
+            copyfileobj(self.rd, fp, entry.size)
+
+    def close(self):
+        self.rd.close()
+        self.r.close()
+
+class ArchiveWeb(Archive):
+
+    def _read_header(self):
+        super()._read_header()
+
         r = self.r
 
         header = self.header
@@ -82,40 +105,44 @@ class Archive(AutoCloseable):
 
         r.read_uint8() # padding
 
-        # open data stream
+    def _read_entries(self):
+        # UnityWeb data stream needs to be opened as compressed LZMA stream
         if self.header.signature == "UnityWeb":
-            rd = self.rd = BinaryIO(lzma.open(r, "rb"), order=ByteOrder.BIG_ENDIAN)
+            self.rd = BinaryIO(lzma.open(self.r, "rb"), order=ByteOrder.BIG_ENDIAN)
 
-        # read StreamingInfo structs
-        entries = self.entries = []
+        # read StreamingInfo list
+        entries = self.entries
+        rd = self.rd
         num_entries = rd.read_uint32()
         for _ in range(num_entries):
-            entry = ObjectDict()
+            entry = Entry(self)
             entry.path = rd.read_cstring()
             entry.offset = rd.read_uint32()
             entry.size = rd.read_uint32()
             entries.append(entry)
 
-    def _read_header_fs(self):
+class ArchiveFS(Archive):
+
+    def _read_header(self):
+        super()._read_header()
+
         r = self.r
 
         header = self.header
         header.file_size = r.read_uint64()
         header.compressed_blocks_info_size = r.read_uint32()
         header.uncompressed_blocks_info_size = r.read_uint32()
+        header.flags = r.read_uint32()
 
-        flags = header.flags = ObjectDict()
-        flags.raw = r.read_uint32()
-        flags.compression_method = Compression(flags.raw & 0x3f)
-        flags.blocks_info = flags.raw & 0x40 != 0
-        flags.directory_info_end = flags.raw & 0x80 != 0
+    def _read_entries(self):
+        r = self.r
 
-        # read entries
-        method = flags.compression_method
+        header = self.header
+        method = self.compression_method
         blocks_info_size_c = header.compressed_blocks_info_size
         blocks_info_size_u = header.uncompressed_blocks_info_size
 
-        if header.flags.directory_info_end:
+        if self.has_directory_info_end:
             r.seek(header.file_size - blocks_info_size_c)
         else:
             r.align(2)
@@ -125,27 +152,23 @@ class Archive(AutoCloseable):
         rb = BinaryIO(io.BytesIO(blocks_info_data), order=ByteOrder.BIG_ENDIAN)
 
         # read ArchiveStorageHeader::BlocksInfo
-        self.blocks_info = blocks_info = ObjectDict()
+        blocks_info = self.blocks_info = ObjectDict()
         blocks_info.uncompressed_data_hash = rb.read_hex(16)
-        blocks_info.storage_blocks = []
+        storage_blocks = blocks_info.storage_blocks = []
 
         num_blocks = rb.read_int32()
         for _ in range(num_blocks):
-            storage_block = ObjectDict()
+            storage_block = StorageBlock()
             storage_block.uncompressed_size = rb.read_uint32()
             storage_block.compressed_size = rb.read_uint32()
+            storage_block.flags = rb.read_uint16()
+            storage_blocks.append(storage_block)
 
-            flags = storage_block.flags = ObjectDict()
-            flags.raw = rb.read_uint16()
-            flags.compression_method = Compression(flags.raw & 0x3f)
-
-            blocks_info.storage_blocks.append(storage_block)
-
-        # read ArchiveStorageHeader::Node strucs
-        self.entries = entries = []
+        # read ArchiveStorageHeader::Node
+        entries = self.entries = []
         num_entries = rb.read_int32()
         for _ in range(num_entries):
-            entry = ObjectDict()
+            entry = Entry(self)
             entry.offset = rb.read_int64()
             entry.size = rb.read_int64()
             entry.flags = rb.read_uint32()
@@ -153,7 +176,7 @@ class Archive(AutoCloseable):
             entries.append(entry)
 
         # check if there's one large LZMA block
-        compression_method = blocks_info.storage_blocks[0].flags.compression_method
+        compression_method = blocks_info.storage_blocks[0].compression_method
         if len(blocks_info.storage_blocks) == 1 and compression_method == Compression.LZMA:
             # in newer archive formats, the LZMA stream header no longer includes
             # the uncompressed size, since it's already part of the archive header,
@@ -198,15 +221,56 @@ class Archive(AutoCloseable):
         else:
             raise NotImplementedError("_read_block with " + method)
 
-    def read(self, entry):
-        self.rd.seek(entry.offset)
-        return self.rd.read(entry.size)
+    @property
+    def compression_method(self):
+        return Compression(self.header.flags & 0x3f)
 
-    def extract(self, entry, path):
-        self.rd.seek(entry.offset)
-        with open(path, "wb") as fp:
-            copyfileobj(self.rd, fp, entry.size)
+    @property
+    def has_blocks_info(self):
+        return self.header.flags & 0x40 != 0
 
-    def close(self):
-        self.rd.close()
-        self.r.close()
+    @property
+    def has_directory_info_end(self):
+        return self.header.flags & 0x80 != 0
+
+class ArchiveError(Exception):
+    pass
+
+class Entry:
+
+    def __init__(self, archive):
+        self.archive = archive
+        self.offset = 0
+        self.size = 0
+        self.flags = 0
+        self.path = ""
+
+    def read(self):
+        return self.archive._entry_read(self)
+
+    def extract(self, path):
+        return self.archive._entry_extract(self, path)
+
+class StorageBlock:
+
+    def __init__(self):
+        self.uncompressed_size = 0
+        self.compressed_size = 0
+        self.flags = 0
+
+    def read(self, r):
+        self.uncompressed_size = r.read_uint32()
+        self.compressed_size = r.read_uint32()
+        self.flags = r.read_uint16()
+
+    @property
+    def compression_method(self):
+        return Compression(self.flags & 0x3f)
+
+class Compression(Enum):
+
+    NONE = 0
+    LZMA = 1
+    LZ4 = 2
+    LZ4HC = 3
+    LZHAM = 4
