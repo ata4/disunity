@@ -10,7 +10,7 @@ import disunity
 class AssetDumpApp(disunity.SerializedFileApp):
 
     def __init__(self):
-        super(AssetDumpApp, self).__init__()
+        super().__init__()
 
         self.cmds = {
             "header": lambda sf: self.json_dump(sf.header),

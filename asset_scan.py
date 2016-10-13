@@ -7,7 +7,7 @@ import disunity
 class AssetScanApp(disunity.SerializedFileApp):
 
     def __init__(self):
-        super(AssetScanApp, self).__init__()
+        super().__init__()
 
         self.num_files_passed = 0
         self.num_files_failed = 0
@@ -43,7 +43,7 @@ class AssetScanApp(disunity.SerializedFileApp):
         print("  -u, --update-db            update database with embedded types")
 
     def main(self, argv):
-        if super(AssetScanApp, self).main(argv):
+        if super().main(argv):
             return
 
         print()
@@ -60,7 +60,7 @@ class AssetScanApp(disunity.SerializedFileApp):
 
     def process(self, path):
         try:
-            super(AssetScanApp, self).process(path)
+            super().process(path)
         except Exception:
             self.log.exception("Failed reading " + path)
             self.num_files_failed += 1

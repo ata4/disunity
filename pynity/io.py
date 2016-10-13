@@ -55,7 +55,7 @@ class ChunkedFileIO(io.BufferedIOBase):
             return cls(paths, mode)
 
     def __init__(self, paths, mode):
-        super(ChunkedFileIO, self).__init__()
+        super().__init__()
 
         self._chunks = []
         self._index = 0
@@ -159,7 +159,7 @@ class ChunkedFileIO(io.BufferedIOBase):
     def close(self):
         for chunk in self._chunks:
             chunk.close()
-        super(ChunkedFileIO, self).close()
+        super().close()
 
     class Chunk():
 

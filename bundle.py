@@ -9,7 +9,7 @@ import pynity
 class BundleApp(disunity.RecursiveFileApp):
 
     def __init__(self):
-        super(BundleApp, self).__init__()
+        super().__init__()
 
         self.cmd = None
 
