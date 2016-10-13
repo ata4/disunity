@@ -199,7 +199,7 @@ class ArchiveFS(Archive):
             # memory at once
             data = bytearray()
             for block in blocks_info.storage_blocks:
-                data.extend(self._read_block(block.flags.compression_method,
+                data.extend(self._read_block(block.compression_method,
                                              block.compressed_size,
                                              block.uncompressed_size))
 
@@ -257,11 +257,6 @@ class StorageBlock:
         self.uncompressed_size = 0
         self.compressed_size = 0
         self.flags = 0
-
-    def read(self, r):
-        self.uncompressed_size = r.read_uint32()
-        self.compressed_size = r.read_uint32()
-        self.flags = r.read_uint16()
 
     @property
     def compression_method(self):
