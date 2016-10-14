@@ -1,10 +1,11 @@
 import sys
 import os
-
-from pprint import pprint
+import logging
 
 import disunity
 import pynity
+
+log = logging.getLogger()
 
 class BundleApp(disunity.RecursiveFileApp):
 
@@ -44,7 +45,21 @@ class BundleApp(disunity.RecursiveFileApp):
                 # extract files
                 for entry in archive.entries:
                     print(entry.path)
+
+                    # append output path
                     entry_path = os.path.join(path_out, entry.path)
+
+                    # block path traversal attempts
+                    entry_path = os.path.abspath(entry_path)
+                    common_prefix = os.path.commonprefix([entry_path, path_out])
+
+                    if common_prefix != path_out:
+                        log.warning("Blocked path traversal attempt: '%s'" % entry.path)
+                        continue
+
+                    # create directories
+                    os.makedirs(os.path.dirname(entry_path), exist_ok=True)
+
                     entry.extract(entry_path)
             else:
                 # validation went wrong
