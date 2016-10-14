@@ -8,7 +8,7 @@ from pynity.io import ByteOrder
 class TestStringTable(unittest.TestCase):
 
     class_id = 1
-    version = "4.6.1f1"
+    signature = "4.6.1f1"
     hash = "0123456789abcdef"
     data = b"dummy"
 
@@ -21,7 +21,6 @@ class TestStringTable(unittest.TestCase):
         self.tdb = TypeDatabase(self.tmpdir.name)
         self.tdb.version = 15
         self.tdb.order = ByteOrder.LITTLE_ENDIAN
-        self.tdb.signature = self.version
 
     def tearDown(self):
         self.tmpdir.cleanup()
@@ -34,11 +33,11 @@ class TestStringTable(unittest.TestCase):
             self.assertEqual(fp.read(), self.data)
 
     def test_add_old(self):
-        self.assertRaises(TypeException, self.tdb.open_old, self.class_id, self.version)
-        self.assertTrue(self.tdb.add_old(self.data, self.class_id))
+        self.assertRaises(TypeException, self.tdb.open_old, self.class_id, self.signature)
+        self.assertTrue(self.tdb.add_old(self.data, self.class_id, self.signature))
 
         # direct match
-        with self.tdb.open_old(self.class_id, self.version) as fp:
+        with self.tdb.open_old(self.class_id, self.signature) as fp:
             self.assertEqual(fp.read(), self.data)
 
         # close match

@@ -22,7 +22,6 @@ class TypeDatabase:
         self.path_types = os.path.join(self.path_resources, "types")
         self.path_types_old = os.path.join(self.path_resources, "types_old")
 
-        self.signature = ""
         self.version = 0
         self.order = ByteOrder.LITTLE_ENDIAN
 
@@ -62,7 +61,7 @@ class TypeDatabase:
 
         return added
 
-    def add_old(self, type_tree_raw, class_id):
+    def add_old(self, type_tree_raw, class_id, signature):
         if class_id < 0:
             return False
 
@@ -71,8 +70,8 @@ class TypeDatabase:
             os.makedirs(path_dir)
 
         # check if the signature already has a hash
-        index = self.VersionIndex(path_dir, class_id)
-        if index.get(self.signature, exact=True):
+        index = self.SignatureIndex(path_dir, class_id)
+        if index.get(signature, exact=True):
             return False
 
         type_hash = hashlib.md5(type_tree_raw).hexdigest()
@@ -83,11 +82,46 @@ class TypeDatabase:
         if added:
             log.info("Added type %s for class %d", type_hash, class_id)
 
-        # update version index
-        if index.add(self.signature, type_hash):
+        # update signature index
+        if index.add(signature, type_hash):
             added = True
 
         return added
+
+    def add_all(self, sf):
+        types_added = 0
+
+        # skip scan entirely if there are no embedded types
+        if not sf.types_raw:
+            return types_added
+
+        # save some metadata required to identify old types
+        self.version = sf.header.version
+        self.order = sf.r.order
+
+        for class_id in sf.types.classes:
+            # ignore script types
+            if class_id <= 0:
+                continue
+
+            # ignore types that aren't loaded
+            if class_id not in sf.types_raw:
+                continue
+
+            class_type = sf.types.classes[class_id]
+
+            # add types that don't exist yet
+            if sf.header.version > 13:
+                if self.add(sf.types_raw[class_id], class_id,
+                                class_type.old_type_hash):
+                    types_added += 1
+            else:
+                signature = sf.types.get("signature")
+                if (class_type and signature and
+                        self.add_old(sf.types_raw[class_id], class_id, signature)):
+                    types_added += 1
+
+        return types_added
 
     def open(self, class_id, type_hash):
         path_type_dir = os.path.join(self.path_types, str(class_id))
@@ -103,16 +137,16 @@ class TypeDatabase:
 
         return self._type_open(path_type)
 
-    def open_old(self, class_id, version):
+    def open_old(self, class_id, signature):
         # script types are never saved in database
         if class_id < 0:
             return
 
-        # load version index and find type hash for version
+        # load signature index and find type hash for signature
         path_type_dir = os.path.join(self.path_types_old, str(class_id))
 
-        index = self.VersionIndex(path_type_dir, class_id)
-        type_hash = index.get(version)
+        index = self.SignatureIndex(path_type_dir, class_id)
+        type_hash = index.get(signature)
 
         # bail out if there's no match inside the index
         if not type_hash:
@@ -126,7 +160,7 @@ class TypeDatabase:
 
         return self._type_open(path_type)
 
-    class VersionIndex:
+    class SignatureIndex:
 
         def __init__(self, dir, class_id):
             self.class_id = class_id
@@ -137,56 +171,56 @@ class TypeDatabase:
             else:
                 self.data = {}
 
-        def get(self, version, exact=False):
+        def get(self, signature, exact=False):
             # search for direct match
-            type_hash, version_match = self.search(version)
+            type_hash, signature_match = self.search(signature)
             if type_hash or exact:
                 return type_hash
 
             # search for major, minor and patch (first 5 chars)
-            type_hash, version_match = self.search(version, 5)
+            type_hash, signature_match = self.search(signature, 5)
             if type_hash:
                 return type_hash
 
             # search for major and minor only (first 3 chars)
-            type_hash, version_match = self.search(version, 3)
+            type_hash, signature_match = self.search(signature, 3)
             if type_hash:
-                log.warning("Using database type %s for version %s instead of %s, "
+                log.warning("Using database type %s for signature %s instead of %s, "
                             "deserializing objects using class %d may fail!",
-                            type_hash, version_match, version, self.class_id)
+                            type_hash, signature_match, signature, self.class_id)
                 return type_hash
 
-        def search(self, version, num_chars=0):
+        def search(self, signature, num_chars=0):
             if num_chars == 0:
-                # search for exact version
-                for type_hash, versions in self.data.items():
-                    if version in versions:
-                        return type_hash, version
+                # search for exact signature
+                for type_hash, signatures in self.data.items():
+                    if signature in signatures:
+                        return type_hash, signature
             else:
-                # search for version substring
-                for type_hash, versions in self.data.items():
-                    for version_index in versions:
-                        if version_index[:num_chars] == version[:num_chars]:
-                            return type_hash, version_index
+                # search for signature substring
+                for type_hash, signatures in self.data.items():
+                    for signature_index in signatures:
+                        if signature_index[:num_chars] == signature[:num_chars]:
+                            return type_hash, signature_index
 
             return None, None
 
-        def add(self, version, type_hash):
+        def add(self, signature, type_hash):
             # catch potential silly mistakes
             assert len(type_hash) == 32
 
-            # cancel if version is already in index
-            if type_hash in self.data and version in self.data[type_hash]:
+            # cancel if signature is already in index
+            if type_hash in self.data and signature in self.data[type_hash]:
                 return False
 
-            # insert version and hash
+            # insert signature and hash
             if type_hash in self.data:
-                self.data[type_hash].append(version)
+                self.data[type_hash].append(signature)
             else:
-                self.data[type_hash] = [version]
+                self.data[type_hash] = [signature]
 
-            log.info("Added version %s to type %s for class %d",
-                     version, type_hash, self.class_id)
+            log.info("Added signature %s to type %s for class %d",
+                     signature, type_hash, self.class_id)
 
             # update index file
             self.save()
@@ -194,11 +228,11 @@ class TypeDatabase:
             return True
 
         def save(self):
-            # sort version strings
-            for versions in self.data.values():
-                versions.sort()
+            # sort signature strings
+            for signatures in self.data.values():
+                signatures.sort()
 
-            # sort keys by last version in list
+            # sort keys by last signature in list
             self.data = OrderedDict(sorted(self.data.items(), key=lambda t: t[1][-1]))
 
             # write file

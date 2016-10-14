@@ -49,8 +49,6 @@ class SerializedFile(AutoCloseable):
         self._cached_types = {}
         self._archive = archive
 
-        self.type_db = TypeDatabase()
-
         if isinstance(file, str):
             fp = ChunkedFileIO.open(file, "rb")
         else:
@@ -326,6 +324,7 @@ class SerializedFile(AutoCloseable):
             externals.append(external)
 
     def _read_objects(self, r=None):
+        type_db = TypeDatabase()
         objects = self.objects = {}
 
         for path_id, obj_info in self.object_infos.items():
@@ -347,15 +346,15 @@ class SerializedFile(AutoCloseable):
                     assert obj_class
 
                     try:
-                        with self.type_db.open(obj_info.type_id,
-                                                obj_class.old_type_hash) as fp:
+                        with type_db.open(obj_info.type_id,
+                                          obj_class.old_type_hash) as fp:
                             obj_type = self._read_type_node(fp)
                     except TypeException as ex:
                         log.warning(ex)
                 else:
                     try:
-                        with self.type_db.open_old(obj_info.type_id,
-                                                   self.types.signature) as fp:
+                        with type_db.open_old(obj_info.type_id,
+                                              self.types.signature) as fp:
                             obj_type = self._read_type_node_old(fp)
                     except TypeException as ex:
                         log.warning(ex)
@@ -366,40 +365,6 @@ class SerializedFile(AutoCloseable):
                 continue
 
             objects[path_id] = SerializedObject(self, path_id, obj_info, obj_type)
-
-    def update_type_db(self):
-        types_added = 0
-
-        # skip scan entirely if there are no embedded types
-        if not self.types_raw:
-            return types_added
-
-        self.type_db.signature = self.types.get("signature")
-        self.type_db.version = self.header.version
-        self.type_db.order = self.r.order
-
-        for class_id in self.types.classes:
-            # ignore script types
-            if class_id <= 0:
-                continue
-
-            # ignore types
-            if class_id not in self.types_raw:
-                continue
-
-            class_type = self.types.classes[class_id]
-
-            # create type files that don't exist yet
-            if self.header.version > 13:
-                if self.type_db.add(self.types_raw[class_id], class_id,
-                                    class_type.old_type_hash):
-                    types_added += 1
-            else:
-                if (class_type and signature and
-                        self.type_db.add_old(self.types_raw[class_id], class_id)):
-                    types_added += 1
-
-        return types_added
 
     def objects_by_class(self, *class_id):
         for obj in self.objects.values():

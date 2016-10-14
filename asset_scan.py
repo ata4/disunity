@@ -3,6 +3,7 @@ import os
 import getopt
 
 import disunity
+import pynity
 
 class AssetScanApp(disunity.SerializedFileApp):
 
@@ -19,6 +20,8 @@ class AssetScanApp(disunity.SerializedFileApp):
         self.update_type_db = False
         self.deserialize = False
         self.signature = None
+
+        self.type_db = pynity.TypeDatabase()
 
     def parse_args(self, argv):
         try:
@@ -69,7 +72,7 @@ class AssetScanApp(disunity.SerializedFileApp):
         print(path)
 
         if self.update_type_db:
-            self.num_types_added += sf.update_type_db()
+            self.num_types_added += self.type_db.add_all(sf)
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))
