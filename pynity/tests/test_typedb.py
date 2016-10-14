@@ -1,9 +1,11 @@
 import logging
 import tempfile
+import os
 import unittest
 
 from pynity.typedb import TypeDatabase, TypeException
 from pynity.io import ByteOrder
+from pynity.serialize import SerializedFile
 
 class TestStringTable(unittest.TestCase):
 
@@ -50,3 +52,11 @@ class TestStringTable(unittest.TestCase):
 
         # no match
         self.assertRaises(TypeException, self.tdb.open_old, self.class_id, "4.5.0f1")
+
+    def test_add_all(self):
+        path_base = os.path.dirname(__file__)
+        path_resources = os.path.join(path_base, "resources", "serialized")
+        path_serialized = os.path.join(path_resources, "v15_r5.2.3f1_typed.assets")
+
+        with SerializedFile(path_serialized) as sf:
+            self.assertEqual(self.tdb.add_all(sf), 29)
