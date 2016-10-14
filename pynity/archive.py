@@ -65,16 +65,6 @@ class Archive(AutoCloseable):
     def _read_entries(self):
         pass
 
-    def _entry_read(self, entry):
-        self.rd.seek(entry.offset)
-        return self.rd.read(entry.size)
-
-    def _entry_extract(self, entry, path):
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        self.rd.seek(entry.offset)
-        with open(path, "wb") as fp:
-            copyfileobj(self.rd, fp, entry.size)
-
     def close(self):
         self.rd.close()
         self.r.close()
@@ -115,7 +105,7 @@ class ArchiveWeb(Archive):
         rd = self.rd
         num_entries = rd.read_uint32()
         for _ in range(num_entries):
-            entry = Entry(self)
+            entry = Entry(rd)
             entry.path = rd.read_cstring()
             entry.offset = rd.read_uint32()
             entry.size = rd.read_uint32()
@@ -164,17 +154,6 @@ class ArchiveFS(Archive):
             storage_block.flags = rb.read_uint16()
             storage_blocks.append(storage_block)
 
-        # read ArchiveStorageHeader::Node
-        entries = self.entries = []
-        num_entries = rb.read_int32()
-        for _ in range(num_entries):
-            entry = Entry(self)
-            entry.offset = rb.read_int64()
-            entry.size = rb.read_int64()
-            entry.flags = rb.read_uint32()
-            entry.path = rb.read_cstring()
-            entries.append(entry)
-
         # check if there's one large LZMA block
         compression_method = blocks_info.storage_blocks[0].compression_method
         if len(blocks_info.storage_blocks) == 1 and compression_method == Compression.LZMA:
@@ -207,6 +186,17 @@ class ArchiveFS(Archive):
 
         self.rd = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
 
+        # read ArchiveStorageHeader::Node
+        entries = self.entries = []
+        num_entries = rb.read_int32()
+        for _ in range(num_entries):
+            entry = Entry(self.rd)
+            entry.offset = rb.read_int64()
+            entry.size = rb.read_int64()
+            entry.flags = rb.read_uint32()
+            entry.path = rb.read_cstring()
+            entries.append(entry)
+
     def _read_block(self, method, compressed_size, uncompressed_size):
         block = self.r.read(compressed_size)
 
@@ -238,18 +228,21 @@ class ArchiveError(Exception):
 
 class Entry:
 
-    def __init__(self, archive):
-        self.archive = archive
+    def __init__(self, fp):
+        self._fp = fp
         self.offset = 0
         self.size = 0
         self.flags = 0
         self.path = ""
 
     def read(self):
-        return self.archive._entry_read(self)
+        self._fp.seek(self.offset)
+        return self._fp.read(self.size)
 
     def extract(self, path):
-        return self.archive._entry_extract(self, path)
+        self._fp.seek(self.offset)
+        with open(path, "wb") as fp:
+            copyfileobj(self._fp, fp, self.size)
 
 class StorageBlock:
 
