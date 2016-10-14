@@ -76,6 +76,7 @@ class AssetScanApp(disunity.SerializedFileApp):
 
         if self.deserialize:
             print("% -16s  % -24s  %s" % ("Path", "Class", "Name"))
+            print("%s  %s  %s" % ("-" * 16, "-" * 24, "-" * 16))
             for obj in sf.objects.values():
                 path_id = obj.path_id
 
