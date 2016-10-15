@@ -37,8 +37,8 @@ class RecursiveFileApp:
 class SerializedFileApp(RecursiveFileApp):
 
     def process(self, path):
-        if pynity.Archive.probe(path):
-            with pynity.Archive.open(path) as archive:
+        if pynity.ArchiveFile.probe(path):
+            with pynity.ArchiveFile.open(path) as archive:
                 self.process_archive(path, archive)
         elif pynity.SerializedFile.probe_path(path):
             with pynity.SerializedFile(path) as sf:
