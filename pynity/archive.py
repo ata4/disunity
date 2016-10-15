@@ -96,8 +96,7 @@ class ArchiveFileWeb(ArchiveFile):
         r.read_uint8() # padding
 
     def _read_entries(self):
-        # UnityWeb data stream needs to be opened as compressed LZMA stream
-        if self.header.signature == "UnityWeb":
+        if self.compression_method == Compression.LZMA:
             self.rd = BinaryIO(lzma.open(self.r, "rb"), order=ByteOrder.BIG_ENDIAN)
 
         # read StreamingInfo list
@@ -110,6 +109,14 @@ class ArchiveFileWeb(ArchiveFile):
             entry.offset = rd.read_uint32()
             entry.size = rd.read_uint32()
             entries.append(entry)
+
+    @property
+    def compression_method(self):
+        # UnityWeb data stream needs to be opened as compressed LZMA stream
+        if self.header.signature == "UnityWeb":
+            return Compression.LZMA
+        else:
+            return Compression.NONE
 
 class ArchiveFileFS(ArchiveFile):
 
