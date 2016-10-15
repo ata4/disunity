@@ -34,7 +34,7 @@ class BundleApp(disunity.RecursiveFileApp):
         if path_out == path:
             path_out += "_"
 
-        with pynity.Archive.open(path) as archive:
+        with pynity.ArchiveFile.open(path) as archive:
             if self.cmd == "l":
                 # list files
                 print("% 12s  %s" % ("Size", "Name"))

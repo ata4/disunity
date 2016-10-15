@@ -9,7 +9,7 @@ from enum import Enum
 from .io import AutoCloseable, BinaryIO, ByteOrder, copyfileobj
 from .utils import ObjectDict
 
-class Archive(AutoCloseable):
+class ArchiveFile(AutoCloseable):
 
     versions = [1, 2, 3, 6]
     signatures = ["UnityWeb", "UnityRaw", "UnityFS"]
@@ -30,9 +30,9 @@ class Archive(AutoCloseable):
         # Note: Unity 5.3 uses "UnityWeb" signature for web builds, but the files
         # are actually in UnityFS format, so check the format version instead.
         if version > 3:
-            return ArchiveFS(r, signature, version)
+            return ArchiveFileFS(r, signature, version)
         else:
-            return ArchiveWeb(r, signature, version)
+            return ArchiveFileWeb(r, signature, version)
 
     @classmethod
     def probe(cls, path):
@@ -69,7 +69,7 @@ class Archive(AutoCloseable):
         self.rd.close()
         self.r.close()
 
-class ArchiveWeb(Archive):
+class ArchiveFileWeb(ArchiveFile):
 
     def _read_header(self):
         super()._read_header()
@@ -111,7 +111,7 @@ class ArchiveWeb(Archive):
             entry.size = rd.read_uint32()
             entries.append(entry)
 
-class ArchiveFS(Archive):
+class ArchiveFileFS(ArchiveFile):
 
     def _read_header(self):
         super()._read_header()

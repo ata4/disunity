@@ -1,3 +1,3 @@
 from .serialize import SerializedFile
-from .archive import Archive
+from .archive import ArchiveFile
 from .typedb import TypeDatabase
