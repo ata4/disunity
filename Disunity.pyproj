@@ -41,23 +41,23 @@
     <Compile Include="pynity\engine.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pynity\io.py" />
+    <Compile Include="pynity\ioutils.py" />
     <Compile Include="pynity\serialize.py" />
     <Compile Include="pynity\stringtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pynity\tests\test_io.py" />
+    <Compile Include="pynity\tests\test_ioutils.py" />
     <Compile Include="pynity\tests\test_serialize.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\tests\test_stringtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pynity\tests\test_typedb.py">
+    <Compile Include="pynity\tests\test_types.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\tests\__init__.py" />
-    <Compile Include="pynity\typedb.py">
+    <Compile Include="pynity\types.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\utils.py" />
