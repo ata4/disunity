@@ -7,11 +7,19 @@ from enum import IntEnum
 
 # re-implementation of shutil.copyfileobj with separate length and buffer size
 # parameters
-def copyfileobj(fsrc, fdst, length, bufsize=8192):
-    while length:
-        read_len = min(bufsize, length)
-        fdst.write(fsrc.read(read_len))
-        length -= read_len
+def copyfileobj(fsrc, fdst, length=-1, bufsize=8192):
+    while True:
+        data = fsrc.read(min(bufsize, length))
+        if not data:
+            break
+
+        fdst.write(data)
+
+        if length > 0:
+            length -= len(data)
+
+        if length == 0:
+            break
 
 class AutoCloseable:
 
