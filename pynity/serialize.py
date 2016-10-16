@@ -49,22 +49,25 @@ class SerializedFile(AutoCloseable):
         self._cached_types = {}
         self._archive = archive
 
+        # open file from string or use it directly, depending on the type
         if isinstance(file, str):
             fp = ChunkedFileIO.open(file, "rb")
         else:
             fp = file
 
-        self.r = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
+        r = self.r = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
 
         # read metadata
-        self._read_header()
-        self._read_types()
-        self._read_object_infos()
-        self._read_script_types()
-        self._read_externals()
-        self._read_objects()
+        self._read_header(r)
+        self._read_types(r)
+        self._read_object_infos(r)
+        self._read_script_types(r)
+        self._read_externals(r)
 
-    def _read_header(self, r=None):
+        # create object list from metadata
+        self._read_objects(r)
+
+    def _read_header(self, r):
         if not r:
             r = self.r
 
@@ -94,10 +97,7 @@ class SerializedFile(AutoCloseable):
         elif header.version > 5:
             r.order = ByteOrder.LITTLE_ENDIAN
 
-    def _read_types(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_types(self, r):
         types = self.types = ObjectDict()
 
         # older formats store the object data before the structure data
@@ -134,14 +134,14 @@ class SerializedFile(AutoCloseable):
 
                 if types.embedded:
                     type_pos = r.tell()
-                    class_type.type_tree = self._read_type_node()
+                    class_type.type_tree = self._read_type_node(r)
                     type_size = r.tell() - type_pos
 
                     r.seek(type_pos)
                     types_raw[class_id] = r.read(type_size)
             else:
                 type_pos = r.tell()
-                class_type.type_tree = self._read_type_node_old()
+                class_type.type_tree = self._read_type_node_old(r)
                 type_size = r.tell() - type_pos
 
                 r.seek(type_pos)
@@ -156,10 +156,7 @@ class SerializedFile(AutoCloseable):
         if 6 < self.header.version < 13:
             r.read_int32()
 
-    def _read_type_node(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_type_node(self, r):
         # read sizes
         num_fields = r.read_int32()
         string_table_len = r.read_int32()
@@ -223,10 +220,7 @@ class SerializedFile(AutoCloseable):
 
         return field_root
 
-    def _read_type_node_old(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_type_node_old(self, r):
         field = ObjectDict()
         field.type = r.read_cstring()
         field.name = r.read_cstring()
@@ -243,10 +237,7 @@ class SerializedFile(AutoCloseable):
 
         return field
 
-    def _read_object_infos(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_object_infos(self, r):
         object_infos = self.object_infos = {}
 
         num_entries = r.read_int32()
@@ -283,10 +274,7 @@ class SerializedFile(AutoCloseable):
 
             object_infos[path_id] = obj_info
 
-    def _read_script_types(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_script_types(self, r):
         script_types = self.script_types = []
 
         # script types exist in newer versions only
@@ -304,10 +292,7 @@ class SerializedFile(AutoCloseable):
 
             script_types.append(script_type)
 
-    def _read_externals(self, r=None):
-        if not r:
-            r = self.r
-
+    def _read_externals(self, r):
         externals = self.externals = []
 
         num_entries = r.read_int32()
@@ -323,7 +308,7 @@ class SerializedFile(AutoCloseable):
 
             externals.append(external)
 
-    def _read_objects(self, r=None):
+    def _read_objects(self, r):
         type_db = TypeDatabase()
         objects = self.objects = {}
 
