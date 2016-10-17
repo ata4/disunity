@@ -15,7 +15,7 @@ class ArchiveFile(ioutils.AutoCloseable):
 
     @classmethod
     def open(cls, path):
-        r = ioutils.BinaryIO(open(path, "rb"), order=ioutils.ByteOrder.BIG_ENDIAN)
+        r = ioutils.BinaryIO(open(path, "rb"), order=ioutils.BIG_ENDIAN)
 
         signature = r.read_cstring()
         if signature not in cls.signatures:
@@ -96,7 +96,7 @@ class ArchiveFileWeb(ArchiveFile):
 
     def _read_entries(self):
         if self.compression_method == Compression.LZMA:
-            self.rd = ioutils.BinaryIO(lzma.open(self.r, "rb"), order=ioutils.ByteOrder.BIG_ENDIAN)
+            self.rd = ioutils.BinaryIO(lzma.open(self.r, "rb"), order=ioutils.BIG_ENDIAN)
 
         # read StreamingInfo list
         entries = self.entries
@@ -145,7 +145,7 @@ class ArchiveFileFS(ArchiveFile):
 
         blocks_info_data = self._read_block(method, blocks_info_size_c, blocks_info_size_u)
 
-        rb = ioutils.BinaryIO(io.BytesIO(blocks_info_data), order=ioutils.ByteOrder.BIG_ENDIAN)
+        rb = ioutils.BinaryIO(io.BytesIO(blocks_info_data), order=ioutils.BIG_ENDIAN)
 
         # read ArchiveStorageHeader::BlocksInfo
         blocks_info = self.blocks_info = utils.ObjectDict()
@@ -166,7 +166,7 @@ class ArchiveFileFS(ArchiveFile):
             # in newer archive formats, the LZMA stream header no longer includes
             # the uncompressed size, since it's already part of the archive header,
             # so the props need to be read manually and supplied to a custom filter
-            r.order = ioutils.ByteOrder.LITTLE_ENDIAN
+            r.order = ioutils.LITTLE_ENDIAN
             prop = r.read_uint8()
             dict_size = r.read_uint32()
 
@@ -190,7 +190,7 @@ class ArchiveFileFS(ArchiveFile):
 
             fp = io.BytesIO(data)
 
-        self.rd = ioutils.BinaryIO(fp, order=ioutils.ByteOrder.BIG_ENDIAN)
+        self.rd = ioutils.BinaryIO(fp, order=ioutils.BIG_ENDIAN)
 
         # read ArchiveStorageHeader::Node
         entries = self.entries = []
