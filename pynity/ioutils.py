@@ -3,7 +3,8 @@ import os
 import struct
 import binascii
 
-from enum import IntEnum
+LITTLE_ENDIAN = 0
+BIG_ENDIAN = 1
 
 # re-implementation of shutil.copyfileobj with separate length and buffer size
 # parameters
@@ -194,13 +195,9 @@ class ChunkedFileIO(io.BufferedIOBase):
         def close(self):
             self.handle.close()
 
-class ByteOrder(IntEnum):
-    LITTLE_ENDIAN = 0
-    BIG_ENDIAN = 1
-
 class BinaryIO():
 
-    def __init__(self, fp, order=ByteOrder.LITTLE_ENDIAN):
+    def __init__(self, fp, order=LITTLE_ENDIAN):
         self._order = None
         self._tag = None
         self._fp = fp

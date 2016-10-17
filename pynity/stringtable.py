@@ -1,31 +1,28 @@
 import os
 
-class StringTable:
+def strmap(buf, offset=0):
+    str_list = [string.decode("ascii") for string in buf.split(b'\0')]
+    str_map = {}
+    p = 0
 
-    strings_global = {}
+    for string in str_list:
+        if not string:
+            continue
 
-    @classmethod
-    def map(cls, buf, offset=0):
-        string_list = [string.decode("ascii") for string in buf.split(b'\0')]
-        string_map = {}
-        p = 0
-        for string in string_list:
-            if not string:
-                continue
+        str_map[p + offset] = string
+        p += len(string) + 1
+    return str_map
 
-            string_map[p + offset] = string
-            p += len(string) + 1
-        return string_map
+def load(buf):
+    if load.strings_global is None:
+        script_dir = os.path.dirname(__file__)
+        strings_path = os.path.join(script_dir, "resources", "types", "common.unitystrings")
 
-    @classmethod
-    def load(cls, buf):
-        if not cls.strings_global:
-            script_dir = os.path.dirname(__file__)
-            strings_path = os.path.join(script_dir, "resources", "types", "common.unitystrings")
+        with open(strings_path, "rb") as fp:
+            load.strings_global = strmap(fp.read(), offset=1<<31)
 
-            with open(strings_path, "rb") as fp:
-                cls.strings_global = cls.map(fp.read(), offset=1<<31)
+    strings = load.strings_global.copy()
+    strings.update(strmap(buf))
+    return strings
 
-        strings = cls.strings_global.copy()
-        strings.update(cls.map(buf))
-        return strings
+load.strings_global = None

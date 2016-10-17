@@ -53,11 +53,11 @@
     <Compile Include="pynity\tests\test_stringtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pynity\tests\test_types.py">
+    <Compile Include="pynity\tests\test_rtti.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\tests\__init__.py" />
-    <Compile Include="pynity\types.py">
+    <Compile Include="pynity\rtti.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pynity\utils.py" />

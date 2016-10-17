@@ -3,9 +3,9 @@ import tempfile
 import os
 import unittest
 
-from pynity.typedb import TypeDatabase, TypeException
-from pynity.io import ByteOrder
-from pynity.serialize import SerializedFile
+import pynity
+import pynity.rtti as rtti
+import pynity.ioutils as ioutils
 
 class TestStringTable(unittest.TestCase):
 
@@ -20,22 +20,22 @@ class TestStringTable(unittest.TestCase):
 
     def setUp(self):
         self.tmpdir = tempfile.TemporaryDirectory()
-        self.tdb = TypeDatabase(self.tmpdir.name)
+        self.tdb = rtti.Database(self.tmpdir.name)
         self.tdb.version = 15
-        self.tdb.order = ByteOrder.LITTLE_ENDIAN
+        self.tdb.order = ioutils.LITTLE_ENDIAN
 
     def tearDown(self):
         self.tmpdir.cleanup()
 
     def test_add(self):
-        self.assertRaises(TypeException, self.tdb.open, self.class_id, self.hash)
+        self.assertRaises(rtti.TypeException, self.tdb.open, self.class_id, self.hash)
         self.assertTrue(self.tdb.add(self.data, self.class_id, self.hash))
 
         with self.tdb.open(self.class_id, self.hash) as fp:
             self.assertEqual(fp.read(), self.data)
 
     def test_add_old(self):
-        self.assertRaises(TypeException, self.tdb.open_old, self.class_id, self.signature)
+        self.assertRaises(rtti.TypeException, self.tdb.open_old, self.class_id, self.signature)
         self.assertTrue(self.tdb.add_old(self.data, self.class_id, self.signature))
 
         # direct match
@@ -51,12 +51,12 @@ class TestStringTable(unittest.TestCase):
             self.assertEqual(fp.read(), self.data)
 
         # no match
-        self.assertRaises(TypeException, self.tdb.open_old, self.class_id, "4.5.0f1")
+        self.assertRaises(rtti.TypeException, self.tdb.open_old, self.class_id, "4.5.0f1")
 
     def test_add_all(self):
         path_base = os.path.dirname(__file__)
         path_resources = os.path.join(path_base, "resources", "serialized")
         path_serialized = os.path.join(path_resources, "v15_r5.2.3f1_typed.assets")
 
-        with SerializedFile(path_serialized) as sf:
+        with pynity.SerializedFile(path_serialized) as sf:
             self.assertEqual(self.tdb.add_all(sf), 29)

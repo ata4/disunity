@@ -2,7 +2,7 @@ import unittest
 import os
 import logging
 
-from pynity.serialize import SerializedFile
+import pynity
 
 class TestSerializeMeta(type):
 
@@ -39,9 +39,9 @@ class TestSerialize(unittest.TestCase, metaclass=TestSerializeMeta):
         logging.getLogger().setLevel(logging.ERROR)
 
     def _test_probe(self, path):
-        self.assertTrue(SerializedFile.probe_path(path))
+        self.assertTrue(pynity.SerializedFile.probe_path(path))
 
     def _test_deserialize(self, file):
-        with SerializedFile(file) as sf:
+        with pynity.SerializedFile(file) as sf:
             for obj in sf.objects.values():
                 self.assertIsNotNone(obj.instance)

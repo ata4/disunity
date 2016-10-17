@@ -1,15 +1,97 @@
 import os
+import io
 import json
 import logging
 import hashlib
 
 from collections import OrderedDict
 
-from .io import BinaryIO, ByteOrder
+from . import utils, ioutils, stringtable
 
-log = logging.getLogger("pynity.typedb")
+log = logging.getLogger("pynity.rtti")
 
-class TypeDatabase:
+def read_type_node(r):
+    # read sizes
+    num_fields = r.read_int32()
+    string_table_len = r.read_int32()
+
+    # read local string table first so the strings can be assigned in one go
+    tree_pos = r.tell()
+    tree_len = 24 * num_fields
+    r.seek(tree_len, io.SEEK_CUR)
+    string_table_buf = r.read(string_table_len)
+    string_table = stringtable.load(string_table_buf)
+    r.seek(tree_pos)
+
+    # read type tree
+    field_stack = []
+    field_root = None
+
+    for _ in range(num_fields):
+        field = utils.ObjectDict()
+        field.version = r.read_int16()
+
+        level = r.read_uint8()
+
+        # pop redundant entries from stack if required
+        while len(field_stack) > level:
+            field_stack.pop()
+
+        # add current node as child for topmost (previous) node
+        if field_stack:
+            field_stack[-1].children.append(field)
+
+        # add current node on top of stack
+        field_stack.append(field)
+
+        field.is_array = r.read_bool8()
+
+        # assign type string
+        type_offset = r.read_uint32()
+        field.type = string_table.get(type_offset)
+        if not field.type:
+            raise TypeException("Invalid field type string offset: %d"
+                                % type_offset)
+
+        # assign name string
+        name_offset = r.read_uint32()
+        field.name = string_table.get(name_offset)
+        if not field.name:
+            raise TypeException("Invalid field name string offset: %d"
+                                % name_offset)
+
+        field.size = r.read_int32()
+        field.index = r.read_int32()
+        field.meta_flag = r.read_int32()
+        field.children = []
+
+        # save first node, which is the root
+        if not field_root:
+            field_root = field
+
+    # correct end position
+    r.seek(string_table_len, io.SEEK_CUR)
+
+    return field_root
+
+def read_type_node_old(r):
+    field = utils.ObjectDict()
+    field.type = r.read_cstring()
+    field.name = r.read_cstring()
+    field.size = r.read_int32()
+    field.index = r.read_int32()
+    field.is_array = r.read_bool32()
+    field.version = r.read_int32()
+    field.meta_flag = r.read_int32()
+    field.children = []
+
+    num_children = r.read_int32()
+    for _ in range(num_children):
+        field.children.append(read_type_node_old(r))
+
+    return field
+
+class Database:
 
     type_ext = ".unitytype"
 
@@ -23,11 +105,11 @@ class TypeDatabase:
         self.path_types_old = os.path.join(self.path_resources, "types_old")
 
         self.version = 0
-        self.order = ByteOrder.LITTLE_ENDIAN
+        self.order = ioutils.LITTLE_ENDIAN
 
     def _type_open(self, path):
-        r = BinaryIO(open(path, "rb"))
-        r.order = ByteOrder(r.read_int8())
+        r = ioutils.BinaryIO(open(path, "rb"))
+        r.order = r.read_int8()
 
         # file version, currently unused but may be helpful in future
         r.read_int32()
@@ -38,7 +120,7 @@ class TypeDatabase:
         if os.path.exists(path):
             return False
 
-        with BinaryIO(open(path, "wb"), order=self.order) as w:
+        with ioutils.BinaryIO(open(path, "wb"), order=self.order) as w:
             w.write_int8(int(self.order))
             w.write_int32(self.version)
             w.write(data)

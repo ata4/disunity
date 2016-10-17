@@ -2,26 +2,22 @@ import io
 import logging
 import uuid
 
-from .io import AutoCloseable, BinaryIO, ChunkedFileIO, ByteOrder
-from .utils import ObjectDict
-from .typedb import TypeDatabase, TypeException
-from .stringtable import StringTable
-from . import engine
+from . import utils, ioutils, engine, rtti, stringtable
 
 log = logging.getLogger("pynity.serialize")
 
-class SerializedFile(AutoCloseable):
+class SerializedFile(ioutils.AutoCloseable):
 
     versions = [5, 6, 8, 9, 14, 15]
 
     @classmethod
     def probe_path(cls, path):
-        with ChunkedFileIO.open(path, "rb") as fp:
+        with ioutils.ChunkedFileIO.open(path, "rb") as fp:
             return cls.probe_file(fp)
 
     @classmethod
     def probe_file(cls, file):
-        r = BinaryIO(file, order=ByteOrder.BIG_ENDIAN)
+        r = ioutils.BinaryIO(file, order=ioutils.BIG_ENDIAN)
 
         # get file size
         r.seek(0, io.SEEK_END)
@@ -51,11 +47,11 @@ class SerializedFile(AutoCloseable):
 
         # open file from string or use it directly, depending on the type
         if isinstance(file, str):
-            fp = ChunkedFileIO.open(file, "rb")
+            fp = ioutils.ChunkedFileIO.open(file, "rb")
         else:
             fp = file
 
-        r = self.r = BinaryIO(fp, order=ByteOrder.BIG_ENDIAN)
+        r = self.r = ioutils.BinaryIO(fp, order=ioutils.BIG_ENDIAN)
 
         # read metadata
         self._read_header(r)
@@ -71,7 +67,7 @@ class SerializedFile(AutoCloseable):
         if not r:
             r = self.r
 
-        header = self.header = ObjectDict()
+        header = self.header = utils.ObjectDict()
         header.metadata_size = r.read_int32()
         header.file_size = r.read_int32()
         header.version = r.read_int32()
@@ -93,12 +89,12 @@ class SerializedFile(AutoCloseable):
         if header.version > 8:
             header.endianness = r.read_int8()
             r.read(3) # reserved
-            r.order = ByteOrder(header.endianness)
+            r.order = header.endianness
         elif header.version > 5:
-            r.order = ByteOrder.LITTLE_ENDIAN
+            r.order = ioutils.LITTLE_ENDIAN
 
     def _read_types(self, r):
-        types = self.types = ObjectDict()
+        types = self.types = utils.ObjectDict()
 
         # older formats store the object data before the structure data
         if self.header.version < 9:
@@ -123,7 +119,7 @@ class SerializedFile(AutoCloseable):
             types.embedded = num_classes > 0
 
         for _ in range(num_classes):
-            class_type = ObjectDict()
+            class_type = utils.ObjectDict()
             class_id = r.read_int32()
 
             if self.header.version > 13:
@@ -134,14 +130,14 @@ class SerializedFile(AutoCloseable):
 
                 if types.embedded:
                     type_pos = r.tell()
-                    class_type.type_tree = self._read_type_node(r)
+                    class_type.type_tree = rtti.read_type_node(r)
                     type_size = r.tell() - type_pos
 
                     r.seek(type_pos)
                     types_raw[class_id] = r.read(type_size)
             else:
                 type_pos = r.tell()
-                class_type.type_tree = self._read_type_node_old(r)
+                class_type.type_tree = rtti.read_type_node_old(r)
                 type_size = r.tell() - type_pos
 
                 r.seek(type_pos)
@@ -156,87 +152,6 @@ class SerializedFile(AutoCloseable):
         if 6 < self.header.version < 13:
             r.read_int32()
 
-    def _read_type_node(self, r):
-        # read sizes
-        num_fields = r.read_int32()
-        string_table_len = r.read_int32()
-
-        # read local string table first so the strings can be assigned in one go
-        tree_pos = r.tell()
-        tree_len = 24 * num_fields
-        r.seek(tree_len, io.SEEK_CUR)
-        string_table_buf = r.read(string_table_len)
-        string_table = StringTable.load(string_table_buf)
-        r.seek(tree_pos)
-
-        # read type tree
-        field_stack = []
-        field_root = None
-
-        for _ in range(num_fields):
-            field = ObjectDict()
-            field.version = r.read_int16()
-
-            level = r.read_uint8()
-
-            # pop redundant entries from stack if required
-            while len(field_stack) > level:
-                field_stack.pop()
-
-            # add current node as child for topmost (previous) node
-            if field_stack:
-                field_stack[-1].children.append(field)
-
-            # add current node on top of stack
-            field_stack.append(field)
-
-            field.is_array = r.read_bool8()
-
-            # assign type string
-            type_offset = r.read_uint32()
-            field.type = string_table.get(type_offset)
-            if not field.type:
-                raise SerializedFileError("Invalid field type string offset: %d"
-                                          % type_offset)
-
-            # assign name string
-            name_offset = r.read_uint32()
-            field.name = string_table.get(name_offset)
-            if not field.name:
-                raise SerializedFileError("Invalid field name string offset: %d"
-                                          % name_offset)
-
-            field.size = r.read_int32()
-            field.index = r.read_int32()
-            field.meta_flag = r.read_int32()
-            field.children = []
-
-            # save first node, which is the root
-            if not field_root:
-                field_root = field
-
-        # correct end position
-        r.seek(string_table_len, io.SEEK_CUR)
-
-        return field_root
-
-    def _read_type_node_old(self, r):
-        field = ObjectDict()
-        field.type = r.read_cstring()
-        field.name = r.read_cstring()
-        field.size = r.read_int32()
-        field.index = r.read_int32()
-        field.is_array = r.read_bool32()
-        field.version = r.read_int32()
-        field.meta_flag = r.read_int32()
-        field.children = []
-
-        num_children = r.read_int32()
-        for _ in range(num_children):
-            field.children.append(self._read_type_node_old(r))
-
-        return field
-
     def _read_object_infos(self, r):
         object_infos = self.object_infos = {}
 
@@ -249,7 +164,7 @@ class SerializedFile(AutoCloseable):
             else:
                 path_id = r.read_uint32()
 
-            obj_info = ObjectDict()
+            obj_info = utils.ObjectDict()
             obj_info.byte_start = r.read_uint32()
             obj_info.byte_size = r.read_uint32()
             obj_info.type_id = r.read_int32()
@@ -286,7 +201,7 @@ class SerializedFile(AutoCloseable):
         for _ in range(num_entries):
             r.align(4)
 
-            script_type = ObjectDict()
+            script_type = utils.ObjectDict()
             script_type.serialized_file_index = r.read_int32()
             script_type.identifier_in_file = r.read_int64()
 
@@ -297,7 +212,7 @@ class SerializedFile(AutoCloseable):
 
         num_entries = r.read_int32()
         for _ in range(num_entries):
-            external = ObjectDict()
+            external = utils.ObjectDict()
 
             if self.header.version > 5:
                 external.asset_path = r.read_cstring()
@@ -309,7 +224,7 @@ class SerializedFile(AutoCloseable):
             externals.append(external)
 
     def _read_objects(self, r):
-        type_db = TypeDatabase()
+        type_db = rtti.Database()
         objects = self.objects = {}
 
         for path_id, obj_info in self.object_infos.items():
@@ -333,15 +248,15 @@ class SerializedFile(AutoCloseable):
                     try:
                         with type_db.open(obj_info.type_id,
                                           obj_class.old_type_hash) as fp:
-                            obj_type = self._read_type_node(fp)
-                    except TypeException as ex:
+                            obj_type = rtti.read_type_node(fp)
+                    except rtti.TypeException as ex:
                         log.warning(ex)
                 else:
                     try:
                         with type_db.open_old(obj_info.type_id,
                                               self.types.signature) as fp:
-                            obj_type = self._read_type_node_old(fp)
-                    except TypeException as ex:
+                            obj_type = rtti.read_type_node_old(fp)
+                    except rtti.TypeException as ex:
                         log.warning(ex)
 
                 self._cached_types[obj_info.type_id] = obj_type
@@ -365,24 +280,24 @@ class SerializedFileError(Exception):
 class SerializedObject():
 
     _read_prim = {
-        "bool":             BinaryIO.read_bool8,
-        "SInt8":            BinaryIO.read_int8,
-        "UInt8":            BinaryIO.read_uint8,
-        "char":             BinaryIO.read_uint8,
-        "SInt16":           BinaryIO.read_int16,
-        "short":            BinaryIO.read_int16,
-        "UInt16":           BinaryIO.read_uint16,
-        "unsigned short":   BinaryIO.read_uint16,
-        "SInt32":           BinaryIO.read_int32,
-        "int":              BinaryIO.read_int32,
-        "UInt32":           BinaryIO.read_uint32,
-        "unsigned int":     BinaryIO.read_uint32,
-        "SInt64":           BinaryIO.read_int64,
-        "long":             BinaryIO.read_int64,
-        "UInt64":           BinaryIO.read_uint64,
-        "unsigned long":    BinaryIO.read_uint64,
-        "float":            BinaryIO.read_float,
-        "double":           BinaryIO.read_double,
+        "bool":             ioutils.BinaryIO.read_bool8,
+        "SInt8":            ioutils.BinaryIO.read_int8,
+        "UInt8":            ioutils.BinaryIO.read_uint8,
+        "char":             ioutils.BinaryIO.read_uint8,
+        "SInt16":           ioutils.BinaryIO.read_int16,
+        "short":            ioutils.BinaryIO.read_int16,
+        "UInt16":           ioutils.BinaryIO.read_uint16,
+        "unsigned short":   ioutils.BinaryIO.read_uint16,
+        "SInt32":           ioutils.BinaryIO.read_int32,
+        "int":              ioutils.BinaryIO.read_int32,
+        "UInt32":           ioutils.BinaryIO.read_uint32,
+        "unsigned int":     ioutils.BinaryIO.read_uint32,
+        "SInt64":           ioutils.BinaryIO.read_int64,
+        "long":             ioutils.BinaryIO.read_int64,
+        "UInt64":           ioutils.BinaryIO.read_uint64,
+        "unsigned long":    ioutils.BinaryIO.read_uint64,
+        "float":            ioutils.BinaryIO.read_float,
+        "double":           ioutils.BinaryIO.read_double,
     }
 
     _cached_classes = {}

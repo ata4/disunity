@@ -2,7 +2,7 @@ import os
 import io
 import unittest
 
-from pynity.io import ChunkedFileIO, BinaryIO, ByteOrder
+import pynity.ioutils as ioutils
 
 class ChunkedFileIOTest(unittest.TestCase):
 
@@ -20,7 +20,7 @@ class ChunkedFileIOTest(unittest.TestCase):
                 cls.file_data.extend(fp.read())
 
     def setUp(self):
-        self.file = ChunkedFileIO.open(self.path_file, "rb")
+        self.file = ioutils.ChunkedFileIO.open(self.path_file, "rb")
 
     def tearDown(self):
         self.file.close()
@@ -107,32 +107,32 @@ class BinaryIOTest(unittest.TestCase):
     def test_read_cstring(self):
         string = "Just a string"
         data = string.encode("ascii") + b"\0"
-        r = BinaryIO(io.BytesIO(data))
+        r = ioutils.BinaryIO(io.BytesIO(data))
 
         self.assertEqual(r.read_cstring(), string)
 
     def test_read_cstring_eof(self):
         string = "Just a string"
         data = string.encode("ascii")
-        r = BinaryIO(io.BytesIO(data))
+        r = ioutils.BinaryIO(io.BytesIO(data))
 
         self.assertRaises(IOError, r.read_cstring)
 
     def test_read_uint8(self):
         data = b"\x18"
-        r = BinaryIO(io.BytesIO(data))
+        r = ioutils.BinaryIO(io.BytesIO(data))
 
         self.assertEqual(r.read_uint8(), 0x18)
 
     def test_read_uint8_eof(self):
         data = b""
-        r = BinaryIO(io.BytesIO(data))
+        r = ioutils.BinaryIO(io.BytesIO(data))
 
         self.assertEqual(r.read_uint8(), None)
 
     def test_align(self):
         data = b"\0" * 64
-        r = BinaryIO(io.BytesIO(data))
+        r = ioutils.BinaryIO(io.BytesIO(data))
 
         r.align(4)
         self.assertEqual(r.tell(), 0)
@@ -150,12 +150,12 @@ class BinaryIOTest(unittest.TestCase):
         self.assertEqual(r.tell(), 32)
 
     def test_byteorder(self):
-        r = BinaryIO(io.BytesIO(b"\x12\x34"))
+        r = ioutils.BinaryIO(io.BytesIO(b"\x12\x34"))
 
-        self.assertEqual(r.order, ByteOrder.LITTLE_ENDIAN)
+        self.assertEqual(r.order, ioutils.LITTLE_ENDIAN)
         self.assertEqual(r.read_int16(), 13330)
 
         r.seek(0)
-        r.order = ByteOrder.BIG_ENDIAN
-        self.assertEqual(r.order, ByteOrder.BIG_ENDIAN)
+        r.order = ioutils.BIG_ENDIAN
+        self.assertEqual(r.order, ioutils.BIG_ENDIAN)
         self.assertEqual(r.read_int16(), 4660)

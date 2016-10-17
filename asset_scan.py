@@ -21,7 +21,7 @@ class AssetScanApp(disunity.SerializedFileApp):
         self.deserialize = False
         self.signature = None
 
-        self.type_db = pynity.TypeDatabase()
+        self.type_db = pynity.types.Database()
 
     def parse_args(self, argv):
         try:
