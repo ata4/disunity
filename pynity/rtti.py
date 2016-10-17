@@ -10,7 +10,7 @@ from . import utils, ioutils, stringtable
 
 log = logging.getLogger("pynity.rtti")
 
-def read_type_node(r):
+def read_node(r):
     # read sizes
     num_fields = r.read_int32()
     string_table_len = r.read_int32()
@@ -74,7 +74,7 @@ def read_type_node(r):
 
     return field_root
 
-def read_type_node_old(r):
+def read_node_old(r):
     field = utils.ObjectDict()
     field.type = r.read_cstring()
     field.name = r.read_cstring()
@@ -87,13 +87,15 @@ def read_type_node_old(r):
 
     num_children = r.read_int32()
     for _ in range(num_children):
-        field.children.append(read_type_node_old(r))
+        field.children.append(read_node_old(r))
 
     return field
 
 class Database:
 
     type_ext = ".unitytype"
+    _cached_types = {}
+    _cached_types_old = {}
 
     def __init__(self, path_resources=None):
         if path_resources:
@@ -174,33 +176,30 @@ class Database:
         types_added = 0
 
         # skip scan entirely if there are no embedded types
-        if not sf.types_raw:
+        if not sf.types.embedded:
             return types_added
 
         # save some metadata required to identify old types
         self.version = sf.header.version
         self.order = sf.r.order
 
-        for class_id in sf.types.classes:
+        for class_id, class_type in sf.types.classes.items():
             # ignore script types
             if class_id <= 0:
                 continue
 
-            # ignore types that aren't loaded
-            if class_id not in sf.types_raw:
-                continue
-
-            class_type = sf.types.classes[class_id]
+            # read raw type data
+            offset = class_type.offset
+            sf.r.seek(offset[0])
+            type_raw = sf.r.read(offset[1] - offset[0])
 
             # add types that don't exist yet
             if sf.header.version > 13:
-                if self.add(sf.types_raw[class_id], class_id,
-                                class_type.old_type_hash):
+                if self.add(type_raw, class_id, class_type.old_type_hash):
                     types_added += 1
             else:
                 signature = sf.types.get("signature")
-                if (class_type and signature and
-                        self.add_old(sf.types_raw[class_id], class_id, signature)):
+                if signature and self.add_old(type_raw, class_id, signature):
                     types_added += 1
 
         return types_added
@@ -241,6 +240,24 @@ class Database:
         log.debug("Type %s for class %d loaded from database", type_hash, class_id)
 
         return self._type_open(path_type)
+
+    def get(self, class_id, type_hash):
+        key = (class_id, type_hash)
+
+        if key not in self._cached_types:
+            with self.open(class_id, type_hash) as fp:
+                self._cached_types[key] = read_node(fp)
+
+        return self._cached_types[key]
+
+    def get_old(self, class_id, signature):
+        key = (class_id, signature)
+
+        if key not in self._cached_types_old:
+            with self.open_old(class_id, signature) as fp:
+                self._cached_types_old[key] = read_node_old(fp)
+
+        return self._cached_types_old[key]
 
     class SignatureIndex:
 

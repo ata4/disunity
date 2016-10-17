@@ -2,7 +2,7 @@ import io
 import logging
 import uuid
 
-from . import utils, ioutils, engine, rtti, stringtable
+from . import utils, ioutils, engine, rtti
 
 log = logging.getLogger("pynity.serialize")
 
@@ -42,7 +42,6 @@ class SerializedFile(ioutils.AutoCloseable):
         return file_size == header_file_size
 
     def __init__(self, file, archive=None):
-        self._cached_types = {}
         self._archive = archive
 
         # open file from string or use it directly, depending on the type
@@ -111,7 +110,6 @@ class SerializedFile(ioutils.AutoCloseable):
             types.embedded = r.read_bool8()
 
         types.classes = {}
-        types_raw = self.types_raw = {}
 
         num_classes = r.read_int32()
 
@@ -129,19 +127,13 @@ class SerializedFile(ioutils.AutoCloseable):
                 class_type.old_type_hash = r.read_hex(16)
 
                 if types.embedded:
-                    type_pos = r.tell()
-                    class_type.type_tree = rtti.read_type_node(r)
-                    type_size = r.tell() - type_pos
-
-                    r.seek(type_pos)
-                    types_raw[class_id] = r.read(type_size)
+                    type_start = r.tell()
+                    class_type.type_tree = rtti.read_node(r)
+                    class_type.offset = (type_start, r.tell())
             else:
-                type_pos = r.tell()
-                class_type.type_tree = rtti.read_type_node_old(r)
-                type_size = r.tell() - type_pos
-
-                r.seek(type_pos)
-                types_raw[class_id] = r.read(type_size)
+                type_start = r.tell()
+                class_type.type_tree = rtti.read_node_old(r)
+                class_type.offset = (type_start, r.tell())
 
             if class_id in types.classes:
                 raise SerializedFileError("Duplicate class ID %d" % class_id)
@@ -237,8 +229,6 @@ class SerializedFile(ioutils.AutoCloseable):
             elif obj_info.type_id <= 0:
                 # script types are never stored in database, so don't even try
                 continue
-            elif obj_info.type_id in self._cached_types:
-                obj_type = self._cached_types[obj_info.type_id]
             else:
                 # use embedded object type tree or load it from database otherwise
                 if self.header.version > 13:
@@ -246,20 +236,14 @@ class SerializedFile(ioutils.AutoCloseable):
                     assert obj_class
 
                     try:
-                        with type_db.open(obj_info.type_id,
-                                          obj_class.old_type_hash) as fp:
-                            obj_type = rtti.read_type_node(fp)
+                        obj_type = type_db.get(obj_info.type_id, obj_class.old_type_hash)
                     except rtti.TypeException as ex:
                         log.warning(ex)
                 else:
                     try:
-                        with type_db.open_old(obj_info.type_id,
-                                              self.types.signature) as fp:
-                            obj_type = rtti.read_type_node_old(fp)
+                        obj_type = type_db.get(obj_info.type_id, self.types.signature)
                     except rtti.TypeException as ex:
                         log.warning(ex)
-
-                self._cached_types[obj_info.type_id] = obj_type
 
             if not obj_type:
                 continue
