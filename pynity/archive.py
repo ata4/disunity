@@ -248,7 +248,7 @@ class Entry:
     def extract(self, path):
         self._fp.seek(self.offset)
         with open(path, "wb") as fp:
-            copyfileobj(self._fp, fp, self.size)
+            ioutils.copyfileobj(self._fp, fp, self.size)
 
 class StorageBlock:
 
