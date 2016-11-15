@@ -245,8 +245,12 @@ class Database:
         key = (class_id, type_hash)
 
         if key not in self._cached_types:
-            with self.open(class_id, type_hash) as fp:
-                self._cached_types[key] = read_node(fp)
+            try:
+                with self.open(class_id, type_hash) as fp:
+                    self._cached_types[key] = read_node(fp)
+            except TypeException as ex:
+                self._cached_types[key] = None
+                raise ex
 
         return self._cached_types[key]
 
@@ -254,8 +258,12 @@ class Database:
         key = (class_id, signature)
 
         if key not in self._cached_types_old:
-            with self.open_old(class_id, signature) as fp:
-                self._cached_types_old[key] = read_node_old(fp)
+            try:
+                with self.open_old(class_id, signature) as fp:
+                    self._cached_types_old[key] = read_node_old(fp)
+            except TypeException as ex:
+                self._cached_types_old[key] = None
+                raise ex
 
         return self._cached_types_old[key]
 
