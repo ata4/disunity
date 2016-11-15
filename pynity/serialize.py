@@ -241,7 +241,7 @@ class SerializedFile(ioutils.AutoCloseable):
                         log.warning(ex)
                 else:
                     try:
-                        obj_type = type_db.get(obj_info.type_id, self.types.signature)
+                        obj_type = type_db.get_old(obj_info.type_id, self.types.signature)
                     except rtti.TypeException as ex:
                         log.warning(ex)
 
