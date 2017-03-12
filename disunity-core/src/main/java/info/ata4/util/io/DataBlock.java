@@ -17,7 +17,7 @@ import java.io.IOException;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class DataBlock {
-    
+
     private long offset;
     private long length;
 
@@ -36,31 +36,31 @@ public class DataBlock {
     public void length(long length) {
         this.length = length;
     }
-    
+
     public void endOffset(long endOffset) {
         this.length = endOffset - offset;
     }
-    
+
     public long endOffset() {
         return offset + length;
     }
-    
+
     public boolean isIntersecting(DataBlock that) {
         return this.endOffset() > that.offset() && that.endOffset() > this.offset();
     }
-    
+
     public boolean isInside(DataBlock that) {
         return this.offset() >= that.offset() && this.endOffset() <= that.endOffset();
     }
-    
+
     public void markBegin(Positionable p) throws IOException {
         offset(p.position());
     }
-    
+
     public void markEnd(Positionable p) throws IOException {
         DataBlock.this.endOffset(p.position());
     }
-    
+
     @Override
     public String toString() {
         return DataBlock.this.offset() + " - " + endOffset() + " (" + DataBlock.this.length() + ")";
