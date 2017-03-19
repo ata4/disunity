@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{219bdbca-57cb-4c4d-8051-41d059a35507}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>asset_scan.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <CommandLineArguments>
+    </CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="disunity\" />
+    <Folder Include="pynity\" />
+    <Folder Include="pynity\tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="bundle.py" />
+    <Compile Include="disunity\app.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="disunity\__init__.py" />
+    <Compile Include="pynity\archive.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\engine.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\ioutils.py" />
+    <Compile Include="pynity\serialize.py" />
+    <Compile Include="pynity\stringtable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\tests\test_ioutils.py" />
+    <Compile Include="pynity\tests\test_serialize.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\tests\test_stringtable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\tests\test_rtti.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\tests\__init__.py" />
+    <Compile Include="pynity\rtti.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pynity\utils.py" />
+    <Compile Include="pynity\__init__.py" />
+    <Compile Include="asset_dump.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="asset_scan.py" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
