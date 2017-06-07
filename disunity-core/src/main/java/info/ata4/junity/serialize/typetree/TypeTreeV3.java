@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 /**
  *
@@ -167,7 +167,7 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
         Map<String, Integer> localMap = new LinkedHashMap<>();
         Map<String, Integer> commonMap = StringTable.commonStrings(revision.major()).inverse();
 
-        Function<String, Integer> addStringOffset = typeName -> {
+        ToIntFunction<String> addStringOffset = typeName -> {
             if (commonMap.containsKey(typeName)) {
                 return commonMap.get(typeName);
             } else if (localMap.containsKey(typeName)) {
@@ -181,8 +181,8 @@ public class TypeTreeV3<T extends TypeV2> extends TypeTreeV2<T> {
 
         // apply string offsets
         types.forEach(type -> {
-            type.typeOffset(addStringOffset.apply(type.typeName()));
-            type.nameOffset(addStringOffset.apply(type.fieldName()));
+            type.typeOffset(addStringOffset.applyAsInt(type.typeName()));
+            type.nameOffset(addStringOffset.applyAsInt(type.fieldName()));
         });
 
         out.writeInt(types.size());
